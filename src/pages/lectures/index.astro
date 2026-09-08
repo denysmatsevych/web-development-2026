@@ -1,0 +1,164 @@
+---
+/**
+ * Lectures index — the list of slide decks from `src/data/lectures/index.ts`.
+ * Each card links to `/lectures/<slug>`. Uses the shared `SiteHeader` /
+ * `SiteFooter`; the decks themselves opt out of that chrome via `DeckLayout`.
+ */
+import SiteFooter from '@/components/SiteFooter.astro';
+import SiteHeader from '@/components/SiteHeader.astro';
+import { lectures } from '@/data/lectures';
+import { site } from '@/data/site';
+import { withBase } from '@/lib/paths';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+---
+
+<BaseLayout title="Lectures" description="Lecture slide decks for Web Development 2026.">
+  <SiteHeader />
+
+  <main id="main-content" class="page" tabindex="-1">
+    <section class="hero">
+      <p class="hero__eyebrow">{site.name}</p>
+      <h1 class="hero__title">Lectures</h1>
+      <p class="hero__lead">
+        Keyboard-driven slide decks — <kbd>→</kbd> / <kbd>←</kbd> to move,
+        <kbd>N</kbd> for speaker notes, <kbd>F</kbd> for fullscreen,
+        <kbd>Ctrl</kbd>+<kbd>P</kbd> to export a PDF.
+      </p>
+    </section>
+
+    <ul class="decks">
+      {
+        lectures.map((lecture, i) => (
+          <li>
+            <a href={withBase(`/lectures/${lecture.slug}`)} class="deck-card glass-panel">
+              <span class="deck-card__index">{String(i + 1).padStart(2, '0')}</span>
+              <span class="deck-card__body">
+                <span class="deck-card__title">{lecture.title}</span>
+                <span class="deck-card__summary">{lecture.summary}</span>
+              </span>
+              <span class="deck-card__arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </main>
+
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  .page {
+    max-width: 60rem;
+    margin-inline: auto;
+    padding: 3.5rem 1rem 5rem;
+  }
+
+  @media (min-width: 640px) {
+    .page {
+      padding-inline: 1.5rem;
+    }
+  }
+
+  .hero {
+    margin-bottom: 3rem;
+  }
+
+  .hero__eyebrow {
+    margin: 0 0 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-brand-blue-soft);
+  }
+
+  .hero__title {
+    margin: 0 0 1rem;
+    font-size: clamp(2rem, 5vw, 2.75rem);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--foreground);
+  }
+
+  .hero__lead {
+    margin: 0;
+    max-width: 42rem;
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: var(--muted-foreground);
+  }
+
+  .hero__lead kbd {
+    padding: 0.05em 0.4em;
+    font-size: 0.85em;
+    font-family: var(--font-mono);
+    color: var(--foreground);
+    background: var(--muted);
+    border-radius: var(--radius-sm);
+  }
+
+  .decks {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .deck-card {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.25rem 1.4rem;
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    transition:
+      border-color 0.15s ease,
+      transform 0.15s ease;
+  }
+
+  .deck-card:hover {
+    border-color: var(--color-brand-blue);
+    transform: translateY(-2px);
+  }
+
+  .deck-card__index {
+    font-size: 1.1rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-brand-blue-soft);
+  }
+
+  .deck-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .deck-card__title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--foreground);
+  }
+
+  .deck-card__summary {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--muted-foreground);
+  }
+
+  .deck-card__arrow {
+    color: var(--color-brand-blue-soft);
+    transition: transform 0.15s ease;
+  }
+
+  .deck-card:hover .deck-card__arrow {
+    transform: translateX(0.2rem);
+  }
+</style>

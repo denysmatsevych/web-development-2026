@@ -1,5 +1,11 @@
 # Plan: Course tutorial site with a javascript.info-style structure — hierarchical navigation & routing
 
+> **Superseded (2026-09-09):** `Lectures/`, `Labs/` and `Tutorial/` have been merged
+> into a single Astro project at the repo root. The handbook now lives under
+> `/tutorial/*` (was `/*`); the header/footer link to the sibling sections by
+> internal path, not URL. This document is kept for the handbook's structure and
+> routing rationale, which still holds — only the project boundary changed.
+
 > **Review status:** approved for the first version. Feedback folded in below —
 > (1) framing is "javascript.info *structure* style", not visual style; (2) article
 > slugs are provisional and will be revisited once the implementation works;

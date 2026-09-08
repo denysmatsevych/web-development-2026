@@ -1,0 +1,143 @@
+---
+/**
+ * Course hub — the `/` landing. Short intro + one card per section from
+ * `src/data/site.ts` (`sections`): Lectures, Labs, Tutorial. The handbook's own
+ * HTML/CSS/JS track picker lives one level down at `/tutorial/`.
+ */
+import SiteFooter from '@/components/SiteFooter.astro';
+import SiteHeader from '@/components/SiteHeader.astro';
+import { sections, site } from '@/data/site';
+import { withBase } from '@/lib/paths';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout title={site.name} description={site.description}>
+  <SiteHeader />
+
+  <main id="main-content" class="home" tabindex="-1">
+    <section class="hero">
+      <p class="hero__eyebrow">{site.eyebrow}</p>
+      <h1 class="hero__title">{site.name}</h1>
+      <p class="hero__lead">
+        Everything for the course in one place — the lecture slide decks, the lab
+        assignments, and a browsable handbook for HTML, CSS and JavaScript.
+      </p>
+    </section>
+
+    <ul class="sections">
+      {
+        sections.map((section) => (
+          <li>
+            <a href={withBase(section.href)} class="section glass-panel">
+              <span class="section__name">{section.label}</span>
+              <span class="section__blurb">{section.blurb}</span>
+              <span class="section__arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </main>
+
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  .home {
+    max-width: 64rem;
+    margin-inline: auto;
+    padding: 3.5rem 1rem 5rem;
+  }
+
+  @media (min-width: 640px) {
+    .home {
+      padding-inline: 1.5rem;
+    }
+  }
+
+  .hero {
+    margin-bottom: 3.5rem;
+  }
+
+  .hero__eyebrow {
+    margin: 0 0 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-brand-blue-soft);
+  }
+
+  .hero__title {
+    margin: 0 0 1rem;
+    font-size: clamp(2rem, 5vw, 2.75rem);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--foreground);
+  }
+
+  .hero__lead {
+    margin: 0;
+    max-width: 42rem;
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: var(--muted-foreground);
+  }
+
+  .sections {
+    display: grid;
+    gap: 1.25rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 640px) {
+    .sections {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    height: 100%;
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    transition:
+      border-color 0.15s ease,
+      transform 0.15s ease;
+  }
+
+  .section:hover {
+    border-color: var(--color-brand-blue);
+    transform: translateY(-2px);
+  }
+
+  .section__name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--foreground);
+  }
+
+  .section__blurb {
+    flex: 1;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--muted-foreground);
+  }
+
+  .section__arrow {
+    margin-top: 0.25rem;
+    color: var(--color-brand-blue-soft);
+    transition: transform 0.15s ease;
+  }
+
+  .section:hover .section__arrow {
+    transform: translateX(0.2rem);
+  }
+</style>

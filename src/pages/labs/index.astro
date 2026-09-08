@@ -1,0 +1,110 @@
+---
+/**
+ * Labs index — placeholder. Lab assignments land here; for now it states the
+ * section is in progress and points back to the lectures and handbook.
+ */
+import SiteFooter from '@/components/SiteFooter.astro';
+import SiteHeader from '@/components/SiteHeader.astro';
+import { site } from '@/data/site';
+import { withBase } from '@/lib/paths';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+---
+
+<BaseLayout title="Labs" description="Lab assignments for Web Development 2026.">
+  <SiteHeader />
+
+  <main id="main-content" class="page" tabindex="-1">
+    <section class="hero">
+      <p class="hero__eyebrow">{site.name}</p>
+      <h1 class="hero__title">Labs</h1>
+      <p class="hero__lead">
+        Hands-on assignments that build on each lecture. This section is still
+        being written.
+      </p>
+    </section>
+
+    <div class="panel glass-panel">
+      <p class="panel__title">Coming soon</p>
+      <p class="panel__text">
+        In the meantime, work through the <a href={withBase('/lectures/')}>lectures</a>
+        and the <a href={withBase('/tutorial/')}>tutorial handbook</a>.
+      </p>
+    </div>
+  </main>
+
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  .page {
+    max-width: 60rem;
+    margin-inline: auto;
+    padding: 3.5rem 1rem 5rem;
+  }
+
+  @media (min-width: 640px) {
+    .page {
+      padding-inline: 1.5rem;
+    }
+  }
+
+  .hero {
+    margin-bottom: 2.5rem;
+  }
+
+  .hero__eyebrow {
+    margin: 0 0 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-brand-blue-soft);
+  }
+
+  .hero__title {
+    margin: 0 0 1rem;
+    font-size: clamp(2rem, 5vw, 2.75rem);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--foreground);
+  }
+
+  .hero__lead {
+    margin: 0;
+    max-width: 42rem;
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: var(--muted-foreground);
+  }
+
+  .panel {
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+  }
+
+  .panel__title {
+    margin: 0 0 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-brand-blue-soft);
+  }
+
+  .panel__text {
+    margin: 0;
+    line-height: 1.7;
+    color: var(--muted-foreground);
+  }
+
+  .panel__text a {
+    color: var(--color-brand-blue-soft);
+    text-decoration: none;
+  }
+
+  .panel__text a:hover {
+    text-decoration: underline;
+  }
+</style>

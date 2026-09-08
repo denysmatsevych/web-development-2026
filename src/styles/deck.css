@@ -1,0 +1,93 @@
+/*
+ * Slide-deck styles — imported only by src/layouts/DeckLayout.astro, so every
+ * rule is scoped to `.deck-page` (the <body> class DeckLayout sets) and never
+ * reaches the handbook pages. Design tokens live in the deck `@theme` block in
+ * src/styles/global.css; this file is the deck's base layer + print sheet.
+ *
+ * Ported from the standalone Lecture-1 deck (was Lectures/src/styles/global.css).
+ * No `@import "tailwindcss"` here — global.css is the single Tailwind entry.
+ */
+
+/* Fullscreen, non-scrolling shell. The handbook <body> must stay scrollable,
+   hence the `.deck-page` scope on the overflow lock. */
+body.deck-page {
+  overflow: hidden;
+  background-color: var(--color-ink-950);
+  color: var(--color-paper);
+  font-family: var(--font-display);
+}
+
+.deck-page .deck {
+  scrollbar-width: none;
+}
+
+.deck-page .deck::-webkit-scrollbar {
+  display: none;
+}
+
+.deck-page :focus-visible {
+  outline: 3px solid var(--color-accent-500);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .deck-page *,
+  .deck-page *::before,
+  .deck-page *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Speaker notes — hidden until `N` toggles `body.show-notes` (deck.ts). */
+.deck-page .deck-note {
+  display: none;
+}
+
+.deck-page.show-notes .deck-note {
+  display: block;
+}
+
+/* Light theme — `T` toggles `html.theme-light` and persists `deck-theme`
+   (deck.ts). Only the tokens that differ from the dark set. */
+html.theme-light {
+  --color-ink-950: oklch(0.99 0.003 265);
+  --color-ink-900: oklch(0.96 0.005 265);
+  --color-ink-800: oklch(0.9 0.008 265);
+  --color-ink-400: oklch(0.45 0.02 265);
+  --color-ink-200: oklch(0.3 0.02 265);
+  --color-paper: oklch(0.2 0.02 265);
+  --color-accent-700: oklch(0.86 0.09 205);
+}
+
+/* Print / export-to-PDF — one slide per page. */
+@media print {
+  @page {
+    size: 1600px 900px;
+    margin: 0;
+  }
+
+  body.deck-page {
+    overflow: visible;
+    background: white;
+    color: black;
+  }
+
+  .deck-page .deck {
+    display: block !important;
+    overflow: visible !important;
+    height: auto !important;
+  }
+
+  .deck-page .slide {
+    width: 100% !important;
+    height: 900px !important;
+    break-after: page;
+    background: white !important;
+    color: black !important;
+  }
+
+  .deck-page .no-print {
+    display: none !important;
+  }
+}

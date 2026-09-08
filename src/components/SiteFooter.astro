@@ -1,0 +1,59 @@
+---
+/**
+ * SiteFooter — condensed institute footer: a "Course" link group (hub home +
+ * the three section links, same targets as the header), a contact link, and a
+ * copyright line. Flat `--color-footer-bg`, no gooey / particle animation from
+ * the source design.
+ */
+import { sections, site } from '@/data/site';
+import { withBase } from '@/lib/paths';
+
+const year = new Date().getFullYear();
+
+const courseLinks = [
+  { label: 'Home', href: withBase('/') },
+  ...sections.map((section) => ({ label: section.label, href: withBase(section.href) })),
+];
+---
+
+<footer class="bg-footer-bg text-pure-white">
+  <div class="mx-auto max-w-[100rem] px-4 py-12 sm:px-6">
+    <div class="grid gap-10 sm:grid-cols-2">
+      <nav aria-label="Course">
+        <p class="text-xs font-semibold uppercase tracking-widest text-pure-white/50">Course</p>
+        <ul class="mt-4 space-y-2.5">
+          {
+            courseLinks.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  class="inline-flex items-center gap-1 text-sm text-pure-white/80 transition-colors hover:text-brand-blue-light"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <div class="sm:text-right">
+        <p class="text-xs font-semibold uppercase tracking-widest text-pure-white/50">Contact</p>
+        <p class="mt-4">
+          <a
+            href={site.contactUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-sm text-pure-white/80 transition-colors hover:text-brand-blue-light"
+          >
+            {site.contactLabel}
+          </a>
+        </p>
+      </div>
+    </div>
+
+    <p class="mt-10 border-t border-pure-white/10 pt-6 text-xs text-pure-white/50">
+      © {year} {site.name}
+    </p>
+  </div>
+</footer>

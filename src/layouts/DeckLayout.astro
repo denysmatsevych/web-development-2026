@@ -1,0 +1,44 @@
+---
+/**
+ * DeckLayout — the fullscreen shell for a lecture slide deck
+ * (`src/pages/lectures/[lecture].astro`). No `SiteHeader` / `SiteFooter`: a deck
+ * is a keyboard-driven takeover. `BaseLayout` still owns `<html>` / `<head>`.
+ *
+ * Theme is independent of the handbook's: `deck.ts` toggles `html.theme-light`
+ * and persists `localStorage['deck-theme']`; the pre-paint script in the `head`
+ * slot re-applies it before the first render. `bodyClass="deck-page"` scopes
+ * every rule in `src/styles/deck.css`.
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import '@/styles/deck.css';
+
+interface Props {
+  /** Deck title → `<title>` + OG. */
+  title: string;
+  /** Optional meta description. */
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  lang="uk"
+  bodyClass="deck-page"
+  skipHref="#deck"
+  skipLabel="Перейти до слайдів"
+>
+  <script is:inline slot="head">
+    try {
+      if (localStorage.getItem('deck-theme') === 'light') {
+        document.documentElement.classList.add('theme-light');
+      }
+    } catch (err) {
+      /* localStorage unavailable — keep the default dark theme. */
+    }
+  </script>
+
+  <slot />
+</BaseLayout>

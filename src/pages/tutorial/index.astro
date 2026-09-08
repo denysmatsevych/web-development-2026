@@ -1,0 +1,226 @@
+---
+/**
+ * Tutorial landing (`/tutorial/`) — the handbook's track picker.
+ *
+ * Hero · `SubjectTabs` (no tab active here) · one `.glass-panel` card per
+ * Subject (HTML / CSS / JavaScript) linking to its `/tutorial/<subject>/` table
+ * of contents, with a live chapter / article count · a "Start reading" CTA into
+ * the default Subject's first article. Each Subject's dense ToC lives on its own
+ * `/tutorial/<subject>/` page (`src/pages/tutorial/[subject]/index.astro`).
+ *
+ * There is no sidebar here, so `SiteHeader` renders without its mobile toggle
+ * and this page owns its own `#main-content` skip-link target.
+ */
+import SiteFooter from '@/components/SiteFooter.astro';
+import SiteHeader from '@/components/SiteHeader.astro';
+import SubjectTabs from '@/components/SubjectTabs.astro';
+import { site } from '@/data/site';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import {
+  DEFAULT_SUBJECT,
+  getFlatDocs,
+  getNavTree,
+  getSubjects,
+  subjectHref,
+} from '@/lib/curriculum';
+
+// One card per Subject: its route, tagline, and a live chapter / article count.
+const tracks = await Promise.all(
+  getSubjects().map(async (subject) => {
+    const tree = await getNavTree(subject.id);
+    const chapterCount = tree.reduce((n, part) => n + part.chapters.length, 0);
+    const articleCount = tree.reduce(
+      (n, part) => n + part.chapters.reduce((m, chapter) => m + chapter.docs.length, 0),
+      0,
+    );
+    return { subject, href: subjectHref(subject.id), chapterCount, articleCount };
+  }),
+);
+
+// "Start reading" → the first article of the default track.
+const [firstDoc] = await getFlatDocs(DEFAULT_SUBJECT);
+---
+
+<BaseLayout title="Tutorial" description={site.description}>
+  <SiteHeader />
+  <SubjectTabs />
+
+  <main id="main-content" class="home" tabindex="-1">
+    <section class="hero">
+      <p class="hero__eyebrow">{site.eyebrow}</p>
+      <h1 class="hero__title">{site.name}</h1>
+      <p class="hero__lead">
+        The course handbook — a hierarchical, javascript.info-style guide to
+        modern HTML, CSS and JavaScript/TypeScript. Pick a track below, or jump
+        straight in.
+      </p>
+      {
+        firstDoc && (
+          <a href={firstDoc.href} class="hero__cta">
+            Start reading
+            <span class="hero__cta-arrow" aria-hidden="true">
+              →
+            </span>
+          </a>
+        )
+      }
+    </section>
+
+    <ul class="tracks">
+      {
+        tracks.map(({ subject, href, chapterCount, articleCount }) => (
+          <li>
+            <a href={href} class="track glass-panel">
+              <span class="track__name">{subject.title}</span>
+              <span class="track__tagline">{subject.tagline}</span>
+              <span class="track__meta">
+                {chapterCount} {chapterCount === 1 ? 'chapter' : 'chapters'} ·{' '}
+                {articleCount} {articleCount === 1 ? 'article' : 'articles'}
+                <span class="track__arrow" aria-hidden="true">
+                  →
+                </span>
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </main>
+
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  .home {
+    max-width: 64rem;
+    margin-inline: auto;
+    padding: 3.5rem 1rem 5rem;
+  }
+
+  @media (min-width: 640px) {
+    .home {
+      padding-inline: 1.5rem;
+    }
+  }
+
+  .hero {
+    margin-bottom: 3.5rem;
+  }
+
+  .hero__eyebrow {
+    margin: 0 0 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-brand-blue-soft);
+  }
+
+  .hero__title {
+    margin: 0 0 1rem;
+    font-size: clamp(2rem, 5vw, 2.75rem);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--foreground);
+  }
+
+  .hero__lead {
+    margin: 0 0 2rem;
+    max-width: 42rem;
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: var(--muted-foreground);
+  }
+
+  .hero__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.4rem;
+    border-radius: var(--radius-lg);
+    background: var(--color-brand-blue);
+    color: var(--color-pure-white);
+    font-weight: 600;
+    text-decoration: none;
+    transition:
+      background 0.15s ease,
+      transform 0.15s ease;
+  }
+
+  .hero__cta:hover {
+    background: var(--color-brand-blue-deep);
+  }
+
+  .hero__cta-arrow {
+    transition: transform 0.15s ease;
+  }
+
+  .hero__cta:hover .hero__cta-arrow {
+    transform: translateX(0.15rem);
+  }
+
+  .tracks {
+    display: grid;
+    gap: 1.25rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 640px) {
+    .tracks {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .track {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    height: 100%;
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    transition:
+      border-color 0.15s ease,
+      transform 0.15s ease;
+  }
+
+  .track:hover {
+    border-color: var(--color-brand-blue);
+    transform: translateY(-2px);
+  }
+
+  .track__name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--foreground);
+  }
+
+  .track__tagline {
+    flex: 1;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--muted-foreground);
+  }
+
+  .track__meta {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-brand-blue-soft);
+  }
+
+  .track__arrow {
+    margin-left: auto;
+    transition: transform 0.15s ease;
+  }
+
+  .track:hover .track__arrow {
+    transform: translateX(0.2rem);
+  }
+</style>
