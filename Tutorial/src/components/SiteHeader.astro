@@ -1,0 +1,112 @@
+---
+/**
+ * SiteHeader — sticky, institute-styled top bar (ported look from
+ * `website_ao` Header, minus React / the site menu).
+ *
+ * Layout: optional mobile sidebar toggle · wordmark → home · outbound
+ * "Lectures" / "Labs" links (URLs from `src/data/site.ts`) · disabled `EN`
+ * language-switcher placeholder · `ThemeToggle`.
+ *
+ * Height is a fixed 4rem to match `--docs-header-h` in `DocsLayout` (the sticky
+ * offset for the side rails). `src/scripts/docs.ts` (step 7) wires
+ * `#docs-sidebar-toggle` to the off-canvas drawer.
+ */
+import ThemeToggle from '@/components/ThemeToggle.astro';
+import { site } from '@/data/site';
+import { withBase } from '@/lib/paths';
+
+interface Props {
+  /**
+   * Render the mobile sidebar toggle (hamburger). `true` on article pages that
+   * mount `DocsLayout`'s `#docs-sidebar`; omitted on the homepage, which has no
+   * sidebar.
+   */
+  sidebarToggle?: boolean;
+}
+
+const { sidebarToggle = false } = Astro.props;
+const home = withBase('/');
+
+const crossLinks = [
+  { label: 'Lectures', href: site.lecturesUrl },
+  { label: 'Labs', href: site.labsUrl },
+];
+---
+
+<header
+  class="sticky top-0 z-30 h-16 border-b border-border bg-background/85 backdrop-blur-md"
+>
+  <div class="mx-auto flex h-full max-w-[100rem] items-center gap-3 px-4 sm:px-6">
+    {
+      sidebarToggle && (
+        <button
+          id="docs-sidebar-toggle"
+          type="button"
+          class="inline-flex size-9 items-center justify-center rounded-xl border border-border text-foreground transition-colors hover:bg-accent hover:text-accent-foreground lg:hidden"
+          aria-label="Open navigation"
+          aria-controls="docs-sidebar"
+          aria-expanded="false"
+        >
+          <svg
+            class="size-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <path d="M4 7h16M4 12h16M4 17h16" />
+          </svg>
+        </button>
+      )
+    }
+
+    <a
+      href={home}
+      class="mr-auto flex shrink-0 items-center gap-2 font-semibold tracking-tight text-foreground"
+    >
+      <span class="inline-block size-2.5 rounded-full bg-brand-blue" aria-hidden="true"></span>
+      {site.name}
+    </a>
+
+    <nav class="hidden items-center gap-1 sm:flex" aria-label="Course parts">
+      {
+        crossLinks.map((link) => (
+          <a
+            href={link.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+          >
+            {link.label}
+            <svg
+              class="size-3 opacity-60"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M7 17 17 7M7 7h10v10" />
+            </svg>
+          </a>
+        ))
+      }
+    </nav>
+
+    <span class="mx-1 hidden h-5 w-px bg-border sm:block" aria-hidden="true"></span>
+
+    <span
+      class="hidden cursor-not-allowed select-none rounded-lg border border-border px-2 py-1 text-xs font-medium text-muted-foreground sm:inline-block"
+      aria-disabled="true"
+      title="English only for now — a language switcher lands later"
+    >
+      EN
+    </span>
+
+    <ThemeToggle />
+  </div>
+</header>

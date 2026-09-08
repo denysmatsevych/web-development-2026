@@ -1,0 +1,132 @@
+---
+/**
+ * Subject index — the dense table of contents for one track, at `/<subject>/`
+ * (`/html/`, `/css/`, `/js/`), javascript.info-style.
+ *
+ * `SubjectTabs` (active tab = this subject) · a compact hero (title · tagline ·
+ * "Start reading" → the subject's first article in flat reading order) ·
+ * `CurriculumOverview` for this subject. There is no sidebar here, so
+ * `SiteHeader` renders without its mobile toggle and this page owns its own
+ * `#main-content` skip-link target.
+ */
+import CurriculumOverview from '@/components/CurriculumOverview.astro';
+import SiteFooter from '@/components/SiteFooter.astro';
+import SiteHeader from '@/components/SiteHeader.astro';
+import SubjectTabs from '@/components/SubjectTabs.astro';
+import { site } from '@/data/site';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getFlatDocs, getSubjects } from '@/lib/curriculum';
+
+export async function getStaticPaths() {
+  return getSubjects().map((subject) => ({
+    params: { subject: subject.id },
+    props: { subject },
+  }));
+}
+
+const { subject } = Astro.props;
+
+// First article in Part → Chapter → order sequence — the "Start reading" target.
+// `href` is already base-prefixed by `getFlatDocs`.
+const [firstDoc] = await getFlatDocs(subject.id);
+
+const pageTitle = `${subject.title} — ${site.name}`;
+---
+
+<BaseLayout title={pageTitle} description={`${subject.title}: ${subject.tagline}`}>
+  <SiteHeader />
+  <SubjectTabs active={subject.id} />
+
+  <main id="main-content" class="home" tabindex="-1">
+    <section class="hero">
+      <p class="hero__eyebrow">{site.name} · Handbook</p>
+      <h1 class="hero__title">{subject.title}</h1>
+      <p class="hero__lead">{subject.tagline}</p>
+      {
+        firstDoc && (
+          <a href={firstDoc.href} class="hero__cta">
+            Start reading
+            <span class="hero__cta-arrow" aria-hidden="true">
+              →
+            </span>
+          </a>
+        )
+      }
+    </section>
+
+    <CurriculumOverview subject={subject.id} />
+  </main>
+
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  .home {
+    max-width: 64rem;
+    margin-inline: auto;
+    padding: 3rem 1rem 5rem;
+  }
+
+  @media (min-width: 640px) {
+    .home {
+      padding-inline: 1.5rem;
+    }
+  }
+
+  .hero {
+    margin-bottom: 3.5rem;
+  }
+
+  .hero__eyebrow {
+    margin: 0 0 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-brand-blue-soft);
+  }
+
+  .hero__title {
+    margin: 0 0 1rem;
+    font-size: clamp(2rem, 5vw, 2.75rem);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--foreground);
+  }
+
+  .hero__lead {
+    margin: 0 0 2rem;
+    max-width: 42rem;
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: var(--muted-foreground);
+  }
+
+  .hero__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.4rem;
+    border-radius: var(--radius-lg);
+    background: var(--color-brand-blue);
+    color: var(--color-pure-white);
+    font-weight: 600;
+    text-decoration: none;
+    transition:
+      background 0.15s ease,
+      transform 0.15s ease;
+  }
+
+  .hero__cta:hover {
+    background: var(--color-brand-blue-deep);
+  }
+
+  .hero__cta-arrow {
+    transition: transform 0.15s ease;
+  }
+
+  .hero__cta:hover .hero__cta-arrow {
+    transform: translateX(0.15rem);
+  }
+</style>

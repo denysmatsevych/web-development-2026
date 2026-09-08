@@ -1,0 +1,165 @@
+---
+/**
+ * OnThisPage — in-page h2/h3 anchor list for the current article, from the
+ * `headings` that `render(entry)` returns (Astro stamps the `id`s).
+ *
+ * On `lg+` it is a sticky right rail (placement from `DocsLayout`); below that
+ * it collapses to a `<details>` above the article. `src/scripts/docs.ts`
+ * (step 7) scroll-spies `.doc-content :is(h2,h3)` and toggles `.is-active` on
+ * the matching `[data-toc-link]`. Renders nothing when there are no headings.
+ */
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  headings?: MarkdownHeading[];
+}
+
+const { headings = [] } = Astro.props;
+const items = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+---
+
+{
+  items.length > 0 && (
+    <details class="on-this-page">
+      <summary class="on-this-page__summary">On this page</summary>
+
+      <div class="on-this-page__body">
+        <p class="on-this-page__label" aria-hidden="true">
+          On this page
+        </p>
+        <nav aria-label="On this page">
+          <ul class="on-this-page__list">
+            {items.map((heading) => (
+              <li
+                class:list={[
+                  'on-this-page__item',
+                  { 'on-this-page__item--sub': heading.depth === 3 },
+                ]}
+              >
+                <a href={`#${heading.slug}`} class="on-this-page__link" data-toc-link>
+                  {heading.text}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+    </details>
+  )
+}
+
+<style>
+  .on-this-page {
+    font-size: 0.8125rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: color-mix(in oklab, var(--card) 60%, transparent);
+  }
+
+  .on-this-page__summary {
+    padding: 0.6rem 0.9rem;
+    cursor: pointer;
+    list-style: none;
+    font-weight: 600;
+    color: var(--foreground);
+  }
+
+  .on-this-page__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .on-this-page__summary::after {
+    content: '';
+    float: right;
+    width: 0.5rem;
+    height: 0.5rem;
+    margin-top: 0.35rem;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: rotate(45deg);
+    transition: transform 0.2s ease;
+    opacity: 0.6;
+  }
+
+  .on-this-page[open] .on-this-page__summary::after {
+    transform: rotate(-135deg);
+  }
+
+  .on-this-page__body {
+    padding: 0.3rem 0.9rem 0.9rem;
+  }
+
+  .on-this-page__label {
+    display: none;
+  }
+
+  .on-this-page__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .on-this-page__item {
+    margin: 0.1rem 0;
+  }
+
+  .on-this-page__item--sub {
+    padding-left: 0.9rem;
+  }
+
+  .on-this-page__link {
+    display: block;
+    padding: 0.25rem 0.5rem;
+    border-left: 2px solid transparent;
+    color: var(--muted-foreground);
+    text-decoration: none;
+    line-height: 1.4;
+  }
+
+  .on-this-page__link:hover {
+    color: var(--foreground);
+  }
+
+  .on-this-page__link.is-active {
+    color: var(--foreground);
+    font-weight: 600;
+    border-left-color: var(--color-brand-blue);
+  }
+
+  /* lg+: plain sticky rail — no card, summary hidden, body always shown. */
+  @media (min-width: 1024px) {
+    .on-this-page {
+      border: 0;
+      border-radius: 0;
+      background: none;
+    }
+
+    .on-this-page__summary {
+      display: none;
+    }
+
+    .on-this-page__body {
+      display: block !important;
+      content-visibility: visible !important;
+      padding: 0;
+    }
+
+    .on-this-page__label {
+      display: block;
+      margin: 0 0 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted-foreground);
+    }
+
+    .on-this-page__list {
+      border-left: 1px solid var(--border);
+    }
+
+    .on-this-page__link {
+      margin-left: -1px;
+    }
+  }
+</style>

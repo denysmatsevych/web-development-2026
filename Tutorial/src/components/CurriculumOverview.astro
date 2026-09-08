@@ -1,0 +1,151 @@
+---
+/**
+ * CurriculumOverview — one Subject's table of contents: `getNavTree(subject)`
+ * rendered as numbered Part sections, each Chapter a `.glass-panel` card that
+ * lists its Articles as links. Shown on each `/<subject>/` index page.
+ *
+ * Part sections and Chapter cards carry the anchor ids from `partAnchorId` /
+ * `chapterAnchorId`, which is where `getBreadcrumbs` points the Part / Chapter
+ * crumbs.
+ */
+import { chapterAnchorId, getNavTree, partAnchorId } from '@/lib/curriculum';
+
+interface Props {
+  /** `Subject.id` whose tree to render. */
+  subject: string;
+}
+
+const { subject } = Astro.props;
+const tree = await getNavTree(subject);
+---
+
+<div class="overview">
+  {
+    tree.map((navPart) => (
+      <section
+        class="overview__part"
+        id={partAnchorId(navPart.part.id)}
+        aria-labelledby={`${partAnchorId(navPart.part.id)}-heading`}
+      >
+        <header class="overview__part-head">
+          <span class="overview__part-eyebrow">Part {navPart.index}</span>
+          <h2 id={`${partAnchorId(navPart.part.id)}-heading`} class="overview__part-title">
+            {navPart.part.title}
+          </h2>
+        </header>
+
+        <div class="overview__chapters">
+          {navPart.chapters.map((navChapter) => (
+            <article
+              class="overview__chapter glass-panel"
+              id={chapterAnchorId(navChapter.chapter.id)}
+            >
+              <h3 class="overview__chapter-title">
+                <span class="overview__chapter-index">
+                  {navPart.index}.{navChapter.index}
+                </span>
+                {navChapter.chapter.title}
+              </h3>
+              <ul class="overview__docs">
+                {navChapter.docs.map((doc) => (
+                  <li>
+                    <a href={doc.href} class="overview__doc">
+                      {doc.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
+      </section>
+    ))
+  }
+</div>
+
+<style>
+  .overview {
+    display: flex;
+    flex-direction: column;
+    gap: 3.5rem;
+  }
+
+  .overview__part {
+    scroll-margin-top: 5.5rem;
+  }
+
+  .overview__part-head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .overview__part-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-brand-blue-soft);
+  }
+
+  .overview__part-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--foreground);
+  }
+
+  .overview__chapters {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+  }
+
+  .overview__chapter {
+    scroll-margin-top: 5.5rem;
+    padding: 1.25rem;
+    border-radius: var(--radius-lg);
+  }
+
+  .overview__chapter-title {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin: 0 0 0.85rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--foreground);
+  }
+
+  .overview__chapter-index {
+    color: var(--color-brand-blue-soft);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .overview__docs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .overview__doc {
+    display: block;
+    padding: 0.3rem 0.5rem;
+    margin-inline: -0.5rem;
+    border-radius: var(--radius-sm);
+    color: var(--muted-foreground);
+    text-decoration: none;
+    line-height: 1.45;
+  }
+
+  .overview__doc:hover {
+    color: var(--foreground);
+    background: color-mix(in oklab, var(--color-brand-blue) 10%, transparent);
+  }
+</style>

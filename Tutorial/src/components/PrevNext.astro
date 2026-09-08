@@ -1,0 +1,90 @@
+---
+/**
+ * PrevNext — the previous / next article links at the foot of an article,
+ * from `getAdjacent(slug)`. A missing side renders an empty cell so the
+ * other link keeps its edge (prev left, next right). Renders nothing when
+ * both are absent (a lone article).
+ */
+import type { DocMeta } from '@/lib/curriculum';
+
+interface Props {
+  prev?: DocMeta;
+  next?: DocMeta;
+}
+
+const { prev, next } = Astro.props;
+---
+
+{
+  (prev || next) && (
+    <nav class="prev-next" aria-label="Article">
+      {prev ? (
+        <a href={prev.href} rel="prev" class="prev-next__link">
+          <span class="prev-next__dir">← Previous</span>
+          <span class="prev-next__title">{prev.title}</span>
+        </a>
+      ) : (
+        <span aria-hidden="true" />
+      )}
+      {next ? (
+        <a href={next.href} rel="next" class="prev-next__link prev-next__link--next">
+          <span class="prev-next__dir">Next →</span>
+          <span class="prev-next__title">{next.title}</span>
+        </a>
+      ) : (
+        <span aria-hidden="true" />
+      )}
+    </nav>
+  )
+}
+
+<style>
+  .prev-next {
+    display: grid;
+    gap: 1rem;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  @media (min-width: 640px) {
+    .prev-next {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .prev-next__link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    transition:
+      border-color 0.15s ease,
+      background 0.15s ease;
+  }
+
+  .prev-next__link:hover {
+    border-color: var(--color-brand-blue);
+    background: color-mix(in oklab, var(--color-brand-blue) 8%, transparent);
+  }
+
+  .prev-next__link--next {
+    text-align: right;
+  }
+
+  .prev-next__dir {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted-foreground);
+  }
+
+  .prev-next__title {
+    color: var(--foreground);
+    font-weight: 500;
+  }
+</style>

@@ -1,0 +1,120 @@
+---
+/**
+ * SubjectTabs — the top-level HTML / CSS / JavaScript switcher.
+ *
+ * Three plain navigation links, one per Subject in `src/data/curriculum.ts`
+ * order, each pointing at that Subject's `/<subject>/` index. The active tab
+ * (matching `active`) gets `aria-current="page"` and the brand-blue underline;
+ * on the bare `/` landing no `active` is passed and every tab renders inactive.
+ *
+ * No JavaScript — each Subject is its own set of static pages, so switching is
+ * just a link. Rendered full-width directly under `SiteHeader` by
+ * `DocsLayout`, `src/pages/[subject]/index.astro` and `src/pages/index.astro`.
+ */
+import { getSubjects, subjectHref } from '@/lib/curriculum';
+
+interface Props {
+  /** `Subject.id` of the current tab; omit on the `/` landing. */
+  active?: string;
+}
+
+const { active } = Astro.props;
+const subjects = getSubjects();
+---
+
+<nav class="subject-tabs" aria-label="Course subject">
+  <div class="subject-tabs__inner">
+    <span class="subject-tabs__label" aria-hidden="true">Track</span>
+    <ul class="subject-tabs__list">
+      {
+        subjects.map((subject) => {
+          const isActive = subject.id === active;
+          return (
+            <li>
+              <a
+                href={subjectHref(subject.id)}
+                class="subject-tabs__tab"
+                aria-current={isActive ? 'page' : undefined}
+              >
+                {subject.title}
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </div>
+</nav>
+
+<style>
+  .subject-tabs {
+    border-bottom: 1px solid var(--border);
+    background: color-mix(in oklab, var(--background) 92%, transparent);
+  }
+
+  .subject-tabs__inner {
+    display: flex;
+    align-items: stretch;
+    gap: 1rem;
+    width: 100%;
+    max-width: 100rem;
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .subject-tabs__inner {
+      padding-inline: 1.5rem;
+    }
+  }
+
+  .subject-tabs__label {
+    align-self: center;
+    flex-shrink: 0;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--muted-foreground);
+  }
+
+  .subject-tabs__list {
+    display: flex;
+    gap: 0.25rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .subject-tabs__list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .subject-tabs__tab {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 0.85rem;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+    font-weight: 600;
+    white-space: nowrap;
+    text-decoration: none;
+    transition:
+      color 0.15s ease,
+      border-color 0.15s ease;
+  }
+
+  .subject-tabs__tab:hover {
+    color: var(--foreground);
+    border-bottom-color: var(--border);
+  }
+
+  .subject-tabs__tab[aria-current='page'] {
+    color: var(--color-brand-blue-soft);
+    border-bottom-color: var(--color-brand-blue);
+  }
+</style>

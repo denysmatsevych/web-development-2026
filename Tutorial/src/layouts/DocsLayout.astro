@@ -1,0 +1,171 @@
+---
+/**
+ * DocsLayout — the three-region reading shell for an article page:
+ *
+ *   SiteHeader (sticky)
+ *   ┌───────────┬──────────────────────┬───────────────┐
+ *   │  Sidebar  │  <slot /> (article)  │  On this page │
+ *   └───────────┴──────────────────────┴───────────────┘
+ *   SiteFooter
+ *
+ * Below `lg` the sidebar becomes an off-canvas drawer (opened from
+ * `#docs-sidebar-toggle` in the header, closed from `#docs-sidebar-close` in
+ * the sidebar or the `#docs-sidebar-scrim` backdrop) and the "on this page"
+ * rail moves above the article as a `<details>`. `src/scripts/docs.ts` (step 7)
+ * wires that behaviour to `#docs-sidebar[data-open]`.
+ *
+ * Used only by `src/pages/[...slug].astro`. The page composes the article
+ * itself into the default slot — `Breadcrumbs`, `<h1>` + summary,
+ * `<article class="doc-content">`, `PrevNext` — so this layout stays generic.
+ */
+import type { MarkdownHeading } from 'astro';
+
+import OnThisPage from '@/components/OnThisPage.astro';
+import Sidebar from '@/components/Sidebar.astro';
+import SiteFooter from '@/components/SiteFooter.astro';
+import SiteHeader from '@/components/SiteHeader.astro';
+import SubjectTabs from '@/components/SubjectTabs.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+interface Props {
+  /** Article title — forwarded to `<BaseLayout>` (the page renders its own `<h1>`). */
+  title: string;
+  /** Article summary → meta description. */
+  description?: string;
+  /** `Subject.id` of the current article; picks the tab + the Sidebar tree. */
+  subject: string;
+  /** Flat slug of the current article; drives the Sidebar highlight + breadcrumbs. */
+  slug: string;
+  /** h2/h3 headings from `render(entry)` — feed the "on this page" rail. */
+  headings?: MarkdownHeading[];
+}
+
+const { title, description, subject, slug, headings = [] } = Astro.props;
+---
+
+<BaseLayout title={title} description={description} ogType="article">
+  <div class="docs-page">
+    <SiteHeader sidebarToggle />
+    <SubjectTabs active={subject} />
+
+    <div class="doc-shell">
+      <div id="docs-sidebar" class="area-sidebar">
+        <Sidebar subject={subject} currentSlug={slug} />
+      </div>
+
+      <main id="main-content" class="area-main" tabindex="-1">
+        <slot />
+      </main>
+
+      <div class="area-toc">
+        <OnThisPage headings={headings} />
+      </div>
+    </div>
+
+    <SiteFooter />
+
+    {/* Backdrop for the mobile sidebar drawer — shown/hidden by docs.ts. */}
+    <div id="docs-sidebar-scrim" class="docs-scrim" hidden></div>
+  </div>
+</BaseLayout>
+
+<script>
+  // Mobile sidebar drawer, "on this page" scrollspy, and the theme toggle.
+  import { initDocs } from '@/scripts/docs';
+
+  initDocs();
+</script>
+
+<style>
+  /* Sticky-header height (SiteHeader is 4rem). Also the sticky offset for the
+     two side rails and the baseline for `.doc-content` heading
+     `scroll-margin-top` (6rem in global.css). */
+  .docs-page {
+    --docs-header-h: 4rem;
+  }
+
+  /* ── Shell grid ────────────────────────────────────────────────────── */
+  .doc-shell {
+    display: grid;
+    width: 100%;
+    max-width: 100rem;
+    margin-inline: auto;
+    padding: 1.5rem 1rem 4rem;
+    gap: 2rem;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'toc'
+      'main';
+  }
+
+  .area-main {
+    grid-area: main;
+    min-width: 0;
+  }
+
+  .area-toc {
+    grid-area: toc;
+  }
+
+  /* Sidebar — off-canvas drawer below `lg`; docs.ts toggles `[data-open]`. */
+  .area-sidebar {
+    position: fixed;
+    inset-block: 0;
+    inset-inline-start: 0;
+    z-index: 50;
+    width: min(20rem, 82vw);
+    padding: 1rem;
+    background: var(--sidebar);
+    border-inline-end: 1px solid var(--sidebar-border);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+  }
+
+  .area-sidebar[data-open] {
+    transform: none;
+  }
+
+  .docs-scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    background: rgb(0 0 0 / 0.5);
+  }
+
+  @media (min-width: 1024px) {
+    .doc-shell {
+      padding-inline: 2rem;
+      align-items: start;
+      grid-template-columns: 15rem minmax(0, 1fr) 14rem;
+      grid-template-areas: 'sidebar main toc';
+    }
+
+    /* Both rails: sticky, own scroll, aligned to the top of their cell. */
+    .area-sidebar,
+    .area-toc {
+      position: sticky;
+      top: calc(var(--docs-header-h) + 1rem);
+      align-self: start;
+      max-height: calc(100dvh - var(--docs-header-h) - 2rem);
+      overflow-y: auto;
+    }
+
+    .area-sidebar {
+      grid-area: sidebar;
+      inset: auto;
+      z-index: auto;
+      width: auto;
+      padding: 0;
+      background: none;
+      border: 0;
+      transform: none;
+      transition: none;
+    }
+
+    .docs-scrim {
+      display: none;
+    }
+  }
+</style>

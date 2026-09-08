@@ -1,0 +1,80 @@
+---
+/**
+ * Breadcrumbs — pure render of the trail from `getBreadcrumbs(slug)`:
+ * `Tutorial › Part › Chapter › Article`. The Part / Chapter crumbs link to
+ * their homepage-ToC anchors; the last crumb is the current page.
+ */
+import type { Crumb } from '@/lib/curriculum';
+
+interface Props {
+  /** Root first, current article last. */
+  items: Crumb[];
+}
+
+const { items } = Astro.props;
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    {
+      items.map((crumb, i) => {
+        const isLast = i === items.length - 1;
+        return (
+          <li>
+            {isLast ? (
+              <span aria-current="page">{crumb.label}</span>
+            ) : (
+              <a href={crumb.href}>{crumb.label}</a>
+            )}
+            {!isLast && (
+              <span class="breadcrumbs__sep" aria-hidden="true">
+                ›
+              </span>
+            )}
+          </li>
+        );
+      })
+    }
+  </ol>
+</nav>
+
+<style>
+  .breadcrumbs {
+    font-size: 0.8125rem;
+  }
+
+  .breadcrumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .breadcrumbs li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .breadcrumbs a {
+    color: var(--muted-foreground);
+    text-decoration: none;
+  }
+
+  .breadcrumbs a:hover {
+    color: var(--foreground);
+    text-decoration: underline;
+  }
+
+  .breadcrumbs [aria-current='page'] {
+    color: var(--foreground);
+    font-weight: 500;
+  }
+
+  .breadcrumbs__sep {
+    color: var(--muted-foreground);
+  }
+</style>

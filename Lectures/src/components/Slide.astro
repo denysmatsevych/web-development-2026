@@ -1,0 +1,154 @@
+---
+import type { Slide } from '../data/slides';
+import RichText from './RichText.astro';
+
+interface Props {
+  slide: Slide;
+  index: number;
+  total: number;
+}
+
+const { slide, index, total } = Astro.props;
+
+const frame =
+  'slide relative flex h-dvh w-screen shrink-0 snap-center snap-always ' +
+  'flex-col justify-center overflow-hidden px-[7vw] py-[8vh]';
+
+const tones: Record<Slide['kind'], string> = {
+  title: 'bg-ink-950 text-paper',
+  section: 'bg-accent-700 text-paper',
+  content: 'bg-ink-950 text-paper',
+  code: 'bg-ink-900 text-paper',
+  diagram: 'bg-ink-900 text-paper',
+  checklist: 'bg-ink-950 text-paper',
+};
+---
+
+<section
+  id={slide.id}
+  class={`${frame} ${tones[slide.kind]}`}
+  tabindex="-1"
+  aria-roledescription="слайд"
+  aria-label={`Слайд ${index + 1} з ${total}: ${slide.title}`}
+>
+  {/* Титульний слайд */}
+  {slide.kind === 'title' && (
+    <header>
+      <p class="mb-8 font-mono text-sm uppercase tracking-[0.3em] text-accent-500">
+        Лекція 1
+      </p>
+      <h1 class="max-w-[24ch] text-slide-h1 font-bold leading-[1.05] text-balance">{slide.title}</h1>
+      {slide.subtitle && (
+        <p class="mt-8 max-w-[45ch] text-slide-body text-ink-400">{slide.subtitle}</p>
+      )}
+    </header>
+  )}
+
+  {/* Роздільник розділу */}
+  {slide.kind === 'section' && (
+    <header>
+      <p class="font-mono text-sm uppercase tracking-[0.3em] text-paper opacity-80">{slide.title}</p>
+      <h2 class="mt-4 max-w-[20ch] text-slide-h1 font-bold leading-tight text-balance">
+        {slide.subtitle}
+      </h2>
+    </header>
+  )}
+
+  {/* Контентний слайд */}
+  {slide.kind === 'content' && (
+    <>
+      <header class="mb-6">
+        <h2 class="text-slide-h2 font-bold text-balance">{slide.title}</h2>
+      </header>
+      {slide.lead && (
+        <p class="mb-8 max-w-[70ch] border-l-2 border-accent-500 pl-5 text-slide-body leading-snug">
+          <RichText text={slide.lead} />
+        </p>
+      )}
+      {slide.subtitle && (
+        <p class="mb-6 max-w-[75ch] text-slide-body text-accent-300">
+          <RichText text={slide.subtitle} />
+        </p>
+      )}
+      <ul class="flex max-w-[75ch] flex-col gap-5">
+        {slide.bullets?.map((point) => (
+          <li class="flex gap-4 text-slide-body leading-snug">
+            <span aria-hidden="true" class="mt-[0.55em] h-2 w-2 shrink-0 rounded-full bg-accent-500" />
+            <span><RichText text={point} /></span>
+          </li>
+        ))}
+      </ul>
+    </>
+  )}
+
+  {/* Слайд із кодом */}
+  {slide.kind === 'code' && (
+    <>
+      <header class="mb-8">
+        <h2 class="text-slide-h2 font-bold text-balance">{slide.title}</h2>
+        {slide.subtitle && <p class="mt-3 text-ink-400">{slide.subtitle}</p>}
+      </header>
+      <figure class="max-w-[100ch]">
+        <pre
+          class="overflow-x-auto rounded-xl border border-ink-800 bg-ink-950 p-8 text-[clamp(0.7rem,1.15vw,1.05rem)] leading-relaxed"
+        ><code class="font-mono">{slide.code?.content}</code></pre>
+        <figcaption class="mt-3 font-mono text-xs uppercase tracking-widest text-ink-400">
+          {slide.code?.lang}
+        </figcaption>
+      </figure>
+    </>
+  )}
+
+  {/* Слайд-схема */}
+  {slide.kind === 'diagram' && (
+    <>
+      <header class="mb-8">
+        <h2 class="text-slide-h2 font-bold text-balance">{slide.title}</h2>
+        {slide.subtitle && <p class="mt-3 text-ink-400">{slide.subtitle}</p>}
+      </header>
+      <pre
+        role="img"
+        aria-label={`Схема: ${slide.title}`}
+        class="overflow-x-auto font-mono text-[clamp(0.65rem,1.05vw,1rem)] leading-relaxed text-accent-300"
+      >{slide.diagram}</pre>
+    </>
+  )}
+
+  {/* Чек-лист */}
+  {slide.kind === 'checklist' && (
+    <>
+      <h2 class="mb-10 text-slide-h2 font-bold">{slide.title}</h2>
+      <ol class="flex max-w-[75ch] list-none flex-col gap-4">
+        {slide.bullets?.map((point, i) => (
+          <li class="flex gap-4 text-slide-body leading-snug">
+            <span class="font-mono text-accent-500 tabular-nums">{i + 1}.</span>
+            <span><RichText text={point} /></span>
+          </li>
+        ))}
+      </ol>
+    </>
+  )}
+
+  {/* Джерело */}
+  {slide.source && (
+    <footer class="mt-auto pt-10">
+      <a
+        href={slide.source.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="font-mono text-xs text-ink-400 underline decoration-dotted underline-offset-4 hover:text-accent-500"
+      >
+        {slide.source.label} ↗
+      </a>
+    </footer>
+  )}
+
+  {/* Нотатка доповідача */}
+  {slide.note && (
+    <aside
+      class="deck-note no-print absolute inset-x-0 bottom-14 mx-[7vw] rounded-lg border-l-4 border-warn-500 bg-ink-900/95 px-5 py-3 text-sm text-ink-200"
+    >
+      <strong class="text-warn-500">Нотатка:</strong> {slide.note}
+    </aside>
+  )}
+</section>

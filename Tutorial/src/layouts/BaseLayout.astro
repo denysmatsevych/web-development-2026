@@ -1,0 +1,111 @@
+---
+/**
+ * BaseLayout — the HTML document shell shared by every page.
+ *
+ * Owns `<html>` / `<head>` / `<body>`: meta + Open Graph, the Roboto webfont
+ * (non-blocking print-media swap, same as the institute design system), the
+ * pre-paint theme script that prevents a light flash, and the skip link.
+ * Page chrome (header, sidebar, footer) is added a level up in `DocsLayout`
+ * or by `src/pages/index.astro`.
+ *
+ * `<html class="dark">` is the default; `ThemeToggle` (step 6) flips it and
+ * persists to `localStorage['tutorial-theme']`, which the inline head script
+ * below re-applies before the first paint.
+ */
+import '@/styles/global.css';
+
+import { site } from '@/data/site';
+import { withBase } from '@/lib/paths';
+
+interface Props {
+  /** Page-specific title. Composed as `"<title> · <site name>"` unless equal. */
+  title: string;
+  /** Meta + OG description; falls back to the site description. */
+  description?: string;
+  /** Document language. `'en'` now; a `uk` locale passes `'uk'` later. */
+  lang?: string;
+  /** OG type — `'article'` for doc pages, `'website'` elsewhere. */
+  ogType?: 'website' | 'article';
+}
+
+const {
+  title,
+  description = site.description,
+  lang = 'en',
+  ogType = 'website',
+} = Astro.props;
+
+const documentTitle = title === site.name ? title : `${title} · ${site.name}`;
+const canonicalURL = Astro.site
+  ? new URL(Astro.url.pathname, Astro.site).href
+  : undefined;
+
+// Roboto matches the institute `--font-roboto` stack. Loaded off the critical
+// path via the `media="print"` → `all` swap; `<noscript>` keeps it for no-JS.
+const fontHref =
+  'https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300..700;1,300..700&display=swap';
+---
+
+<!doctype html>
+<html lang={lang} class="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#0f1215" />
+
+    <title>{documentTitle}</title>
+    <meta name="description" content={description} />
+    {canonicalURL && <link rel="canonical" href={canonicalURL} />}
+
+    <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={documentTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content={site.name} />
+    {canonicalURL && <meta property="og:url" content={canonicalURL} />}
+    <meta name="twitter:card" content="summary" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link id="font-roboto" rel="stylesheet" href={fontHref} media="print" />
+    <noscript><link rel="stylesheet" href={fontHref} /></noscript>
+    <script is:inline>
+      // Non-blocking webfont: the sheet loads as `media="print"`, then flips to
+      // `all` once ready. Listener is attached here, right after the <link>.
+      (function () {
+        var link = document.getElementById('font-roboto');
+        if (link) link.addEventListener('load', function () { link.media = 'all'; });
+      })();
+    </script>
+
+    {/*
+      Apply the saved theme before the first paint so there is no light flash.
+      `<html class="dark">` above is the default; only a stored preference
+      overrides it. Same pattern as ../Lectures/src/layouts/BaseLayout.astro
+      and website_ao/src/layouts/Layout.astro.
+    */}
+    <script is:inline>
+      try {
+        var theme = localStorage.getItem('tutorial-theme');
+        if (theme === 'light') document.documentElement.classList.remove('dark');
+        else if (theme === 'dark') document.documentElement.classList.add('dark');
+      } catch (err) {
+        /* localStorage unavailable (private mode, blocked cookies) — keep the default. */
+      }
+    </script>
+  </head>
+
+  <body class="antialiased">
+    <a
+      href="#main-content"
+      class="sr-only rounded-md bg-brand-blue px-4 py-2 text-pure-white shadow-lg focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50"
+    >
+      Skip to content
+    </a>
+
+    <slot />
+  </body>
+</html>

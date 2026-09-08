@@ -1,0 +1,50 @@
+---
+/**
+ * ThemeToggle — sun/moon button that flips `<html class="dark">` and persists
+ * the choice to `localStorage['tutorial-theme']`.
+ *
+ * Markup only: the click handler lives in `src/scripts/docs.ts` (step 7), which
+ * targets `#theme-toggle`. The pre-paint script in `BaseLayout.astro` re-applies
+ * the stored theme before the first render so there is no light flash.
+ *
+ * Both icons sit in the DOM; CSS shows the one matching the current theme
+ * (`.dark` → moon, light → sun), so the button paints correctly with no JS.
+ */
+---
+
+<button
+  id="theme-toggle"
+  type="button"
+  class="inline-flex size-9 items-center justify-center rounded-xl border border-border text-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+  aria-label="Toggle color theme"
+>
+  {/* Sun — light theme */}
+  <svg
+    class="size-4 dark:hidden"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <circle cx="12" cy="12" r="4"></circle>
+    <path
+      d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"
+    ></path>
+  </svg>
+  {/* Moon — dark theme */}
+  <svg
+    class="hidden size-4 dark:block"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+  </svg>
+</button>

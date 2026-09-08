@@ -1,0 +1,56 @@
+---
+/**
+ * Легка inline-розмітка для тексту слайдів:
+ *   [підпис](https://…)  →  зовнішнє посилання (нова вкладка)
+ *   **жирний**           →  <strong>
+ *
+ * Навмисно без `set:html`: рядок розбивається на токени, а кожен токен
+ * рендериться звичайним елементом — текст екранується Astro автоматично.
+ */
+interface Props {
+  text: string;
+}
+
+const { text } = Astro.props;
+
+type Token =
+  | { kind: 'text'; value: string }
+  | { kind: 'link'; value: string; href: string }
+  | { kind: 'strong'; value: string };
+
+// 1) [текст](http…)   2) **текст**
+const pattern = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)|\*\*([^*]+)\*\*/g;
+
+const tokens: Token[] = [];
+let cursor = 0;
+let match: RegExpExecArray | null;
+
+while ((match = pattern.exec(text)) !== null) {
+  if (match.index > cursor) {
+    tokens.push({ kind: 'text', value: text.slice(cursor, match.index) });
+  }
+  if (match[1] !== undefined) {
+    tokens.push({ kind: 'link', value: match[1], href: match[2] });
+  } else {
+    tokens.push({ kind: 'strong', value: match[3] });
+  }
+  cursor = pattern.lastIndex;
+}
+if (cursor < text.length) {
+  tokens.push({ kind: 'text', value: text.slice(cursor) });
+}
+---
+{tokens.map((token) =>
+  token.kind === 'link' ? (
+    <a
+      href={token.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="font-medium underline decoration-accent-500 decoration-2 underline-offset-[3px] transition-colors hover:text-accent-500 hover:decoration-accent-300"
+    >{token.value}</a>
+  ) : token.kind === 'strong' ? (
+    <strong class="font-semibold">{token.value}</strong>
+  ) : (
+    <Fragment>{token.value}</Fragment>
+  ),
+)}
