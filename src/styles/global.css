@@ -40,6 +40,7 @@
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
+  --color-brand-text: var(--brand-text);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
@@ -109,8 +110,12 @@
   --text-slide-body: clamp(1rem, 1.7vw, 1.6rem);
 }
 
-/* OKLCH slate scale — copied verbatim from website_ao. `<html class="dark">`
-   is the default; :root is the light theme the toggle can switch to. */
+/* OKLCH slate scale — copied from website_ao. `<html class="dark">` is the
+   default; :root is the light theme the toggle can switch to.
+   Light-theme deviations from the source, for WCAG AA text contrast:
+   --muted-foreground is slate-600 (was slate-500: 4.35:1 on --muted), and
+   --brand-text — blue labels / links / arrows — is the full brand blue, since
+   the dark theme's --color-brand-blue-soft is only 2.6:1 on white. */
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
@@ -124,7 +129,8 @@
   --secondary: oklch(0.968 0.007 247.896);
   --secondary-foreground: oklch(0.208 0.042 265.755);
   --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
+  --muted-foreground: oklch(0.446 0.043 257.281);
+  --brand-text: var(--color-brand-blue);
   --accent: oklch(0.968 0.007 247.896);
   --accent-foreground: oklch(0.208 0.042 265.755);
   --destructive: oklch(0.577 0.245 27.325);
@@ -159,6 +165,7 @@
   --secondary-foreground: oklch(0.984 0.003 247.858);
   --muted: oklch(0.279 0.041 260.031);
   --muted-foreground: oklch(0.704 0.04 256.788);
+  --brand-text: var(--color-brand-blue-soft);
   --accent: oklch(0.279 0.041 260.031);
   --accent-foreground: oklch(0.984 0.003 247.858);
   --destructive: oklch(0.704 0.191 22.216);
@@ -349,7 +356,7 @@
 
   /* Links. */
   .doc-content a {
-    color: var(--color-brand-blue-soft);
+    color: var(--brand-text);
     text-decoration: none;
   }
 
