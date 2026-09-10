@@ -1,0 +1,89 @@
+---
+/**
+ * Lab page — one static route per Markdown file in `src/content/labs/`, at
+ * `/labs/<id>` (`/labs/lab-1`). Drafts are excluded by `getLabs()`, so an
+ * unpublished lab produces no route.
+ *
+ * The body is authored from `##` down; the `<h1>`, summary and breadcrumb
+ * trail all come from frontmatter, composed here into `LabLayout`.
+ */
+import { render } from 'astro:content';
+
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import PrevNext from '@/components/PrevNext.astro';
+import LabLayout from '@/layouts/LabLayout.astro';
+import { getAdjacentLab, getLabs, labHref } from '@/lib/labs';
+import { withBase } from '@/lib/paths';
+
+export async function getStaticPaths() {
+  const labs = await getLabs();
+  return labs.map((entry) => ({
+    params: { lab: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { data } = entry;
+
+// Body + h2/h3 headings for the "on this page" rail (Astro stamps the ids).
+const { Content, headings } = await render(entry);
+const adjacent = await getAdjacentLab(entry.id);
+
+const crumbs = [
+  { label: 'Labs', href: withBase('/labs/') },
+  { label: `ЛР-${data.number}`, href: labHref(entry.id) },
+];
+---
+
+<LabLayout
+  title={data.title}
+  description={data.summary}
+  lang={data.lang}
+  headings={headings}
+>
+  <Breadcrumbs items={crumbs} />
+
+  <header class="lab-header">
+    <p class="lab-header__eyebrow">Лабораторна робота №{data.number}</p>
+    <h1 class="lab-header__title">{data.title}</h1>
+    <p class="lab-header__summary">{data.summary}</p>
+  </header>
+
+  <article class="doc-content">
+    <Content />
+  </article>
+
+  <PrevNext prev={adjacent.prev} next={adjacent.next} />
+</LabLayout>
+
+<style>
+  .lab-header {
+    margin-block: 1rem 1.75rem;
+  }
+
+  .lab-header__eyebrow {
+    margin: 0.5rem 0 0.6rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-brand-blue-soft);
+  }
+
+  .lab-header__title {
+    margin: 0;
+    font-size: clamp(1.9rem, 4vw, 2.4rem);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--foreground);
+  }
+
+  .lab-header__summary {
+    margin: 0.75rem 0 0;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--muted-foreground);
+  }
+</style>

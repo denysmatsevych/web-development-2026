@@ -5,11 +5,15 @@
  * other link keeps its edge (prev left, next right). Renders nothing when
  * both are absent (a lone article).
  */
-import type { DocMeta } from '@/lib/curriculum';
+/** The two fields this component reads — `DocMeta` and `LabMeta` both satisfy it. */
+interface NavTarget {
+  title: string;
+  href: string;
+}
 
 interface Props {
-  prev?: DocMeta;
-  next?: DocMeta;
+  prev?: NavTarget;
+  next?: NavTarget;
 }
 
 const { prev, next } = Astro.props;

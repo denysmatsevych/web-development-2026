@@ -34,4 +34,36 @@ const docs = defineCollection({
   }),
 });
 
-export const collections = { docs };
+/**
+ * The `labs` collection — one Markdown file per lab assignment under
+ * `src/content/labs/`. Unlike `docs`, labs are flat (no locale folder): the
+ * course's lab handouts are Ukrainian, and `lang` carries that to `<html lang>`
+ * rather than the file path. Ordering is `number`, not folder position.
+ */
+const labs = defineCollection({
+  // ids look like "lab-1" — ".md" stripped, no prefix.
+  loader: glob({ pattern: '**/*.md', base: './src/content/labs' }),
+  schema: z.object({
+    /** Lab number — ordering, the `ЛР-N` badge, and the index card index. */
+    number: z.number().int().positive(),
+    /** Lab title (Ukrainian) — `<h1>` / card heading / `<title>` base. */
+    title: z.string(),
+    /** One-line description — index card blurb + meta description. */
+    summary: z.string(),
+    /** BCP-47 language of the body — drives `<html lang>`. */
+    lang: z.string().default('uk'),
+    /** Header meta panel — all optional so a terse lab can skip them. */
+    discipline: z.string().optional(),
+    level: z.string().optional(),
+    format: z.string().optional(),
+    duration: z.string().optional(),
+    /** "Актуально станом на" date from the handout. */
+    updated: z.coerce.date().optional(),
+    /** Path (no base prefix) to the downloadable handout, if published. */
+    handout: z.string().optional(),
+    /** Hidden from the index and un-routed while true. */
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { docs, labs };

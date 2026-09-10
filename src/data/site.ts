@@ -55,7 +55,7 @@ export const sections: Section[] = [
     id: 'labs',
     label: 'Labs',
     href: '/labs/',
-    blurb: 'Hands-on assignments that build on each lecture. In progress.',
+    blurb: 'Hands-on assignments that build on each lecture, with downloadable handouts.',
   },
   {
     id: 'tutorial',

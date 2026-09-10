@@ -1,0 +1,109 @@
+---
+/**
+ * LabLayout — the reading shell for a single lab assignment:
+ *
+ *   SiteHeader (sticky)
+ *   ┌──────────────────────┬───────────────┐
+ *   │  <slot /> (article)  │  On this page │
+ *   └──────────────────────┴───────────────┘
+ *   SiteFooter
+ *
+ * A trimmed `DocsLayout`: labs have no Subject tabs and no curriculum sidebar,
+ * so the shell is two columns, collapsing to one below `lg` with the ToC as a
+ * `<details>` above the article.
+ *
+ * `initDocs()` is still the right script — its sidebar setup bails when
+ * `#docs-sidebar` is absent, leaving the ToC scrollspy and the theme toggle.
+ */
+import type { MarkdownHeading } from 'astro';
+
+import OnThisPage from '@/components/OnThisPage.astro';
+import SiteFooter from '@/components/SiteFooter.astro';
+import SiteHeader from '@/components/SiteHeader.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+interface Props {
+  /** Lab title — forwarded to `BaseLayout` (the page renders its own `<h1>`). */
+  title: string;
+  /** Lab summary → meta description. */
+  description?: string;
+  /** Body language — `'uk'` for the current handouts. */
+  lang?: string;
+  /** h2/h3 headings from `render(entry)` — feed the "on this page" rail. */
+  headings?: MarkdownHeading[];
+}
+
+const { title, description, lang = 'uk', headings = [] } = Astro.props;
+---
+
+<BaseLayout title={title} description={description} lang={lang} ogType="article">
+  <div class="lab-page">
+    <SiteHeader />
+
+    <div class="lab-shell">
+      <main id="main-content" class="area-main" tabindex="-1">
+        <slot />
+      </main>
+
+      <div class="area-toc">
+        <OnThisPage headings={headings} />
+      </div>
+    </div>
+
+    <SiteFooter />
+  </div>
+</BaseLayout>
+
+<script>
+  // ToC scrollspy + theme toggle. The sidebar branch no-ops (no #docs-sidebar).
+  import { initDocs } from '@/scripts/docs';
+
+  initDocs();
+</script>
+
+<style>
+  /* Matches DocsLayout: SiteHeader is 4rem, and global.css sizes
+     `.doc-content` heading `scroll-margin-top` against it. */
+  .lab-page {
+    --docs-header-h: 4rem;
+  }
+
+  .lab-shell {
+    display: grid;
+    width: 100%;
+    max-width: 78rem;
+    margin-inline: auto;
+    padding: 1.5rem 1rem 4rem;
+    gap: 2rem;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'toc'
+      'main';
+  }
+
+  .area-main {
+    grid-area: main;
+    min-width: 0;
+  }
+
+  .area-toc {
+    grid-area: toc;
+  }
+
+  @media (min-width: 1024px) {
+    .lab-shell {
+      padding-inline: 2rem;
+      align-items: start;
+      grid-template-columns: minmax(0, 1fr) 15rem;
+      grid-template-areas: 'main toc';
+    }
+
+    .area-toc {
+      position: sticky;
+      top: calc(var(--docs-header-h) + 1rem);
+      align-self: start;
+      max-height: calc(100dvh - var(--docs-header-h) - 2rem);
+      overflow-y: auto;
+    }
+  }
+</style>

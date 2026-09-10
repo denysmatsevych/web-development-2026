@@ -1,14 +1,18 @@
 ---
 /**
- * Labs index — placeholder. Lab assignments land here; for now it states the
- * section is in progress and points back to the lectures and handbook.
+ * Labs index — the list of lab assignments from the `labs` collection.
+ * Each card links to `/labs/<id>`. Card markup and styles mirror the lectures
+ * index so the two sections read as one site; the `.panel` empty state stays
+ * for the case where every lab is still a draft.
  */
 import SiteFooter from '@/components/SiteFooter.astro';
 import SiteHeader from '@/components/SiteHeader.astro';
 import { site } from '@/data/site';
+import { getLabs, labHref } from '@/lib/labs';
 import { withBase } from '@/lib/paths';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 
+const labs = await getLabs();
 ---
 
 <BaseLayout title="Labs" description="Lab assignments for Web Development 2026.">
@@ -19,22 +23,50 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
       <p class="hero__eyebrow">{site.name}</p>
       <h1 class="hero__title">Labs</h1>
       <p class="hero__lead">
-        Hands-on assignments that build on each lecture. This section is still
-        being written.
+        Hands-on assignments that build on each lecture. Each lab is a full
+        walkthrough with a downloadable handout.
       </p>
     </section>
 
-    <div class="panel glass-panel">
-      <p class="panel__title">Coming soon</p>
-      <p class="panel__text">
-        In the meantime, work through the <a href={withBase('/lectures/')}>lectures</a>
-        and the <a href={withBase('/tutorial/')}>tutorial handbook</a>.
-      </p>
-    </div>
+    {
+      labs.length > 0 ? (
+        <ul class="labs">
+          {labs.map((lab) => (
+            <li>
+              <a href={labHref(lab.id)} class="lab-card glass-panel">
+                <span class="lab-card__index">{String(lab.data.number).padStart(2, '0')}</span>
+                <span class="lab-card__body">
+                  <span class="lab-card__title">{lab.data.title}</span>
+                  <span class="lab-card__summary">{lab.data.summary}</span>
+                </span>
+                <span class="lab-card__arrow" aria-hidden="true">
+                  →
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div class="panel glass-panel">
+          <p class="panel__title">Coming soon</p>
+          <p class="panel__text">
+            In the meantime, work through the <a href={withBase('/lectures/')}>lectures</a>
+            and the <a href={withBase('/tutorial/')}>tutorial handbook</a>.
+          </p>
+        </div>
+      )
+    }
   </main>
 
   <SiteFooter />
 </BaseLayout>
+
+<script>
+  // Theme toggle only — the sidebar and scrollspy branches no-op on this page.
+  import { initDocs } from '@/scripts/docs';
+
+  initDocs();
+</script>
 
 <style>
   .page {
@@ -50,7 +82,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   }
 
   .hero {
-    margin-bottom: 2.5rem;
+    margin-bottom: 3rem;
   }
 
   .hero__eyebrow {
@@ -77,6 +109,68 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     font-size: 1.0625rem;
     line-height: 1.7;
     color: var(--muted-foreground);
+  }
+
+  .labs {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .lab-card {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.25rem 1.4rem;
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    transition:
+      border-color 0.15s ease,
+      transform 0.15s ease;
+  }
+
+  .lab-card:hover {
+    border-color: var(--color-brand-blue);
+    transform: translateY(-2px);
+  }
+
+  .lab-card__index {
+    font-size: 1.1rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-brand-blue-soft);
+  }
+
+  .lab-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .lab-card__title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--foreground);
+  }
+
+  .lab-card__summary {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--muted-foreground);
+  }
+
+  .lab-card__arrow {
+    color: var(--color-brand-blue-soft);
+    transition: transform 0.15s ease;
+  }
+
+  .lab-card:hover .lab-card__arrow {
+    transform: translateX(0.2rem);
   }
 
   .panel {
