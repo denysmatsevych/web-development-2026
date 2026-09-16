@@ -284,12 +284,14 @@
     margin-top: 0;
   }
 
-  /* Headings — scroll-margin-top clears the sticky header on #anchor jumps. */
+  /* Headings — scroll-margin-top clears the sticky header on #anchor jumps.
+     Layouts with more sticky chrome (the mobile ToC bar) raise
+     `--doc-scroll-offset`; docs.ts reads the same value for the scrollspy. */
   .doc-content :is(h2, h3, h4) {
     color: var(--foreground);
     font-weight: 600;
     line-height: 1.3;
-    scroll-margin-top: 6rem;
+    scroll-margin-top: var(--doc-scroll-offset, 6rem);
   }
 
   .doc-content h2 {

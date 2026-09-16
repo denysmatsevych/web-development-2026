@@ -11,8 +11,9 @@
  * Below `lg` the sidebar becomes an off-canvas drawer (opened from
  * `#docs-sidebar-toggle` in the header, closed from `#docs-sidebar-close` in
  * the sidebar or the `#docs-sidebar-scrim` backdrop) and the "on this page"
- * rail moves above the article as a `<details>`. `src/scripts/docs.ts` (step 7)
- * wires that behaviour to `#docs-sidebar[data-open]`.
+ * rail becomes a sticky bar under the header (current section + dropdown
+ * list). `src/scripts/docs.ts` (step 7) wires that behaviour to
+ * `#docs-sidebar[data-open]` and the ToC `<details>`.
  *
  * Used only by `src/pages/[...slug].astro`. The page composes the article
  * itself into the default slot — `Breadcrumbs`, `<h1>` + summary,
@@ -70,18 +71,20 @@ const { title, description, subject, slug, headings = [] } = Astro.props;
 </BaseLayout>
 
 <script>
-  // Mobile sidebar drawer, "on this page" scrollspy, and the theme toggle.
+  // Mobile sidebar drawer, "on this page" scrollspy + dropdown, theme toggle.
   import { initDocs } from '@/scripts/docs';
 
   initDocs();
 </script>
 
 <style>
-  /* Sticky-header height (SiteHeader is 4rem). Also the sticky offset for the
-     two side rails and the baseline for `.doc-content` heading
-     `scroll-margin-top` (6rem in global.css). */
+  /* Sticky-header height (SiteHeader is 4rem) — the sticky offset for the two
+     side rails. `--doc-scroll-offset` is the `.doc-content` heading
+     `scroll-margin-top` (global.css); below `lg` it also clears the sticky ToC
+     bar. */
   .docs-page {
     --docs-header-h: 4rem;
+    --doc-scroll-offset: 8.5rem;
   }
 
   /* ── Shell grid ────────────────────────────────────────────────────── */
@@ -103,8 +106,13 @@ const { title, description, subject, slug, headings = [] } = Astro.props;
     min-width: 0;
   }
 
+  /* Below `lg` the collapsed ToC rides under the header as a sticky bar,
+     beneath the sidebar drawer (50) and its scrim (40). */
   .area-toc {
     grid-area: toc;
+    position: sticky;
+    top: calc(var(--docs-header-h) + 0.5rem);
+    z-index: 20;
   }
 
   /* Sidebar — off-canvas drawer below `lg`; docs.ts toggles `[data-open]`. */
@@ -135,6 +143,10 @@ const { title, description, subject, slug, headings = [] } = Astro.props;
   }
 
   @media (min-width: 1024px) {
+    .docs-page {
+      --doc-scroll-offset: 6rem;
+    }
+
     .doc-shell {
       padding-inline: 2rem;
       align-items: start;
@@ -150,6 +162,11 @@ const { title, description, subject, slug, headings = [] } = Astro.props;
       align-self: start;
       max-height: calc(100dvh - var(--docs-header-h) - 2rem);
       overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+
+    .area-toc {
+      z-index: auto;
     }
 
     .area-sidebar {
