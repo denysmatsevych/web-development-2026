@@ -563,32 +563,3 @@ AI-агент є інструментом підтримки розробник�
 39. Windsurf / Devin Docs. [Plugins / Windsurf](https://docs.windsurf.com/plugins)
 40. Windsurf / Devin Docs. [Workflows](https://docs.windsurf.com/windsurf/cascade/workflows)
 41. Windsurf / Devin Docs. [Cascade overview](https://docs.windsurf.com/windsurf/cascade)
-
-## Додаток А. Шаблон checklist студента
-
-- [ ] Git працює
-- [ ] Node.js LTS працює
-- [ ] IDE встановлена
-- [ ] HTML/CSS/JS/TS support працює
-- [ ] ESLint працює
-- [ ] Prettier працює
-- [ ] Local preview працює
-- [ ] AI agent працює
-- [ ] AGENTS.md / rules створено
-- [ ] Skill створено
-- [ ] GitHub repo створено
-- [ ] 1-й push виконано
-- [ ] GitHub Pages працює
-- [ ] Vercel працює
-- [ ] Контрольна зміна задеплоєна
-
-## Додаток Б. Рекомендовані базові промпти
-
-| Ситуація | Приклад промпту |
-| --- | --- |
-| Початок роботи | «Проаналізуй структуру цього web-проєкту. Нічого не змінюй. Назви основні файли та ризики.» |
-| Планування | «Потрібно додати dark mode без нових залежностей. Спочатку дай короткий план і перелік файлів, які будуть змінені.» |
-| Реалізація | «Реалізуй цю зміну. Не змінюй package manager чи інші конфіги без потреби. Після змін запусти доступні перевірки.» |
-| Debugging | «Ось помилка браузера: … Проаналізуй причину, покажи найімовірніший файл/рядок і запропонуй мінімальне виправлення.» |
-| Code review | «Перевір мій останній diff на correctness, accessibility, responsive layout та maintainability. Нічого не змінюй; дай findings за рівнями.» |
-| Перед push | «Перевір робочу директорію, git diff, lint та очевидні runtime-ризики. Повідом, чи готовий проєкт до commit/push.» |
