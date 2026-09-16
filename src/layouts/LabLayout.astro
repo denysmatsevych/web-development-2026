@@ -10,10 +10,11 @@
  *
  * A trimmed `DocsLayout`: labs have no Subject tabs and no curriculum sidebar,
  * so the shell is two columns, collapsing to one below `lg` with the ToC as a
- * `<details>` above the article.
+ * sticky bar under the header (current section + dropdown list).
  *
  * `initDocs()` is still the right script — its sidebar setup bails when
- * `#docs-sidebar` is absent, leaving the ToC scrollspy and the theme toggle.
+ * `#docs-sidebar` is absent, leaving the ToC scrollspy/dropdown and the theme
+ * toggle.
  */
 import type { MarkdownHeading } from 'astro';
 
@@ -55,17 +56,19 @@ const { title, description, lang = 'uk', headings = [] } = Astro.props;
 </BaseLayout>
 
 <script>
-  // ToC scrollspy + theme toggle. The sidebar branch no-ops (no #docs-sidebar).
+  // ToC scrollspy + dropdown, theme toggle. The sidebar branch no-ops.
   import { initDocs } from '@/scripts/docs';
 
   initDocs();
 </script>
 
 <style>
-  /* Matches DocsLayout: SiteHeader is 4rem, and global.css sizes
-     `.doc-content` heading `scroll-margin-top` against it. */
+  /* Matches DocsLayout: SiteHeader is 4rem. `--doc-scroll-offset` is the
+     `.doc-content` heading `scroll-margin-top` (global.css) — below `lg` it
+     also clears the sticky ToC bar. */
   .lab-page {
     --docs-header-h: 4rem;
+    --doc-scroll-offset: 8.5rem;
   }
 
   .lab-shell {
@@ -86,11 +89,19 @@ const { title, description, lang = 'uk', headings = [] } = Astro.props;
     min-width: 0;
   }
 
+  /* Below `lg` the collapsed ToC rides under the header as a sticky bar. */
   .area-toc {
     grid-area: toc;
+    position: sticky;
+    top: calc(var(--docs-header-h) + 0.5rem);
+    z-index: 20;
   }
 
   @media (min-width: 1024px) {
+    .lab-page {
+      --doc-scroll-offset: 6rem;
+    }
+
     .lab-shell {
       padding-inline: 2rem;
       align-items: start;
@@ -99,11 +110,12 @@ const { title, description, lang = 'uk', headings = [] } = Astro.props;
     }
 
     .area-toc {
-      position: sticky;
       top: calc(var(--docs-header-h) + 1rem);
+      z-index: auto;
       align-self: start;
       max-height: calc(100dvh - var(--docs-header-h) - 2rem);
       overflow-y: auto;
+      overscroll-behavior: contain;
     }
   }
 </style>
