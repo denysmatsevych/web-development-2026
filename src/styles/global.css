@@ -392,6 +392,58 @@
     background: none;
   }
 
+  /* Copy button — the wrapper and button are added by src/scripts/docs.ts on
+     `[data-copy-code]` articles. The wrapper takes over the block's margin so
+     the button is inset from the `<pre>`'s own corner. Colours are fixed to
+     Shiki's github-dark block, which is dark in both site themes; the fill is
+     opaque so a long line scrolled under the button doesn't show through. */
+  .doc-content .code-copy {
+    position: relative;
+    margin-block: 1.25rem;
+  }
+
+  .doc-content .code-copy > pre {
+    margin-block: 0;
+    padding-right: 3.25rem;
+  }
+
+  .doc-content .code-copy-button {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    display: inline-flex;
+    width: 2rem;
+    height: 2rem;
+    align-items: center;
+    justify-content: center;
+    color: #e1e4e8;
+    background: #2f363d;
+    border: 1px solid #444d56;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition:
+      background-color 150ms,
+      color 150ms;
+  }
+
+  .doc-content .code-copy-button:hover {
+    background: #3a424b;
+  }
+
+  .doc-content .code-copy-button:focus-visible {
+    outline: 2px solid var(--color-brand-blue);
+    outline-offset: 2px;
+  }
+
+  .doc-content .code-copy-button[data-copied] {
+    color: #85e89d;
+  }
+
+  .doc-content .code-copy-button svg {
+    width: 1rem;
+    height: 1rem;
+  }
+
   /* Blockquote — brand-blue left rule. */
   .doc-content blockquote {
     margin-block: 1.25rem;

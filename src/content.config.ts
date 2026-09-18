@@ -66,4 +66,43 @@ const labs = defineCollection({
   }),
 });
 
-export const collections = { docs, labs };
+/**
+ * The `tasks` collection — one practical brief (ТЗ) per lab, under
+ * `src/content/tasks/`. The entry id **is** the owning lab's id (`lab-2`), and
+ * that is the whole relation: no `lab:` field to keep in sync, and the route
+ * `/labs/<id>/task/` falls straight out of the id.
+ *
+ * A brief lives outside its lab because the two are read differently — the lab
+ * once, top to bottom; the brief kept open beside the editor for two hours.
+ * See docs/lab-2/README.md §3.
+ */
+const tasks = defineCollection({
+  // ids look like "lab-2" — the owning lab's id, ".md" stripped.
+  loader: glob({ pattern: '**/*.md', base: './src/content/tasks' }),
+  schema: z.object({
+    /** Brief title (Ukrainian) — `<h1>` / card heading / `<title>` base. */
+    title: z.string(),
+    /** One-line description — hand-off card blurb + meta description. */
+    summary: z.string(),
+    /**
+     * The brief's "Мета практичної частини" box — the one paragraph that
+     * answers "what am I building". Rendered as a lead callout by the route,
+     * above the body, so it is never scrolled past.
+     */
+    goal: z.string().optional(),
+    /** BCP-47 language of the body — drives `<html lang>`. */
+    lang: z.string().default('uk'),
+    /** Short badge: hand-off card, index pill, last breadcrumb. */
+    label: z.string().default('ТЗ'),
+    /** Constraint chips on the hand-off card — 2–4 short phrases. */
+    highlights: z.array(z.string()).default([]),
+    /** "Актуально станом на" date from the brief. */
+    updated: z.coerce.date().optional(),
+    /** Path (no base prefix) to the downloadable brief, if published. */
+    handout: z.string().optional(),
+    /** Hidden from the lab page and un-routed while true. */
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { docs, labs, tasks };

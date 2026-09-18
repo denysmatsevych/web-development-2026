@@ -61,3 +61,19 @@ export async function getAdjacentLab(
     next: next && toLabMeta(next),
   };
 }
+
+export type TaskEntry = CollectionEntry<'tasks'>;
+
+/** `withBase` applied to a lab's practical brief. */
+export function taskHref(slug: string): string {
+  return withBase(`/labs/${slug}/task/`);
+}
+
+/**
+ * Published briefs. Unordered on purpose — a brief is always reached through
+ * its lab, never listed on its own.
+ */
+export async function getTasks(): Promise<TaskEntry[]> {
+  return getCollection('tasks', ({ data }) => !data.draft);
+}
+
