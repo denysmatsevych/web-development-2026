@@ -1,0 +1,123 @@
+---
+/**
+ * LabHeader — the eyebrow / title / summary block at the top of a lab page and
+ * of its ТЗ page. Extracted from `[lab].astro` when the second route appeared,
+ * so the two do not carry duplicate copies of the same scoped CSS.
+ *
+ * The handout download sits at the end of the eyebrow row rather than in a
+ * panel of its own — it is the only action the header carries.
+ */
+import { withBase } from '@/lib/paths';
+
+interface Props {
+  /** Small uppercase line above the title. */
+  eyebrow: string;
+  title: string;
+  summary?: string;
+  /** Path without the base prefix, e.g. `/labs/lab-2.pdf`. */
+  handout?: string;
+}
+
+const { eyebrow, title, summary, handout } = Astro.props;
+---
+
+<header class="lab-header">
+  <div class="lab-header__top">
+    <p class="lab-header__eyebrow">{eyebrow}</p>
+    {
+      handout && (
+        <a class="lab-header__download" href={withBase(handout)} download>
+          <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+            <path
+              d="M8 2v8m0 0L4.5 6.5M8 10l3.5-3.5M2.5 13.5h11"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span class="lab-header__download-verb">Завантажити</span> PDF
+        </a>
+      )
+    }
+  </div>
+  <h1 class="lab-header__title">{title}</h1>
+  {summary && <p class="lab-header__summary">{summary}</p>}
+</header>
+
+<style>
+  .lab-header {
+    margin-block: 1rem 1.75rem;
+  }
+
+  .lab-header__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    margin: 0.5rem 0 0.6rem;
+  }
+
+  .lab-header__eyebrow {
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--brand-text);
+  }
+
+  .lab-header__download {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.4rem 0.85rem;
+    border: 1px solid var(--color-brand-blue);
+    border-radius: var(--radius-md);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    /* `--brand-text`, not `--color-brand-blue-soft`: the soft blue is only
+       2.6:1 on white — see the light-theme contrast fix in 8567b76. */
+    color: var(--brand-text);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 0.15s ease;
+  }
+
+  .lab-header__download:hover {
+    background: color-mix(in oklab, var(--color-brand-blue) 15%, transparent);
+  }
+
+  /* On a phone the full label pushes the link onto a line of its own; drop
+     the verb visually (screen readers still get "Завантажити PDF") so it keeps
+     sharing the eyebrow row. */
+  @media (max-width: 639px) {
+    .lab-header__download-verb {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+  }
+
+  .lab-header__title {
+    margin: 0;
+    font-size: clamp(1.9rem, 4vw, 2.4rem);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    /* `--lab-heading` (src/styles/lab.css) — the PDF's navy in light. */
+    color: var(--lab-heading, var(--foreground));
+  }
+
+  .lab-header__summary {
+    margin: 0.75rem 0 0;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--muted-foreground);
+  }
+</style>

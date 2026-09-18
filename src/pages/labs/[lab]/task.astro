@@ -1,0 +1,150 @@
+---
+/**
+ * ТЗ page — one static route per entry in the `tasks` collection, at
+ * `/labs/<id>/task` (`/labs/lab-2/task`). The id is the owning lab's, so the
+ * route is generated only when that lab is itself published.
+ *
+ * `src/pages/labs/[lab].astro` and this file coexist: `/labs/[lab]` and
+ * `/labs/[lab]/task` are distinct patterns, building to `labs/lab-2/index.html`
+ * and `labs/lab-2/task/index.html`.
+ *
+ * The page composes the mockup above `.doc-content` — the brief's §1 describes
+ * the target design, and a live render beats a screenshot in both themes.
+ */
+import { render } from "astro:content";
+
+import AcceptanceChecklist from "@/components/AcceptanceChecklist.astro";
+import Breadcrumbs from "@/components/Breadcrumbs.astro";
+import LabHeader from "@/components/LabHeader.astro";
+import MockupLightbox from "@/components/MockupLightbox.astro";
+import LabLayout from "@/layouts/LabLayout.astro";
+import { getLabs, getTasks, labHref, taskHref } from "@/lib/labs";
+import { withBase } from "@/lib/paths";
+
+export async function getStaticPaths() {
+  const [labs, tasks] = await Promise.all([getLabs(), getTasks()]);
+  const byId = new Map(labs.map((lab) => [lab.id, lab]));
+
+  // A brief whose lab is a draft (or missing) gets no route — otherwise the
+  // spec would be reachable while the lab itself is unpublished.
+  return tasks.flatMap((task) => {
+    const lab = byId.get(task.id);
+    return lab ? [{ params: { lab: task.id }, props: { task, lab } }] : [];
+  });
+}
+
+const { task, lab } = Astro.props;
+const { data } = task;
+
+const { Content, headings } = await render(task);
+
+const crumbs = [
+  { label: "Labs", href: withBase("/labs/") },
+  { label: `ЛР-${lab.data.number}`, href: labHref(lab.id) },
+  { label: data.label, href: taskHref(task.id) },
+];
+
+/**
+ * The brief's §7 acceptance table, one row per line, for the self-check dialog
+ * — see docs/lab-2/content-map.md §2.6. Lives here rather than in the Markdown
+ * so the dialog and the body table cannot silently disagree; which of the two
+ * stays is a call for the review (docs/lab-2/implementation.md §11.2).
+ */
+const ACCEPTANCE = [
+  "Структура — заголовок, опис, 3 тарифні картки, кнопки",
+  "Basic — $10 / month; 1 User; 5GB Storage; Basic Support",
+  "Pro — $29 / month; 5 Users; 50GB Storage; Priority Support; візуальний акцент",
+  "Enterprise — $99 / month; Unlimited; 1TB Storage; 24/7 Support",
+  "CSS Variables — кольори, шрифти, відступи винесено у :root",
+  "Box Model — box-sizing: border-box; коректні padding / border / розміри",
+  "Inheritance — спільні властивості успадковуються від body",
+  "Reuse / DRY — спільні класи для карток і кнопок; мінімум дублювання",
+  "Responsive — до 768px картки стають у один стовпчик",
+  "AI-assisted — код перевірений і відрефакторений студентом",
+];
+---
+
+<LabLayout
+  title={data.title}
+  description={data.summary}
+  lang={data.lang}
+  headings={headings}
+>
+  <Breadcrumbs items={crumbs} />
+
+  <LabHeader
+    eyebrow={`Технічне завдання · ЛР-${lab.data.number}`}
+    title={data.title}
+    summary={data.summary}
+    handout={data.handout}
+  />
+
+  {
+    data.goal && (
+      <p class="task-goal">
+        <strong>Мета практичної частини.</strong> {data.goal}
+      </p>
+    )
+  }
+
+  <AcceptanceChecklist items={ACCEPTANCE} />
+
+  <figure class="task-preview">
+    <MockupLightbox />
+    <figcaption>Орієнтовний вигляд готової секції</figcaption>
+  </figure>
+
+  <article class="doc-content">
+    <Content />
+  </article>
+
+  <nav class="task-back" aria-label="Lab">
+    <a href={labHref(lab.id)} rel="up"
+      >← До лабораторної роботи №{lab.data.number}</a
+    >
+  </nav>
+</LabLayout>
+
+<style>
+  /* The brief's "Мета практичної частини" box — a lead, not body copy, so it
+     sits outside `.doc-content` and carries its own rule. */
+  .task-goal {
+    margin: 0 0 1.75rem;
+    padding-left: 1rem;
+    border-left: 3px solid var(--color-brand-blue);
+    font-size: 1rem;
+    line-height: 1.65;
+    color: var(--muted-foreground);
+  }
+
+  .task-goal strong {
+    color: var(--foreground);
+  }
+
+  .task-preview {
+    margin: 0 0 2.5rem;
+  }
+
+  .task-preview figcaption {
+    margin-top: 0.6rem;
+    font-size: 0.8125rem;
+    text-align: center;
+    color: var(--muted-foreground);
+  }
+
+  .task-back {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.9rem;
+  }
+
+  .task-back a {
+    color: var(--brand-text);
+    text-decoration: none;
+  }
+
+  .task-back a:hover {
+    text-decoration: underline;
+  }
+</style>

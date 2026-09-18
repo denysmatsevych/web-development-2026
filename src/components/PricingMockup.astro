@@ -1,0 +1,221 @@
+---
+/**
+ * PricingMockup — a live render of the section the ТЗ asks for: heading, lead
+ * and three plan cards, with the one-column → three-column switch the brief
+ * specifies.
+ *
+ * A reference picture that happens to be HTML, not a reference implementation:
+ * the markup carries none of the brief's class names, the styles are scoped,
+ * and the card titles are not headings. The route renders it above
+ * `.doc-content` so it stays out of the article's typography and its ToC.
+ */
+interface Plan {
+  name: string;
+  price: string;
+  period?: string;
+  features: string[];
+  cta: string;
+  /** The promoted middle plan. */
+  featured?: boolean;
+  /** Badge above a featured card. */
+  badge?: string;
+}
+
+interface Props {
+  heading?: string;
+  lead?: string;
+  plans?: Plan[];
+}
+
+/**
+ * The plan table from the ТЗ, verbatim — see content-map.md §2.3. Keep the two
+ * in sync: if the picture and the spec disagree, students build the picture.
+ */
+const PLANS: Plan[] = [
+  {
+    name: 'Basic',
+    price: '$10',
+    period: '/ month',
+    features: ['1 User', '5GB Storage', 'Basic Support'],
+    cta: 'Select',
+  },
+  {
+    name: 'Pro',
+    price: '$29',
+    period: '/ month',
+    features: ['5 Users', '50GB Storage', 'Priority Support'],
+    cta: 'Get Started',
+    featured: true,
+    badge: 'PRO • ACTIVE',
+  },
+  {
+    name: 'Enterprise',
+    price: '$99',
+    period: '/ month',
+    features: ['Unlimited', '1TB Storage', '24/7 Support'],
+    cta: 'Contact',
+  },
+];
+
+const {
+  heading = 'Наші тарифи',
+  lead = 'Оберіть план, який найкраще підходить для ваших завдань',
+  plans = PLANS,
+} = Astro.props;
+---
+
+<div class="mockup">
+  <p class="mockup__heading">{heading}</p>
+  <p class="mockup__lead">{lead}</p>
+
+  <div class="mockup__plans">
+    {
+      plans.map((plan) => (
+        <div class:list={['mockup__card', { 'mockup__card--featured': plan.featured }]}>
+          {plan.badge && <span class="mockup__badge">{plan.badge}</span>}
+          <span class="mockup__name">{plan.name}</span>
+          <span class="mockup__price">
+            {plan.price}
+            {plan.period && <span class="mockup__period">{plan.period}</span>}
+          </span>
+          <ul class="mockup__features">
+            {plan.features.map((feature) => (
+              <li>{feature}</li>
+            ))}
+          </ul>
+          <span class="mockup__cta">{plan.cta}</span>
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  /* `container-type` makes the breakpoint below respond to the mockup's own
+     width — it sits in a ~44rem article column, not the viewport. */
+  .mockup {
+    container-type: inline-size;
+    padding: 1.75rem 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: color-mix(in oklab, var(--muted) 50%, transparent);
+    text-align: center;
+  }
+
+  .mockup__heading {
+    margin: 0 0 0.5rem;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--foreground);
+  }
+
+  .mockup__lead {
+    margin: 0 auto 1.75rem;
+    max-width: 34rem;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--muted-foreground);
+  }
+
+  .mockup__plans {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: minmax(0, 1fr);
+    text-align: left;
+  }
+
+  @container (min-width: 48rem) {
+    .mockup__plans {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      align-items: center;
+    }
+
+    .mockup__card--featured {
+      transform: scale(1.04);
+    }
+  }
+
+  .mockup__card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 1.4rem 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--card);
+  }
+
+  .mockup__card--featured {
+    border-color: var(--color-brand-blue);
+    box-shadow: 0 0 0 1px var(--color-brand-blue);
+  }
+
+  .mockup__badge {
+    position: absolute;
+    top: -0.65rem;
+    left: 1.2rem;
+    padding: 0.15rem 0.55rem;
+    border-radius: var(--radius-sm);
+    background: var(--color-brand-blue);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--color-pure-white);
+  }
+
+  .mockup__name {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--brand-text);
+  }
+
+  .mockup__price {
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--foreground);
+  }
+
+  .mockup__period {
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: var(--muted-foreground);
+  }
+
+  .mockup__features {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin: 0.4rem 0 0.9rem;
+    padding: 0;
+    list-style: none;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--muted-foreground);
+  }
+
+  .mockup__features li::before {
+    content: '✓';
+    margin-right: 0.45rem;
+    color: var(--brand-text);
+  }
+
+  .mockup__cta {
+    margin-top: auto;
+    padding: 0.5rem 0.9rem;
+    border: 1px solid var(--color-brand-blue);
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-align: center;
+    color: var(--brand-text);
+  }
+
+  .mockup__card--featured .mockup__cta {
+    background: var(--color-brand-blue);
+    color: var(--color-pure-white);
+  }
+</style>
