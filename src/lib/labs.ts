@@ -54,7 +54,7 @@ export function labLabels({ data }: LabEntry): { eyebrow: string; crumb: string 
   if (data.kind === 'individual') {
     return {
       eyebrow: ['Самостійна робота', data.duration].filter(Boolean).join(' · '),
-      crumb: 'ІЗ',
+      crumb: 'Індивідуальне завдання',
     };
   }
   return { eyebrow: `Лабораторна робота №${data.number}`, crumb: `ЛР-${data.number}` };

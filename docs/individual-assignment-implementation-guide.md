@@ -133,7 +133,7 @@ This is the part that drives the code changes:
 | File / URL | `src/content/labs/individual.md` → `/labs/individual/` | Readable; the id is the URL segment, as with `lab-1` |
 | `<h1>` / card title | «Індивідуальне завдання» | What students and the handout call it. The formal theme stays in §1 |
 | Eyebrow | «Самостійна робота · 62 години» (from `duration`) | An eyebrow of «Індивідуальне завдання» would repeat the `<h1>` |
-| Breadcrumb | `Labs › ІЗ` | Matches `ЛР-N` for labs |
+| Breadcrumb | `Labs › Індивідуальне завдання` | Spelled out, the same as the `<h1>` |
 | Prev/next | Excluded both ways | It runs alongside the sequence, not inside it |
 | Index card | First in the same list, with a resting brand border | A marker that it is different, with no second list and no new component |
 | Wide tables | Scroll inside their own box **on phones only** | Measured in §8; a site-wide `display: block` shrinks desktop tables |
@@ -208,7 +208,7 @@ export function labLabels({ data }: LabEntry): { eyebrow: string; crumb: string 
   if (data.kind === 'individual') {
     return {
       eyebrow: ['Самостійна робота', data.duration].filter(Boolean).join(' · '),
-      crumb: 'ІЗ',
+      crumb: 'Індивідуальне завдання',
     };
   }
   return { eyebrow: `Лабораторна робота №${data.number}`, crumb: `ЛР-${data.number}` };
@@ -412,7 +412,7 @@ the dry run, all of them again on the real implementation.
 - [x] `/labs/` lists `00` first with the brand border, then `01`, `02`; Lab 2
       keeps its `ТЗ` pill
 - [x] `/labs/individual/`: `<html lang="uk">`, eyebrow «Самостійна робота ·
-      62 години», breadcrumb `Labs › ІЗ`
+      62 години», breadcrumb `Labs › Індивідуальне завдання`
 - [x] No prev/next nav on the ІЗ page
 - [x] Lab 1 has no "Previous" and its "Next" is still Lab 2
 - [x] The download button points at `/web-development-2026/labs/individual.pdf`
