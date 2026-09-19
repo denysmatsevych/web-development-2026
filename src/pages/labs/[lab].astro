@@ -13,7 +13,7 @@ import Breadcrumbs from '@/components/Breadcrumbs.astro';
 import LabHeader from '@/components/LabHeader.astro';
 import PrevNext from '@/components/PrevNext.astro';
 import LabLayout from '@/layouts/LabLayout.astro';
-import { getAdjacentLab, getLabs, labHref } from '@/lib/labs';
+import { getAdjacentLab, getLabs, labHref, labLabels } from '@/lib/labs';
 import { withBase } from '@/lib/paths';
 
 export async function getStaticPaths() {
@@ -30,10 +30,11 @@ const { data } = entry;
 // Body + h2/h3 headings for the "on this page" rail (Astro stamps the ids).
 const { Content, headings } = await render(entry);
 const adjacent = await getAdjacentLab(entry.id);
+const { eyebrow, crumb } = labLabels(entry);
 
 const crumbs = [
   { label: 'Labs', href: withBase('/labs/') },
-  { label: `ЛР-${data.number}`, href: labHref(entry.id) },
+  { label: crumb, href: labHref(entry.id) },
 ];
 ---
 
@@ -41,7 +42,7 @@ const crumbs = [
   <Breadcrumbs items={crumbs} />
 
   <LabHeader
-    eyebrow={`Лабораторна робота №${data.number}`}
+    eyebrow={eyebrow}
     title={data.title}
     summary={data.summary}
     handout={data.handout}
