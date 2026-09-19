@@ -70,3 +70,13 @@ html:not(.dark) .lab-page .doc-content :not(pre) > code {
   color: var(--lab-code);
   background: none;
 }
+
+/* Phones: a table wider than the column scrolls inside its own box instead of
+   widening the page. Desktop keeps `display: table` on purpose — as a block,
+   a narrow table shrinks to its content instead of filling the column. */
+@media (max-width: 639px) {
+  .lab-page .doc-content table {
+    display: block;
+    overflow-x: auto;
+  }
+}

@@ -44,8 +44,14 @@ const labs = defineCollection({
   // ids look like "lab-1" — ".md" stripped, no prefix.
   loader: glob({ pattern: '**/*.md', base: './src/content/labs' }),
   schema: z.object({
-    /** Lab number — ordering, the `ЛР-N` badge, and the index card index. */
-    number: z.number().int().positive(),
+    /**
+     * `lab` — a numbered lab (ЛР-N). `individual` — the semester's individual
+     * assignment (ІЗ): listed first as `00`, named by its kind rather than a
+     * number, and kept out of the lab-to-lab prev/next chain.
+     */
+    kind: z.enum(['lab', 'individual']).default('lab'),
+    /** Ordering, the `ЛР-N` badge, and the index card index — `0` for the ІЗ. */
+    number: z.number().int().nonnegative(),
     /** Lab title (Ukrainian) — `<h1>` / card heading / `<title>` base. */
     title: z.string(),
     /** One-line description — index card blurb + meta description. */

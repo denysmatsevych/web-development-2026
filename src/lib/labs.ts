@@ -46,11 +46,30 @@ export async function getLabs(): Promise<LabEntry[]> {
   return entries.sort((a, b) => a.data.number - b.data.number);
 }
 
-/** Neighbours of one lab, for the footer nav. Either side may be absent. */
+/**
+ * How a lab is named in page chrome — the header eyebrow and its breadcrumb.
+ * The ІЗ has no lab number worth showing, so it is named by its kind.
+ */
+export function labLabels({ data }: LabEntry): { eyebrow: string; crumb: string } {
+  if (data.kind === 'individual') {
+    return {
+      eyebrow: ['Самостійна робота', data.duration].filter(Boolean).join(' · '),
+      crumb: 'Індивідуальне завдання',
+    };
+  }
+  return { eyebrow: `Лабораторна робота №${data.number}`, crumb: `ЛР-${data.number}` };
+}
+
+/**
+ * Neighbours of one lab, for the footer nav. Either side may be absent.
+ *
+ * Only numbered labs form the chain: the ІЗ runs alongside every lab rather
+ * than between two of them, so it neither gets nor appears in a prev/next link.
+ */
 export async function getAdjacentLab(
   slug: string,
 ): Promise<{ prev?: LabMeta; next?: LabMeta }> {
-  const labs = await getLabs();
+  const labs = (await getLabs()).filter(({ data }) => data.kind === 'lab');
   const i = labs.findIndex((entry) => entry.id === slug);
   if (i === -1) return {};
 

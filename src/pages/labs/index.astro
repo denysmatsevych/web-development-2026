@@ -28,7 +28,8 @@ const taskLabels = new Map(tasks.map((task) => [task.id, task.data.label]));
       <h1 class="hero__title">Labs</h1>
       <p class="hero__lead">
         Hands-on assignments that build on each lecture. Each lab is a full
-        walkthrough with a downloadable handout.
+        walkthrough with a downloadable handout; the individual assignment,
+        pinned at 00, runs alongside them all semester.
       </p>
     </section>
 
@@ -37,7 +38,13 @@ const taskLabels = new Map(tasks.map((task) => [task.id, task.data.label]));
         <ul class="labs">
           {labs.map((lab) => (
             <li>
-              <a href={labHref(lab.id)} class="lab-card glass-panel">
+              <a
+                href={labHref(lab.id)}
+                class:list={[
+                  'lab-card glass-panel',
+                  { 'lab-card--individual': lab.data.kind === 'individual' },
+                ]}
+              >
                 <span class="lab-card__index">{String(lab.data.number).padStart(2, '0')}</span>
                 <span class="lab-card__body">
                   <span class="lab-card__title">
@@ -144,6 +151,12 @@ const taskLabels = new Map(tasks.map((task) => [task.id, task.data.label]));
   .lab-card:hover {
     border-color: var(--color-brand-blue);
     transform: translateY(-2px);
+  }
+
+  /* The ІЗ card (`00`). `number: 0` already sorts it first; the resting brand
+     border marks it as the one assignment that spans the whole semester. */
+  .lab-card--individual {
+    border-color: var(--color-brand-blue);
   }
 
   .lab-card__index {
