@@ -40,7 +40,7 @@ Roboto, size, colour and position, so nothing else on any page moved:
 3. **Page numbers.** The footer read `Сторінка з` with the numbers missing; it
    now reads `Сторінка N з 4`.
 4. **Footer attribution.** `НаОА • Кафедра ІТАД` →
-   `НУОА • ННШ ІТ та бізнесу • Кафедра ІТАД` on all four pages.
+   `НУОА • ННІ ІТ та бізнесу • Кафедра ІТАД` on all four pages.
 5. **Three rows in the wrong font size.** Topics row 1 (Open Library), stage 8
    (Vite/NPM…) and the «Testing, debugging та code quality | 20» grading row
    were set at 10.5pt among 8.5–9pt neighbours. All three now match. Row 1 also
@@ -681,4 +681,4 @@ Everything not listed is word-for-word.
 | «Обов'язкова умова зарахування» (bold heading + paragraph) | Blockquote callout | Same treatment as Lab 2's «Важливо!» |
 | Email address as plain text | `mailto:` link | One tap on a phone |
 | Subject line as plain text | Code block (copy button) | Students copy it verbatim |
-| Footer «НУОА • ННШ ІТ та бізнесу • Кафедра ІТАД / Сторінка N з 4» | Dropped | Print artefact |
+| Footer «НУОА • ННІ ІТ та бізнесу • Кафедра ІТАД / Сторінка N з 4» | Dropped | Print artefact |
