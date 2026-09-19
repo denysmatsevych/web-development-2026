@@ -10,12 +10,11 @@ It reuses what Labs 1 and 2 shipped: the `labs` collection, `LabLayout`,
 `LabHeader`, `Breadcrumbs`, `OnThisPage` and the `.doc-content` prose styles. It
 adds no new layout, component or dependency.
 
-**Dry-run status.** Every step below was applied on this branch on 2026-09-19
-and then reverted, so the branch carries only this guide. Results:
-`astro check` reported 0 errors, 0 warnings, 0 hints. The build emitted
-`dist/labs/individual/index.html`. The page and the index were measured in
-headless Edge at 390px and 1280px wide. The numbers quoted in §8 and §11 come
-from that run.
+**Status: implemented** on this branch on 2026-09-19, following §4–§12 as
+written. The steps were first dry-run and reverted, then applied for real;
+both runs gave `astro check` 0 errors / 0 warnings / 0 hints. Pages were
+measured in headless Edge at 390px and 1280px wide, and the numbers quoted in
+§8 and §11 come from those runs.
 
 | | |
 | --- | --- |
@@ -406,7 +405,8 @@ ls dist/labs/individual
 grep -o 'lab-card__index[^>]*>[0-9]*<' dist/labs/index.html   # 00, 01, 02 in that order
 ```
 
-Checklist (ticked items passed in the dry run):
+Checklist. Every item passed in headless Edge on 2026-09-19: the first nine in
+the dry run, all of them again on the real implementation.
 
 - [x] `astro check`: 0 errors / 0 warnings / 0 hints
 - [x] `/labs/` lists `00` first with the brand border, then `01`, `02`; Lab 2
@@ -420,14 +420,18 @@ Checklist (ticked items passed in the dry run):
 - [x] 390px window: no horizontal page scroll on `/labs/` or
       `/labs/individual/`; the topics table scrolls inside its box
 - [x] 1280px: all three ІЗ tables fill the 912px column
-- [ ] The subject-line code block has a working copy button (`data-copy-code`
-      is already on the lab route's `<article>`)
-- [ ] On a narrow window, `Tab` reaches the scrolling topics table and the
-      arrow keys scroll it. Chromium and Firefox make scroll containers
-      focusable on their own; if the browser you test doesn't, that is a
-      finding
-- [ ] Light theme: the 00 card's border and the table headers read well
-- [ ] The downloaded PDF is the **fixed** one (§0)
+- [x] The subject-line code block has a working copy button. Clicking it puts
+      exactly `[Веб] Індивідуальне завдання` on the clipboard
+- [x] On a 390px window, `Tab` from the download button lands on the Open
+      Library link inside the topics table, and the arrow keys scroll the
+      table through its full overflow (`scrollLeft` 0 → 84). The table itself
+      is not a tab stop because it contains links; its links are
+- [x] Light and dark theme: the 00 card's border, the eyebrow and the table
+      headers all read well
+- [x] The served PDF is byte-identical to the fixed one (§0)
+- [x] No regressions: `/labs/lab-2/` and `/labs/lab-2/task/` show no page
+      scroll at 390px. Lab 1 improves from 1012px to 388px (the rest is the
+      inline-code follow-up in §13)
 
 For phone widths, use a real narrow window over CDP with `mobile: false`.
 Device emulation with `mobile: true` misreports layout on these long pages.
