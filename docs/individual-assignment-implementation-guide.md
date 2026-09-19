@@ -25,29 +25,33 @@ from that run.
 
 ---
 
-## 0. Before you start — fix the handout
+## 0. The handout — use the fixed PDF
 
-The PDF has four defects. Fix them **before** copying it into `public/`,
-because the page links to it as the download:
+Publish `Індивідуальне_завдання_Сучасна_веброзробка_виправлено.pdf` (in
+Downloads), **not** the original. The original had defects, fixed in place on
+2026-09-19. Each fix removed the exact original text and re-set it in the same
+Roboto, size, colour and position, so nothing else on any page moved:
 
-1. **The hours don't add up.** The header and the "Разом" row both say
-   **62**, but the nine stages in §5 sum to **58**
-   (5 + 5 + 8 + 9 + 9 + 8 + 6 + 6 + 2). Either a stage is short by 4 hours or
-   the total is wrong. The page transcribes the PDF as-is (62), so it inherits
-   whichever fix you make. Update [Appendix A](#appendix-a--srccontentlabsindividualmd)
-   to match.
-2. **Typo in the email subject.** §10 reads `[Веб] Індивідальне завдання`
-   (missing «у»). Students will copy it verbatim. The page corrects it to
-   `[Веб] Індивідуальне завдання`. Correct the PDF too, or the two will
-   disagree.
-3. **Broken page footer.** Every page ends in `Сторінка з`, with the page
-   numbers missing because the template field didn't render.
-4. **Row 1 of the topics table has no description.** Rows 2–10 have one line
-   about the API ("REST API для пошуку шоу…"); Open Library has only the link.
-   Optional fix, e.g. «Дані про книги, авторів і видання; пошук за назвою,
-   автором або ISBN.»
+1. **Hours.** The nine stages summed to **58** while the header and "Разом"
+   said 62. Stage 9 (Комплексне доопрацювання та підготовка до захисту) went
+   from 2 to **6**, so the stages now sum to 62.
+2. **Email subject typo.** `[Веб] Індивідальне завдання` →
+   `[Веб] Індивідуальне завдання`. The page and the PDF now agree.
+3. **Page numbers.** The footer read `Сторінка з` with the numbers missing; it
+   now reads `Сторінка N з 4`.
+4. **Footer attribution.** `НаОА • Кафедра ІТАД` →
+   `НУОА • ННШ ІТ та бізнесу • Кафедра ІТАД` on all four pages.
+5. **Three rows in the wrong font size.** Topics row 1 (Open Library), stage 8
+   (Vite/NPM…) and the «Testing, debugging та code quality | 20» grading row
+   were set at 10.5pt among 8.5–9pt neighbours. All three now match. Row 1 also
+   gained the description line every other row has: «Відкритий API з даними про
+   книги, авторів і видання, з пошуком та обкладинками.» Stage 8 and the
+   Testing row stay a little taller than their neighbours, because row heights
+   are fixed in the PDF; their text is centred in the row.
 
-All ten API links were checked and return HTTP 200. Two need a note:
+All ten table rows were checked for content: numbering, topics, API names and
+formats are correct. All ten links point to the right URLs and return HTTP 200.
+Two links need a note:
 
 - **Nobel Prize** — `…/organization/developer-zone-2/` now redirects to
   `https://www.nobelprize.org/about/developer-zone-2/`. The page uses the new
@@ -376,10 +380,10 @@ There is no `updated` field: the handout has no «актуально стано�
 
 ## 10. Step 7 — Publish the handout
 
-After fixing the PDF (§0), copy it in under a URL-safe name:
+Copy the **fixed** PDF (§0) in under a URL-safe name:
 
 ```bash
-cp "/c/Users/matse/Downloads/Індивідуальне_завдання_Сучасна_веброзробка.pdf" public/labs/individual.pdf
+cp "/c/Users/matse/Downloads/Індивідуальне_завдання_Сучасна_веброзробка_виправлено.pdf" public/labs/individual.pdf
 ```
 
 `LabHeader` turns `handout` into `withBase('/labs/individual.pdf')` with the
@@ -476,8 +480,7 @@ git commit -m "Add the individual assignment as 00 on /labs/"
 
 ## Appendix A — `src/content/labs/individual.md`
 
-Transcribed from the handout. Deviations are listed in Appendix B. Re-check the
-§5 hours against the fixed PDF (§0.1) before publishing.
+Transcribed from the fixed handout (§0). Deviations are listed in Appendix B.
 
 ````markdown
 ---
@@ -549,7 +552,7 @@ accessibility та responsive design.
 
 | № | Предметна область / тема | Публічне API | Орієнтовний формат |
 | --- | --- | --- | --- |
-| 1 | **Каталог книжок** — пошук та перегляд інформації про книги | [Open Library API](https://openlibrary.org/developers/api) | MPA: каталог → детальна інформація |
+| 1 | **Каталог книжок** — пошук та перегляд інформації про книги | [Open Library API](https://openlibrary.org/developers/api) — відкритий API з даними про книги, авторів і видання, з пошуком та обкладинками | MPA: каталог → детальна інформація |
 | 2 | **Каталог серіалів** — пошук серіалів та перегляд інформації про них | [TVmaze API](https://www.tvmaze.com/api) — REST API для пошуку шоу, епізодів, акторського складу та рейтингової інформації | MPA: пошук → список → details |
 | 3 | **Каталог рецептів** — пошук, фільтрація та перегляд рецептів | [DummyJSON Recipes API](https://dummyjson.com/docs/recipes) — готовий набір даних із рецептами, пошуком, фільтрацією, сортуванням і пагінацією | Landing + каталог або MPA |
 | 4 | **Сервіс прогнозу погоди для подорожей** — прогноз для обраного міста | [Open-Meteo API](https://open-meteo.com/en/docs) — weather forecast та geocoding API без API key | Landing: пошук міста → прогноз |
@@ -584,7 +587,7 @@ accessibility та responsive design.
 | 6 | TypeScript та типізація API/коду | 8 |
 | 7 | Типізація існуючого коду, рефакторинг та code review | 6 |
 | 8 | Vite/NPM, Git, ESLint, Prettier, testing, deployment | 6 |
-| 9 | Комплексне доопрацювання та підготовка до захисту | 2 |
+| 9 | Комплексне доопрацювання та підготовка до захисту | 6 |
 | | **Разом** | **62** |
 
 ## 6. Результати, які необхідно подати
@@ -677,5 +680,5 @@ Everything not listed is word-for-word.
 | Nobel URL `…/organization/developer-zone-2/` | `…/about/developer-zone-2/` | The old URL redirects there |
 | «Обов'язкова умова зарахування» (bold heading + paragraph) | Blockquote callout | Same treatment as Lab 2's «Важливо!» |
 | Email address as plain text | `mailto:` link | One tap on a phone |
-| Subject `[Веб] Індивідальне завдання` | Code block (copy button), spelled `Індивідуальне` | Typo fix; see §0.2, and correct the PDF too |
-| Footer «НаОА • Кафедра ІТАД / Сторінка з» | Dropped | Print artefact |
+| Subject line as plain text | Code block (copy button) | Students copy it verbatim |
+| Footer «НУОА • ННШ ІТ та бізнесу • Кафедра ІТАД / Сторінка N з 4» | Dropped | Print artefact |
