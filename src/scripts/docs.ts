@@ -29,6 +29,11 @@ function writeStoredTheme(value: 'dark' | 'light'): void {
   }
 }
 
+function toggleTheme(): void {
+  const isDark = document.documentElement.classList.toggle('dark');
+  writeStoredTheme(isDark ? 'dark' : 'light');
+}
+
 /* ── 1. Mobile sidebar drawer ──────────────────────────────────────────── */
 
 function setupSidebarDrawer(): void {
@@ -243,8 +248,21 @@ function setupThemeToggle(): void {
   if (!button) return;
 
   button.addEventListener('click', () => {
-    const isDark = document.documentElement.classList.toggle('dark');
-    writeStoredTheme(isDark ? 'dark' : 'light');
+    toggleTheme();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    const target = event.target;
+    const isTextField =
+      target instanceof HTMLElement &&
+      (target.matches('input, textarea, select') ||
+        target.isContentEditable ||
+        target.closest('[contenteditable="true"]'));
+
+    if (event.key.toLowerCase() === 't' && !event.metaKey && !event.ctrlKey && !event.altKey && !isTextField) {
+      event.preventDefault();
+      toggleTheme();
+    }
   });
 }
 
@@ -252,6 +270,9 @@ function setupThemeToggle(): void {
 
 /** Wire every reading-shell behaviour present on the page. Call once. */
 export function initDocs(): void {
+  if (document.documentElement.dataset.themeInit === '1') return;
+  document.documentElement.dataset.themeInit = '1';
+
   setupSidebarDrawer();
   setupScrollspy();
   setupTocDropdown();

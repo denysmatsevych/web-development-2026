@@ -1,8 +1,7 @@
 ---
 /**
  * Course hub — the `/` landing. Short intro + one card per section from
- * `src/data/site.ts` (`sections`): Lectures, Labs, Tutorial. The handbook's own
- * HTML/CSS/JS track picker lives one level down at `/tutorial/`.
+ * `src/data/site.ts` (`sections`): Lectures and Labs.
  */
 import SiteFooter from '@/components/SiteFooter.astro';
 import SiteHeader from '@/components/SiteHeader.astro';
@@ -19,8 +18,8 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
       <p class="hero__eyebrow">{site.eyebrow}</p>
       <h1 class="hero__title">{site.name}</h1>
       <p class="hero__lead">
-        Everything for the course in one place — the lecture slide decks, the lab
-        assignments, and a browsable handbook for HTML, CSS and JavaScript.
+        Everything for the course in one place — the lecture slide decks and the
+        lab assignments for modern HTML, CSS and JavaScript.
       </p>
     </section>
 
@@ -29,9 +28,11 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
         sections.map((section) => (
           <li>
             <a href={withBase(section.href)} class="section glass-panel">
-              <span class="section__name">{section.label}</span>
+              <div class="section__top-panel">
+                <span class="section__name">{section.label}</span>
+                <span class="section__arrow" aria-hidden="true">→</span>
+              </div>
               <span class="section__blurb">{section.blurb}</span>
-              <span class="section__arrow" aria-hidden="true">→</span>
             </a>
           </li>
         ))
@@ -96,7 +97,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 
   @media (min-width: 640px) {
     .sections {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
     }
   }
 
@@ -105,7 +106,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     flex-direction: column;
     gap: 0.5rem;
     height: 100%;
-    padding: 1.5rem;
+    padding: 2.25rem 1.75rem;
     border-radius: var(--radius-lg);
     text-decoration: none;
     transition:
@@ -113,26 +114,26 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
       transform 0.15s ease;
   }
 
-  .section:hover {
-    border-color: var(--color-brand-blue);
-    transform: translateY(-2px);
+  .section__top-panel{
+    display: flex;
+    justify-content: space-between;
   }
 
   .section__name {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: var(--foreground);
   }
 
   .section__blurb {
     flex: 1;
-    font-size: 0.9375rem;
+    font-size: 0.975rem;
     line-height: 1.6;
     color: var(--muted-foreground);
   }
 
   .section__arrow {
-    margin-top: 0.25rem;
+    font-size: 1.1rem;
     color: var(--brand-text);
     transition: transform 0.15s ease;
   }

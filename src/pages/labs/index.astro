@@ -51,7 +51,7 @@ const labs = await getLabs();
           <p class="panel__title">Coming soon</p>
           <p class="panel__text">
             In the meantime, work through the <a href={withBase('/lectures/')}>lectures</a>
-            and the <a href={withBase('/tutorial/')}>tutorial handbook</a>.
+            and the course labs.
           </p>
         </div>
       )
@@ -130,11 +130,6 @@ const labs = await getLabs();
     transition:
       border-color 0.15s ease,
       transform 0.15s ease;
-  }
-
-  .lab-card:hover {
-    border-color: var(--color-brand-blue);
-    transform: translateY(-2px);
   }
 
   .lab-card__index {
