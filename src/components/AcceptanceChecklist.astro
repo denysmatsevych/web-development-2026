@@ -4,8 +4,9 @@
  * submitting. State is per-viewer convenience only: `localStorage`, wrapped,
  * and the list renders correctly when it is unavailable.
  *
- * `items` comes from the route rather than the Markdown so the criteria exist
- * once; see docs/lab-2/content-map.md §2.6 for the source table.
+ * `items` comes from the owning brief's `acceptance` frontmatter, so each ТЗ
+ * carries its own criteria; see docs/lab-2/content-map.md §2.6 for ЛР-2's
+ * source table.
  */
 interface Props {
   items: string[];
@@ -38,7 +39,9 @@ const { items } = Astro.props;
 </div>
 
 <script>
-  const KEY = 'lab-2-acceptance';
+  // Scoped to the page: each ТЗ has its own criteria, so a shared key would
+  // restore ЛР-2's ticks against ЛР-4's rows.
+  const KEY = `acceptance:${location.pathname}`;
 
   document.querySelectorAll<HTMLElement>('.checklist').forEach((root) => {
     const dialog = root.querySelector<HTMLDialogElement>('[data-checklist]');

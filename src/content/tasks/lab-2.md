@@ -9,6 +9,18 @@ highlights:
   - "3 картки"
   - "Брейкпоінт 768px"
   - "Бонус до 23.09.2026"
+acceptance:
+  - "Структура — заголовок, опис, 3 тарифні картки, кнопки"
+  - "Basic — $10 / month; 1 User; 5GB Storage; Basic Support"
+  - "Pro — $29 / month; 5 Users; 50GB Storage; Priority Support; візуальний акцент"
+  - "Enterprise — $99 / month; Unlimited; 1TB Storage; 24/7 Support"
+  - "CSS Variables — кольори, шрифти, відступи винесено у :root"
+  - "Box Model — box-sizing: border-box; коректні padding / border / розміри"
+  - "Inheritance — спільні властивості успадковуються від body"
+  - "Reuse / DRY — спільні класи для карток і кнопок; мінімум дублювання"
+  - "Responsive — до 768px картки стають у один стовпчик"
+  - "AI-assisted — код перевірений і відрефакторений студентом"
+mockup: pricing
 updated: 2026-09-18
 handout: /labs/lab-2-task.pdf
 ---
