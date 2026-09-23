@@ -102,6 +102,19 @@ const tasks = defineCollection({
     label: z.string().default('ТЗ'),
     /** Constraint chips on the hand-off card — 2–4 short phrases. */
     highlights: z.array(z.string()).default([]),
+    /**
+     * The brief's §7 acceptance criteria, one line per row, for the self-check
+     * dialog. Frontmatter rather than the route (see `labs/[lab]/task.astro`)
+     * so a second brief cannot inherit another lab's criteria; empty hides the
+     * dialog.
+     */
+    acceptance: z.array(z.string()).default([]),
+    /**
+     * Which mockup to render above the body. A brief that specifies a target
+     * design names one; a brief whose practical part is an audit of supplied
+     * code names none.
+     */
+    mockup: z.enum(['pricing']).optional(),
     /** "Актуально станом на" date from the brief. */
     updated: z.coerce.date().optional(),
     /** Path (no base prefix) to the downloadable brief, if published. */

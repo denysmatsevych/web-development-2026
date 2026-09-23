@@ -8,8 +8,10 @@
  * `/labs/[lab]/task` are distinct patterns, building to `labs/lab-2/index.html`
  * and `labs/lab-2/task/index.html`.
  *
- * The page composes the mockup above `.doc-content` — the brief's §1 describes
- * the target design, and a live render beats a screenshot in both themes.
+ * A brief that names a `mockup` composes it above `.doc-content` — its §1
+ * describes the target design, and a live render beats a screenshot in both
+ * themes. A brief whose practical part is an audit of supplied code names none,
+ * and renders body-first.
  */
 import { render } from "astro:content";
 
@@ -44,24 +46,6 @@ const crumbs = [
   { label: data.label, href: taskHref(task.id) },
 ];
 
-/**
- * The brief's §7 acceptance table, one row per line, for the self-check dialog
- * — see docs/lab-2/content-map.md §2.6. Lives here rather than in the Markdown
- * so the dialog and the body table cannot silently disagree; which of the two
- * stays is a call for the review (docs/lab-2/implementation.md §11.2).
- */
-const ACCEPTANCE = [
-  "Структура — заголовок, опис, 3 тарифні картки, кнопки",
-  "Basic — $10 / month; 1 User; 5GB Storage; Basic Support",
-  "Pro — $29 / month; 5 Users; 50GB Storage; Priority Support; візуальний акцент",
-  "Enterprise — $99 / month; Unlimited; 1TB Storage; 24/7 Support",
-  "CSS Variables — кольори, шрифти, відступи винесено у :root",
-  "Box Model — box-sizing: border-box; коректні padding / border / розміри",
-  "Inheritance — спільні властивості успадковуються від body",
-  "Reuse / DRY — спільні класи для карток і кнопок; мінімум дублювання",
-  "Responsive — до 768px картки стають у один стовпчик",
-  "AI-assisted — код перевірений і відрефакторений студентом",
-];
 ---
 
 <LabLayout
@@ -87,12 +71,20 @@ const ACCEPTANCE = [
     )
   }
 
-  <AcceptanceChecklist items={ACCEPTANCE} />
+  {
+    data.acceptance.length > 0 && (
+      <AcceptanceChecklist items={data.acceptance} />
+    )
+  }
 
-  <figure class="task-preview">
-    <MockupLightbox />
-    <figcaption>Орієнтовний вигляд готової секції</figcaption>
-  </figure>
+  {
+    data.mockup === "pricing" && (
+      <figure class="task-preview">
+        <MockupLightbox />
+        <figcaption>Орієнтовний вигляд готової секції</figcaption>
+      </figure>
+    )
+  }
 
   <article class="doc-content">
     <Content />
