@@ -1,11 +1,11 @@
 /**
  * Site metadata and the list of top-level sections.
  *
- * The three sections (Lectures, Labs, Tutorial) are all part of this one Astro
- * build now. `sections` is the single source for the hub cards
- * (`src/pages/index.astro`), the header nav (`SiteHeader.astro`) and the footer
- * link group (`SiteFooter.astro`) — `href`s are plain paths, run through
- * `withBase()` at the point of use.
+ * The main sections (Lectures and Labs) are part of this Astro build.
+ * `sections` is the single source for the hub cards (`src/pages/index.astro`),
+ * the header nav (`SiteHeader.astro`) and the footer link group
+ * (`SiteFooter.astro`) — `href`s are plain paths, run through `withBase()` at
+ * the point of use.
  */
 
 export interface SiteConfig {
@@ -24,7 +24,7 @@ export interface SiteConfig {
 
 export interface Section {
   /** Stable id. */
-  id: 'lectures' | 'labs' | 'tutorial';
+  id: 'lectures' | 'labs';
   /** Nav label / card heading. */
   label: string;
   /** Internal path (no base prefix) — wrap in `withBase()` when rendering. */
@@ -36,12 +36,12 @@ export interface Section {
 export const site: SiteConfig = {
   name: 'Web Development 2026',
   description:
-    'Course site for Web Development 2026 — lecture slide decks, lab assignments, and a hierarchical javascript.info-style handbook for modern HTML, CSS and JavaScript/TypeScript.',
+    'Course site for Web Development 2026 — lecture slide decks and lab assignments for modern HTML, CSS and JavaScript/TypeScript.',
   eyebrow: 'Modern Web Development · HTML, CSS, JS/TS',
   courseUk: 'Сучасна веброзробка · HTML, CSS, JS/TS',
 
-  contactLabel: 'oa.edu.ua',
-  contactUrl: 'https://www.oa.edu.ua/',
+  contactLabel: 'denys.matsevych@oa.edu.ua',
+  contactUrl: 'https://mail.google.com/mail/?view=cm&fs=1&to=denys.matsevych@oa.edu.ua',
 };
 
 export const sections: Section[] = [
@@ -56,11 +56,5 @@ export const sections: Section[] = [
     label: 'Labs',
     href: '/labs/',
     blurb: 'Hands-on assignments that build on each lecture, with downloadable handouts.',
-  },
-  {
-    id: 'tutorial',
-    label: 'Tutorial',
-    href: '/tutorial/',
-    blurb: 'The course handbook — HTML, CSS and JavaScript as a browsable reference.',
   },
 ];
