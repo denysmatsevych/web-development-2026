@@ -1,0 +1,167 @@
+---
+/**
+ * AcceptanceChecklist — the ТЗ's acceptance criteria as a self-check before
+ * submitting. State is per-viewer convenience only: `localStorage`, wrapped,
+ * and the list renders correctly when it is unavailable.
+ *
+ * `items` comes from the owning brief's `acceptance` frontmatter, so each ТЗ
+ * carries its own criteria; see docs/lab-2/content-map.md §2.6 for ЛР-2's
+ * source table.
+ */
+interface Props {
+  items: string[];
+}
+
+const { items } = Astro.props;
+---
+
+<div class="checklist">
+  <button type="button" class="checklist__trigger" data-checklist-open>
+    Самоперевірка перед здачею
+  </button>
+
+  <dialog class="checklist__dialog" data-checklist aria-label="Критерії приймання">
+    <h2 class="checklist__title">Критерії приймання</h2>
+    <ul class="checklist__list">
+      {
+        items.map((item, i) => (
+          <li>
+            <label>
+              <input type="checkbox" data-checklist-item={String(i)} />
+              <span>{item}</span>
+            </label>
+          </li>
+        ))
+      }
+    </ul>
+    <button type="button" class="checklist__close" data-checklist-close>Закрити</button>
+  </dialog>
+</div>
+
+<script>
+  // Scoped to the page: each ТЗ has its own criteria, so a shared key would
+  // restore ЛР-2's ticks against ЛР-4's rows.
+  const KEY = `acceptance:${location.pathname}`;
+
+  document.querySelectorAll<HTMLElement>('.checklist').forEach((root) => {
+    const dialog = root.querySelector<HTMLDialogElement>('[data-checklist]');
+    if (!dialog) return;
+
+    const boxes = [...dialog.querySelectorAll<HTMLInputElement>('[data-checklist-item]')];
+
+    // Private windows and blocked site data both throw here; the list still
+    // works, it just does not remember.
+    const read = (): string[] => {
+      try {
+        const raw = localStorage.getItem(KEY);
+        return raw ? (JSON.parse(raw) as string[]) : [];
+      } catch {
+        return [];
+      }
+    };
+
+    const write = (checked: string[]) => {
+      try {
+        localStorage.setItem(KEY, JSON.stringify(checked));
+      } catch {
+        /* nothing to do — the checkboxes keep working in-session */
+      }
+    };
+
+    const saved = new Set(read());
+    boxes.forEach((box) => {
+      box.checked = saved.has(box.dataset.checklistItem ?? '');
+      box.addEventListener('change', () =>
+        write(boxes.filter((b) => b.checked).map((b) => b.dataset.checklistItem ?? '')),
+      );
+    });
+
+    root
+      .querySelector('[data-checklist-open]')
+      ?.addEventListener('click', () => dialog.showModal());
+    dialog
+      .querySelector('[data-checklist-close]')
+      ?.addEventListener('click', () => dialog.close());
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+  });
+</script>
+
+<style>
+  .checklist {
+    margin-block: 1.75rem;
+  }
+
+  .checklist__trigger {
+    padding: 0.45rem 0.9rem;
+    border: 1px solid var(--color-brand-blue);
+    border-radius: var(--radius-md);
+    background: none;
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--brand-text);
+    cursor: pointer;
+  }
+
+  .checklist__dialog {
+    /* Tailwind's preflight zeroes `margin` on `*`, which also kills the UA
+       stylesheet's `margin: auto` — the rule that centers a modal dialog
+       inside its `inset: 0`. Without this the dialog sits in the top-left
+       corner. */
+    margin: auto;
+    width: min(38rem, 92vw);
+    max-height: 85dvh;
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--background);
+    color: var(--foreground);
+    overflow: auto;
+  }
+
+  .checklist__dialog::backdrop {
+    background: rgb(0 0 0 / 0.55);
+  }
+
+  .checklist__title {
+    margin: 0 0 1rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  .checklist__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin: 0 0 1.25rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .checklist__list label {
+    display: flex;
+    gap: 0.6rem;
+    align-items: start;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    cursor: pointer;
+  }
+
+  .checklist__list input {
+    margin-top: 0.2rem;
+    accent-color: var(--color-brand-blue);
+  }
+
+  .checklist__close {
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: none;
+    font: inherit;
+    font-size: 0.875rem;
+    color: var(--foreground);
+    cursor: pointer;
+  }
+</style>

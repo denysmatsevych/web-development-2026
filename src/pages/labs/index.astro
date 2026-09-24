@@ -8,11 +8,15 @@
 import SiteFooter from '@/components/SiteFooter.astro';
 import SiteHeader from '@/components/SiteHeader.astro';
 import { site } from '@/data/site';
-import { getLabs, labHref } from '@/lib/labs';
+import { getLabs, getTasks, labHref } from '@/lib/labs';
 import { withBase } from '@/lib/paths';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 
-const labs = await getLabs();
+const [labs, tasks] = await Promise.all([getLabs(), getTasks()]);
+
+// Lab id -> its brief's badge text, for the pill on that lab's card. A Map
+// rather than a Set so the badge stays whatever the brief's frontmatter says.
+const taskLabels = new Map(tasks.map((task) => [task.id, task.data.label]));
 ---
 
 <BaseLayout title="Labs" description="Lab assignments for Web Development 2026.">
@@ -24,7 +28,8 @@ const labs = await getLabs();
       <h1 class="hero__title">Labs</h1>
       <p class="hero__lead">
         Hands-on assignments that build on each lecture. Each lab is a full
-        walkthrough with a downloadable handout.
+        walkthrough with a downloadable handout; the individual assignment,
+        pinned at 00, runs alongside them all semester.
       </p>
     </section>
 
@@ -33,10 +38,21 @@ const labs = await getLabs();
         <ul class="labs">
           {labs.map((lab) => (
             <li>
-              <a href={labHref(lab.id)} class="lab-card glass-panel">
+              <a
+                href={labHref(lab.id)}
+                class:list={[
+                  'lab-card glass-panel',
+                  { 'lab-card--individual': lab.data.kind === 'individual' },
+                ]}
+              >
                 <span class="lab-card__index">{String(lab.data.number).padStart(2, '0')}</span>
                 <span class="lab-card__body">
-                  <span class="lab-card__title">{lab.data.title}</span>
+                  <span class="lab-card__title">
+                    {lab.data.title}
+                    {taskLabels.has(lab.id) && (
+                      <span class="lab-card__pill">{taskLabels.get(lab.id)}</span>
+                    )}
+                  </span>
                   <span class="lab-card__summary">{lab.data.summary}</span>
                 </span>
                 <span class="lab-card__arrow" aria-hidden="true">
@@ -132,6 +148,17 @@ const labs = await getLabs();
       transform 0.15s ease;
   }
 
+  .lab-card:hover {
+    border-color: var(--color-brand-blue);
+    transform: translateY(-2px);
+  }
+
+  /* The ІЗ card (`00`). `number: 0` already sorts it first; the resting brand
+     border marks it as the one assignment that spans the whole semester. */
+  .lab-card--individual {
+    border-color: var(--color-brand-blue);
+  }
+
   .lab-card__index {
     font-size: 1.1rem;
     font-weight: 700;
@@ -151,6 +178,20 @@ const labs = await getLabs();
     font-size: 1.05rem;
     font-weight: 600;
     color: var(--foreground);
+  }
+
+  /* Marker, not a second link: the whole card is already one `<a>`, and an
+     anchor inside an anchor is invalid HTML. */
+  .lab-card__pill {
+    margin-left: 0.5rem;
+    padding: 0.1rem 0.4rem;
+    border: 1px solid var(--color-brand-blue);
+    border-radius: var(--radius-sm);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    vertical-align: middle;
+    color: var(--brand-text);
   }
 
   .lab-card__summary {

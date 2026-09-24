@@ -15,6 +15,9 @@
  * `initDocs()` is still the right script — its sidebar setup bails when
  * `#docs-sidebar` is absent, leaving the ToC scrollspy/dropdown and the theme
  * toggle.
+ *
+ * Typography follows the handout PDFs — Montserrat headings, Inter text; see
+ * `src/styles/lab.css`. The two webfonts load here, only on lab pages.
  */
 import type { MarkdownHeading } from 'astro';
 
@@ -22,6 +25,7 @@ import OnThisPage from '@/components/OnThisPage.astro';
 import SiteFooter from '@/components/SiteFooter.astro';
 import SiteHeader from '@/components/SiteHeader.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import '@/styles/lab.css';
 
 interface Props {
   /** Lab title — forwarded to `BaseLayout` (the page renders its own `<h1>`). */
@@ -35,9 +39,24 @@ interface Props {
 }
 
 const { title, description, lang = 'uk', headings = [] } = Astro.props;
+
+// Same non-blocking `media="print"` → `all` swap as BaseLayout's Roboto.
+const fontHref =
+  'https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400..700;1,400..700&family=Montserrat:wght@600..700&display=swap';
 ---
 
 <BaseLayout title={title} description={description} lang={lang} ogType="article">
+  <Fragment slot="head">
+    <link id="font-lab" rel="stylesheet" href={fontHref} media="print" />
+    <noscript><link rel="stylesheet" href={fontHref} /></noscript>
+    <script is:inline>
+      (function () {
+        var link = document.getElementById('font-lab');
+        if (link) link.addEventListener('load', function () { link.media = 'all'; });
+      })();
+    </script>
+  </Fragment>
+
   <div class="lab-page">
     <SiteHeader />
 

@@ -2,7 +2,7 @@
  * docs.ts — the small client bundle for the reading shells (`DocsLayout`,
  * `LabLayout`).
  *
- * Four independent behaviours, each a no-op when its markup is absent so the
+ * Five independent behaviours, each a no-op when its markup is absent so the
  * same entry point stays safe to call from pages without a sidebar or ToC:
  *
  *   1. mobile sidebar drawer — open / close / backdrop / `Esc` + body-scroll lock
@@ -14,6 +14,7 @@
  *      an outside click
  *   4. theme toggle — flip `<html class="dark">` and persist to
  *      `localStorage['tutorial-theme']` (re-applied pre-paint by `BaseLayout`)
+ *   5. copy buttons — on each `<pre>` inside a `[data-copy-code]` container
  *
  * Vanilla DOM, no framework — same spirit as ../Lectures/src/scripts/deck.ts.
  */
@@ -266,6 +267,80 @@ function setupThemeToggle(): void {
   });
 }
 
+/* ── 5. Copy-to-clipboard on code blocks ──────────────────────────────── */
+
+const SVG_ATTRS =
+  'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"';
+const COPY_ICON = `<svg ${SVG_ATTRS}><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
+const CHECK_ICON = `<svg ${SVG_ATTRS}><path d="M20 6 9 17l-5-5"></path></svg>`;
+
+// How long the "copied" check holds before the button resets.
+const COPIED_MS = 2000;
+
+/**
+ * Give every `<pre>` inside a `[data-copy-code]` container a copy button.
+ * Opt-in per article, so only blocks meant to be pasted verbatim (the lab's
+ * email subject and links) get one. Skipped entirely without the async
+ * Clipboard API — no button beats one that does nothing.
+ */
+function setupCopyButtons(): void {
+  const blocks = document.querySelectorAll<HTMLPreElement>('[data-copy-code] pre');
+  if (blocks.length === 0 || !navigator.clipboard?.writeText) return;
+
+  const uk = document.documentElement.lang.startsWith('uk');
+  const label = uk ? 'Копіювати' : 'Copy';
+  const copiedLabel = uk ? 'Скопійовано' : 'Copied';
+  const failedLabel = uk ? 'Не вдалося скопіювати' : 'Copy failed';
+
+  for (const pre of blocks) {
+    // The button sits in a wrapper, not the `<pre>`, so it stays put when a
+    // long line scrolls the block sideways.
+    const wrapper = document.createElement('div');
+    wrapper.className = 'code-copy';
+    pre.before(wrapper);
+    wrapper.append(pre);
+
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'code-copy-button';
+    button.setAttribute('aria-label', label);
+    button.title = label;
+    button.innerHTML = COPY_ICON;
+
+    // Announces the result — a changed `aria-label` alone is not re-read.
+    const status = document.createElement('span');
+    status.className = 'sr-only';
+    status.setAttribute('role', 'status');
+
+    wrapper.append(button, status);
+
+    let timer = 0;
+    button.addEventListener('click', async () => {
+      const text = (pre.querySelector('code') ?? pre).textContent ?? '';
+      let message = copiedLabel;
+      try {
+        await navigator.clipboard.writeText(text.replace(/\n$/, ''));
+        button.innerHTML = CHECK_ICON;
+        button.setAttribute('data-copied', '');
+      } catch {
+        message = failedLabel;
+      }
+      button.setAttribute('aria-label', message);
+      button.title = message;
+      status.textContent = message;
+
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        button.innerHTML = COPY_ICON;
+        button.removeAttribute('data-copied');
+        button.setAttribute('aria-label', label);
+        button.title = label;
+        status.textContent = '';
+      }, COPIED_MS);
+    });
+  }
+}
+
 /* ── Entry point ──────────────────────────────────────────────────────── */
 
 /** Wire every reading-shell behaviour present on the page. Call once. */
@@ -277,4 +352,5 @@ export function initDocs(): void {
   setupScrollspy();
   setupTocDropdown();
   setupThemeToggle();
+  setupCopyButtons();
 }

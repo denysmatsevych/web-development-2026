@@ -1,0 +1,100 @@
+---
+/**
+ * MockupLightbox — the pricing mockup inline, plus a way to see it at full
+ * width in the top layer.
+ *
+ * The inline copy stays in the flow; the dialog only adds room the article
+ * column cannot give — which is exactly the "glance at and dismiss" case a
+ * dialog is for. The trigger is a real `<button>`, so keyboard and
+ * screen-reader users reach it the same way; the dialog's own close button is
+ * the first focusable element inside, which is where `showModal()` puts initial
+ * focus.
+ */
+import PricingMockup from '@/components/PricingMockup.astro';
+---
+
+<div class="lightbox">
+  <PricingMockup />
+
+  <button type="button" class="lightbox__trigger" data-lightbox-open> Збільшити макет </button>
+
+  <dialog class="lightbox__dialog" data-lightbox aria-label="Макет секції тарифів">
+    <button type="button" class="lightbox__close" data-lightbox-close aria-label="Закрити">
+      ✕
+    </button>
+    <PricingMockup />
+  </dialog>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.lightbox').forEach((root) => {
+    const dialog = root.querySelector<HTMLDialogElement>('[data-lightbox]');
+    if (!dialog) return;
+
+    root
+      .querySelector('[data-lightbox-open]')
+      ?.addEventListener('click', () => dialog.showModal());
+    dialog
+      .querySelector('[data-lightbox-close]')
+      ?.addEventListener('click', () => dialog.close());
+
+    // Click on the backdrop — the dialog element itself is the only target
+    // outside its own children.
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+  });
+</script>
+
+<style>
+  .lightbox__trigger {
+    display: block;
+    margin: 0.75rem auto 0;
+    padding: 0.35rem 0.8rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: none;
+    font: inherit;
+    font-size: 0.8125rem;
+    color: var(--brand-text);
+    cursor: pointer;
+  }
+
+  .lightbox__trigger:hover {
+    border-color: var(--color-brand-blue);
+  }
+
+  .lightbox__dialog {
+    /* Tailwind's preflight zeroes `margin` on `*`, which also kills the UA
+       stylesheet's `margin: auto` — the rule that centers a modal dialog
+       inside its `inset: 0`. Without this the dialog sits in the top-left
+       corner. */
+    margin: auto;
+    width: min(64rem, 92vw);
+    max-height: 90dvh;
+    padding: 2.5rem 1.5rem 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--background);
+    color: var(--foreground);
+    overflow: auto;
+  }
+
+  .lightbox__dialog::backdrop {
+    background: rgb(0 0 0 / 0.55);
+    backdrop-filter: blur(2px);
+  }
+
+  .lightbox__close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: none;
+    font: inherit;
+    color: var(--muted-foreground);
+    cursor: pointer;
+  }
+</style>

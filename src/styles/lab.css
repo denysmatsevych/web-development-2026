@@ -1,0 +1,82 @@
+/*
+ * Lab-page styles — imported only by src/layouts/LabLayout.astro, so every
+ * rule is scoped to `.lab-page` (LabLayout's wrapper) and never reaches the
+ * tutorial, which shares `.doc-content`.
+ *
+ * The lab pages follow the handout PDFs (public/labs/*.pdf), which students
+ * also download: Montserrat headings over Inter text in both themes, and in
+ * the light theme the PDF's own palette. The dark theme keeps the site tokens.
+ * SiteHeader / SiteFooter sit outside `.lab-shell` and stay on Roboto.
+ *
+ * Unlayered on purpose: it has to beat the `@layer base` `.doc-content` rules
+ * in global.css. Fonts are loaded by LabLayout.
+ */
+
+.lab-page {
+  --lab-font-heading: "Montserrat", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --lab-font-text: "Inter", ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+
+  /* Light theme — the PDF palette. All AA on white: heading 13.9:1,
+     subheading 10.6:1, text 12.2:1, code 5.0:1, link 6.6:1. */
+  --lab-heading: #192a56;
+  --lab-subheading: #273c75;
+  --lab-text: #2f3640;
+  --lab-code: #188038;
+  --lab-link: #1155cc;
+}
+
+.dark .lab-page {
+  --lab-heading: var(--foreground);
+  --lab-subheading: var(--foreground);
+  --lab-text: var(--foreground);
+  --lab-code: var(--foreground);
+  --lab-link: var(--brand-text);
+}
+
+.lab-page .lab-shell {
+  font-family: var(--lab-font-text);
+}
+
+.lab-page .lab-shell :is(h1, h2, h3, h4) {
+  font-family: var(--lab-font-heading);
+}
+
+.lab-page .doc-content {
+  color: var(--lab-text);
+}
+
+.lab-page .doc-content :is(h2, h3, h4) {
+  font-weight: 700;
+  color: var(--lab-heading);
+}
+
+.lab-page .doc-content :is(h3, h4) {
+  color: var(--lab-subheading);
+}
+
+.lab-page .doc-content a {
+  color: var(--lab-link);
+}
+
+/* The PDF's light-theme treatments that are more than a colour: links are
+   always underlined, and inline code is bare green monospace, not a chip. */
+html:not(.dark) .lab-page .doc-content a {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+html:not(.dark) .lab-page .doc-content :not(pre) > code {
+  padding: 0;
+  color: var(--lab-code);
+  background: none;
+}
+
+/* Phones: a table wider than the column scrolls inside its own box instead of
+   widening the page. Desktop keeps `display: table` on purpose — as a block,
+   a narrow table shrinks to its content instead of filling the column. */
+@media (max-width: 639px) {
+  .lab-page .doc-content table {
+    display: block;
+    overflow-x: auto;
+  }
+}
