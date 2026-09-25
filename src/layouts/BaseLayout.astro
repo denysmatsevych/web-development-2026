@@ -5,17 +5,18 @@
  * Owns `<html>` / `<head>` / `<body>`: meta + Open Graph, the Roboto webfont
  * (non-blocking print-media swap, same as the institute design system), the
  * pre-paint theme script that prevents a light flash, and the skip link.
- * Page chrome (header, sidebar, footer) is added a level up in `DocsLayout`
- * or by `src/pages/index.astro`.
+ * Page chrome (header, footer) is added a level up: `LabLayout` wraps lab
+ * pages, `DeckLayout` wraps slide decks, and the hub / index pages compose it
+ * themselves.
  *
- * `<html class="dark">` is the default; `ThemeToggle` (step 6) flips it and
- * persists to `localStorage['tutorial-theme']`, which the inline head script
- * below re-applies before the first paint.
+ * `<html class="dark">` is the default; `ThemeToggle` flips it and persists to
+ * `localStorage['course-theme']`, which the inline head script below
+ * re-applies before the first paint.
  */
-import '@/styles/global.css';
+import "@/styles/global.css";
 
-import { site } from '@/data/site';
-import { withBase } from '@/lib/paths';
+import { site } from "@/data/site";
+import { withBase } from "@/lib/paths";
 
 interface Props {
   /** Page-specific title. Composed as `"<title> · <site name>"` unless equal. */
@@ -24,8 +25,8 @@ interface Props {
   description?: string;
   /** Document language. `'en'` now; a `uk` locale passes `'uk'` later. */
   lang?: string;
-  /** OG type — `'article'` for doc pages, `'website'` elsewhere. */
-  ogType?: 'website' | 'article';
+  /** OG type — `'article'` for lab pages, `'website'` elsewhere. */
+  ogType?: "website" | "article";
   /** Extra class(es) on `<body>` (e.g. `'deck-page'` for the fullscreen deck). */
   bodyClass?: string;
   /** Skip-link target — the id the "skip to content" link jumps to. */
@@ -37,11 +38,11 @@ interface Props {
 const {
   title,
   description = site.description,
-  lang = 'en',
-  ogType = 'website',
+  lang = "en",
+  ogType = "website",
   bodyClass,
-  skipHref = '#main-content',
-  skipLabel = 'Skip to content',
+  skipHref = "#main-content",
+  skipLabel = "Skip to content",
 } = Astro.props;
 
 const documentTitle = title === site.name ? title : `${title} · ${site.name}`;
@@ -52,7 +53,7 @@ const canonicalURL = Astro.site
 // Roboto matches the institute `--font-roboto` stack. Loaded off the critical
 // path via the `media="print"` → `all` swap; `<noscript>` keeps it for no-JS.
 const fontHref =
-  'https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300..700;1,300..700&display=swap';
+  "https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300..700;1,300..700&display=swap";
 ---
 
 <!doctype html>
@@ -68,7 +69,7 @@ const fontHref =
     <meta name="description" content={description} />
     {canonicalURL && <link rel="canonical" href={canonicalURL} />}
 
-    <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
+    <link rel="icon" type="image/svg+xml" href={withBase("/favicon.svg")} />
 
     <meta property="og:type" content={ogType} />
     <meta property="og:title" content={documentTitle} />
@@ -85,32 +86,40 @@ const fontHref =
       // Non-blocking webfont: the sheet loads as `media="print"`, then flips to
       // `all` once ready. Listener is attached here, right after the <link>.
       (function () {
-        var link = document.getElementById('font-roboto');
-        if (link) link.addEventListener('load', function () { link.media = 'all'; });
+        var link = document.getElementById("font-roboto");
+        if (link)
+          link.addEventListener("load", function () {
+            link.media = "all";
+          });
       })();
     </script>
 
-    {/*
+    {
+      /*
       Apply the saved theme before the first paint so there is no light flash.
       `<html class="dark">` above is the default; only a stored preference
-      overrides it. Same pattern as ../Lectures/src/layouts/BaseLayout.astro
-      and website_ao/src/layouts/Layout.astro.
-    */}
+      overrides it.
+    */
+    }
     <script is:inline>
       try {
-        var theme = localStorage.getItem('tutorial-theme');
-        if (theme === 'light') document.documentElement.classList.remove('dark');
-        else if (theme === 'dark') document.documentElement.classList.add('dark');
+        var theme = localStorage.getItem("course-theme");
+        if (theme === "light")
+          document.documentElement.classList.remove("dark");
+        else if (theme === "dark")
+          document.documentElement.classList.add("dark");
       } catch (err) {
         /* localStorage unavailable (private mode, blocked cookies) — keep the default. */
       }
     </script>
 
-    {/* Per-layout head additions (e.g. DeckLayout's pre-paint theme script). */}
+    {
+      /* Per-layout head additions (e.g. DeckLayout's pre-paint theme script). */
+    }
     <slot name="head" />
   </head>
 
-  <body class:list={['antialiased', bodyClass]}>
+  <body class:list={["antialiased", bodyClass]}>
     <a
       href={skipHref}
       class="sr-only rounded-md bg-brand-blue px-4 py-2 text-pure-white shadow-lg focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50"
@@ -121,7 +130,7 @@ const fontHref =
     <slot />
 
     <script>
-      import { initDocs } from '@/scripts/docs';
+      import { initDocs } from "@/scripts/docs";
       initDocs();
     </script>
   </body>

@@ -2,9 +2,8 @@
  * Lab helpers — the flat, `number`-ordered list of published labs, plus the
  * prev/next pair for a lab page's footer nav.
  *
- * The handbook's equivalent (`src/lib/curriculum.ts`) has to reconcile a
- * Part/Chapter tree declared in `src/data/curriculum.ts`. Labs need none of
- * that: `number` in frontmatter is the whole ordering model.
+ * Labs use a flat ordering model: `number` in frontmatter is sufficient for
+ * sorting and for building the previous/next navigation.
  */
 import { getCollection, type CollectionEntry } from 'astro:content';
 
