@@ -21,7 +21,7 @@ const courseLinks = [
     <div class="grid gap-10 sm:grid-cols-2">
       <nav aria-label="Course">
         <p class="text-xs font-semibold uppercase tracking-widest text-pure-white/50">Course</p>
-        <ul class="mt-4 space-y-2.5 flex gap-4">
+        <ul class="mt-4 flex gap-4">
           {
             courseLinks.map((link) => (
               <li>
@@ -42,7 +42,6 @@ const courseLinks = [
         <p class="mt-4">
           <a
             href={site.contactUrl}
-            target="_blank"
             rel="noopener noreferrer"
             class="text-sm text-pure-white/80 transition-colors hover:text-brand-blue-light"
           >

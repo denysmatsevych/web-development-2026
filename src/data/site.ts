@@ -41,7 +41,7 @@ export const site: SiteConfig = {
   courseUk: 'Сучасна веброзробка · HTML, CSS, JS/TS',
 
   contactLabel: 'denys.matsevych@oa.edu.ua',
-  contactUrl: 'https://mail.google.com/mail/?view=cm&fs=1&to=denys.matsevych@oa.edu.ua',
+  contactUrl: 'mailto:denys.matsevych@oa.edu.ua',
 };
 
 export const sections: Section[] = [
