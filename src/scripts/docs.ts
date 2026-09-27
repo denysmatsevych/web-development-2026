@@ -193,18 +193,27 @@ function setupThemeToggle(): void {
   });
 
   document.addEventListener('keydown', (event) => {
-    const target = event.target;
-    const isTextField =
-      target instanceof HTMLElement &&
-      (target.matches('input, textarea, select') ||
-        target.isContentEditable ||
-        target.closest('[contenteditable="true"]'));
+  if (event.repeat) return;
 
-    if (event.key.toLowerCase() === 't' && !event.metaKey && !event.ctrlKey && !event.altKey && !isTextField) {
-      event.preventDefault();
-      toggleTheme();
-    }
-  });
+  const target = event.target;
+  const isTextField =
+    target instanceof HTMLElement &&
+    (target.matches('input, textarea, select, [role="textbox"], [role="searchbox"]') ||
+      target.isContentEditable ||
+      target.closest('[contenteditable="true"]'));
+
+  if (
+    event.code === 'KeyT' &&
+    !event.metaKey &&
+    !event.ctrlKey &&
+    !event.altKey &&
+    !event.shiftKey &&
+    !isTextField
+  ) {
+    event.preventDefault();
+    toggleTheme();
+  }
+});
 }
 
 /* ── 4. Copy-to-clipboard on code blocks ──────────────────────────────── */
@@ -285,8 +294,8 @@ function setupCopyButtons(): void {
 
 /** Wire every reading-shell behaviour present on the page. Call once. */
 export function initDocs(): void {
-  if (document.documentElement.dataset.themeInit === '1') return;
-  document.documentElement.dataset.themeInit = '1';
+  if (document.documentElement.dataset.docsInit === '1') return;
+  document.documentElement.dataset.docsInit = '1';
 
   setupScrollspy();
   setupTocDropdown();

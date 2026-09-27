@@ -77,13 +77,6 @@ const taskLabels = new Map(tasks.map((task) => [task.id, task.data.label]));
   <SiteFooter />
 </BaseLayout>
 
-<script>
-  // Theme toggle only — the sidebar and scrollspy branches no-op on this page.
-  import { initDocs } from '@/scripts/docs';
-
-  initDocs();
-</script>
-
 <style>
   .page {
     max-width: 60rem;

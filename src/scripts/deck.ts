@@ -50,7 +50,8 @@ export function initDeck(): void {
   slides.forEach((slide) => observer.observe(slide));
 
   document.addEventListener('keydown', (event) => {
-    if (event.ctrlKey || event.metaKey || event.altKey) return;
+    if (event.repeat) return;
+    if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
 
     switch (event.key) {
       case 'ArrowRight':
