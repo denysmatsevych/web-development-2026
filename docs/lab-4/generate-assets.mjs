@@ -1,5 +1,5 @@
 /**
- * Lab 4 — regenerates the FlowTask starter's raster assets.
+ * Lab 4-5 — regenerates the FlowTask starter's raster assets.
  *
  *   node docs/lab-4/generate-assets.mjs        (run from the repo root)
  *

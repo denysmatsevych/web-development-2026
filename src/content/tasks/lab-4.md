@@ -1,6 +1,6 @@
 ---
 title: "FlowTask — starter-проєкт для Web Quality Audit"
-summary: "Landing page SaaS-сервісу з навмисно допущеними проблемами accessibility, технічного SEO та performance. Основа для аудиту в ЛР №4."
+summary: "Landing page SaaS-сервісу з навмисно допущеними проблемами accessibility, технічного SEO та performance. Основа для аудиту в ЛР №4-5."
 goal: "Провести комплексний аудит наданого starter-проєкту FlowTask, підтвердити кожну виявлену проблему, виправити обґрунтовані та повторно перевірити результат. Практична частина відповідає розділу 5 лабораторної роботи."
 lang: uk
 label: "ТЗ"

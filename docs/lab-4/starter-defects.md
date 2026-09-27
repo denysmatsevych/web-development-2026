@@ -1,4 +1,4 @@
-# Lab 4 — FlowTask starter: defect map
+# Lab 4-5 — FlowTask starter: defect map
 
 Instructor-side companion to `/labs/lab-4/task/`. The student brief deliberately
 names no specific defect; this file is the build spec for the starter and the
@@ -178,6 +178,6 @@ renders the same rows and mockup as before. This resolves the open question left
 
 `AcceptanceChecklist` also keyed its `localStorage` state to the literal string
 `lab-2-acceptance`. With per-brief criteria that key is shared across ТЗ, so
-ЛР-2's saved ticks would restore against ЛР-4's twelve rows by index. It is now
+ЛР-2's saved ticks would restore against ЛР-4-5's twelve rows by index. It is now
 keyed to `location.pathname`. The one visible cost: ticks a student already
 saved on ЛР-2 under the old key are not carried over.

@@ -1,5 +1,6 @@
 ---
 number: 4
+numberLabel: "4-5"
 title: "AI-агент для Web Quality Audit: accessibility, технічне SEO та Core Web Vitals"
 summary: "Комплексний аудит наданого starter-проєкту: accessibility за WCAG 2.2, технічне SEO, structured data та Core Web Vitals. Цикл audit → verification → fix → re-audit із перевіркою рекомендацій AI."
 lang: uk
@@ -483,7 +484,7 @@ performance audit — за тих самих умов, що й первинни�
 **Тема листа:**
 
 ```
-[Веб] ЛР-4: AI-агент для Web Quality Audit: accessibility, технічне SEO та Core Web Vitals
+[Веб] ЛР-4-5: AI-агент для Web Quality Audit: accessibility, технічне SEO та Core Web Vitals
 ```
 
 У листі вказати посилання на:
@@ -559,7 +560,7 @@ _Core Web Vitals_
 
 ## 8. Оцінювання
 
-1. Успішний захист — **2 бали**.
+1. Успішний захист — **4 бали**.
 2. Додаткові **2 бали** за однієї з умов:
    - термін здачі до **30.09.2026**, АБО
    - робота на парі.
