@@ -20,7 +20,7 @@ import Breadcrumbs from "@/components/Breadcrumbs.astro";
 import LabHeader from "@/components/LabHeader.astro";
 import MockupLightbox from "@/components/MockupLightbox.astro";
 import LabLayout from "@/layouts/LabLayout.astro";
-import { getLabs, getTasks, labHref, taskHref } from "@/lib/labs";
+import { getLabs, getTasks, labHref, labNumber, taskHref } from "@/lib/labs";
 import { withBase } from "@/lib/paths";
 
 export async function getStaticPaths() {
@@ -42,7 +42,7 @@ const { Content, headings } = await render(task);
 
 const crumbs = [
   { label: "Labs", href: withBase("/labs/") },
-  { label: `ЛР-${lab.data.number}`, href: labHref(lab.id) },
+  { label: `ЛР-${labNumber(lab)}`, href: labHref(lab.id) },
   { label: data.label, href: taskHref(task.id) },
 ];
 
@@ -57,7 +57,7 @@ const crumbs = [
   <Breadcrumbs items={crumbs} />
 
   <LabHeader
-    eyebrow={`Технічне завдання · ЛР-${lab.data.number}`}
+    eyebrow={`Технічне завдання · ЛР-${labNumber(lab)}`}
     title={data.title}
     summary={data.summary}
     handout={data.handout}
@@ -92,7 +92,7 @@ const crumbs = [
 
   <nav class="task-back" aria-label="Lab">
     <a href={labHref(lab.id)} rel="up"
-      >← До лабораторної роботи №{lab.data.number}</a
+      >← До лабораторної роботи №{labNumber(lab)}</a
     >
   </nav>
 </LabLayout>

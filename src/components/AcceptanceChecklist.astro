@@ -40,7 +40,7 @@ const { items } = Astro.props;
 
 <script>
   // Scoped to the page: each ТЗ has its own criteria, so a shared key would
-  // restore ЛР-2's ticks against ЛР-4's rows.
+  // restore ЛР-2's ticks against ЛР-4-5's rows.
   const KEY = `acceptance:${location.pathname}`;
 
   document.querySelectorAll<HTMLElement>('.checklist').forEach((root) => {

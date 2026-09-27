@@ -8,7 +8,7 @@
 import SiteFooter from '@/components/SiteFooter.astro';
 import SiteHeader from '@/components/SiteHeader.astro';
 import { site } from '@/data/site';
-import { getLabs, getTasks, labHref } from '@/lib/labs';
+import { getLabs, getTasks, labHref, labNumber } from '@/lib/labs';
 import { withBase } from '@/lib/paths';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 
@@ -45,7 +45,16 @@ const taskLabels = new Map(tasks.map((task) => [task.id, task.data.label]));
                   { 'lab-card--individual': lab.data.kind === 'individual' },
                 ]}
               >
-                <span class="lab-card__index">{String(lab.data.number).padStart(2, '0')}</span>
+                <span class="lab-card__index">
+                  {labNumber(lab)
+                    .split('-')
+                    .map((n, i) => (
+                      <>
+                        {i > 0 && <span class="sr-only">-</span>}
+                        <span>{n.padStart(2, '0')}</span>
+                      </>
+                    ))}
+                </span>
                 <span class="lab-card__body">
                   <span class="lab-card__title">
                     {lab.data.title}
@@ -159,7 +168,12 @@ const taskLabels = new Map(tasks.map((task) => [task.id, task.data.label]));
     border-color: var(--color-brand-blue);
   }
 
+  /* A multi-slot lab (`4-5`) stacks its numbers, so its column stays as wide
+     as a single `04` and every card's body starts at the same x. */
   .lab-card__index {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
     font-size: 1.1rem;
     font-weight: 700;
     font-variant-numeric: tabular-nums;

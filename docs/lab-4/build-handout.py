@@ -24,7 +24,9 @@ EDGE = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
 text = SRC.read_text(encoding="utf-8")
 _, front, body = text.split("---", 2)
 title = re.search(r'^title:\s*"(.+)"\s*$', front, re.M).group(1)
-number = re.search(r"^number:\s*(\d+)", front, re.M).group(1)
+# `numberLabel` ("4-5") wins over the ordering `number` when the lab spans slots.
+label = re.search(r'^numberLabel:\s*"?([^"\n]+?)"?\s*$', front, re.M)
+number = label.group(1) if label else re.search(r"^number:\s*(\d+)", front, re.M).group(1)
 
 # The leading deadline blockquote becomes the green line under the title.
 m = re.match(r"\s*>\s*\*\*Термін здачі:\*\*\s*(.+?)\s*\n", body)

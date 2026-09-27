@@ -52,6 +52,11 @@ const labs = defineCollection({
     kind: z.enum(['lab', 'individual']).default('lab'),
     /** Ordering, the `ЛР-N` badge, and the index card index — `0` for the ІЗ. */
     number: z.number().int().nonnegative(),
+    /**
+     * Displayed number when one lab covers several slots — `"4-5"` shows as
+     * `ЛР-4-5`. Ordering still uses `number`; omit it for a single-slot lab.
+     */
+    numberLabel: z.string().optional(),
     /** Lab title (Ukrainian) — `<h1>` / card heading / `<title>` base. */
     title: z.string(),
     /** One-line description — index card blurb + meta description. */

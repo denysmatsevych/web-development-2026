@@ -46,18 +46,25 @@ export async function getLabs(): Promise<LabEntry[]> {
   return entries.sort((a, b) => a.data.number - b.data.number);
 }
 
+/** A lab's displayed number — `numberLabel` when it spans slots, else `number`. */
+export function labNumber({ data }: LabEntry): string {
+  return data.numberLabel ?? String(data.number);
+}
+
 /**
  * How a lab is named in page chrome — the header eyebrow and its breadcrumb.
  * The ІЗ has no lab number worth showing, so it is named by its kind.
  */
-export function labLabels({ data }: LabEntry): { eyebrow: string; crumb: string } {
+export function labLabels(entry: LabEntry): { eyebrow: string; crumb: string } {
+  const { data } = entry;
   if (data.kind === 'individual') {
     return {
       eyebrow: ['Самостійна робота', data.duration].filter(Boolean).join(' · '),
       crumb: 'Індивідуальне завдання',
     };
   }
-  return { eyebrow: `Лабораторна робота №${data.number}`, crumb: `ЛР-${data.number}` };
+  const n = labNumber(entry);
+  return { eyebrow: `Лабораторна робота №${n}`, crumb: `ЛР-${n}` };
 }
 
 /**
