@@ -1,9 +1,9 @@
-"""Build public/labs/lab-4.pdf from src/content/labs/lab-4.md.
+"""Build public/labs/<lab>.pdf from src/content/labs/<lab>.md.
 
 Matches the look of lab-3.pdf (Noto Sans, navy headings, green deadline line,
-grey code blocks, US Letter). Run from the repo root:
+grey code blocks, US Letter). Run from the repo root with the lab's id:
 
-    python docs/lab-4/build-handout.py
+    python docs/build-handout.py lab-6
 
 Needs `markdown-it-py` (pip) and Microsoft Edge; fonts come from jsDelivr
 (Fontsource), so the run needs network access.
@@ -11,13 +11,17 @@ Needs `markdown-it-py` (pip) and Microsoft Edge; fonts come from jsDelivr
 import pathlib
 import re
 import subprocess
+import sys
 import tempfile
 
 from markdown_it import MarkdownIt
 
-ROOT = pathlib.Path(__file__).resolve().parents[2]
-SRC = ROOT / "src/content/labs/lab-4.md"
-OUT = ROOT / "public/labs/lab-4.pdf"
+ROOT = pathlib.Path(__file__).resolve().parents[1]
+if len(sys.argv) != 2:
+    sys.exit("usage: python docs/build-handout.py <lab-id>   (e.g. lab-6)")
+LAB = sys.argv[1]
+SRC = ROOT / f"src/content/labs/{LAB}.md"
+OUT = ROOT / f"public/labs/{LAB}.pdf"
 SITE = "https://denysmatsevych.github.io/web-development-2026"
 EDGE = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
 
@@ -62,6 +66,9 @@ h2 { font-size: 20.8pt; margin: 1.05em 0 0.35em; }
 h3 { font-size: 16.2pt; margin: 1em 0 0.3em; }
 h4 { font-size: 12.6pt; margin: 0.9em 0 0.25em; }
 p { margin: 0 0 0.5em; }
+/* A bold-only label ("Тема листа:") or a line introducing code belongs to what follows it. */
+p:has(> strong:only-child), p:has(+ pre) { break-after: avoid; page-break-after: avoid; }
+li:first-child { break-before: avoid; }
 a { color: var(--link); }
 .deadline { color: var(--ok); font-weight: 700; font-size: 12.2pt; margin: 0 0 1.3em; }
 ul, ol { margin: 0.2em 0 0.6em; padding-left: 1.6em; }
