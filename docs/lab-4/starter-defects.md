@@ -7,7 +7,7 @@ grading reference.
 | Source | Becomes |
 | --- | --- |
 | `src/content/labs/lab-4.md` | `/labs/lab-4/` |
-| `src/content/labs/lab-4.md` via `docs/lab-4/build-handout.py` | `/labs/lab-4.pdf` (re-run after editing the handout) |
+| `src/content/labs/lab-4.md` via `docs/build-handout.py lab-4` | `/labs/lab-4.pdf` (re-run after editing the handout) |
 | `src/content/tasks/lab-4.md` | `/labs/lab-4/task/` |
 | `flowtask-starter/` (see §6) | the code students audit |
 
