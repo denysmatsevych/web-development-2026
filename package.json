@@ -3,7 +3,7 @@
   "type": "module",
   "version": "1.0.0",
   "private": true,
-  "description": "Web Development 2026 — one course site: hub, lecture slide decks, labs, and the javascript.info-style tutorial handbook. Astro + Tailwind CSS v4.",
+  "description": "Web Development 2026 — one course site: hub, lecture slide decks, labs. Astro + Tailwind CSS v4.",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",

@@ -3,42 +3,10 @@ import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
 /**
- * The `docs` collection — every tutorial article, one Markdown file per topic
- * under `src/content/docs/<locale>/`.
- *
- * The glob loader keeps the locale folder in the entry id (`en/intro`,
- * `uk/intro` later), which is how `src/lib/curriculum.ts` selects a locale's
- * articles and derives its flat slug (`intro`). Adding `src/content/docs/uk/**`
- * is the only change needed to light up a `uk` tree — this schema is shared.
- *
- * Structural placement (which Part / Chapter, and the position within it) lives
- * in frontmatter, not the folder path: `chapter` points at a `Chapter.id` from
- * `src/data/curriculum.ts` and `order` sequences the article inside that
- * chapter. An article whose `chapter` isn't declared there is warned about and
- * skipped at build time (see `getFlatDocs`).
- */
-const docs = defineCollection({
-  // ids look like "en/intro" — locale folder retained, ".md" stripped.
-  loader: glob({ pattern: '**/*.md', base: './src/content/docs' }),
-  schema: z.object({
-    /** Article `<h1>` / nav label / `<title>` base. */
-    title: z.string(),
-    /** Owning `Chapter.id` from `src/data/curriculum.ts`. */
-    chapter: z.string(),
-    /** 1-based position within the chapter (prev/next + sidebar order). */
-    order: z.number().int().positive(),
-    /** One-line description — homepage list + article subhead. */
-    summary: z.string().optional(),
-    /** Hidden from every derived nav view while true. */
-    draft: z.boolean().default(false),
-  }),
-});
-
-/**
  * The `labs` collection — one Markdown file per lab assignment under
- * `src/content/labs/`. Unlike `docs`, labs are flat (no locale folder): the
- * course's lab handouts are Ukrainian, and `lang` carries that to `<html lang>`
- * rather than the file path. Ordering is `number`, not folder position.
+ * `src/content/labs/`. The files are flat (no locale folder): the course's lab
+ * handouts are Ukrainian, and `lang` carries that to `<html lang>` rather than
+ * the file path. Ordering is `number`, not folder position.
  */
 const labs = defineCollection({
   // ids look like "lab-1" — ".md" stripped, no prefix.
@@ -52,6 +20,11 @@ const labs = defineCollection({
     kind: z.enum(['lab', 'individual']).default('lab'),
     /** Ordering, the `ЛР-N` badge, and the index card index — `0` for the ІЗ. */
     number: z.number().int().nonnegative(),
+    /**
+     * Displayed number when one lab covers several slots — `"4-5"` shows as
+     * `ЛР-4-5`. Ordering still uses `number`; omit it for a single-slot lab.
+     */
+    numberLabel: z.string().optional(),
     /** Lab title (Ukrainian) — `<h1>` / card heading / `<title>` base. */
     title: z.string(),
     /** One-line description — index card blurb + meta description. */
@@ -102,6 +75,19 @@ const tasks = defineCollection({
     label: z.string().default('ТЗ'),
     /** Constraint chips on the hand-off card — 2–4 short phrases. */
     highlights: z.array(z.string()).default([]),
+    /**
+     * The brief's §7 acceptance criteria, one line per row, for the self-check
+     * dialog. Frontmatter rather than the route (see `labs/[lab]/task.astro`)
+     * so a second brief cannot inherit another lab's criteria; empty hides the
+     * dialog.
+     */
+    acceptance: z.array(z.string()).default([]),
+    /**
+     * Which mockup to render above the body. A brief that specifies a target
+     * design names one; a brief whose practical part is an audit of supplied
+     * code names none.
+     */
+    mockup: z.enum(['pricing']).optional(),
     /** "Актуально станом на" date from the brief. */
     updated: z.coerce.date().optional(),
     /** Path (no base prefix) to the downloadable brief, if published. */
@@ -111,4 +97,4 @@ const tasks = defineCollection({
   }),
 });
 
-export const collections = { docs, labs, tasks };
+export const collections = { labs, tasks };

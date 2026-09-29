@@ -2,9 +2,8 @@
  * Lab helpers — the flat, `number`-ordered list of published labs, plus the
  * prev/next pair for a lab page's footer nav.
  *
- * The handbook's equivalent (`src/lib/curriculum.ts`) has to reconcile a
- * Part/Chapter tree declared in `src/data/curriculum.ts`. Labs need none of
- * that: `number` in frontmatter is the whole ordering model.
+ * Labs use a flat ordering model: `number` in frontmatter is sufficient for
+ * sorting and for building the previous/next navigation.
  */
 import { getCollection, type CollectionEntry } from 'astro:content';
 
@@ -46,18 +45,25 @@ export async function getLabs(): Promise<LabEntry[]> {
   return entries.sort((a, b) => a.data.number - b.data.number);
 }
 
+/** A lab's displayed number — `numberLabel` when it spans slots, else `number`. */
+export function labNumber({ data }: LabEntry): string {
+  return data.numberLabel ?? String(data.number);
+}
+
 /**
  * How a lab is named in page chrome — the header eyebrow and its breadcrumb.
  * The ІЗ has no lab number worth showing, so it is named by its kind.
  */
-export function labLabels({ data }: LabEntry): { eyebrow: string; crumb: string } {
+export function labLabels(entry: LabEntry): { eyebrow: string; crumb: string } {
+  const { data } = entry;
   if (data.kind === 'individual') {
     return {
       eyebrow: ['Самостійна робота', data.duration].filter(Boolean).join(' · '),
       crumb: 'Індивідуальне завдання',
     };
   }
-  return { eyebrow: `Лабораторна робота №${data.number}`, crumb: `ЛР-${data.number}` };
+  const n = labNumber(entry);
+  return { eyebrow: `Лабораторна робота №${n}`, crumb: `ЛР-${n}` };
 }
 
 /**

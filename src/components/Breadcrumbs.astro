@@ -1,10 +1,10 @@
 ---
 /**
- * Breadcrumbs — pure render of the trail from `getBreadcrumbs(slug)`:
- * `Tutorial › Part › Chapter › Article`. The Part / Chapter crumbs link to
- * their homepage-ToC anchors; the last crumb is the current page.
+ * Breadcrumbs — render a lightweight section trail for the current page.
+ * The final crumb stays as the active page label, while earlier crumbs link
+ * back to their parent sections.
  */
-import type { Crumb } from '@/lib/curriculum';
+interface Crumb { label: string; href: string }
 
 interface Props {
   /** Root first, current article last. */

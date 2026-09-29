@@ -16,15 +16,15 @@ merged project). Everything here reuses patterns already in the codebase — the
 
 ### What the document is
 
-| Field | Value |
-| --- | --- |
-| Title | ЛАБОРАТОРНА РОБОТА №1 — Налаштування середовища розробки для HTML, CSS, JavaScript/TypeScript |
-| Discipline | «Сучасна веброзробка: HTML, CSS, JS/TS» |
-| Level | 3 курс, спеціальність «Комп'ютерні науки» |
-| Format | індивідуально |
-| Duration | 2–4 академічні години + час на налаштування акаунтів |
-| Valid as of | 10 вересня 2026 |
-| Language | **Ukrainian** |
+| Field       | Value                                                                                         |
+| ----------- | --------------------------------------------------------------------------------------------- |
+| Title       | ЛАБОРАТОРНА РОБОТА №1 — Налаштування середовища розробки для HTML, CSS, JavaScript/TypeScript |
+| Discipline  | «Сучасна веброзробка: HTML, CSS, JS/TS»                                                       |
+| Level       | 3 курс, спеціальність «Комп'ютерні науки»                                                     |
+| Format      | індивідуально                                                                                 |
+| Duration    | 2–4 академічні години + час на налаштування акаунтів                                          |
+| Valid as of | 10 вересня 2026                                                                               |
+| Language    | **Ukrainian**                                                                                 |
 
 ### Shape of the content
 
@@ -39,6 +39,7 @@ Nine numbered sections plus two appendices:
 7. Контрольні питання — 10 questions
 8. Критерії готовності — 1 table
 9. Список джерел — 41 official links
+
 - Додаток А — student checklist table (15 rows)
 - Додаток Б — recommended prompts table (6 rows)
 
@@ -66,15 +67,15 @@ unzip -o "ЛР-1_....docx" -d extracted
 
 ## 2. Decisions
 
-| Decision | Choice | Why |
-| --- | --- | --- |
-| Content model | New `labs` content collection, one `.md` per lab | Mirrors `docs`; prose/tables/code are Markdown-shaped |
-| File | `src/content/labs/lab-1.md` (flat, no locale folder) | Labs are Ukrainian-only for now; a `lang` frontmatter field carries the language |
-| URL | `/labs/lab-1/` | Matches `/lectures/<slug>`; readable |
-| Layout | New `LabLayout.astro` (header + article + ToC rail + footer) | `DocsLayout` is hard-wired to `SubjectTabs` + curriculum `Sidebar`; labs have neither |
-| Prose styling | Reuse the global `.doc-content` class | Already styles h2–h4, lists, tables, `pre`, blockquotes, inline code |
-| Page language | `lang="uk"` on `<html>`, English UI chrome | Decks are already Ukrainian; only the article body is translated content |
-| Handout | `public/labs/lab-1.pdf`, linked from the page | Students expect the original document |
+| Decision      | Choice                                                       | Why                                                                                   |
+| ------------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------------- |
+| Content model | New `labs` content collection, one `.md` per lab             | Mirrors `docs`; prose/tables/code are Markdown-shaped                                 |
+| File          | `src/content/labs/lab-1.md` (flat, no locale folder)         | Labs are Ukrainian-only for now; a `lang` frontmatter field carries the language      |
+| URL           | `/labs/lab-1/`                                               | Matches `/lectures/<slug>`; readable                                                  |
+| Layout        | New `LabLayout.astro` (header + article + ToC rail + footer) | `DocsLayout` is hard-wired to `SubjectTabs` + curriculum `Sidebar`; labs have neither |
+| Prose styling | Reuse the global `.doc-content` class                        | Already styles h2–h4, lists, tables, `pre`, blockquotes, inline code                  |
+| Page language | `lang="uk"` on `<html>`, English UI chrome                   | Decks are already Ukrainian; only the article body is translated content              |
+| Handout       | `public/labs/lab-1.pdf`, linked from the page                | Students expect the original document                                                 |
 
 **Deliberately deferred:** a Ukrainian UI locale, a labs sidebar, submission
 forms, per-task progress tracking. See §12.
@@ -123,7 +124,7 @@ collection untouched; append `labs` and extend the export.
  */
 const labs = defineCollection({
   // ids look like "lab-1" — ".md" stripped, no prefix.
-  loader: glob({ pattern: '**/*.md', base: './src/content/labs' }),
+  loader: glob({ pattern: "**/*.md", base: "./src/content/labs" }),
   schema: z.object({
     /** Lab number — ordering, the `ЛР-N` badge, and the index card index. */
     number: z.number().int().positive(),
@@ -132,7 +133,7 @@ const labs = defineCollection({
     /** One-line description — index card blurb + meta description. */
     summary: z.string(),
     /** BCP-47 language of the body — drives `<html lang>`. */
-    lang: z.string().default('uk'),
+    lang: z.string().default("uk"),
     /** Header meta panel — all optional so a terse lab can skip them. */
     discipline: z.string().optional(),
     level: z.string().optional(),
@@ -194,11 +195,11 @@ far smaller — labs are a flat ordered list.
  * Part/Chapter tree declared in `src/data/curriculum.ts`. Labs need none of
  * that: `number` in frontmatter is the whole ordering model.
  */
-import { getCollection, type CollectionEntry } from 'astro:content';
+import { getCollection, type CollectionEntry } from "astro:content";
 
-import { withBase } from '@/lib/paths';
+import { withBase } from "@/lib/paths";
 
-export type LabEntry = CollectionEntry<'labs'>;
+export type LabEntry = CollectionEntry<"labs">;
 
 export interface LabMeta {
   /** Collection id — `lab-1` — which is also the URL segment. */
@@ -230,7 +231,7 @@ export function toLabMeta(entry: LabEntry): LabMeta {
  * (index, routes and prev/next), so an unfinished lab can sit in the repo.
  */
 export async function getLabs(): Promise<LabEntry[]> {
-  const entries = await getCollection('labs', ({ data }) => !data.draft);
+  const entries = await getCollection("labs", ({ data }) => !data.draft);
   return entries.sort((a, b) => a.data.number - b.data.number);
 }
 
@@ -477,7 +478,7 @@ const { title, description, lang = 'uk', headings = [] } = Astro.props;
   /* Matches DocsLayout: SiteHeader is 4rem, and global.css sizes
      `.doc-content` heading `scroll-margin-top` against it. */
   .lab-page {
-    --docs-header-h: 4rem;
+    --header-h: 4rem;
   }
 
   .lab-shell {
@@ -512,9 +513,9 @@ const { title, description, lang = 'uk', headings = [] } = Astro.props;
 
     .area-toc {
       position: sticky;
-      top: calc(var(--docs-header-h) + 1rem);
+      top: calc(var(--header-h) + 1rem);
       align-self: start;
-      max-height: calc(100dvh - var(--docs-header-h) - 2rem);
+      max-height: calc(100dvh - var(--header-h) - 2rem);
       overflow-y: auto;
     }
   }
@@ -769,7 +770,6 @@ from the labs blurb:
    ```
 
 3. Walk the checklist:
-
    - [ ] `/labs/` lists Lab 1; the card links to `/labs/lab-1/`
    - [ ] `/labs/lab-1/` renders; `<html lang="uk">` in view-source
    - [ ] All 7 tables render as tables (not raw pipes)
@@ -815,7 +815,7 @@ from the labs blurb:
 Complete file, ready to paste. Ukrainian body transcribed from the source
 document; frontmatter carries the header block and handout link.
 
-`````markdown
+````markdown
 ---
 number: 1
 title: "Налаштування середовища розробки для HTML, CSS, JavaScript/TypeScript"
@@ -878,12 +878,12 @@ JavaScript формально стандартизується Ecma Internationa
 Handbook і Reference, з яких Handbook позиціонується як основна щоденна
 навчальна документація.
 
-| Технологія | Основне офіційне джерело | Що дає студенту | Чи описує налаштування IDE? |
-| --- | --- | --- | --- |
-| HTML | WHATWG HTML Living Standard | семантика, структура документа, DOM, алгоритми браузера | Ні, переважно специфікація; setup — у документації інструментів |
-| CSS | W3C CSS / CSS Snapshot 2026 | модулі CSS, синтаксис, каскад, layout, сумісність | Мінімально; інструменти авторингу згадуються загально |
-| JavaScript | ECMAScript + MDN | мовні конструкції, API та практичні приклади | MDN має окремий Environment Setup, але це не документація конкретної IDE |
-| TypeScript | TypeScript Handbook / Reference | типізація, compiler options, everyday types, modules | Пояснює tooling, але IDE setup деталізується в документації IDE |
+| Технологія | Основне офіційне джерело        | Що дає студенту                                         | Чи описує налаштування IDE?                                              |
+| ---------- | ------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------ |
+| HTML       | WHATWG HTML Living Standard     | семантика, структура документа, DOM, алгоритми браузера | Ні, переважно специфікація; setup — у документації інструментів          |
+| CSS        | W3C CSS / CSS Snapshot 2026     | модулі CSS, синтаксис, каскад, layout, сумісність       | Мінімально; інструменти авторингу згадуються загально                    |
+| JavaScript | ECMAScript + MDN                | мовні конструкції, API та практичні приклади            | MDN має окремий Environment Setup, але це не документація конкретної IDE |
+| TypeScript | TypeScript Handbook / Reference | типізація, compiler options, everyday types, modules    | Пояснює tooling, але IDE setup деталізується в документації IDE          |
 
 ### 3.2. Де офіційна документація говорить про IDE та environment setup
 
@@ -907,36 +907,37 @@ configuration та AI.
 
 ### 3.3. Порівняння IDE/редакторів
 
-| Критерій | VS Code | WebStorm | Cursor | Windsurf |
-| --- | --- | --- | --- | --- |
-| Позиціонування | легкий розширюваний редактор з IDE-подібними функціями | повноцінна IDE JetBrains для JavaScript/TypeScript/web | VS Code-based AI-first editor | VS Code-based AI-first editor |
-| HTML/CSS/JS/TS | сильна built-in підтримка | глибока built-in підтримка | як у VS Code + AI | як у VS Code + AI |
-| Розширення | Visual Studio Marketplace | JetBrains Marketplace + bundled plugins | Open VSX + власні/аудитовані заміни для частини розширень | Open VSX / сумісні плагіни, залежно від версії |
-| Git | built-in + extensions | глибока built-in інтеграція | built-in | built-in |
-| Debugging | JavaScript/TypeScript/Node.js | клієнтський і серверний JS, інтеграція тестів | через VS Code stack + Agent | через VS Code stack + Cascade |
-| AI | GitHub Copilot / інші плагіни | Junie / AI Assistant та інші плагіни | Agent, rules, skills, MCP та ін. | Cascade, rules/memories/workflows/skills за актуальною документацією |
-| Рекомендація для курсу | основний baseline | сильна альтернатива | AI-first альтернатива | AI-first альтернатива |
+| Критерій               | VS Code                                                | WebStorm                                               | Cursor                                                    | Windsurf                                                             |
+| ---------------------- | ------------------------------------------------------ | ------------------------------------------------------ | --------------------------------------------------------- | -------------------------------------------------------------------- |
+| Позиціонування         | легкий розширюваний редактор з IDE-подібними функціями | повноцінна IDE JetBrains для JavaScript/TypeScript/web | VS Code-based AI-first editor                             | VS Code-based AI-first editor                                        |
+| HTML/CSS/JS/TS         | сильна built-in підтримка                              | глибока built-in підтримка                             | як у VS Code + AI                                         | як у VS Code + AI                                                    |
+| Розширення             | Visual Studio Marketplace                              | JetBrains Marketplace + bundled plugins                | Open VSX + власні/аудитовані заміни для частини розширень | Open VSX / сумісні плагіни, залежно від версії                       |
+| Git                    | built-in + extensions                                  | глибока built-in інтеграція                            | built-in                                                  | built-in                                                             |
+| Debugging              | JavaScript/TypeScript/Node.js                          | клієнтський і серверний JS, інтеграція тестів          | через VS Code stack + Agent                               | через VS Code stack + Cascade                                        |
+| AI                     | GitHub Copilot / інші плагіни                          | Junie / AI Assistant та інші плагіни                   | Agent, rules, skills, MCP та ін.                          | Cascade, rules/memories/workflows/skills за актуальною документацією |
+| Рекомендація для курсу | основний baseline                                      | сильна альтернатива                                    | AI-first альтернатива                                     | AI-first альтернатива                                                |
 
 ### 3.4. Рекомендований baseline для студента 3 курсу
 
 Для всієї групи доцільно стандартизувати не одну «правильну IDE», а один набір
 проєктних практик. Найпростіший спільний baseline — VS Code + Git + Node.js LTS
-+ ESLint + Prettier + Live Preview + GitHub. WebStorm можна використовувати без
-зміни навчальних результатів, оскільки він має native support для HTML/CSS/JS/TS
-та інтеграцію linting/formatting. Cursor і Windsurf доцільні як AI-first
-варіанти, але студент має розуміти, що AI не замінює IDE-базові операції:
-запуск, дебаг, Git, перевірку diff і читання документації.
+
+- ESLint + Prettier + Live Preview + GitHub. WebStorm можна використовувати без
+  зміни навчальних результатів, оскільки він має native support для HTML/CSS/JS/TS
+  та інтеграцію linting/formatting. Cursor і Windsurf доцільні як AI-first
+  варіанти, але студент має розуміти, що AI не замінює IDE-базові операції:
+  запуск, дебаг, Git, перевірку diff і читання документації.
 
 ### 3.5. Мінімальний набір сторонніх додатків
 
-| Інструмент | VS Code | WebStorm | Cursor | Windsurf | Навіщо |
-| --- | --- | --- | --- | --- | --- |
-| ESLint | Обов'язково | Бажано | Бажано | Бажано | виявлення проблем JavaScript/TypeScript та автоматичні fixes |
-| Prettier | Обов'язково | Бажано | Бажано | Бажано | однакове форматування HTML/CSS/JS/TS |
-| Live Preview | Рекомендовано | не потрібно | необов'язково | необов'язково | локальний preview + live reload для статичного web-проєкту |
-| GitLens | Рекомендовано | не потрібно | необов'язково | Рекомендовано | розширений Git blame/history/CodeLens |
-| Error Lens | Опційно | не потрібно | Опційно | Опційно | помітні inline повідомлення про помилки |
-| EditorConfig | Рекомендовано | частково | Рекомендовано | Рекомендовано | узгодження базових правил відступів/кінцевих символів |
+| Інструмент   | VS Code       | WebStorm    | Cursor        | Windsurf      | Навіщо                                                       |
+| ------------ | ------------- | ----------- | ------------- | ------------- | ------------------------------------------------------------ |
+| ESLint       | Обов'язково   | Бажано      | Бажано        | Бажано        | виявлення проблем JavaScript/TypeScript та автоматичні fixes |
+| Prettier     | Обов'язково   | Бажано      | Бажано        | Бажано        | однакове форматування HTML/CSS/JS/TS                         |
+| Live Preview | Рекомендовано | не потрібно | необов'язково | необов'язково | локальний preview + live reload для статичного web-проєкту   |
+| GitLens      | Рекомендовано | не потрібно | необов'язково | Рекомендовано | розширений Git blame/history/CodeLens                        |
+| Error Lens   | Опційно       | не потрібно | Опційно       | Опційно       | помітні inline повідомлення про помилки                      |
+| EditorConfig | Рекомендовано | частково    | Рекомендовано | Рекомендовано | узгодження базових правил відступів/кінцевих символів        |
 
 **Принцип:** не встановлювати десятки «корисних» розширень. Кожне розширення має
 конкретну функцію й перевіреного publisher. VS Code офіційно попереджає, що
@@ -977,13 +978,13 @@ deployment після push. Це дозволяє в межах однієї л�
 межі автономії агента, перевіряти його diff та відокремлювати «контекст про
 проєкт» від «команди для конкретного кроку».
 
-| Механізм | Призначення | Приклад | Коли використовувати |
-| --- | --- | --- | --- |
-| Prompt | разове завдання | «Знайди причину 404 і виправ її» | одна конкретна задача |
-| Rule / AGENTS.md | постійні правила проєкту | «Використовуй TypeScript; перед commit запускати lint» | спільні або постійні вимоги |
-| Skill (SKILL.md) | повторювана процедура + знання | «Перевір frontend за чеклістом доступності» | складний, але типовий workflow |
-| Workflow / command | ручний запуск послідовності | «/deploy-preview» | коли процедура має виконуватися явно |
-| MCP / tools | доступ до зовнішнього контексту або сервісу | документація, issue tracker | коли потрібні зовнішні дані/дії |
+| Механізм           | Призначення                                 | Приклад                                                | Коли використовувати                 |
+| ------------------ | ------------------------------------------- | ------------------------------------------------------ | ------------------------------------ |
+| Prompt             | разове завдання                             | «Знайди причину 404 і виправ її»                       | одна конкретна задача                |
+| Rule / AGENTS.md   | постійні правила проєкту                    | «Використовуй TypeScript; перед commit запускати lint» | спільні або постійні вимоги          |
+| Skill (SKILL.md)   | повторювана процедура + знання              | «Перевір frontend за чеклістом доступності»            | складний, але типовий workflow       |
+| Workflow / command | ручний запуск послідовності                 | «/deploy-preview»                                      | коли процедура має виконуватися явно |
+| MCP / tools        | доступ до зовнішнього контексту або сервісу | документація, issue tracker                            | коли потрібні зовнішні дані/дії      |
 
 Cursor офіційно підтримує Agent Skills як відкритий стандарт, правила проєкту та
 `AGENTS.md`. Опис Agent Skills визначає переносимий підхід: папка зі `SKILL.md`,
@@ -1187,24 +1188,29 @@ AI-агент є інструментом підтримки розробник�
    # Frontend Lab Agent Instructions
 
    ## Role
+
    Act as a careful frontend development assistant for a 3rd-year CS student.
 
    ## Project
+
    - HTML + CSS + JavaScript/TypeScript.
    - Prefer browser-native APIs and simple solutions.
    - Do not add dependencies unless there is a clear reason.
 
    ## Before editing
+
    1. Inspect the relevant files.
    2. State a short plan.
    3. Identify risks or missing context.
 
    ## After editing
+
    1. Check the diff.
    2. Run the relevant lint/format/type checks.
    3. Report exactly what changed and what was verified.
 
    ## Safety
+
    Never expose or invent secrets. Do not delete files or rewrite project
    configuration without explaining why.
    ```
@@ -1220,6 +1226,7 @@ AI-агент є інструментом підтримки розробник�
    # Frontend Review
 
    ## Checklist
+
    1. Inspect only the files relevant to the task.
    2. Check HTML semantics and obvious accessibility issues.
    3. Check CSS responsiveness and class naming consistency.
@@ -1343,15 +1350,15 @@ AI-агент є інструментом підтримки розробник�
 
 ### 6.4. Приклад структури звіту
 
-| Розділ | Зміст |
-| --- | --- |
-| 1. Тема і мета | назва роботи, мета, ПІБ, група |
-| 2. Середовище | IDE, ОС, Git, Node.js, основні плагіни |
-| 3. AI-агент | агент, AGENTS.md/rules, skill, 2–3 приклади промптів |
-| 4. GitHub | repository, commit/push, посилання |
-| 5. Deployment | GitHub Pages і Vercel, посилання |
+| Розділ              | Зміст                                                    |
+| ------------------- | -------------------------------------------------------- |
+| 1. Тема і мета      | назва роботи, мета, ПІБ, група                           |
+| 2. Середовище       | IDE, ОС, Git, Node.js, основні плагіни                   |
+| 3. AI-агент         | агент, AGENTS.md/rules, skill, 2–3 приклади промптів     |
+| 4. GitHub           | repository, commit/push, посилання                       |
+| 5. Deployment       | GitHub Pages і Vercel, посилання                         |
 | 6. Контрольна зміна | що змінилось, як перевірялось, як оновились deployment-и |
-| 7. Висновок | що налаштовано, що перевірено, що було складним |
+| 7. Висновок         | що налаштовано, що перевірено, що було складним          |
 
 ## 7. Контрольні питання
 
@@ -1370,16 +1377,16 @@ AI-агент є інструментом підтримки розробник�
 
 ## 8. Критерії готовності лабораторної
 
-| Критерій | Мінімальна вимога |
-| --- | --- |
-| IDE | встановлена, відкриває проєкт, працюють HTML/CSS/JS/TS features |
-| Tooling | ESLint + Prettier налаштовані; є локальний preview/debug |
-| AI | агент доступний; створено `AGENTS.md` або equivalent rules; створено 1 reusable skill за підтримки інструмента |
-| GitHub | репозиторій створено, код запушено, є щонайменше 2 змістовні commits |
-| GitHub Pages | публічний URL відкриває актуальну версію сайту |
-| Vercel | deployment успішний; після push створюється нова версія |
-| Зміна | студент продемонстрував edit → verify → commit → push → deploy |
-| Звіт | містить посилання, короткий опис середовища, AI та висновок |
+| Критерій     | Мінімальна вимога                                                                                              |
+| ------------ | -------------------------------------------------------------------------------------------------------------- |
+| IDE          | встановлена, відкриває проєкт, працюють HTML/CSS/JS/TS features                                                |
+| Tooling      | ESLint + Prettier налаштовані; є локальний preview/debug                                                       |
+| AI           | агент доступний; створено `AGENTS.md` або equivalent rules; створено 1 reusable skill за підтримки інструмента |
+| GitHub       | репозиторій створено, код запушено, є щонайменше 2 змістовні commits                                           |
+| GitHub Pages | публічний URL відкриває актуальну версію сайту                                                                 |
+| Vercel       | deployment успішний; після push створюється нова версія                                                        |
+| Зміна        | студент продемонстрував edit → verify → commit → push → deploy                                                 |
+| Звіт         | містить посилання, короткий опис середовища, AI та висновок                                                    |
 
 ## 9. Список джерел
 
@@ -1449,31 +1456,31 @@ AI-агент є інструментом підтримки розробник�
 
 ## Додаток Б. Рекомендовані базові промпти
 
-| Ситуація | Приклад промпту |
-| --- | --- |
-| Початок роботи | «Проаналізуй структуру цього web-проєкту. Нічого не змінюй. Назви основні файли та ризики.» |
-| Планування | «Потрібно додати dark mode без нових залежностей. Спочатку дай короткий план і перелік файлів, які будуть змінені.» |
-| Реалізація | «Реалізуй цю зміну. Не змінюй package manager чи інші конфіги без потреби. Після змін запусти доступні перевірки.» |
-| Debugging | «Ось помилка браузера: … Проаналізуй причину, покажи найімовірніший файл/рядок і запропонуй мінімальне виправлення.» |
-| Code review | «Перевір мій останній diff на correctness, accessibility, responsive layout та maintainability. Нічого не змінюй; дай findings за рівнями.» |
-| Перед push | «Перевір робочу директорію, git diff, lint та очевидні runtime-ризики. Повідом, чи готовий проєкт до commit/push.» |
-`````
+| Ситуація       | Приклад промпту                                                                                                                             |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| Початок роботи | «Проаналізуй структуру цього web-проєкту. Нічого не змінюй. Назви основні файли та ризики.»                                                 |
+| Планування     | «Потрібно додати dark mode без нових залежностей. Спочатку дай короткий план і перелік файлів, які будуть змінені.»                         |
+| Реалізація     | «Реалізуй цю зміну. Не змінюй package manager чи інші конфіги без потреби. Після змін запусти доступні перевірки.»                          |
+| Debugging      | «Ось помилка браузера: … Проаналізуй причину, покажи найімовірніший файл/рядок і запропонуй мінімальне виправлення.»                        |
+| Code review    | «Перевір мій останній diff на correctness, accessibility, responsive layout та maintainability. Нічого не змінюй; дай findings за рівнями.» |
+| Перед push     | «Перевір робочу директорію, git diff, lint та очевидні runtime-ризики. Повідом, чи готовий проєкт до commit/push.»                          |
+````
 
 ---
 
 ## Appendix B — content mapping reference
 
-| Source (`.docx`) | Target (`lab-1.md`) | Notes |
-| --- | --- | --- |
-| Title + `[Title]` style | frontmatter `title` | `<h1>` rendered by the route |
-| Дисципліна / Рівень / Формат / Тривалість | frontmatter `discipline`/`level`/`format`/`duration` | rendered by `LabMeta` |
-| Примітка щодо актуальності | body blockquote + `updated` | date also feeds "Актуально станом на" |
-| `[Heading1] 1.`–`9.` | `##` | 9 sections |
-| `[Heading2] 3.1`–`5.11` | `###` | 21 subsections |
-| `[ListBullet]` | `-` | |
-| `[ListNumber]` | `1.` | |
-| `[Code]` runs | fenced blocks | language tag per block; `text` for the tree |
-| `=== TABLE ===` blocks | GFM tables | 7 tables |
-| Список джерел (plain URLs) | `[Title](url)` ordered list | 41 links |
-| Додаток А table | `- [ ]` task list | the "Статус" column is the checkbox |
-| Додаток Б table | GFM table | unchanged |
+| Source (`.docx`)                          | Target (`lab-1.md`)                                  | Notes                                       |
+| ----------------------------------------- | ---------------------------------------------------- | ------------------------------------------- |
+| Title + `[Title]` style                   | frontmatter `title`                                  | `<h1>` rendered by the route                |
+| Дисципліна / Рівень / Формат / Тривалість | frontmatter `discipline`/`level`/`format`/`duration` | rendered by `LabMeta`                       |
+| Примітка щодо актуальності                | body blockquote + `updated`                          | date also feeds "Актуально станом на"       |
+| `[Heading1] 1.`–`9.`                      | `##`                                                 | 9 sections                                  |
+| `[Heading2] 3.1`–`5.11`                   | `###`                                                | 21 subsections                              |
+| `[ListBullet]`                            | `-`                                                  |                                             |
+| `[ListNumber]`                            | `1.`                                                 |                                             |
+| `[Code]` runs                             | fenced blocks                                        | language tag per block; `text` for the tree |
+| `=== TABLE ===` blocks                    | GFM tables                                           | 7 tables                                    |
+| Список джерел (plain URLs)                | `[Title](url)` ordered list                          | 41 links                                    |
+| Додаток А table                           | `- [ ]` task list                                    | the "Статус" column is the checkbox         |
+| Додаток Б table                           | GFM table                                            | unchanged                                   |

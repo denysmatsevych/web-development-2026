@@ -1,25 +1,23 @@
 /**
- * docs.ts — the small client bundle for the reading shells (`DocsLayout`,
- * `LabLayout`).
+ * docs.ts — the small client bundle for `LabLayout` (and the theme toggle on
+ * every page via `BaseLayout`).
  *
- * Five independent behaviours, each a no-op when its markup is absent so the
- * same entry point stays safe to call from pages without a sidebar or ToC:
+ * Independent behaviours, each a no-op when its markup is absent:
  *
- *   1. mobile sidebar drawer — open / close / backdrop / `Esc` + body-scroll lock
- *   2. scrollspy — tracks the heading at the top of the viewport among
+ *   1. scrollspy — tracks the heading at the top of the viewport among
  *      `.doc-content :is(h2, h3)`, marks the matching "On this page" link
  *      `.is-active`, keeps it in view inside the rail, and mirrors its text
  *      into the mobile bar's `[data-toc-current]`
- *   3. "On this page" dropdown (below `lg`) — closes on a link pick, `Esc`, or
+ *   2. "On this page" dropdown (below `lg`) — closes on a link pick, `Esc`, or
  *      an outside click
- *   4. theme toggle — flip `<html class="dark">` and persist to
- *      `localStorage['tutorial-theme']` (re-applied pre-paint by `BaseLayout`)
- *   5. copy buttons — on each `<pre>` inside a `[data-copy-code]` container
+ *   3. theme toggle — flip `<html class="dark">` and persist to
+ *      `localStorage['course-theme']` (re-applied pre-paint by `BaseLayout`)
+ *   4. copy buttons — on each `<pre>` inside a `[data-copy-code]` container
  *
- * Vanilla DOM, no framework — same spirit as ../Lectures/src/scripts/deck.ts.
+ * Vanilla DOM, no framework — same spirit as `deck.ts`.
  */
 
-const THEME_KEY = 'tutorial-theme';
+const THEME_KEY = 'course-theme';
 
 /** Persist the theme choice, tolerating a locked-down `localStorage`. */
 function writeStoredTheme(value: 'dark' | 'light'): void {
@@ -30,65 +28,12 @@ function writeStoredTheme(value: 'dark' | 'light'): void {
   }
 }
 
-/* ── 1. Mobile sidebar drawer ──────────────────────────────────────────── */
-
-function setupSidebarDrawer(): void {
-  const sidebar = document.getElementById('docs-sidebar');
-  const toggle = document.getElementById('docs-sidebar-toggle');
-  const scrim = document.getElementById('docs-sidebar-scrim');
-  const closeButton = document.getElementById('docs-sidebar-close');
-  if (!sidebar || !toggle || !scrim) return;
-
-  const desktop = window.matchMedia('(min-width: 1024px)');
-  let restoreOverflow = '';
-
-  // Arrow consts (not hoisted `function`s) so TypeScript keeps the null-guard
-  // narrowing of `sidebar` / `toggle` / `scrim` inside these closures.
-  const isOpen = (): boolean => sidebar.hasAttribute('data-open');
-
-  const open = (): void => {
-    if (isOpen()) return;
-    sidebar.setAttribute('data-open', '');
-    scrim.hidden = false;
-    toggle.setAttribute('aria-expanded', 'true');
-    restoreOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    closeButton?.focus();
-  };
-
-  const close = ({ returnFocus = true }: { returnFocus?: boolean } = {}): void => {
-    if (!isOpen()) return;
-    sidebar.removeAttribute('data-open');
-    scrim.hidden = true;
-    toggle.setAttribute('aria-expanded', 'false');
-    document.body.style.overflow = restoreOverflow;
-    if (returnFocus) toggle.focus();
-  };
-
-  toggle.addEventListener('click', () => {
-    if (isOpen()) close();
-    else open();
-  });
-  closeButton?.addEventListener('click', () => close());
-  scrim.addEventListener('click', () => close());
-
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && isOpen()) close();
-  });
-
-  // Close silently when a nav link is chosen, or when the viewport grows to
-  // `lg` where the drawer CSS no longer applies — no focus yank in either case.
-  sidebar.addEventListener('click', (event) => {
-    if (event.target instanceof Element && event.target.closest('a[href]')) {
-      close({ returnFocus: false });
-    }
-  });
-  desktop.addEventListener('change', (event) => {
-    if (event.matches) close({ returnFocus: false });
-  });
+function toggleTheme(): void {
+  const isDark = document.documentElement.classList.toggle('dark');
+  writeStoredTheme(isDark ? 'dark' : 'light');
 }
 
-/* ── 2. Scrollspy — "On this page" active marker ───────────────────────── */
+/* ── 1. Scrollspy — "On this page" active marker ───────────────────────── */
 
 // Slack (px) so a heading an anchor jump parks exactly on its
 // `scroll-margin-top` still counts as reached despite sub-pixel rounding.
@@ -195,7 +140,7 @@ function setupScrollspy(): void {
   window.addEventListener('hashchange', schedule);
 }
 
-/* ── 3. "On this page" dropdown (below `lg`) ───────────────────────────── */
+/* ── 2. "On this page" dropdown (below `lg`) ───────────────────────────── */
 
 function setupTocDropdown(): void {
   const toc = document.querySelector<HTMLDetailsElement>('details.on-this-page');
@@ -237,19 +182,41 @@ function setupTocDropdown(): void {
   });
 }
 
-/* ── 4. Theme toggle ──────────────────────────────────────────────────── */
+/* ── 3. Theme toggle ──────────────────────────────────────────────────── */
 
 function setupThemeToggle(): void {
   const button = document.getElementById('theme-toggle');
   if (!button) return;
 
   button.addEventListener('click', () => {
-    const isDark = document.documentElement.classList.toggle('dark');
-    writeStoredTheme(isDark ? 'dark' : 'light');
+    toggleTheme();
   });
+
+  document.addEventListener('keydown', (event) => {
+  if (event.repeat) return;
+
+  const target = event.target;
+  const isTextField =
+    target instanceof HTMLElement &&
+    (target.matches('input, textarea, select, [role="textbox"], [role="searchbox"]') ||
+      target.isContentEditable ||
+      target.closest('[contenteditable="true"]'));
+
+  if (
+    event.code === 'KeyT' &&
+    !event.metaKey &&
+    !event.ctrlKey &&
+    !event.altKey &&
+    !event.shiftKey &&
+    !isTextField
+  ) {
+    event.preventDefault();
+    toggleTheme();
+  }
+});
 }
 
-/* ── 5. Copy-to-clipboard on code blocks ──────────────────────────────── */
+/* ── 4. Copy-to-clipboard on code blocks ──────────────────────────────── */
 
 const SVG_ATTRS =
   'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"';
@@ -327,7 +294,9 @@ function setupCopyButtons(): void {
 
 /** Wire every reading-shell behaviour present on the page. Call once. */
 export function initDocs(): void {
-  setupSidebarDrawer();
+  if (document.documentElement.dataset.docsInit === '1') return;
+  document.documentElement.dataset.docsInit = '1';
+
   setupScrollspy();
   setupTocDropdown();
   setupThemeToggle();
