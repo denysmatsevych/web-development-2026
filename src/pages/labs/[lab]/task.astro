@@ -10,13 +10,16 @@
  *
  * A brief that names a `mockup` composes it above `.doc-content` — its §1
  * describes the target design, and a live render beats a screenshot in both
- * themes. A brief whose practical part is an audit of supplied code names none,
- * and renders body-first.
+ * themes. ЛР-7's `courtly` mockup is the exception: a whole landing page in its
+ * own brand colours, so it ships as captures (see docs/lab-7/README.md). A
+ * brief whose practical part is an audit of supplied code names none, and
+ * renders body-first.
  */
 import { render } from "astro:content";
 
 import AcceptanceChecklist from "@/components/AcceptanceChecklist.astro";
 import Breadcrumbs from "@/components/Breadcrumbs.astro";
+import CourtlyMockup from "@/components/CourtlyMockup.astro";
 import LabHeader from "@/components/LabHeader.astro";
 import MockupLightbox from "@/components/MockupLightbox.astro";
 import LabLayout from "@/layouts/LabLayout.astro";
@@ -57,7 +60,7 @@ const crumbs = [
   <Breadcrumbs items={crumbs} />
 
   <LabHeader
-    eyebrow={`Технічне завдання · ЛР-${labNumber(lab)}`}
+    eyebrow={`${data.eyebrow} · ЛР-${labNumber(lab)}`}
     title={data.title}
     summary={data.summary}
     handout={data.handout}
@@ -82,6 +85,15 @@ const crumbs = [
       <figure class="task-preview">
         <MockupLightbox />
         <figcaption>Орієнтовний вигляд готової секції</figcaption>
+      </figure>
+    )
+  }
+
+  {
+    data.mockup === "courtly" && (
+      <figure class="task-preview">
+        <CourtlyMockup />
+        <figcaption>Макет сторінки Courtly на трьох ширинах viewport</figcaption>
       </figure>
     )
   }
