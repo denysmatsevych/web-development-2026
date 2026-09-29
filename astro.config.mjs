@@ -9,7 +9,7 @@ import baseLinks from './plugins/base-links.mjs';
 const BASE = '/web-development-2026';
 
 // One deploy for the whole course site: the hub at `/`, the slide decks under
-// `/lectures/*`, the labs under `/labs/*`, and the handbook under `/tutorial/*`.
+// `/lectures/*`, the labs under `/labs/*`.
 // GitHub Pages project site at https://denysmatsevych.github.io/web-development-2026/
 // (repo denysmatsevych/web-development-2026, Settings → Pages → Source: GitHub Actions).
 // `base` must match the repo name; every internal link/asset goes through
@@ -25,9 +25,8 @@ export default defineConfig({
     // (src/lib/paths.ts).
     processor: satteri({ hastPlugins: [baseLinks({ base: BASE })] }),
   },
-  // English handbook by default; `uk` is pre-declared (the decks are Ukrainian)
-  // so a locale + language switcher can drop in without a routing refactor. The
-  // default locale carries no URL prefix.
+  // English is the default locale; Ukrainian is pre-declared for the course
+  // content and lecture decks. The default locale carries no URL prefix.
   i18n: {
     defaultLocale: 'en',
     locales: ['en', 'uk'],

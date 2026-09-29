@@ -1,15 +1,15 @@
 /*
  * Slide-deck styles — imported only by src/layouts/DeckLayout.astro, so every
  * rule is scoped to `.deck-page` (the <body> class DeckLayout sets) and never
- * reaches the handbook pages. Design tokens live in the deck `@theme` block in
+ * reaches the other course pages. Design tokens live in the deck `@theme` block in
  * src/styles/global.css; this file is the deck's base layer + print sheet.
  *
  * Ported from the standalone Lecture-1 deck (was Lectures/src/styles/global.css).
  * No `@import "tailwindcss"` here — global.css is the single Tailwind entry.
  */
 
-/* Fullscreen, non-scrolling shell. The handbook <body> must stay scrollable,
-   hence the `.deck-page` scope on the overflow lock. */
+/* Fullscreen, non-scrolling shell. The `.deck-page` scope keeps the overflow
+  lock isolated to lecture decks. */
 body.deck-page {
   overflow: hidden;
   background-color: var(--color-ink-950);

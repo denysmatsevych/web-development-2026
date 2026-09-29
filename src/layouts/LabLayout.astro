@@ -8,18 +8,16 @@
  *   └──────────────────────┴───────────────┘
  *   SiteFooter
  *
- * A trimmed `DocsLayout`: labs have no Subject tabs and no curriculum sidebar,
- * so the shell is two columns, collapsing to one below `lg` with the ToC as a
- * sticky bar under the header (current section + dropdown list).
+ * Two columns on `lg+`, collapsing to one below `lg` with the ToC as a sticky
+ * bar under the header (current section + dropdown list).
  *
- * `initDocs()` is still the right script — its sidebar setup bails when
- * `#docs-sidebar` is absent, leaving the ToC scrollspy/dropdown and the theme
- * toggle.
+ * `initDocs()` wires the ToC scrollspy and dropdown; the theme toggle is
+ * handled the same way on every page.
  *
  * Typography follows the handout PDFs — Montserrat headings, Inter text; see
  * `src/styles/lab.css`. The two webfonts load here, only on lab pages.
  */
-import type { MarkdownHeading } from 'astro';
+import type { MarkdownHeading } from "astro";
 
 import OnThisPage from '@/components/OnThisPage.astro';
 import SiteFooter from '@/components/SiteFooter.astro';
@@ -74,19 +72,12 @@ const fontHref =
   </div>
 </BaseLayout>
 
-<script>
-  // ToC scrollspy + dropdown, theme toggle. The sidebar branch no-ops.
-  import { initDocs } from '@/scripts/docs';
-
-  initDocs();
-</script>
-
 <style>
-  /* Matches DocsLayout: SiteHeader is 4rem. `--doc-scroll-offset` is the
-     `.doc-content` heading `scroll-margin-top` (global.css) — below `lg` it
-     also clears the sticky ToC bar. */
+  /* SiteHeader is 4rem tall. `--doc-scroll-offset` is the `.doc-content`
+   heading `scroll-margin-top` (global.css) — below `lg` it also clears the
+   sticky ToC bar. */
   .lab-page {
-    --docs-header-h: 4rem;
+    --header-h: 4rem;
     --doc-scroll-offset: 8.5rem;
   }
 
@@ -99,8 +90,8 @@ const fontHref =
     gap: 2rem;
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
-      'toc'
-      'main';
+      "toc"
+      "main";
   }
 
   .area-main {
@@ -112,7 +103,7 @@ const fontHref =
   .area-toc {
     grid-area: toc;
     position: sticky;
-    top: calc(var(--docs-header-h) + 0.5rem);
+    top: calc(var(--header-h) + 0.5rem);
     z-index: 20;
   }
 
@@ -125,14 +116,14 @@ const fontHref =
       padding-inline: 2rem;
       align-items: start;
       grid-template-columns: minmax(0, 1fr) 15rem;
-      grid-template-areas: 'main toc';
+      grid-template-areas: "main toc";
     }
 
     .area-toc {
-      top: calc(var(--docs-header-h) + 1rem);
+      top: calc(var(--header-h) + 1rem);
       z-index: auto;
       align-self: start;
-      max-height: calc(100dvh - var(--docs-header-h) - 2rem);
+      max-height: calc(100dvh - var(--header-h) - 2rem);
       overflow-y: auto;
       overscroll-behavior: contain;
     }

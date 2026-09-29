@@ -75,8 +75,8 @@ const taskLabels = new Map(tasks.map((task) => [task.id, task.data.label]));
         <div class="panel glass-panel">
           <p class="panel__title">Coming soon</p>
           <p class="panel__text">
-            In the meantime, work through the <a href={withBase('/lectures/')}>lectures</a>
-            and the <a href={withBase('/tutorial/')}>tutorial handbook</a>.
+            Lab assignments are being prepared. In the meantime, work through
+            the <a href={withBase("/lectures/")}>lectures</a>.
           </p>
         </div>
       )
@@ -85,13 +85,6 @@ const taskLabels = new Map(tasks.map((task) => [task.id, task.data.label]));
 
   <SiteFooter />
 </BaseLayout>
-
-<script>
-  // Theme toggle only — the sidebar and scrollspy branches no-op on this page.
-  import { initDocs } from '@/scripts/docs';
-
-  initDocs();
-</script>
 
 <style>
   .page {
@@ -155,11 +148,6 @@ const taskLabels = new Map(tasks.map((task) => [task.id, task.data.label]));
     transition:
       border-color 0.15s ease,
       transform 0.15s ease;
-  }
-
-  .lab-card:hover {
-    border-color: var(--color-brand-blue);
-    transform: translateY(-2px);
   }
 
   /* The ІЗ card (`00`). `number: 0` already sorts it first; the resting brand
