@@ -34,9 +34,11 @@ interface Props {
   lang?: string;
   /** h2/h3 headings from `render(entry)` — feed the "on this page" rail. */
   headings?: MarkdownHeading[];
+  /** Keep an unlisted page (the ЛР-7 auto-check) out of search results. */
+  noindex?: boolean;
 }
 
-const { title, description, lang = 'uk', headings = [] } = Astro.props;
+const { title, description, lang = 'uk', headings = [], noindex = false } = Astro.props;
 
 // Same non-blocking `media="print"` → `all` swap as BaseLayout's Roboto.
 const fontHref =
@@ -45,6 +47,7 @@ const fontHref =
 
 <BaseLayout title={title} description={description} lang={lang} ogType="article">
   <Fragment slot="head">
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link id="font-lab" rel="stylesheet" href={fontHref} media="print" />
     <noscript><link rel="stylesheet" href={fontHref} /></noscript>
     <script is:inline>
