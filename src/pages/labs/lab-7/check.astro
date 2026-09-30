@@ -6,6 +6,11 @@
  * the browser; the engine and its trade-offs are documented in
  * src/scripts/courtly-check.ts.
  *
+ * Scored Lighthouse rows carry a "Виконано" checkbox: PageSpeed Insights is
+ * often out of quota, so the instructor confirms a category from the
+ * student's screenshot and it counts as passed. "Скопіювати звіт" puts the
+ * report on the clipboard formatted for a reply to the student.
+ *
  * Instructor-only by obscurity: nothing links here and the page is
  * `noindex`, but anyone who knows the URL can use it. Limiting students to
  * one attempt needs a backend, so there is no limit.
@@ -160,8 +165,9 @@ const headings = [
             </div>
           </div>
           <p class="cc-note">
-            Оцінка — лише за автоматичну частину. Відповідність макету, лист,
-            скриншот Lighthouse й опис роботи з AI перевіряються вручну.
+            Оцінка — лише за автоматичну частину. Відповідність макету, лист і
+            опис роботи з AI перевіряються вручну; категорії Lighthouse можна
+            зарахувати прапорцем за скриншотом студента.
           </p>
           <div class="cc-groups-bar">
             <button class="cc-toggle-all" type="button" data-cc-toggle-all
@@ -214,7 +220,8 @@ const headings = [
       </li>
       <li>
         <strong>Lighthouse</strong> — через PageSpeed Insights (Mobile), якщо сервіс
-        доступний.
+        доступний; інакше категорії зараховуються прапорцем «Виконано» за
+        скриншотом студента.
       </li>
     </ul>
 
@@ -222,7 +229,8 @@ const headings = [
     <p>
       Кожна перевірка має вагу: «виконано» — повна вага, «частково» — половина,
       «не виконано» — 0. Перевірки, які не вдалося виконати, в оцінку не
-      входять. Відсоток переводиться у 12-бальну шкалу й округлюється: 10–12 —
+      входять. Категорія Lighthouse, позначена прапорцем, рахується як
+      «виконано» незалежно від PageSpeed Insights. Відсоток переводиться у 12-бальну шкалу й округлюється: 10–12 —
       високий рівень, 7–9 — достатній, 4–6 — середній, 1–3 — початковий.
     </p>
 
@@ -234,7 +242,8 @@ const headings = [
       </li>
       <li>
         Якщо PageSpeed Insights недоступний, рядки Lighthouse позначаються «не
-        перевірено» — запустіть Lighthouse у DevTools вручну, як описано в §4.
+        перевірено» — звірте скриншот студента або запустіть Lighthouse у
+        DevTools, як описано в §4, і позначте виконані категорії прапорцями.
       </li>
       <li>
         Помилка перевірки можлива: сумнівні пункти варто переглянути у DevTools
@@ -252,6 +261,7 @@ const headings = [
     normalizeUrl,
     scoreChecks,
     type Check,
+    type GroupId,
     type Status,
   } from "@/scripts/courtly-check";
 
@@ -301,6 +311,57 @@ const headings = [
    */
   const openState = new Map<string, boolean>();
 
+  /** Lighthouse rows the instructor ticked as passed, by check id. Cleared per run. */
+  const manual = new Set<string>();
+
+  /** A check as scored and reported; `manual` — ticked by the instructor. */
+  type Row = Check & { manual?: boolean };
+
+  /** Scored Lighthouse rows get the "Виконано" checkbox; Performance has no threshold. */
+  const canTick = (c: Check) => c.group === "lighthouse" && c.weight > 0;
+
+  /**
+   * Checks as scored and reported: a ticked Lighthouse row counts as passed
+   * whatever PageSpeed Insights said, or could not say.
+   */
+  function reported(): Row[] {
+    return current!.checks.map((c): Row => {
+      if (!manual.has(c.id) || c.status === "pass") return c;
+      const psi = c.status !== "skip" && c.detail;
+      return {
+        ...c,
+        status: "pass",
+        manual: true,
+        detail: psi
+          ? `підтверджено вручну; PageSpeed Insights: ${c.detail}`
+          : "підтверджено вручну",
+      };
+    });
+  }
+
+  /** Share of a group's weight earned, shown beside its title. */
+  function groupScoreText(id: GroupId, rows: Check[]): string {
+    if (id === "lighthouse" && !current!.lighthouseDone) return "виконується…";
+    const score = scoreChecks(rows);
+    if (score.max) return `${Math.round(score.percent * 100)} %`;
+    if (rows.length && rows.every((c) => c.status === "skip"))
+      return "не перевірено";
+    return "";
+  }
+
+  /** Checked and locked when PageSpeed Insights already passed the row. */
+  function tickBox(check: Row): HTMLLabelElement {
+    const label = el("label", "cc-manual");
+    const box = el("input");
+    box.type = "checkbox";
+    box.dataset.ccManual = check.id;
+    box.checked = check.status === "pass";
+    box.disabled = check.status === "pass" && !check.manual;
+    if (box.disabled) label.title = "Зараховано за PageSpeed Insights";
+    label.append(box, "Виконано", el("span", "visually-hidden", `: ${check.title}`));
+    return label;
+  }
+
   const CHEVRON =
     '<svg class="cc-group__chevron" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="m9 6 6 6-6 6"></path></svg>';
 
@@ -336,7 +397,8 @@ const headings = [
 
   function render() {
     if (!current) return;
-    const { checks, pageUrl, lighthouseDone } = current;
+    const { pageUrl, lighthouseDone, at } = current;
+    const checks = reported();
     const score = scoreChecks(checks);
     const scored = checks.filter((c) => c.weight > 0 && c.status !== "skip");
     const passed = scored.filter((c) => c.status === "pass").length;
@@ -366,11 +428,12 @@ const headings = [
           rows.filter((c) => c.status === status).length;
 
         // Collapsed by default when every row passed; open when there is
-        // something to read.
+        // something to read — or a Lighthouse row left to tick.
+        const toTick = rows.some((c) => canTick(c) && c.status === "skip");
         const section = el("details", "cc-group");
         section.dataset.group = group.id;
         section.open =
-          openState.get(group.id) ?? count("fail") + count("warn") > 0;
+          openState.get(group.id) ?? (count("fail") + count("warn") > 0 || toTick);
 
         const head = el("summary", "cc-group__head");
         head.insertAdjacentHTML("afterbegin", CHEVRON);
@@ -396,22 +459,20 @@ const headings = [
             ),
           );
         }
-        const groupScore = scoreChecks(rows);
-        if (group.id === "lighthouse" && !lighthouseDone) {
-          meta.append(el("span", "cc-group__score", "виконується…"));
-        } else if (groupScore.max) {
-          meta.append(
-            el(
-              "span",
-              "cc-group__score",
-              `${Math.round(groupScore.percent * 100)} %`,
-            ),
-          );
-        } else if (rows.length && rows.every((c) => c.status === "skip")) {
-          meta.append(el("span", "cc-group__score", "не перевірено"));
-        }
+        const scoreText = groupScoreText(group.id, rows);
+        if (scoreText) meta.append(el("span", "cc-group__score", scoreText));
         head.append(meta);
         section.append(head);
+
+        if (rows.some((c) => canTick(c) && (c.status !== "pass" || c.manual))) {
+          section.append(
+            el(
+              "p",
+              "cc-group__hint",
+              "Прапорець «Виконано» зараховує категорію вручну — наприклад, за скриншотом Lighthouse з листа студента.",
+            ),
+          );
+        }
 
         const list = el("ul", "cc-list");
         if (group.id === "lighthouse" && !lighthouseDone) {
@@ -447,6 +508,10 @@ const headings = [
           if (check.detail)
             body.append(el("p", "cc-check__detail", check.detail));
           li.append(icon, body);
+          if (canTick(check)) {
+            li.classList.add("cc-check--tick");
+            li.append(tickBox(check));
+          }
           list.append(li);
         }
         section.append(list);
@@ -454,6 +519,12 @@ const headings = [
       }),
     );
     syncToggleAll();
+    // Here rather than in run(): ticking a row changes the mark.
+    if (lighthouseDone)
+      setStatus(
+        `Перевірку завершено: ${score.mark} з 12 (${formatDate(at)}).`,
+        false,
+      );
   }
 
   /** One button for all groups: expands unless every group is open. */
@@ -466,27 +537,90 @@ const headings = [
     toggleAll.dataset.open = String(!allOpen);
   }
 
-  function asText(): string {
-    if (!current) return "";
-    const score = scoreChecks(current.checks);
-    const lines = [
-      `ЛР-7 · Автоматична перевірка (бета): ${score.mark} / 12 (${Math.round(score.percent * 100)} %)`,
-      current.pageUrl,
-      `Перевірено: ${formatDate(current.at)}`,
-      "",
+  /** Light-theme status colours for the mail copy: clients drop stylesheets, so inline. */
+  const MAIL_COLOR: Record<Status, string> = {
+    pass: "#177245",
+    warn: "#9a5800",
+    fail: "#c0262d",
+    skip: "#6b6f76",
+  };
+  const MAIL_MUTED = "#6b6f76";
+
+  const escapeHtml = (value: string) =>
+    value.replace(/[&<>"]/g, (ch) => `&#${ch.charCodeAt(0)};`);
+
+  /**
+   * The report as it goes into a reply to the student: HTML with inline
+   * styles for mail clients, plain text for everything else. No `?url=`
+   * link — this page is instructor-only.
+   */
+  function mailReport(): { html: string; text: string } {
+    const { pageUrl, lighthouseDone, at } = current!;
+    const checks = reported();
+    const score = scoreChecks(checks);
+    const headline = `ЛР-7 · Автоматична перевірка: ${lighthouseDone ? "орієнтовна" : "попередня"} оцінка ${score.mark} / 12 (${Math.round(score.percent * 100)} %)`;
+    const when = `Перевірено ${formatDate(at)}${lighthouseDone ? "" : " · Lighthouse ще не завершився"}`;
+    const legend = (["pass", "warn", "fail", "skip"] as const)
+      .map((s) => `${ICON[s]} ${LABEL[s].toLowerCase()}`)
+      .join(" · ");
+
+    const text = [headline, pageUrl, when, legend, ""];
+    const html = [
+      `<p style="margin:0 0 4px"><b style="font-size:16px">${escapeHtml(headline)}</b></p>`,
+      `<p style="margin:0"><a href="${escapeHtml(pageUrl)}">${escapeHtml(pageUrl)}</a></p>`,
+      `<p style="margin:0;color:${MAIL_MUTED}">${escapeHtml(when)}<br>${escapeHtml(legend)}</p>`,
+      `<table cellpadding="0" cellspacing="0" style="border-collapse:collapse">`,
     ];
     for (const group of GROUPS) {
-      const rows = current.checks.filter((c) => c.group === group.id);
+      const rows = checks.filter((c) => c.group === group.id);
       if (!rows.length) continue;
-      lines.push(group.title);
+      const groupScore = groupScoreText(group.id, rows);
+      text.push(groupScore ? `${group.title} — ${groupScore}` : group.title);
+      html.push(
+        `<tr><td colspan="2" style="padding:14px 0 4px"><b>${escapeHtml(group.title)}</b>${groupScore ? `<span style="color:${MAIL_MUTED}"> — ${escapeHtml(groupScore)}</span>` : ""}</td></tr>`,
+      );
       for (const c of rows) {
-        lines.push(
-          `  [${ICON[c.status]}] ${c.title}${c.detail ? ` — ${c.detail}` : ""}`,
+        const info = c.weight === 0 ? " · не впливає на оцінку" : "";
+        text.push(
+          `  ${ICON[c.status]} ${c.title}${c.detail ? ` — ${c.detail}` : ""}${info}`,
+        );
+        const detailColor =
+          c.status === "warn" || c.status === "fail"
+            ? MAIL_COLOR[c.status]
+            : MAIL_MUTED;
+        html.push(
+          `<tr><td style="padding:2px 8px 2px 0;vertical-align:top;font-weight:bold;color:${MAIL_COLOR[c.status]}">${ICON[c.status]}</td>` +
+            `<td style="padding:2px 0">${escapeHtml(c.title)}` +
+            (c.detail
+              ? `<span style="color:${detailColor}"> — ${escapeHtml(c.detail)}</span>`
+              : "") +
+            (info ? `<span style="color:${MAIL_MUTED}">${info}</span>` : "") +
+            `</td></tr>`,
         );
       }
-      lines.push("");
+      text.push("");
     }
-    return lines.join("\n");
+    html.push("</table>");
+    return { html: html.join(""), text: text.join("\n").trimEnd() };
+  }
+
+  /** Both flavours, so a mail client pastes it formatted; plain text if the browser cannot. */
+  async function copyMailReport() {
+    const { html, text } = mailReport();
+    if (typeof ClipboardItem !== "undefined" && navigator.clipboard.write) {
+      try {
+        await navigator.clipboard.write([
+          new ClipboardItem({
+            "text/html": new Blob([html], { type: "text/html" }),
+            "text/plain": new Blob([text], { type: "text/plain" }),
+          }),
+        ]);
+        return;
+      } catch {
+        // fall through to plain text
+      }
+    }
+    await navigator.clipboard.writeText(text);
   }
 
   /**
@@ -529,6 +663,7 @@ const headings = [
     report.hidden = true;
     runError.hidden = true;
     openState.clear();
+    manual.clear();
     setStatus("Підготовка…", true);
     reopen.hidden = false;
     if (!dialog.open) dialog.showModal();
@@ -563,10 +698,6 @@ const headings = [
       entry.checks = [...entry.checks, ...extra];
       entry.lighthouseDone = true;
       render();
-      setStatus(
-        `Перевірку завершено: ${scoreChecks(entry.checks).mark} з 12 (${formatDate(entry.at)}).`,
-        false,
-      );
     } catch (err) {
       setStatus("", false);
       runError.textContent =
@@ -595,6 +726,21 @@ const headings = [
   });
   // `toggle` does not bubble — capture it to keep the button label honest.
   groupsEl.addEventListener("toggle", syncToggleAll, true);
+
+  // A tick re-renders the report (mark, group score, row); keep the group
+  // open and focus on the new copy of the checkbox.
+  groupsEl.addEventListener("change", (event) => {
+    const box = event.target;
+    if (!(box instanceof HTMLInputElement) || !box.dataset.ccManual) return;
+    const id = box.dataset.ccManual;
+    if (box.checked) manual.add(id);
+    else manual.delete(id);
+    openState.set("lighthouse", true);
+    render();
+    groupsEl
+      .querySelector<HTMLInputElement>(`[data-cc-manual="${id}"]`)
+      ?.focus();
+  });
   dialog
     .querySelector("[data-cc-close]")!
     .addEventListener("click", () => dialog.close());
@@ -606,8 +752,9 @@ const headings = [
     .querySelector("[data-cc-copy]")!
     .addEventListener("click", async (event) => {
       const button = event.currentTarget as HTMLButtonElement;
+      if (!current) return;
       try {
-        await navigator.clipboard.writeText(asText());
+        await copyMailReport();
         button.textContent = "Скопійовано";
       } catch {
         button.textContent = "Не вдалося скопіювати";
@@ -1228,6 +1375,48 @@ const headings = [
   .cc-check__body {
     align-self: center;
     font-size: 0.875rem;
+    color: var(--muted-foreground);
+  }
+
+  .cc-check--tick {
+    grid-template-columns: 1.5rem minmax(0, 1fr) auto;
+  }
+
+  .cc-manual {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    align-self: center;
+    min-height: 2.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--foreground);
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .cc-manual input {
+    width: 1.125rem;
+    height: 1.125rem;
+    margin: 0;
+    accent-color: var(--cc-pass);
+    cursor: inherit;
+  }
+
+  .cc-manual input:focus-visible {
+    outline: 2px solid var(--color-brand-blue);
+    outline-offset: 2px;
+  }
+
+  .cc-manual:has(input:disabled) {
+    color: var(--muted-foreground);
+    cursor: default;
+  }
+
+  .cc-group__hint {
+    margin: 0;
+    padding: 0.65rem 1rem 0;
+    font-size: 0.8125rem;
     color: var(--muted-foreground);
   }
 
