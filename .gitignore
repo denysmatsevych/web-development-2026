@@ -20,3 +20,6 @@ pnpm-debug.log*
 Thumbs.db
 .vscode/*
 !.vscode/extensions.json
+
+# Lab 7 — reference mockup source (instructor-only; see docs/lab-7/README.md)
+docs/lab-7/mockup/

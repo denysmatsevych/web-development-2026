@@ -73,6 +73,11 @@ const tasks = defineCollection({
     lang: z.string().default('uk'),
     /** Short badge: hand-off card, index pill, last breadcrumb. */
     label: z.string().default('ТЗ'),
+    /**
+     * Header eyebrow before the `· ЛР-N` suffix. A brief that is a design
+     * reference rather than a build spec (ЛР-7's mockup page) names itself.
+     */
+    eyebrow: z.string().default('Технічне завдання'),
     /** Constraint chips on the hand-off card — 2–4 short phrases. */
     highlights: z.array(z.string()).default([]),
     /**
@@ -87,7 +92,7 @@ const tasks = defineCollection({
      * design names one; a brief whose practical part is an audit of supplied
      * code names none.
      */
-    mockup: z.enum(['pricing']).optional(),
+    mockup: z.enum(['pricing', 'courtly']).optional(),
     /** "Актуально станом на" date from the brief. */
     updated: z.coerce.date().optional(),
     /** Path (no base prefix) to the downloadable brief, if published. */
