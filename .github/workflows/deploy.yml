@@ -18,6 +18,12 @@ jobs:
         uses: actions/checkout@v7
       - name: Install, build and upload site
         uses: withastro/action@v6
+        env:
+          # Optional. PageSpeed Insights key for the ЛР-7 auto-check's
+          # Lighthouse rows (src/scripts/courtly-check.ts). It ships in the
+          # client bundle, so restrict it by HTTP referrer in Google Cloud;
+          # a repository variable, not a secret, is enough.
+          PUBLIC_PSI_API_KEY: ${{ vars.PSI_API_KEY }}
         with:
           node-version: "24"
 

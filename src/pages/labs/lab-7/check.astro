@@ -1,0 +1,1461 @@
+---
+/**
+ * ЛР-7 auto-check (beta) — `/labs/lab-7/check/`. The instructor pastes the URL
+ * of a student's deployed Courtly page; progress and the report (an estimated
+ * mark on the 12-point scale) open in a modal dialog. All checking happens in
+ * the browser; the engine and its trade-offs are documented in
+ * src/scripts/courtly-check.ts.
+ *
+ * Scored Lighthouse rows carry a "Виконано" checkbox: PageSpeed Insights is
+ * often out of quota, so the instructor confirms a category from the
+ * student's screenshot and it counts as passed. "Скопіювати звіт" puts the
+ * report on the clipboard formatted for a reply to the student.
+ *
+ * Instructor-only by obscurity: nothing links here and the page is
+ * `noindex`, but anyone who knows the URL can use it. Limiting students to
+ * one attempt needs a backend, so there is no limit.
+ *
+ * Static route beside `[lab].astro` / `[lab]/task.astro`: only ЛР-7 has a
+ * checker, so a collection field would be ceremony.
+ */
+import Breadcrumbs from "@/components/Breadcrumbs.astro";
+import LabHeader from "@/components/LabHeader.astro";
+import LabLayout from "@/layouts/LabLayout.astro";
+import { labHref, taskHref } from "@/lib/labs";
+import { withBase } from "@/lib/paths";
+
+const title = "Автоматична перевірка Courtly";
+const summary =
+  "Вставте адресу опублікованої сторінки студента. Перевірка відкриє її на 320, 375, 768 і 1440 px, прочитає HTML і CSS та складе звіт з орієнтовною оцінкою за 12-бальною шкалою.";
+
+const crumbs = [
+  { label: "Labs", href: withBase("/labs/") },
+  { label: "ЛР-7", href: labHref("lab-7") },
+  { label: "Автоперевірка", href: withBase("/labs/lab-7/check/") },
+];
+
+const headings = [
+  { depth: 2, slug: "scope", text: "Що перевіряється" },
+  { depth: 2, slug: "mark", text: "Як рахується оцінка" },
+  { depth: 2, slug: "limits", text: "Обмеження бета-версії" },
+];
+---
+
+<LabLayout
+  title={`${title} (бета) — ЛР-7`}
+  description={summary}
+  lang="uk"
+  headings={headings}
+  noindex
+>
+  <Breadcrumbs items={crumbs} />
+
+  <LabHeader
+    eyebrow="Бета · Проміжний контроль №1 · ЛР-7"
+    title={title}
+    summary={summary}
+  />
+
+  <div class="cc" data-cc>
+    <form class="cc-form" data-cc-form novalidate>
+      <label class="cc-form__label" for="cc-url"
+        >Адреса опублікованої сторінки</label
+      >
+      <div class="cc-form__row">
+        <input
+          id="cc-url"
+          class="cc-form__input"
+          name="url"
+          type="url"
+          inputmode="url"
+          autocomplete="url"
+          spellcheck="false"
+          required
+          placeholder="https://username.github.io/courtly/"
+          aria-describedby="cc-hint cc-error"
+        />
+        <button class="cc-form__submit" type="submit" data-cc-submit
+          >Перевірити</button
+        >
+      </div>
+      <p id="cc-hint" class="cc-form__hint">
+        GitHub Pages або Vercel. Сторінка має відкриватися без авторизації.
+        Посилання виду <code>?url=&lt;адреса&gt;</code> запускає перевірку одразу.
+      </p>
+      <p id="cc-error" class="cc-form__error" data-cc-error hidden></p>
+      <button class="cc-reopen" type="button" data-cc-reopen hidden
+        >Відкрити результат</button
+      >
+    </form>
+
+    <dialog class="cc-dialog" data-cc-dialog aria-labelledby="cc-dialog-title">
+      <header class="cc-dialog__head">
+        <div class="cc-dialog__heading">
+          <h2 id="cc-dialog-title" class="cc-dialog__title">
+            Автоматична перевірка
+          </h2>
+          <p class="cc-dialog__url">
+            <a data-cc-url target="_blank" rel="noopener noreferrer"></a>
+          </p>
+        </div>
+        <button
+          class="cc-dialog__close"
+          type="button"
+          data-cc-close
+          aria-label="Закрити"
+          autofocus
+        >
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+            <path d="M18 6 6 18M6 6l12 12"></path>
+          </svg>
+        </button>
+      </header>
+
+      <div class="cc-dialog__body" data-cc-body>
+        <p class="cc-status" data-cc-status role="status" aria-live="polite"></p>
+        <p class="cc-run-error" data-cc-run-error role="alert" hidden></p>
+        <p class="visually-hidden" data-cc-announce aria-live="polite"></p>
+
+        <section class="cc-report" data-cc-report aria-label="Звіт" hidden>
+          <div class="cc-summary">
+            <p class="cc-mark">
+              <span class="cc-mark__value" data-cc-mark>—</span>
+              <span class="cc-mark__max">/ 12</span>
+            </p>
+            <div class="cc-summary__text">
+              <p class="cc-summary__title" data-cc-title>Орієнтовна оцінка</p>
+              <p class="cc-summary__meta" data-cc-meta></p>
+              <div class="cc-bar" aria-hidden="true"><span data-cc-bar></span></div>
+            </div>
+            <div class="cc-actions">
+              <button class="cc-copy" type="button" data-cc-copy
+                >Скопіювати звіт</button
+              >
+              <button
+                class="cc-copy cc-copy--icon"
+                type="button"
+                data-cc-copy-link
+                aria-label="Скопіювати посилання на звіт"
+                title="Скопіювати посилання на звіт"
+              >
+                <svg
+                  class="cc-copy__link"
+                  viewBox="0 0 24 24"
+                  width="18"
+                  height="18"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
+                  ></path>
+                  <path
+                    d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
+                  ></path>
+                </svg>
+                <svg
+                  class="cc-copy__done"
+                  viewBox="0 0 24 24"
+                  width="18"
+                  height="18"
+                  aria-hidden="true"
+                >
+                  <path d="M20 6 9 17l-5-5"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <p class="cc-note">
+            Оцінка — лише за автоматичну частину. Відповідність макету, лист і
+            опис роботи з AI перевіряються вручну; категорії Lighthouse можна
+            зарахувати прапорцем за скриншотом студента.
+          </p>
+          <div class="cc-groups-bar">
+            <button class="cc-toggle-all" type="button" data-cc-toggle-all
+              >Розгорнути все</button
+            >
+          </div>
+          <div data-cc-groups></div>
+        </section>
+      </div>
+    </dialog>
+  </div>
+
+  <article class="doc-content">
+    <h2 id="scope">Що перевіряється</h2>
+    <p>
+      Критерії — з тексту <a href={labHref("lab-7")}>лабораторної роботи</a> і <a
+        href={taskHref("lab-7")}
+      >
+        макета
+      </a>. Сторінка завантажується з опублікованої адреси, як у браузері відвідувача:
+    </p>
+    <ul>
+      <li>
+        <strong>Адаптивність</strong> — сторінка рендериться на 320, 375, 768 і 1440
+        px; вимірюються горизонтальний scroll, колонки карток, featured card, header,
+        hero, форма й кроки.
+      </li>
+      <li>
+        <strong>Розмітка</strong> — <code>id</code> секцій, посилання, форма, картки,
+        кнопки «Забронювати», landmarks, заголовки, <code>alt</code>,
+        зображення.
+      </li>
+      <li>
+        <strong>CSS</strong> — значення токенів, <code>clamp()</code>,
+        breakpoints, Grid, Flexbox, Montserrat з кирилицею, перевизначення <code
+          >--color-focus</code
+        >.
+      </li>
+      <li>
+        <strong>Mobile menu</strong> — скрипт сторінки запускається в ізольованому фреймі
+        на 375 px, кнопка натискається двічі, перевіряється <code
+          >aria-expanded</code
+        >.
+      </li>
+      <li>
+        <strong>SEO</strong> — meta, canonical, Open Graph, favicon, <code
+          >robots.txt</code
+        > і
+        <code>sitemap.xml</code>.
+      </li>
+      <li>
+        <strong>Lighthouse</strong> — через PageSpeed Insights (Mobile), якщо сервіс
+        доступний; інакше категорії зараховуються прапорцем «Виконано» за
+        скриншотом студента.
+      </li>
+    </ul>
+
+    <h2 id="mark">Як рахується оцінка</h2>
+    <p>
+      Кожна перевірка має вагу: «виконано» — повна вага, «частково» — половина,
+      «не виконано» — 0. Перевірки, які не вдалося виконати, в оцінку не
+      входять. Категорія Lighthouse, позначена прапорцем, рахується як
+      «виконано» незалежно від PageSpeed Insights. Відсоток переводиться у 12-бальну шкалу й округлюється: 10–12 —
+      високий рівень, 7–9 — достатній, 4–6 — середній, 1–3 — початковий.
+    </p>
+
+    <h2 id="limits">Обмеження бета-версії</h2>
+    <ul>
+      <li>
+        Перевірка не порівнює сторінку з макетом візуально: кольори секцій,
+        відступи й компонування всередині карток треба звірити вручну.
+      </li>
+      <li>
+        Якщо PageSpeed Insights недоступний, рядки Lighthouse позначаються «не
+        перевірено» — звірте скриншот студента або запустіть Lighthouse у
+        DevTools, як описано в §4, і позначте виконані категорії прапорцями.
+      </li>
+      <li>
+        Помилка перевірки можлива: сумнівні пункти варто переглянути у DevTools
+        на сторінці студента.
+      </li>
+    </ul>
+  </article>
+</LabLayout>
+
+<script>
+  import {
+    CheckError,
+    GROUPS,
+    inspect,
+    normalizeUrl,
+    scoreChecks,
+    type Check,
+    type GroupId,
+    type Status,
+  } from "@/scripts/courtly-check";
+
+  const root = document.querySelector<HTMLElement>("[data-cc]")!;
+  const form = root.querySelector<HTMLFormElement>("[data-cc-form]")!;
+  const input = form.querySelector<HTMLInputElement>("#cc-url")!;
+  const submit = form.querySelector<HTMLButtonElement>("[data-cc-submit]")!;
+  const error = form.querySelector<HTMLElement>("[data-cc-error]")!;
+  const reopen = form.querySelector<HTMLButtonElement>("[data-cc-reopen]")!;
+  const dialog = root.querySelector<HTMLDialogElement>("[data-cc-dialog]")!;
+  const body = dialog.querySelector<HTMLElement>("[data-cc-body]")!;
+  const status = dialog.querySelector<HTMLElement>("[data-cc-status]")!;
+  const runError = dialog.querySelector<HTMLElement>("[data-cc-run-error]")!;
+  const announce = dialog.querySelector<HTMLElement>("[data-cc-announce]")!;
+  const report = dialog.querySelector<HTMLElement>("[data-cc-report]")!;
+  const groupsEl = report.querySelector<HTMLElement>("[data-cc-groups]")!;
+  const toggleAll = report.querySelector<HTMLButtonElement>(
+    "[data-cc-toggle-all]",
+  )!;
+
+  const PSI_KEY: string = import.meta.env.PUBLIC_PSI_API_KEY ?? "";
+
+  const LABEL: Record<Status, string> = {
+    pass: "Виконано",
+    warn: "Частково",
+    fail: "Не виконано",
+    skip: "Не перевірено",
+  };
+  const ICON: Record<Status, string> = {
+    pass: "✓",
+    warn: "!",
+    fail: "✕",
+    skip: "–",
+  };
+
+  let current: {
+    pageUrl: string;
+    checks: Check[];
+    lighthouseDone: boolean;
+    /** ISO timestamp of the run. */
+    at: string;
+  } | null = null;
+
+  /**
+   * Groups the viewer opened or closed by hand, by group id. `render()` runs
+   * again when Lighthouse lands; this keeps their choice. Cleared per run.
+   */
+  const openState = new Map<string, boolean>();
+
+  /** Lighthouse rows the instructor ticked as passed, by check id. Cleared per run. */
+  const manual = new Set<string>();
+
+  /** A check as scored and reported; `manual` — ticked by the instructor. */
+  type Row = Check & { manual?: boolean };
+
+  /** Scored Lighthouse rows get the "Виконано" checkbox; Performance has no threshold. */
+  const canTick = (c: Check) => c.group === "lighthouse" && c.weight > 0;
+
+  /**
+   * Checks as scored and reported: a ticked Lighthouse row counts as passed
+   * whatever PageSpeed Insights said, or could not say.
+   */
+  function reported(): Row[] {
+    return current!.checks.map((c): Row => {
+      if (!manual.has(c.id) || c.status === "pass") return c;
+      const psi = c.status !== "skip" && c.detail;
+      return {
+        ...c,
+        status: "pass",
+        manual: true,
+        detail: psi
+          ? `підтверджено вручну; PageSpeed Insights: ${c.detail}`
+          : "підтверджено вручну",
+      };
+    });
+  }
+
+  /** Share of a group's weight earned, shown beside its title. */
+  function groupScoreText(id: GroupId, rows: Check[]): string {
+    if (id === "lighthouse" && !current!.lighthouseDone) return "виконується…";
+    const score = scoreChecks(rows);
+    if (score.max) return `${Math.round(score.percent * 100)} %`;
+    if (rows.length && rows.every((c) => c.status === "skip"))
+      return "не перевірено";
+    return "";
+  }
+
+  /** Checked and locked when PageSpeed Insights already passed the row. */
+  function tickBox(check: Row): HTMLLabelElement {
+    const label = el("label", "cc-manual");
+    const box = el("input");
+    box.type = "checkbox";
+    box.dataset.ccManual = check.id;
+    box.checked = check.status === "pass";
+    box.disabled = check.status === "pass" && !check.manual;
+    if (box.disabled) label.title = "Зараховано за PageSpeed Insights";
+    label.append(box, "Виконано", el("span", "visually-hidden", `: ${check.title}`));
+    return label;
+  }
+
+  const CHEVRON =
+    '<svg class="cc-group__chevron" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="m9 6 6 6-6 6"></path></svg>';
+
+  const formatDate = (iso: string) =>
+    new Date(iso).toLocaleString("uk-UA", {
+      dateStyle: "long",
+      timeStyle: "short",
+    });
+
+  function el<K extends keyof HTMLElementTagNameMap>(
+    tag: K,
+    className?: string,
+    text?: string,
+  ) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined) node.textContent = text;
+    return node;
+  }
+
+  /** The page being checked, under the dialog title. */
+  function setUrl(pageUrl: string) {
+    const link = dialog.querySelector<HTMLAnchorElement>("[data-cc-url]")!;
+    link.href = pageUrl;
+    link.textContent = pageUrl;
+  }
+
+  /** Progress line at the top of the dialog; `busy` shows the spinner. */
+  function setStatus(text: string, busy: boolean) {
+    status.textContent = text;
+    status.toggleAttribute("data-busy", busy);
+  }
+
+  function render() {
+    if (!current) return;
+    const { pageUrl, lighthouseDone, at } = current;
+    const checks = reported();
+    const score = scoreChecks(checks);
+    const scored = checks.filter((c) => c.weight > 0 && c.status !== "skip");
+    const passed = scored.filter((c) => c.status === "pass").length;
+
+    report.querySelector("[data-cc-mark]")!.textContent = String(score.mark);
+    report.querySelector("[data-cc-title]")!.textContent = lighthouseDone
+      ? "Орієнтовна оцінка"
+      : "Попередня оцінка — чекаємо на Lighthouse";
+    report.querySelector("[data-cc-meta]")!.textContent =
+      `${Math.round(score.percent * 100)} % ваги · виконано ${passed} з ${scored.length} перевірок`;
+    setUrl(pageUrl);
+    report.querySelector<HTMLElement>("[data-cc-bar]")!.style.width =
+      `${score.percent * 100}%`;
+    report.dataset.level =
+      score.mark >= 10
+        ? "high"
+        : score.mark >= 7
+          ? "good"
+          : score.mark >= 4
+            ? "mid"
+            : "low";
+
+    groupsEl.replaceChildren(
+      ...GROUPS.map((group) => {
+        const rows = checks.filter((c) => c.group === group.id);
+        const count = (status: Status) =>
+          rows.filter((c) => c.status === status).length;
+
+        // Collapsed by default when every row passed; open when there is
+        // something to read — or a Lighthouse row left to tick.
+        const toTick = rows.some((c) => canTick(c) && c.status === "skip");
+        const section = el("details", "cc-group");
+        section.dataset.group = group.id;
+        section.open =
+          openState.get(group.id) ?? (count("fail") + count("warn") > 0 || toTick);
+
+        const head = el("summary", "cc-group__head");
+        head.insertAdjacentHTML("afterbegin", CHEVRON);
+        head.append(el("span", "cc-group__title", group.title));
+        // Before click's default action, `open` still holds the old value.
+        head.addEventListener("click", () =>
+          openState.set(group.id, !section.open),
+        );
+
+        const meta = el("span", "cc-group__meta");
+        for (const status of ["fail", "warn"] as const) {
+          const n = count(status);
+          if (!n) continue;
+          const pill = el("span", "cc-pill", `${ICON[status]} ${n}`);
+          pill.dataset.status = status;
+          pill.setAttribute("aria-hidden", "true");
+          meta.append(
+            pill,
+            el(
+              "span",
+              "visually-hidden",
+              `, ${LABEL[status].toLowerCase()}: ${n}`,
+            ),
+          );
+        }
+        const scoreText = groupScoreText(group.id, rows);
+        if (scoreText) meta.append(el("span", "cc-group__score", scoreText));
+        head.append(meta);
+        section.append(head);
+
+        if (rows.some((c) => canTick(c) && (c.status !== "pass" || c.manual))) {
+          section.append(
+            el(
+              "p",
+              "cc-group__hint",
+              "Прапорець «Виконано» зараховує категорію вручну — наприклад, за скриншотом Lighthouse з листа студента.",
+            ),
+          );
+        }
+
+        const list = el("ul", "cc-list");
+        if (group.id === "lighthouse" && !lighthouseDone) {
+          const li = el("li", "cc-check");
+          li.dataset.status = "skip";
+          li.append(el("span", "cc-check__icon cc-spinner"));
+          li.firstElementChild!.setAttribute("aria-hidden", "true");
+          li.append(
+            el(
+              "div",
+              "cc-check__body",
+              "PageSpeed Insights запускає Lighthouse — це до хвилини.",
+            ),
+          );
+          list.append(li);
+        }
+        for (const check of rows) {
+          const li = el("li", "cc-check");
+          li.dataset.status = check.status;
+          const icon = el("span", "cc-check__icon", ICON[check.status]);
+          icon.setAttribute("aria-hidden", "true");
+          const body = el("div", "cc-check__body");
+          const titleRow = el("p", "cc-check__title");
+          titleRow.append(
+            el("span", "visually-hidden", `${LABEL[check.status]}: `),
+            check.title,
+          );
+          if (check.weight === 0)
+            titleRow.append(
+              el("span", "cc-check__info", " · не впливає на оцінку"),
+            );
+          body.append(titleRow);
+          if (check.detail)
+            body.append(el("p", "cc-check__detail", check.detail));
+          li.append(icon, body);
+          if (canTick(check)) {
+            li.classList.add("cc-check--tick");
+            li.append(tickBox(check));
+          }
+          list.append(li);
+        }
+        section.append(list);
+        return section;
+      }),
+    );
+    syncToggleAll();
+    // Here rather than in run(): ticking a row changes the mark.
+    if (lighthouseDone)
+      setStatus(
+        `Перевірку завершено: ${score.mark} з 12 (${formatDate(at)}).`,
+        false,
+      );
+  }
+
+  /** One button for all groups: expands unless every group is open. */
+  function syncToggleAll() {
+    const groups = [
+      ...groupsEl.querySelectorAll<HTMLDetailsElement>("details"),
+    ];
+    const allOpen = groups.length > 0 && groups.every((d) => d.open);
+    toggleAll.textContent = allOpen ? "Згорнути все" : "Розгорнути все";
+    toggleAll.dataset.open = String(!allOpen);
+  }
+
+  /** Light-theme status colours for the mail copy: clients drop stylesheets, so inline. */
+  const MAIL_COLOR: Record<Status, string> = {
+    pass: "#177245",
+    warn: "#9a5800",
+    fail: "#c0262d",
+    skip: "#6b6f76",
+  };
+  const MAIL_MUTED = "#6b6f76";
+
+  const escapeHtml = (value: string) =>
+    value.replace(/[&<>"]/g, (ch) => `&#${ch.charCodeAt(0)};`);
+
+  /**
+   * The report as it goes into a reply to the student: HTML with inline
+   * styles for mail clients, plain text for everything else. No `?url=`
+   * link — this page is instructor-only.
+   */
+  function mailReport(): { html: string; text: string } {
+    const { pageUrl, lighthouseDone, at } = current!;
+    const checks = reported();
+    const score = scoreChecks(checks);
+    const headline = `ЛР-7 · Автоматична перевірка: ${lighthouseDone ? "орієнтовна" : "попередня"} оцінка ${score.mark} / 12 (${Math.round(score.percent * 100)} %)`;
+    const when = `Перевірено ${formatDate(at)}${lighthouseDone ? "" : " · Lighthouse ще не завершився"}`;
+    const legend = (["pass", "warn", "fail", "skip"] as const)
+      .map((s) => `${ICON[s]} ${LABEL[s].toLowerCase()}`)
+      .join(" · ");
+
+    const text = [headline, pageUrl, when, legend, ""];
+    const html = [
+      `<p style="margin:0 0 4px"><b style="font-size:16px">${escapeHtml(headline)}</b></p>`,
+      `<p style="margin:0"><a href="${escapeHtml(pageUrl)}">${escapeHtml(pageUrl)}</a></p>`,
+      `<p style="margin:0;color:${MAIL_MUTED}">${escapeHtml(when)}<br>${escapeHtml(legend)}</p>`,
+      `<table cellpadding="0" cellspacing="0" style="border-collapse:collapse">`,
+    ];
+    for (const group of GROUPS) {
+      const rows = checks.filter((c) => c.group === group.id);
+      if (!rows.length) continue;
+      const groupScore = groupScoreText(group.id, rows);
+      text.push(groupScore ? `${group.title} — ${groupScore}` : group.title);
+      html.push(
+        `<tr><td colspan="2" style="padding:14px 0 4px"><b>${escapeHtml(group.title)}</b>${groupScore ? `<span style="color:${MAIL_MUTED}"> — ${escapeHtml(groupScore)}</span>` : ""}</td></tr>`,
+      );
+      for (const c of rows) {
+        const info = c.weight === 0 ? " · не впливає на оцінку" : "";
+        text.push(
+          `  ${ICON[c.status]} ${c.title}${c.detail ? ` — ${c.detail}` : ""}${info}`,
+        );
+        const detailColor =
+          c.status === "warn" || c.status === "fail"
+            ? MAIL_COLOR[c.status]
+            : MAIL_MUTED;
+        html.push(
+          `<tr><td style="padding:2px 8px 2px 0;vertical-align:top;font-weight:bold;color:${MAIL_COLOR[c.status]}">${ICON[c.status]}</td>` +
+            `<td style="padding:2px 0">${escapeHtml(c.title)}` +
+            (c.detail
+              ? `<span style="color:${detailColor}"> — ${escapeHtml(c.detail)}</span>`
+              : "") +
+            (info ? `<span style="color:${MAIL_MUTED}">${info}</span>` : "") +
+            `</td></tr>`,
+        );
+      }
+      text.push("");
+    }
+    html.push("</table>");
+    return { html: html.join(""), text: text.join("\n").trimEnd() };
+  }
+
+  /** Both flavours, so a mail client pastes it formatted; plain text if the browser cannot. */
+  async function copyMailReport() {
+    const { html, text } = mailReport();
+    if (typeof ClipboardItem !== "undefined" && navigator.clipboard.write) {
+      try {
+        await navigator.clipboard.write([
+          new ClipboardItem({
+            "text/html": new Blob([html], { type: "text/html" }),
+            "text/plain": new Blob([text], { type: "text/plain" }),
+          }),
+        ]);
+        return;
+      } catch {
+        // fall through to plain text
+      }
+    }
+    await navigator.clipboard.writeText(text);
+  }
+
+  /**
+   * `?url=` link to this page. Opening it re-runs the check on the live site,
+   * so the result cannot be edited on the way — but it reflects the site at
+   * the time of the click, not of the first run.
+   */
+  function reportLink(pageUrl: string): string {
+    const url = new URL(location.pathname, location.origin);
+    url.searchParams.set("url", pageUrl);
+    return url.href;
+  }
+
+  function setBusy(busy: boolean) {
+    submit.disabled = busy;
+    submit.textContent = busy ? "Перевіряю…" : "Перевірити";
+    body.setAttribute("aria-busy", String(busy));
+  }
+
+  /**
+   * Syntax problems (empty field, a github.com repo link) are reported under
+   * the field; everything from the network on happens in the dialog.
+   */
+  async function run(raw: string) {
+    error.hidden = true;
+    input.removeAttribute("aria-invalid");
+    let target: URL;
+    try {
+      target = normalizeUrl(raw);
+    } catch (err) {
+      error.textContent = err instanceof Error ? err.message : String(err);
+      error.hidden = false;
+      input.setAttribute("aria-invalid", "true");
+      input.focus();
+      return;
+    }
+
+    setBusy(true);
+    setUrl(target.href);
+    report.hidden = true;
+    runError.hidden = true;
+    openState.clear();
+    manual.clear();
+    setStatus("Підготовка…", true);
+    reopen.hidden = false;
+    if (!dialog.open) dialog.showModal();
+    body.scrollTop = 0;
+
+    try {
+      const result = await inspect(
+        raw,
+        (text) => setStatus(text, true),
+        PSI_KEY,
+      );
+
+      const entry = {
+        pageUrl: result.pageUrl,
+        checks: result.checks,
+        lighthouseDone: false,
+        at: new Date().toISOString(),
+      };
+      current = entry;
+      history.replaceState(null, "", reportLink(result.pageUrl));
+
+      render();
+      report.hidden = false;
+      setStatus(
+        `Попередня оцінка ${scoreChecks(entry.checks).mark} з 12 — Lighthouse ще виконується.`,
+        false,
+      );
+      setBusy(false);
+
+      const extra = await result.lighthouse;
+      if (current !== entry) return; // a newer run replaced this one
+      entry.checks = [...entry.checks, ...extra];
+      entry.lighthouseDone = true;
+      render();
+    } catch (err) {
+      setStatus("", false);
+      runError.textContent =
+        err instanceof CheckError
+          ? err.message
+          : `Перевірка не вдалася: ${err instanceof Error ? err.message : String(err)}`;
+      runError.hidden = false;
+      setBusy(false);
+    }
+  }
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!submit.disabled) run(input.value);
+  });
+
+  reopen.addEventListener("click", () => dialog.showModal());
+
+  toggleAll.addEventListener("click", () => {
+    const open = toggleAll.dataset.open === "true";
+    groupsEl.querySelectorAll<HTMLDetailsElement>("details").forEach((d) => {
+      d.open = open;
+      openState.set(d.dataset.group ?? "", open);
+    });
+    syncToggleAll();
+  });
+  // `toggle` does not bubble — capture it to keep the button label honest.
+  groupsEl.addEventListener("toggle", syncToggleAll, true);
+
+  // A tick re-renders the report (mark, group score, row); keep the group
+  // open and focus on the new copy of the checkbox.
+  groupsEl.addEventListener("change", (event) => {
+    const box = event.target;
+    if (!(box instanceof HTMLInputElement) || !box.dataset.ccManual) return;
+    const id = box.dataset.ccManual;
+    if (box.checked) manual.add(id);
+    else manual.delete(id);
+    openState.set("lighthouse", true);
+    render();
+    groupsEl
+      .querySelector<HTMLInputElement>(`[data-cc-manual="${id}"]`)
+      ?.focus();
+  });
+  dialog
+    .querySelector("[data-cc-close]")!
+    .addEventListener("click", () => dialog.close());
+  dialog.addEventListener("click", (event) => {
+    if (event.target === dialog) dialog.close();
+  });
+
+  report
+    .querySelector("[data-cc-copy]")!
+    .addEventListener("click", async (event) => {
+      const button = event.currentTarget as HTMLButtonElement;
+      if (!current) return;
+      try {
+        await copyMailReport();
+        button.textContent = "Скопійовано";
+      } catch {
+        button.textContent = "Не вдалося скопіювати";
+      }
+      setTimeout(() => (button.textContent = "Скопіювати звіт"), 2000);
+    });
+
+  report
+    .querySelector("[data-cc-copy-link]")!
+    .addEventListener("click", async (event) => {
+      const button = event.currentTarget as HTMLButtonElement;
+      if (!current) return;
+      try {
+        await navigator.clipboard.writeText(reportLink(current.pageUrl));
+        button.dataset.copied = "true";
+        announce.textContent = "Посилання на звіт скопійовано.";
+      } catch {
+        announce.textContent = "Не вдалося скопіювати посилання.";
+      }
+      setTimeout(() => {
+        delete button.dataset.copied;
+        announce.textContent = "";
+      }, 2000);
+    });
+
+  // `?url=` prefills and runs — the address bar keeps it after a run, so a
+  // report can be reopened or bookmarked as a link.
+  const fromQuery = new URLSearchParams(location.search).get("url");
+  if (fromQuery) {
+    input.value = fromQuery;
+    run(fromQuery);
+  }
+</script>
+
+
+<style is:global>
+  /* Global because the report rows are built at runtime and carry no scoped
+     attribute; every selector is prefixed `.cc`. */
+  .cc {
+    --cc-pass: #177245;
+    --cc-warn: #9a5800;
+    --cc-fail: #c0262d;
+    --cc-skip: var(--muted-foreground);
+    margin-block: 0 3rem;
+  }
+
+  .dark .cc {
+    --cc-pass: #5fd39a;
+    --cc-warn: #f0b75a;
+    --cc-fail: #ff8f87;
+  }
+
+  .cc-form {
+    padding: 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--card);
+  }
+
+  .cc-form__label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--foreground);
+  }
+
+  .cc-form__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .cc-form__input {
+    flex: 1 1 16rem;
+    min-width: 0;
+    min-height: 2.75rem;
+    padding: 0 0.85rem;
+    border: 1px solid color-mix(in oklab, var(--foreground) 25%, transparent);
+    border-radius: var(--radius-md);
+    background: var(--background);
+    color: var(--foreground);
+    font: inherit;
+    font-size: 1rem;
+  }
+
+  .cc-form__input:focus-visible,
+  .cc-form__submit:focus-visible,
+  .cc-copy:focus-visible,
+  .cc-reopen:focus-visible,
+  .cc-dialog__close:focus-visible,
+  .cc-toggle-all:focus-visible,
+  .cc-group__head:focus-visible {
+    outline: 2px solid var(--color-brand-blue);
+    outline-offset: 2px;
+  }
+
+  .cc-form__input[aria-invalid="true"] {
+    border-color: var(--cc-fail);
+  }
+
+  .cc-form__submit {
+    flex: 0 0 auto;
+    min-height: 2.75rem;
+    padding: 0 1.25rem;
+    border: 0;
+    border-radius: var(--radius-md);
+    background: var(--color-brand-blue);
+    color: #fff;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .cc-form__submit:disabled {
+    opacity: 0.7;
+    cursor: progress;
+  }
+
+  .cc-form__hint {
+    margin: 0.5rem 0 0;
+    font-size: 0.8125rem;
+    color: var(--muted-foreground);
+  }
+
+  .cc-form__error {
+    margin: 0.6rem 0 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--cc-fail);
+  }
+
+  .cc-reopen {
+    margin-top: 0.75rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--brand-text);
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    cursor: pointer;
+  }
+
+  /* The report is a modal: the page behind it should not scroll. */
+  html:has(.cc-dialog[open]) {
+    overflow: hidden;
+  }
+
+  .cc-dialog {
+    /* Tailwind's preflight zeroes the UA `margin: auto` that centres a modal
+       dialog — same fix as AcceptanceChecklist. */
+    margin: auto;
+    width: min(56rem, calc(100vw - 2rem));
+    max-width: none;
+    /* Fixed, so the box does not jump when the report replaces the spinner. */
+    height: min(52rem, calc(100dvh - 2rem));
+    max-height: none;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--background);
+    color: var(--foreground);
+    overflow: hidden;
+  }
+
+  .cc-dialog[open] {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cc-dialog::backdrop {
+    background: rgb(0 0 0 / 0.6);
+  }
+
+  .cc-dialog__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .cc-dialog__heading {
+    min-width: 0;
+  }
+
+  .cc-dialog__title {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--foreground);
+  }
+
+  .cc-dialog__url {
+    margin: 0.2rem 0 0;
+    font-size: 0.875rem;
+    overflow-wrap: anywhere;
+  }
+
+  .cc-dialog__url a {
+    color: var(--brand-text);
+  }
+
+  .cc-dialog__close {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: none;
+    color: var(--foreground);
+    cursor: pointer;
+  }
+
+  .cc-dialog__close svg {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+
+  .cc-dialog__body {
+    flex: 1;
+    min-height: 0;
+    padding: 1.25rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  /* Before the report arrives, progress or the error sits mid-dialog. */
+  .cc-dialog__body:has(> .cc-report[hidden]) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .cc-dialog__body:has(> .cc-report[hidden]) .cc-status {
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  @media (max-width: 639px) {
+    .cc-dialog {
+      width: 100vw;
+      height: 100dvh;
+      border: 0;
+      border-radius: 0;
+    }
+
+    .cc-dialog__head,
+    .cc-dialog__body {
+      padding-inline: 1rem;
+    }
+  }
+
+  .cc-status {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0 0 1rem;
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+  }
+
+  .cc-status:empty {
+    display: none;
+  }
+
+  .cc-status[data-busy]::before {
+    content: "";
+    flex: none;
+    width: 1.1rem;
+    height: 1.1rem;
+    border: 2px solid color-mix(in oklab, var(--muted-foreground) 30%, transparent);
+    border-top-color: var(--color-brand-blue);
+    border-radius: 999px;
+    animation: cc-spin 0.9s linear infinite;
+  }
+
+  .cc-run-error {
+    margin: 0;
+    padding: 0.85rem 1rem;
+    border: 1px solid color-mix(in oklab, var(--cc-fail) 45%, transparent);
+    border-radius: var(--radius-md);
+    background: color-mix(in oklab, var(--cc-fail) 10%, transparent);
+    color: var(--cc-fail);
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .cc-report {
+    margin: 0;
+  }
+
+  .cc-summary {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.75rem 1.25rem;
+    align-items: center;
+    padding: 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--card);
+  }
+
+  .cc-mark {
+    display: flex;
+    align-items: baseline;
+    gap: 0.3rem;
+    margin: 0;
+    font-family: var(--lab-font-heading, inherit);
+    color: var(--cc-level, var(--foreground));
+  }
+
+  .cc-report[data-level="high"] {
+    --cc-level: var(--cc-pass);
+  }
+  .cc-report[data-level="good"] {
+    --cc-level: var(--cc-pass);
+  }
+  .cc-report[data-level="mid"] {
+    --cc-level: var(--cc-warn);
+  }
+  .cc-report[data-level="low"] {
+    --cc-level: var(--cc-fail);
+  }
+
+  .cc-mark__value {
+    font-size: 3.25rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .cc-mark__max {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--muted-foreground);
+  }
+
+  .cc-summary__title {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--foreground);
+  }
+
+  .cc-summary__meta {
+    margin: 0.2rem 0 0;
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+    overflow-wrap: anywhere;
+  }
+
+  .cc-bar {
+    height: 0.4rem;
+    margin-top: 0.6rem;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--foreground) 10%, transparent);
+    overflow: hidden;
+  }
+
+  .cc-bar span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--cc-level, var(--color-brand-blue));
+    transition: width 0.4s ease;
+  }
+
+  .cc-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .cc-copy {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.25rem;
+    padding: 0 0.9rem;
+    border: 1px solid var(--color-brand-blue);
+    border-radius: var(--radius-md);
+    background: none;
+    color: var(--brand-text);
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .cc-copy--icon {
+    width: 2.25rem;
+    padding: 0;
+  }
+
+  .cc-copy--icon svg {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .cc-copy__done,
+  .cc-copy--icon[data-copied] .cc-copy__link {
+    display: none;
+  }
+
+  .cc-copy--icon[data-copied] .cc-copy__done {
+    display: block;
+    color: var(--cc-pass);
+  }
+
+  @media (min-width: 640px) {
+    .cc-summary {
+      grid-template-columns: auto minmax(0, 1fr) auto;
+    }
+
+    .cc-actions {
+      grid-column: auto;
+      align-self: start;
+    }
+  }
+
+  .cc-note {
+    margin: 0.75rem 0 0;
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+  }
+
+  .cc-groups-bar {
+    display: flex;
+    justify-content: flex-end;
+    margin: 1.25rem 0 0.5rem;
+  }
+
+  .cc-toggle-all {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--brand-text);
+    font: inherit;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .cc-toggle-all:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .cc-group {
+    margin-top: 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+  }
+
+  .cc-group__head {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.75rem 1rem;
+    border-radius: inherit;
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .cc-group__head::-webkit-details-marker {
+    display: none;
+  }
+
+  .cc-group__head:hover {
+    background: color-mix(in oklab, var(--foreground) 4%, transparent);
+  }
+
+  .cc-group[open] > .cc-group__head {
+    border-bottom: 1px solid var(--border);
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+  }
+
+  .cc-group__chevron {
+    flex: none;
+    fill: none;
+    stroke: var(--muted-foreground);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.15s ease;
+  }
+
+  .cc-group[open] .cc-group__chevron {
+    transform: rotate(90deg);
+  }
+
+  .cc-group__title {
+    flex: 1;
+    min-width: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--lab-subheading, var(--foreground));
+  }
+
+  .cc-group__meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .cc-group__score {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--muted-foreground);
+    white-space: nowrap;
+  }
+
+  .cc-pill {
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    white-space: nowrap;
+    color: var(--cc-color);
+    background: color-mix(in oklab, var(--cc-color) 14%, transparent);
+  }
+
+  .cc-pill[data-status="fail"] {
+    --cc-color: var(--cc-fail);
+  }
+
+  .cc-pill[data-status="warn"] {
+    --cc-color: var(--cc-warn);
+  }
+
+  .cc-group .cc-list {
+    padding-inline: 1rem;
+  }
+
+  .cc-group .cc-check:last-child {
+    border-bottom: 0;
+  }
+
+  .cc-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .cc-check {
+    display: grid;
+    grid-template-columns: 1.5rem minmax(0, 1fr);
+    gap: 0.65rem;
+    padding: 0.65rem 0;
+    border-bottom: 1px solid color-mix(in oklab, var(--border) 70%, transparent);
+  }
+
+  .cc-check__icon {
+    display: grid;
+    place-items: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 999px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--cc-color);
+    background: color-mix(in oklab, var(--cc-color) 14%, transparent);
+  }
+
+  .cc-check[data-status="pass"] {
+    --cc-color: var(--cc-pass);
+  }
+  .cc-check[data-status="warn"] {
+    --cc-color: var(--cc-warn);
+  }
+  .cc-check[data-status="fail"] {
+    --cc-color: var(--cc-fail);
+  }
+  .cc-check[data-status="skip"] {
+    --cc-color: var(--cc-skip);
+  }
+
+  .cc-check__title,
+  .cc-check__detail {
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .cc-check__title {
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--foreground);
+  }
+
+  .cc-check__detail {
+    margin-top: 0.15rem;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--cc-color);
+  }
+
+  .cc-check[data-status="pass"] .cc-check__detail,
+  .cc-check__info {
+    color: var(--muted-foreground);
+  }
+
+  .cc-check__body {
+    align-self: center;
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+  }
+
+  .cc-check--tick {
+    grid-template-columns: 1.5rem minmax(0, 1fr) auto;
+  }
+
+  .cc-manual {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    align-self: center;
+    min-height: 2.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--foreground);
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .cc-manual input {
+    width: 1.125rem;
+    height: 1.125rem;
+    margin: 0;
+    accent-color: var(--cc-pass);
+    cursor: inherit;
+  }
+
+  .cc-manual input:focus-visible {
+    outline: 2px solid var(--color-brand-blue);
+    outline-offset: 2px;
+  }
+
+  .cc-manual:has(input:disabled) {
+    color: var(--muted-foreground);
+    cursor: default;
+  }
+
+  .cc-group__hint {
+    margin: 0;
+    padding: 0.65rem 1rem 0;
+    font-size: 0.8125rem;
+    color: var(--muted-foreground);
+  }
+
+  .cc-spinner {
+    border: 2px solid
+      color-mix(in oklab, var(--muted-foreground) 30%, transparent);
+    border-top-color: var(--muted-foreground);
+    background: none;
+    animation: cc-spin 0.9s linear infinite;
+  }
+
+  @keyframes cc-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cc-status[data-busy]::before {
+      animation-duration: 2.5s;
+    }
+
+    .cc-spinner {
+      animation: none;
+    }
+    .cc-group__chevron {
+      transition: none;
+    }
+    .cc-bar span {
+      transition: none;
+    }
+  }
+
+  .cc .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+</style>
