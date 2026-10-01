@@ -2,13 +2,16 @@
 
 One Astro + Tailwind CSS v4 project for the whole course:
 
-| Path                                | What                                                |
-| ----------------------------------- | --------------------------------------------------- |
-| `/`                                 | Course hub — links to the main sections             |
-| `/lectures/`, `/lectures/lecture-1` | Lecture slide decks (keyboard-driven, print to PDF) |
-| `/labs/`                            | Lab assignments (in progress)                       |
+| Path                                | What                                                 |
+| ----------------------------------- | ---------------------------------------------------- |
+| `/`                                 | Course hub — links to the main sections              |
+| `/lectures/`, `/lectures/lecture-1` | Lecture slide decks (keyboard-driven, print to PDF)  |
+| `/labs/`, `/labs/lab-1`             | Lab assignments                                      |
+| `/labs/lab-2/task`                  | The practical-task brief (ТЗ) for a lab that has one |
 
 ## Quick start
+
+Requires Node `>=22.12.0` (see `package.json` `engines`; the project targets Node 24 via `volta`).
 
 ```bash
 npm install
@@ -32,27 +35,56 @@ npm run dev      # http://localhost:4321/web-development-2026/
 ```
 src/
 ├─ pages/
-│  ├─ index.astro              hub
-│  ├─ lectures/                deck index + [lecture].astro (one deck per slug)
-│  └─ labs/                    labs index
-├─ layouts/   BaseLayout · DeckLayout (fullscreen deck)
-├─ components/ SiteHeader/Footer · deck (Slide, DeckChrome, RichText)
+│  ├─ index.astro                 hub
+│  ├─ lectures/                   deck index + [lecture].astro (one deck per slug)
+│  └─ labs/                       labs index + [lab].astro + [lab]/task.astro (ТЗ brief)
+├─ content/
+│  ├─ labs/                       one .md per lab assignment (the `labs` collection)
+│  └─ tasks/                      one .md per practical-task brief (the `tasks` collection),
+│                                  id-linked 1:1 to its lab
+├─ content.config.ts              schemas for `labs` and `tasks`
+├─ layouts/   BaseLayout (shared <html>/<head>) · DeckLayout (fullscreen deck) ·
+│             LabLayout (lab reading shell: article + "on this page" rail)
+├─ components/ SiteHeader/Footer · ThemeToggle · deck (Slide, DeckChrome, RichText) ·
+│               lab (LabHeader, AcceptanceChecklist, PricingMockup, MockupLightbox) ·
+│               OnThisPage, PrevNext, Breadcrumbs
 ├─ data/
-│  ├─ site.ts                  site meta + the section list
-│  └─ lectures/                lecture registry + per-lecture slide data
-├─ lib/      · paths.ts (withBase) · utils.ts (cn)
-├─ scripts/    deck.ts (slides)
-└─ styles/     global.css (institute design system, single Tailwind entry) · deck.css (deck-only)
+│  ├─ site.ts                     site meta + the section list
+│  └─ lectures/                   lecture registry + per-lecture slide data
+├─ lib/        paths.ts (withBase) · labs.ts (lab/task lookups) · utils.ts (cn)
+├─ scripts/    deck.ts (deck navigation + theme) · docs.ts (lab scrollspy, ToC, theme, copy buttons)
+└─ styles/     global.css (design tokens, single Tailwind entry, hub styles) ·
+               deck.css (deck-only, scoped to .deck-page) ·
+               lab.css (lab-only, scoped to .lab-page, deliberately unlayered)
+
+plugins/
+└─ base-links.mjs   rewrites root-relative URLs in Markdown bodies for the GitHub Pages base path
 ```
+
+See `docs/agents/design-system.md` for which stylesheet owns what and how
+theming differs between the hub, decks, and labs.
 
 ## Deploy
 
-GitHub Pages via `.github/workflows/deploy.yml` on push to `main`. Deploys to
-`denysmatsevych/web-development-2026` → https://denysmatsevych.github.io/web-development-2026/
-(enable once at **Settings → Pages → Source: GitHub Actions**). `base` in
+GitHub Pages project site at `https://denysmatsevych.github.io/web-development-2026/`,
+via `.github/workflows/deploy.yml` on push to `main` (`withastro/action`
+installs, builds, and uploads the site; a second job deploys it). `base` in
 `astro.config.mjs` must stay equal to the repository name.
+
+This workflow only runs on push to `main`, after merge — it does not gate
+pull requests. PR checks run separately via `.github/workflows/pr-check.yml`
+and run `astro check` and a build on every pull request. See
+`CONTRIBUTING.md` → **Pull request guidelines** for what that means for
+PR review in practice.
 
 ## Docs
 
 - [docs/presentation-app-guide.md](docs/presentation-app-guide.md) — how the slide deck is built
 - [docs/lab-1-implementation-guide.md](docs/lab-1-implementation-guide.md) — lab implementation notes and project conventions
+- [docs/individual-assignment-implementation-guide.md](docs/individual-assignment-implementation-guide.md) — individual assignment (ІЗ) implementation notes
+
+## For AI agents
+
+See `AGENTS.md` — tech stack, commands, architecture, and which
+`docs/agents/*.md` file to read before reviewing a PR, writing a commit, or
+touching styles/components.
