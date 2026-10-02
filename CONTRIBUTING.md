@@ -2,7 +2,7 @@
 
 This repository is the course site for Web Development 2026, built with Astro, Tailwind CSS v4, and TypeScript. Keep changes focused, consistent, and easy to review.
 
-Requires Node `>=22.12.0` (see `package.json` `engines`; the project targets Node 24 via `volta`).
+See `README.md` → **Quick start** for the Node version requirement and the full command list.
 
 ## Branching strategy
 
@@ -45,9 +45,9 @@ Use [Conventional Commits](https://www.conventionalcommits.org/): `<type>(<scope
 - `refactor` — internal restructuring without behavioral change
 - `perf` — a change that improves performance
 - `test` — adding or correcting tests
-- `build` — changes to the build system or external dependencies
+- `build` — changes to the build system itself (e.g., webpack config, build scripts, Astro config)
 - `ci` — changes to CI configuration and scripts
-- `chore` — tooling, maintenance work that doesn't fit the above
+- `chore` — dependency updates, tooling, and maintenance work that doesn't fit the above
 - `revert` — reverts a previous commit
 
 This list is exhaustive — if nothing fits, that's a sign to extend this list in the same change, not to improvise.
@@ -64,7 +64,8 @@ git commit -m "fix(labs): correct slug generation for individual assignment"
 git commit -m "docs: add PR checklist"
 git commit -m "style(global): adjust card spacing and contrast"
 git commit -m "refactor(layout): simplify lab shell structure"
-git commit -m "chore(build): update astro and tailwind config"
+git commit -m "chore: update astro and tailwind dependencies"
+git commit -m "build: configure astro image optimization plugin"
 git commit -m "ci: add pull_request check workflow"
 ```
 
@@ -76,15 +77,10 @@ Open a PR only when the change is ready for review.
 
 - Ensure the branch is up to date with `main`
 - Confirm the change matches the issue or task scope
-- Run the verification commands yourself — PR checks run
-  automatically on pull requests via `.github/workflows/pr-check.yml`,
-  but running them locally before pushing catches issues early:
-
-```bash
-npm run check
-npm run build
-```
-
+- Run the verification command yourself before pushing — see `AGENTS.md` →
+  **Project commands**. PR checks re-run the same thing on GitHub (see
+  `README.md` → **Deploy**), but running it locally first catches issues
+  earlier and saves a round trip.
 - Check that the work is responsive and consistent with the existing design system (`docs/agents/design-system.md`)
 - For an accessibility-relevant change, check it against the relevant WCAG criteria (`docs/agents/design-system.md` → Accessibility)
 - Avoid unrelated edits in the same PR
@@ -98,15 +94,17 @@ npm run build
 - Do not merge without addressing blocking review feedback
 - See `docs/agents/pr-review.md` for the full reviewer checklist
 
+## Attribution and AI policy
+
+- **No trailers:** Do not include `Co-Authored-By` or tool-branding/marketing trailers on commits or PR descriptions.
+- **AI-assisted review footer:** Any AI-assisted review comments or summaries must end with the exact neutral footer:
+  > `🤖 AI-assisted review — verify before acting on anything marked as a recommendation.`
+
 ## Deployment and site hygiene
 
 This project is deployed as a GitHub Pages project site. Keep the static site configuration aligned with the repository name and project base path.
 
-Important rule:
-
-- The `base` value in `astro.config.mjs` must remain aligned with the repo name, currently `/web-development-2026`
-
-If you change routing, links, or deployment assumptions, confirm they still work with the project site base path — see `docs/agents/pr-review.md` §3 for the two mechanisms involved.
+See `README.md` → **Deploy** for the base path rule and deployment workflow details. If you change routing, links, or deployment assumptions, confirm they still work with the project site base path — see `docs/agents/pr-review.md` → **Base-path correctness**.
 
 ## Keeping documentation accurate
 

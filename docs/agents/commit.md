@@ -6,13 +6,10 @@ the quick operational checklist, not a second copy of the rules.
 
 ## Before writing a commit message
 
-1. Run `git log --oneline -10` if unsure the format is still as documented —
-   `CONTRIBUTING.md` is the source of truth, but a quick sanity check against
-   recent history costs nothing.
-2. Pick the type that matches what actually changed, not what sounds most
+1. Pick the type that matches what actually changed, not what sounds most
    impressive. A one-line CSS tweak is `style:`, not `fix:`; a dependency
    bump with no behavior change is `chore:`, not `fix:`.
-3. Add a scope only when it narrows the subject usefully (`deck`, `lab`,
+2. Add a scope only when it narrows the subject usefully (`deck`, `lab`,
    `hub`, `agents`, a component name). Skip it rather than force one.
 
 ## Common mistakes to avoid
@@ -27,4 +24,7 @@ the quick operational checklist, not a second copy of the rules.
   even as a hypothetical. Copy-pasting a stale example is how references to
   removed features spread back into the codebase.
 - **Don't write past tense or a trailing period** — `fix(deck): guard
-key-repeat`, not `Fixed the key-repeat bug.`
+  key-repeat`, not `Fixed the key-repeat bug.`
+- **Don't add attribution or vendor trailers.** See `CONTRIBUTING.md` →
+  **Attribution and AI policy** for the full rule on `Co-Authored-By`,
+  tool branding, and AI-assisted review footers.

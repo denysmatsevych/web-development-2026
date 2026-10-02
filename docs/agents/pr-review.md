@@ -17,19 +17,11 @@ npm run build
 A type regression or a broken route will surface in CI, but catching it
 locally before pushing is faster for everyone.
 
-## 2. Content collections are `labs` and `tasks` — nothing else
+## 2. Verify content paths and avoid stale references
 
-`src/content.config.ts` defines exactly two collections:
+Content collections live in `src/content/` (such as `labs` and `tasks`), while other course materials like lecture data live in `src/data/lectures/`. 
 
-- **`labs`** — one Markdown file per lab assignment (`src/content/labs/`),
-  ordered by `number`, kind `lab` or `individual`.
-- **`tasks`** — one practical brief per lab (`src/content/tasks/`), id-linked
-  to its lab 1:1 (the task's id _is_ its lab's id — no separate field to
-  keep in sync).
-
-There is no `docs`/handbook collection and no curriculum data file. If a PR
-references either, or adds content outside `labs`/`tasks`, that's a sign it
-was written against an older version of the site — flag it.
+When reviewing content changes, ensure no PR tries to reintroduce the deleted `docs`/`handbook` collection or the obsolete `curriculum.ts` data file. Beyond that, new or distinct content structures are valid as long as they align with the current Astro and Zod schema setup.
 
 ## 3. Base-path correctness — two different mechanisms, check both
 
@@ -45,10 +37,10 @@ handle this, for two different contexts:
   automatically at build time by `plugins/base-links.mjs`. You don't need to
   ask lab content authors to call anything — but the rewrite only covers
   `href`/`src` on `a`, `area`, `img`, `source`, `video`, `audio`, and `src`
-  on `iframe`. **It does not rewrite `srcset`.** If a reviewed Markdown body
-  adds an `<img srcset="/labs/…">`, that attribute will not get the base
-  prefix and will 404 in production — this is the one gap in an otherwise
-  automatic system, so it's worth specifically checking for.
+  on `iframe`. **It does not rewrite `srcset`, `video poster`, `track src`,
+  `embed src`, `object data`, or `url(...)` in styles.** If a reviewed Markdown
+  body adds any of these with a root-relative path, that attribute will not
+  get the base prefix and will 404 in production — check for these gaps.
 
 ## 4. Decks keep their own theme — don't let `dark:` creep in
 
@@ -91,6 +83,9 @@ Any new `keydown` handler should:
   content — a lab or task with a frontmatter field that no longer matches
   the Zod schema in `content.config.ts` fails the build loudly (good); a
   file in the wrong directory or with the wrong `kind`/`id` may not.
+  Note: Zod's `z.object()` silently strips unknown keys, so a typo in an
+  optional field won't stop the build — manually verify frontmatter keys
+  against the schema when reviewing content changes.
 
 ## 8. A feature-removal PR should leave no stale references
 

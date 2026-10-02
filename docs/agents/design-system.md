@@ -4,11 +4,13 @@ The site has three surfaces, each with its own theme mechanism and its own
 stylesheet. There is no single global rule that covers all three — check
 which surface you're in before applying any of the rules below.
 
-| Surface | Route(s)               | Stylesheet                | Layout       |
-| ------- | ---------------------- | ------------------------- | ------------ |
-| Hub     | `/`                    | `global.css`              | `BaseLayout` |
-| Decks   | `/lectures/<slug>`     | `global.css` + `deck.css` | `DeckLayout` |
-| Labs    | `/labs/`, `/labs/<id>` | `global.css` + `lab.css`  | `LabLayout`  |
+| Surface | Route(s)                                  | Stylesheet                | Layout       |
+| ------- | ----------------------------------------- | ------------------------- | ------------ |
+| Hub     | `/`                                       | `global.css`              | `BaseLayout` |
+| Decks   | `/lectures/`, `/lectures/<slug>`          | `global.css` + `deck.css` | `DeckLayout` |
+| Labs    | `/labs/`, `/labs/<id>`, `/labs/<id>/task` | `global.css` + `lab.css`  | `LabLayout`  |
+
+Note: `/lectures/` and `/labs/` are index pages that use `BaseLayout` (no deck.css or lab.css). Individual lecture pages use `DeckLayout`, and individual lab pages use `LabLayout`.
 
 ## Source of truth — three stylesheets, not two
 
@@ -19,11 +21,9 @@ which surface you're in before applying any of the rules below.
   to `.deck-page` (the `<body>` class `DeckLayout` sets) and never reaches
   the hub or labs.
 - **`lab.css`** — imported only by `LabLayout.astro`. Every rule is scoped to
-  `.lab-page`. **Deliberately unlayered**: it has to beat the `@layer base`
-  `.doc-content` rules in `global.css`. If you add lab styling, put it here,
-  not in `global.css` — rules added to `global.css`'s `@layer base` will lose
-  to nothing and silently do nothing, because `lab.css` is specifically
-  structured to win that fight, not the other way round.
+  `.lab-page`. **Deliberately unlayered**: its normal declarations override
+  layered `@layer base` and utility declarations when they set the same
+  property on the same element. Put lab-only overrides here.
 
 ## Dark mode is per-surface, not global
 
@@ -36,10 +36,13 @@ There is no one dark-mode rule for the whole site:
 - **Decks**: independent of the hub's theme. `deck.ts`'s `T` hotkey toggles
   `html.theme-light` (not `.dark`) and persists `localStorage['deck-theme']`.
   `deck.css` keys its light-theme rules off `html.theme-light`. **Do not use
-  `dark:` utilities inside deck components** (`Slide.astro`, `DeckChrome.astro`)
-  — they are keyed to `.dark`, which decks never set, so they will never
-  respond to the deck's `T` hotkey. Style deck light/dark differences with
-  plain selectors against `html.theme-light` in `deck.css` instead.
+  `dark:` utilities inside deck components** (`Slide.astro`, `DeckChrome.astro`
+  — neither uses one today, keep it that way) — they are keyed to `.dark`,
+  which `BaseLayout` sets by default and `DeckLayout` never removes. If one
+  is ever added, it will always match regardless of the deck's `T` hotkey —
+  an active bug, not harmlessly inert, because `.dark` stays present the
+  whole time. Style deck light/dark differences with plain selectors against
+  `html.theme-light` in `deck.css` instead.
 - **Labs**: uses the hub's `.dark` mechanism for the _dark_ theme (site
   tokens), but the _light_ theme is a fixed palette — see below. Labs don't
   have their own toggle; they follow whatever `<html class="dark">` says,
@@ -101,11 +104,9 @@ in practice — match the existing pattern rather than relying on vibes:
   never produce rapid flashing — `docs.ts` and `deck.ts` both guard this;
   a new handler should too.
 - **2.1.1 Keyboard.** Anything clickable must also be operable from the
-  keyboard — a real `<button>`/`<a>`, not a `<div onclick>`. If you add a
-  custom keyboard shortcut, match the physical key (`event.code`), not the
-  character (`event.key`) — `event.key` depends on the active keyboard
-  layout and silently stops matching on a non-Latin one (this site serves
-  `lang="uk"` pages).
+  keyboard — a real `<button>`/`<a>`, not a `<div onclick>`. For custom
+  keyboard shortcut rules (repeat-guard, physical-key matching, shiftKey
+  check, text-field skipping), see `docs/agents/pr-review.md` → **Keyboard shortcuts**.
 - **1.4.3 Contrast (Minimum).** Text needs at least 4.5:1 contrast against
   its background (3:1 for large text). `lab.css`'s light theme documents
   its actual contrast ratios in a comment for exactly this reason — when
@@ -123,9 +124,10 @@ is the authoritative reference.
 
 ## Keyboard shortcuts and `localStorage` keys
 
-Two independent `keydown` listeners exist — one in `docs.ts` (hub + labs,
-`course-theme` key) and one in `deck.ts` (decks, `deck-theme` key). If you
-add a third surface with its own shortcut, keep its storage key distinct
-from both, and guard against key-repeat (`if (event.repeat) return;`) before
-anything else in the handler — holding a key down should never rapid-fire
-your handler.
+Multiple `keydown` listeners exist across the site — `docs.ts` has two
+(Escape for ToC, T for theme), `deck.ts` has one (deck navigation), and
+`CourtlyMockup.astro` has its own. If you add a new surface with its own
+shortcut, keep its `localStorage` key distinct from the existing ones
+(`course-theme`, `deck-theme`). For the full keyboard handler rules
+(repeat-guard, physical-key matching, shiftKey check, text-field skipping),
+see `docs/agents/pr-review.md` → **Keyboard shortcuts**.

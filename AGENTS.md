@@ -21,38 +21,18 @@ Always consult the respective file when performing these tasks.
 
 ## Project commands
 
-Requires Node `>=22.12.0` (`package.json` `engines`; the project targets
-Node 24 via `volta`). Run these from the repository root:
+See `README.md` → **Quick start** for Node requirements and the full command list. The verification command for changes is:
 
 ```bash
-npm install
-npm run dev
-npm run build
-npm run preview
-npm run check
+npm run check && npm run build
 ```
 
-Notes:
-
-- `npm run dev` starts the local site for development using the project base path at `/web-development-2026/`
-- `npm run build` produces a production static build in `dist/`
-- `npm run preview` serves the built site locally
-- `npm run check` runs `astro check` for TypeScript and Astro validation
+`astro check` validates TypeScript and Astro content, but does not verify route generation (`getStaticPaths`), plugin behavior, or the full build — run both to catch all issues.
 
 ## Local development
 
-Use the repository base path while developing locally:
-
-```text
-http://localhost:4321/web-development-2026/
-```
-
-The project is designed for GitHub Pages deployment as a project site. Keep the `base` path aligned with the repository name at all times.
-
-Important rule:
-
-- `astro.config.mjs` must keep `base` equal to the repository base path, currently `/web-development-2026`
-- Do not change this value casually; it affects all internal URLs and assets
+See `README.md` → **Quick start** for the local development URL, and
+`README.md` → **Deploy** for the GitHub Pages base path rule.
 
 ## Architecture guidance
 
@@ -79,7 +59,7 @@ When adding or modifying features:
 - preserve content collection schemas and frontmatter conventions
 - prefer reusable layout and component patterns over page-specific duplication
 - keep visual design aligned with the site-wide design system and dark/light theme tokens — but check `docs/agents/design-system.md` first, since decks and labs each handle theming differently from the hub
-- ensure links and asset paths still work with the configured base path (see `docs/agents/pr-review.md` §3 for the two mechanisms that handle this)
+- ensure links and asset paths still work with the configured base path (see `docs/agents/pr-review.md` → **Base-path correctness**)
 
 ## Contribution expectations
 
@@ -87,23 +67,21 @@ When adding or modifying features:
 - Type-safe code and valid Astro content are required
 - Responsive layouts should work across common screen sizes
 - Lab/task routes must keep slug generation and schema validation coherent
-- Verify with `npm run check` before finalizing changes
+- Verify with the command in **Project commands** above before finalizing changes
 
 ## Documentation principles
 
-This applies to README.md, AGENTS.md, docs/agents/*.md, CONTRIBUTING.md, and
+This applies to README.md, AGENTS.md, docs/agents/\*.md, CONTRIBUTING.md, and
 code comments alike.
 
 - **One source of truth per fact, everything else points to it.** If the
   same rule, tree diagram, or example needs to appear in two files, put it
   in one and link from the other. A forked copy doesn't just risk drifting —
   it _will_ drift the first time only one side gets updated.
-- **Write for the mechanism, not the current instance.** A comment that
-  says "see `src/data/curriculum.ts` for the handbook's chapter tree" breaks
-  the moment that file is deleted. A comment that says "labs are ordered by
-  `number` in frontmatter — no separate index file to keep in sync" survives
-  a neighboring feature's removal because it doesn't depend on that feature
-  existing.
+- **Write for the mechanism, not the current instance.** A comment that references 
+  a specific file path or internal module name breaks the moment that file is 
+  renamed or deleted. A comment that describes the underlying rule or schema 
+  structure survives a neighboring feature's removal.
 - **Treat "deleting X touched comments in N unrelated files" as a bug in the
   docs, not a normal cost of deletion.** If removing one surface requires
   editing a dozen files' worth of prose that merely _mentioned_ it in
