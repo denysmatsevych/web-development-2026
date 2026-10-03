@@ -1,0 +1,264 @@
+---
+/**
+ * CourtlyMockup — ЛР-7's target design: the Courtly landing page captured at
+ * the three viewport widths the brief grades, one tab each.
+ *
+ * Captures, not a live render (PricingMockup's approach): the mockup is a whole
+ * page in Courtly's own palette, so it would not follow the site theme anyway,
+ * and shipping its markup would hand students a finished solution. The
+ * captures come from docs/lab-7/render-mockup.mjs; the `width`/`height` below
+ * are its output and only reserve space — CSS keeps `height: auto`.
+ *
+ * Each capture sits in a scrollable frame (a focusable region, so keyboard
+ * users can scroll it) with a link to the full-size file. Without JS every
+ * panel renders in sequence and the tab strip stays hidden.
+ */
+import { withBase } from '@/lib/paths';
+
+interface Capture {
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+}
+
+interface View {
+  id: string;
+  label: string;
+  captures: Capture[];
+}
+
+const VIEWS: View[] = [
+  {
+    id: 'desktop',
+    label: 'Desktop · 1440',
+    captures: [
+      {
+        src: '/labs/lab-7/mockup-desktop.webp',
+        width: 1440,
+        height: 4925,
+        alt: 'Макет Courtly на ширині 1440 px: header з навігацією в рядок, hero у дві колонки, форма пошуку в один рядок, сітка карток 3 колонки з featured card на 2 колонки × 2 рядки, три кроки в ряд, інформаційний блок у дві колонки, CTA і footer у чотири колонки.',
+      },
+    ],
+  },
+  {
+    id: 'tablet',
+    label: 'Tablet · 768',
+    captures: [
+      {
+        src: '/labs/lab-7/mockup-tablet.webp',
+        width: 768,
+        height: 5523,
+        alt: 'Макет Courtly на ширині 768 px: кнопка «Меню» замість навігації, hero вертикально, форма пошуку 2 × 2, картки у 2 колонки (featured — звичайна вертикальна картка), кроки один під одним, інформаційний блок у дві колонки, footer у дві колонки.',
+      },
+    ],
+  },
+  {
+    id: 'mobile',
+    label: 'Mobile · 375',
+    captures: [
+      {
+        src: '/labs/lab-7/mockup-mobile.webp',
+        width: 375,
+        height: 8036,
+        alt: 'Макет Courtly на ширині 375 px: усі секції в одну колонку, поля форми та кнопки на всю ширину.',
+      },
+      {
+        src: '/labs/lab-7/mockup-mobile-menu.webp',
+        width: 375,
+        height: 760,
+        alt: 'Перший екран на 375 px із відкритим меню: пункти навігації списком і кнопка «Забронювати» на всю ширину.',
+      },
+    ],
+  },
+];
+---
+
+<div class="courtly" data-courtly>
+  <div class="courtly__tabs" role="tablist" aria-label="Ширина viewport" hidden>
+    {
+      VIEWS.map((view, i) => (
+        <button
+          type="button"
+          role="tab"
+          id={`courtly-tab-${view.id}`}
+          aria-controls={`courtly-panel-${view.id}`}
+          aria-selected={i === 0 ? 'true' : 'false'}
+          tabindex={i === 0 ? 0 : -1}
+        >
+          {view.label}
+        </button>
+      ))
+    }
+  </div>
+
+  {
+    VIEWS.map((view, i) => (
+      <div
+        class="courtly__panel"
+        role="tabpanel"
+        id={`courtly-panel-${view.id}`}
+        aria-labelledby={`courtly-tab-${view.id}`}
+      >
+        <p class="courtly__label">{view.label} px</p>
+        <div class:list={['courtly__captures', { 'courtly__captures--pair': view.captures.length > 1 }]}>
+          {view.captures.map((capture) => (
+            <div class="courtly__capture">
+              <div class="courtly__frame" role="region" tabindex="0" aria-label={`${view.label} px — прокручувана область`}>
+                <img
+                  src={withBase(capture.src)}
+                  width={capture.width}
+                  height={capture.height}
+                  alt={capture.alt}
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                  decoding="async"
+                  style={`max-width: ${capture.width}px`}
+                />
+              </div>
+              <a class="courtly__open" href={withBase(capture.src)}>
+                Повний розмір · {capture.width} × {capture.height}
+              </a>
+            </div>
+          ))}
+        </div>
+      </div>
+    ))
+  }
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-courtly]').forEach((root) => {
+    const list = root.querySelector<HTMLElement>('[role="tablist"]');
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    const panels = [...root.querySelectorAll<HTMLElement>('[role="tabpanel"]')];
+    if (!list || tabs.length === 0) return;
+
+    const select = (index: number, focus = false) => {
+      tabs.forEach((tab, i) => {
+        const on = i === index;
+        tab.setAttribute('aria-selected', String(on));
+        tab.tabIndex = on ? 0 : -1;
+        panels[i].hidden = !on;
+      });
+      if (focus) tabs[index].focus();
+    };
+
+    list.hidden = false;
+    root.classList.add('courtly--tabs');
+    select(0);
+
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => select(i));
+      tab.addEventListener('keydown', (event) => {
+        const last = tabs.length - 1;
+        const next =
+          event.key === 'ArrowRight' ? (i === last ? 0 : i + 1)
+          : event.key === 'ArrowLeft' ? (i === 0 ? last : i - 1)
+          : event.key === 'Home' ? 0
+          : event.key === 'End' ? last
+          : -1;
+        if (next === -1) return;
+        event.preventDefault();
+        select(next, true);
+      });
+    });
+  });
+</script>
+
+<style>
+  .courtly {
+    padding: 1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: color-mix(in oklab, var(--muted) 50%, transparent);
+  }
+
+  .courtly__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-bottom: 0.9rem;
+  }
+
+  .courtly__tabs[hidden] {
+    display: none;
+  }
+
+  .courtly__tabs button {
+    padding: 0.4rem 0.85rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--background);
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--muted-foreground);
+    cursor: pointer;
+  }
+
+  .courtly__tabs button:hover {
+    border-color: var(--color-brand-blue);
+  }
+
+  .courtly__tabs button[aria-selected='true'] {
+    border-color: var(--color-brand-blue);
+    background: var(--color-brand-blue);
+    color: var(--color-pure-white);
+  }
+
+  .courtly__panel + .courtly__panel {
+    margin-top: 1.5rem;
+  }
+
+  /* With tabs the strip names the view; the label is for the no-JS stack. */
+  .courtly--tabs .courtly__label {
+    display: none;
+  }
+
+  .courtly__label {
+    margin: 0 0 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--foreground);
+  }
+
+  .courtly__captures {
+    display: grid;
+    gap: 1rem;
+  }
+
+  @media (min-width: 40rem) {
+    .courtly__captures--pair {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: start;
+    }
+  }
+
+  .courtly__frame {
+    max-height: min(72vh, 46rem);
+    overflow: auto;
+    overscroll-behavior: contain;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--card);
+  }
+
+  .courtly__frame:focus-visible {
+    outline: 2px solid var(--color-brand-blue);
+    outline-offset: 2px;
+  }
+
+  .courtly__frame img {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-inline: auto;
+  }
+
+  .courtly__open {
+    display: inline-block;
+    margin-top: 0.5rem;
+    font-size: 0.8125rem;
+    color: var(--brand-text);
+  }
+</style>
