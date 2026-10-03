@@ -27,7 +27,8 @@ own images. The revision adds both and fixes the gaps found in review:
   still uses a container query — that is fine, it is not handed out.
 - **INP / reduced motion dropped** from the handout; the Lighthouse deliverable
   is one screenshot.
-- **Audit bar** — Mobile, Incognito, deployed URL; A11y / BP / SEO ≥ 90.
+- **Audit bar** — Mobile, Incognito, deployed URL; Performance / A11y / BP /
+  SEO ≥ 90 (Performance had no threshold until 2026-10-03).
 - **Link targets** — a table of section `id`s; card buttons are
   `<button type="button">` with unique accessible names.
 - **Form data**, **mobile header** (menu below 1024 px, "Забронювати" moves
