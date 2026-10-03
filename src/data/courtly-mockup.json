@@ -1,0 +1,44 @@
+{
+  "375": {
+    "src": "/labs/lab-7/mockup-mobile.webp",
+    "height": 8036,
+    "anchors": {
+      "hero": 73,
+      "search": 743,
+      "venues": 1112,
+      "how": 4930,
+      "about": 5823,
+      "cta": 6893,
+      "footer": 7322,
+      "end": 8036
+    }
+  },
+  "768": {
+    "src": "/labs/lab-7/mockup-tablet.webp",
+    "height": 5523,
+    "anchors": {
+      "hero": 73,
+      "search": 879,
+      "venues": 1093,
+      "how": 3145,
+      "about": 4027,
+      "cta": 4669,
+      "footer": 5066,
+      "end": 5523
+    }
+  },
+  "1440": {
+    "src": "/labs/lab-7/mockup-desktop.webp",
+    "height": 4925,
+    "anchors": {
+      "hero": 73,
+      "search": 611,
+      "venues": 735,
+      "how": 2767,
+      "about": 3284,
+      "cta": 4152,
+      "footer": 4590,
+      "end": 4925
+    }
+  }
+}

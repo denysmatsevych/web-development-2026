@@ -56,6 +56,7 @@ src/
 │                    CourtlyMockup) · OnThisPage, PrevNext, Breadcrumbs
 ├─ data/
 │  ├─ site.ts                     site meta + the section list
+│  ├─ courtly-mockup.json         lab-7 mockup captures' section offsets (generated)
 │  └─ lectures/                   lecture registry + per-lecture slide data
 ├─ lib/        paths.ts (withBase) · labs.ts (lab/task lookups) · utils.ts (cn)
 ├─ scripts/    deck.ts (deck navigation + theme) · docs.ts (lab scrollspy, ToC, theme, copy buttons) ·

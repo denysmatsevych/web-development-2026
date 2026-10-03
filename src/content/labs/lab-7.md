@@ -118,9 +118,9 @@ sitemap збігаються з фактичною адресою сторінк
 Перевіряйте **задеплоєну** сторінку у вікні Incognito / InPrivate. Режим
 **Navigation**, пристрій **Mobile**.
 
-**Ціль:** Accessibility, Best Practices і SEO — **не нижче 90**. Для
-Performance порогу немає, але очевидні проблеми (важкі зображення, відсутні
-розміри, блокувальні ресурси) повинні бути усунені.
+**Ціль:** Performance, Accessibility, Best Practices і SEO — **не нижче 90**.
+Performance найчастіше знижують важкі зображення, відсутні розміри та
+блокувальні ресурси.
 
 Для звіту достатньо одного скриншота з результатами чотирьох категорій.
 
@@ -179,6 +179,6 @@ AI дозволений і рекомендований, але при необ�
 [ ] Видимий :focus-visible; правильні alt
 [ ] Meta, canonical, Open Graph з абсолютним og:image
 [ ] robots.txt і sitemap.xml
-[ ] Lighthouse (Mobile, Incognito): A11y / BP / SEO ≥ 90
+[ ] Lighthouse (Mobile, Incognito): Performance / A11y / BP / SEO ≥ 90
 [ ] Лист: 2 посилання, скриншот Lighthouse, опис роботи з AI
 ```
