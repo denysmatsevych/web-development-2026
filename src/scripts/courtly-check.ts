@@ -105,7 +105,7 @@ const WIDTHS = [320, 375, 768, 1440] as const;
 type Width = (typeof WIDTHS)[number];
 
 /** `tokens.css` values the page must carry unchanged (names may differ). */
-const TOKENS: [string, string][] = [
+export const TOKENS: [string, string][] = [
   ['--color-primary', '#0b6e4f'],
   ['--color-primary-hover', '#085a40'],
   ['--color-primary-soft', '#e3f1ea'],
@@ -283,7 +283,7 @@ function describe(el: Element): string {
 }
 
 /** Deepest common ancestor of a non-empty list of elements. */
-function commonAncestor(els: Element[]): Element | null {
+export function commonAncestor(els: Element[]): Element | null {
   if (!els.length) return null;
   let node: Element | null = els.length === 1 ? els[0].parentElement : els[0];
   while (node && !els.every((el) => node!.contains(el))) node = node.parentElement;
@@ -300,7 +300,7 @@ function itemsOf(container: Element, els: Element[]): Element[] {
 }
 
 /** Count of distinct values after rounding to `step` px. */
-function distinct(values: number[], step = 8): number {
+export function distinct(values: number[], step = 8): number {
   const sorted = [...values].sort((a, b) => a - b);
   let count = 0;
   let last = -Infinity;
@@ -539,10 +539,12 @@ async function probeMenu(doc: Document, base: string): Promise<MenuResult | null
 // ---------------------------------------------------------------------------
 // Layout measurements (same-origin, script-less frame)
 
-interface Snapshot {
-  width: Width;
+/** Layout at one width, read from a rendered page (`snapshot()`). */
+export interface Snapshot {
+  width: number;
   overflow: number;
-  culprits: string[];
+  /** The outermost elements past the right edge, at most 3. */
+  culprits: Element[];
   gridColumns: number | null;
   featured: { w: number; h: number; otherW: number; otherH: number } | null;
   toggleShown: boolean | null;
@@ -568,7 +570,8 @@ interface Computed {
   montserrat: 'cyrillic' | 'latin-only' | 'none';
 }
 
-function shownIn(win: Window, el: Element | null): boolean {
+/** Rendered, inside the viewport horizontally, not hidden or transparent. */
+export function shownIn(win: Window, el: Element | null): boolean {
   if (!el) return false;
   const r = el.getBoundingClientRect();
   if (r.width < 1 || r.height < 1 || r.right <= 0 || r.left >= win.innerWidth) return false;
@@ -594,6 +597,125 @@ function toRgb(win: Window, value: string): string {
   return out;
 }
 
+/** The parts of a Courtly page the layout is measured on; any may be missing. */
+export interface Located {
+  header: Element | null;
+  /** The menu button: a header `<button>` with `aria-expanded` or `aria-controls`. */
+  toggle: HTMLButtonElement | null;
+  navLinks: Element[];
+  h1: Element | null;
+  hero: HTMLImageElement | null;
+  form: HTMLFormElement | null;
+  /** Fields and the submit button. */
+  controls: Element[];
+  /** The `<article>`s in #venues. */
+  cards: Element[];
+  /** Their deepest common ancestor, and the grid items holding each card. */
+  grid: Element | null;
+  items: Element[];
+  /** Index of Arena Sport in `cards` / `items`, or -1. */
+  featuredIdx: number;
+  how: Element | null;
+  steps: Element[];
+  /** The #venues heading, else the first `<h2>`. */
+  h2: Element | null;
+}
+
+export function locate(d: Document): Located {
+  const venuesSection = d.getElementById('venues');
+  const cards = [...(venuesSection ?? d).querySelectorAll('article')];
+  const grid = cards.length > 1 ? commonAncestor(cards) : null;
+  const header = d.querySelector('header');
+  const form = d.querySelector('form');
+  const how = d.getElementById('how');
+  const stepList = how?.querySelector('ol, ul');
+  return {
+    header,
+    toggle:
+      [...(header ?? d).querySelectorAll('button')].find(
+        (b) => b.hasAttribute('aria-expanded') || b.hasAttribute('aria-controls'),
+      ) ?? null,
+    navLinks: [...(header?.querySelectorAll('nav a[href]') ?? [])],
+    h1: d.querySelector('h1'),
+    hero: heroImage(d),
+    form,
+    controls: form
+      ? [...form.querySelectorAll('select, input:not([type="hidden"]), textarea, button[type="submit"], button:not([type])')]
+      : [],
+    cards,
+    grid,
+    items: grid ? itemsOf(grid, cards) : [],
+    featuredIdx: cards.findIndex((card) => /arena\s*sport/i.test(card.querySelector('h1,h2,h3,h4')?.textContent ?? '')),
+    how,
+    steps: [...(stepList?.querySelectorAll(':scope > li') ?? how?.querySelectorAll('h3') ?? [])],
+    h2: d.querySelector('#venues h2') ?? d.querySelector('h2'),
+  };
+}
+
+/** Reads the layout as `win` renders it now; the caller sets the width first. */
+export function snapshot(win: Window, at: Located, width: number): Snapshot {
+  const d = win.document;
+  const { items, featuredIdx, h1, hero, steps, controls, toggle, navLinks, h2 } = at;
+  const root = d.documentElement;
+  const vw = root.clientWidth;
+  const overflow = root.scrollWidth - vw;
+
+  const culprits: Element[] = [];
+  if (overflow > 1) {
+    const wide = [...d.body.querySelectorAll('*')].filter((el) => el.getBoundingClientRect().right > vw + 1);
+    for (const el of wide) {
+      if (![...el.children].some((child) => wide.includes(child))) culprits.push(el);
+      if (culprits.length >= 3) break;
+    }
+  }
+
+  const rects = items.map((item) => item.getBoundingClientRect());
+  let featured: Snapshot['featured'] = null;
+  if (featuredIdx >= 0 && rects.length > 1) {
+    const others = rects.filter((_, i) => i !== featuredIdx);
+    const median = (xs: number[]) => xs.sort((a, b) => a - b)[Math.floor(xs.length / 2)];
+    featured = {
+      w: rects[featuredIdx].width,
+      h: rects[featuredIdx].height,
+      otherW: median(others.map((r) => r.width)),
+      otherH: median(others.map((r) => r.height)),
+    };
+  }
+
+  let heroSideBySide: boolean | null = null;
+  if (h1 && hero) {
+    const a = h1.getBoundingClientRect();
+    const b = hero.getBoundingClientRect();
+    heroSideBySide = b.height > 0 && b.left >= a.right - 8 && b.top < a.bottom && b.bottom > a.top;
+  }
+
+  const stepRects = steps.map((s) => s.getBoundingClientRect());
+  const controlRects = controls.map((c) => c.getBoundingClientRect());
+  return {
+    width,
+    overflow,
+    culprits,
+    gridColumns: rects.length > 1 ? distinct(rects.map((r) => r.left)) : null,
+    featured,
+    toggleShown: toggle ? shownIn(win, toggle) : null,
+    navShown: navLinks.some((a) => shownIn(win, a)),
+    heroSideBySide,
+    form:
+      controlRects.length >= 3
+        ? {
+            cols: distinct(controlRects.map((r) => r.left)),
+            rows: distinct(controlRects.map((r) => r.top + r.height / 2), 16),
+          }
+        : null,
+    stepsRow:
+      stepRects.length >= 3
+        ? { cols: distinct(stepRects.map((r) => r.left)), rows: distinct(stepRects.map((r) => r.top)) }
+        : null,
+    h1: h1 ? parseFloat(win.getComputedStyle(h1).fontSize) : null,
+    h2: h2 ? parseFloat(win.getComputedStyle(h2).fontSize) : null,
+  };
+}
+
 async function measure(doc: Document, base: string, focusVar: string, onWidth: (w: number) => void): Promise<Computed> {
   const frame = await mountFrame(frameSource(doc, base, 'layout'), 1440, 'allow-same-origin');
   try {
@@ -602,91 +724,15 @@ async function measure(doc: Document, base: string, focusVar: string, onWidth: (
     await Promise.race([d.fonts.ready, sleep(5000)]);
 
     const snaps = new Map<Width, Snapshot>();
-    const venuesSection = d.getElementById('venues');
-    const cards = [...(venuesSection ?? d).querySelectorAll('article')];
-    const grid = cards.length > 1 ? commonAncestor(cards) : null;
-    const items = grid ? itemsOf(grid, cards) : [];
-    const featuredIdx = cards.findIndex((card) => /arena\s*sport/i.test(card.querySelector('h1,h2,h3,h4')?.textContent ?? ''));
-    const header = d.querySelector('header');
-    const toggle =
-      [...(header ?? d).querySelectorAll('button')].find(
-        (b) => b.hasAttribute('aria-expanded') || b.hasAttribute('aria-controls'),
-      ) ?? null;
-    const navLinks = [...(header?.querySelectorAll('nav a[href]') ?? [])];
-    const h1 = d.querySelector('h1');
-    const hero = heroImage(d);
-    const form = d.querySelector('form');
-    const controls = form
-      ? [...form.querySelectorAll('select, input:not([type="hidden"]), textarea, button[type="submit"], button:not([type])')]
-      : [];
-    const how = d.getElementById('how');
-    const stepList = how?.querySelector('ol, ul');
-    const steps = [...(stepList?.querySelectorAll(':scope > li') ?? how?.querySelectorAll('h3') ?? [])];
-    const h2 = d.querySelector('#venues h2') ?? d.querySelector('h2');
+    const at = locate(d);
+    const { cards, grid, featuredIdx, header, form } = at;
 
     for (const width of WIDTHS) {
       onWidth(width);
       frame.style.width = `${width}px`;
       await frames();
       await sleep(60);
-      const root = d.documentElement;
-      const vw = root.clientWidth;
-      const overflow = root.scrollWidth - vw;
-
-      const culprits: string[] = [];
-      if (overflow > 1) {
-        const wide = [...d.body.querySelectorAll('*')].filter((el) => el.getBoundingClientRect().right > vw + 1);
-        for (const el of wide) {
-          if (![...el.children].some((child) => wide.includes(child))) culprits.push(describe(el));
-          if (culprits.length >= 3) break;
-        }
-      }
-
-      const rects = items.map((item) => item.getBoundingClientRect());
-      let featured: Snapshot['featured'] = null;
-      if (featuredIdx >= 0 && rects.length > 1) {
-        const others = rects.filter((_, i) => i !== featuredIdx);
-        const median = (xs: number[]) => xs.sort((a, b) => a - b)[Math.floor(xs.length / 2)];
-        featured = {
-          w: rects[featuredIdx].width,
-          h: rects[featuredIdx].height,
-          otherW: median(others.map((r) => r.width)),
-          otherH: median(others.map((r) => r.height)),
-        };
-      }
-
-      let heroSideBySide: boolean | null = null;
-      if (h1 && hero) {
-        const a = h1.getBoundingClientRect();
-        const b = hero.getBoundingClientRect();
-        heroSideBySide = b.height > 0 && b.left >= a.right - 8 && b.top < a.bottom && b.bottom > a.top;
-      }
-
-      const stepRects = steps.map((s) => s.getBoundingClientRect());
-      const controlRects = controls.map((c) => c.getBoundingClientRect());
-      snaps.set(width, {
-        width,
-        overflow,
-        culprits,
-        gridColumns: rects.length > 1 ? distinct(rects.map((r) => r.left)) : null,
-        featured,
-        toggleShown: toggle ? shownIn(win, toggle) : null,
-        navShown: navLinks.some((a) => shownIn(win, a)),
-        heroSideBySide,
-        form:
-          controlRects.length >= 3
-            ? {
-                cols: distinct(controlRects.map((r) => r.left)),
-                rows: distinct(controlRects.map((r) => r.top + r.height / 2), 16),
-              }
-            : null,
-        stepsRow:
-          stepRects.length >= 3
-            ? { cols: distinct(stepRects.map((r) => r.left)), rows: distinct(stepRects.map((r) => r.top)) }
-            : null,
-        h1: h1 ? parseFloat(win.getComputedStyle(h1).fontSize) : null,
-        h2: h2 ? parseFloat(win.getComputedStyle(h2).fontSize) : null,
-      });
+      snaps.set(width, snapshot(win, at, width));
     }
 
     // Back to desktop for the width-independent reads.
@@ -1238,7 +1284,7 @@ function layoutChecks(add: Add, c: Computed, fromStatic: ReturnType<typeof stati
     overflowing.length === 0 ? 'pass' : overflowing.length === 1 ? 'warn' : 'fail',
     overflowing.length
       ? overflowing
-          .map((w) => `${w} px: +${Math.round(s(w).overflow)} px${s(w).culprits.length ? ` (${s(w).culprits.join(', ')})` : ''}`)
+          .map((w) => `${w} px: +${Math.round(s(w).overflow)} px${s(w).culprits.length ? ` (${s(w).culprits.map(describe).join(', ')})` : ''}`)
           .join('; ')
       : undefined,
   );
@@ -1577,10 +1623,24 @@ async function lighthouse(pageUrl: string, key: string): Promise<Check[]> {
 // ---------------------------------------------------------------------------
 // Entry points
 
-export async function inspect(rawUrl: string, onProgress: (text: string) => void, psiKey = ''): Promise<Inspection> {
-  const url = normalizeUrl(rawUrl);
+/** A Courtly page fetched and parsed, ready to render (`loadPage()`). */
+export interface LoadedPage {
+  /** After redirects. */
+  pageUrl: string;
+  /** The HTML as authored. */
+  doc: Document;
+  /** What its relative URLs resolve against: a `<base>`, else `pageUrl`. */
+  base: string;
+  /** See `Inspection.preview`. */
+  preview: string;
+}
 
-  onProgress('Завантаження сторінки…');
+/**
+ * Fetches the page and makes sure it is a Courtly page: throws `CheckError`
+ * with a message for the user when it is not, or cannot be loaded.
+ */
+export async function loadPage(rawUrl: string): Promise<LoadedPage> {
+  const url = normalizeUrl(rawUrl);
   let page: Fetched;
   try {
     page = await get(url.href);
@@ -1611,6 +1671,12 @@ export async function inspect(rawUrl: string, onProgress: (text: string) => void
   }
   const baseHref = doc.querySelector('base[href]')?.getAttribute('href');
   const base = baseHref ? new URL(baseHref, pageUrl).href : pageUrl;
+  return { pageUrl, doc, base, preview: frameSource(doc, base, 'layout') };
+}
+
+export async function inspect(rawUrl: string, onProgress: (text: string) => void, psiKey = ''): Promise<Inspection> {
+  onProgress('Завантаження сторінки…');
+  const { pageUrl, doc, base, preview } = await loadPage(rawUrl);
 
   // PSI is slow — start it now, report it when it lands.
   const lighthousePromise = lighthouse(pageUrl, psiKey);
@@ -1655,7 +1721,7 @@ export async function inspect(rawUrl: string, onProgress: (text: string) => void
     });
   }
 
-  return { pageUrl, checks, lighthouse: lighthousePromise, preview: frameSource(doc, base, 'layout') };
+  return { pageUrl, checks, lighthouse: lighthousePromise, preview };
 }
 
 /**
@@ -1697,4 +1763,47 @@ export function scoreChecks(checks: Check[]): Score {
   }
   const percent = max ? earned / max : 0;
   return { percent, earned, max, mark: Math.min(12, Math.max(1, Math.round(percent * 12))) };
+}
+
+// ---------------------------------------------------------------------------
+// Wording shared by the check dialog, its copied report and the report page
+
+export const STATUS_LABEL: Record<Status, string> = {
+  pass: 'Виконано',
+  warn: 'Частково',
+  fail: 'Не виконано',
+  skip: 'Не перевірено',
+};
+
+export const STATUS_ICON: Record<Status, string> = {
+  pass: '✓',
+  warn: '!',
+  fail: '✕',
+  skip: '–',
+};
+
+/**
+ * "92 % ваги · виконано 49 · частково 2 · не виконано 4 (усього 55)". Partial
+ * rows earn half, so they are counted apart from failed ones; zero counts are
+ * left out; rows nothing could check come after the total.
+ */
+export function summaryLine(checks: Check[]): string {
+  const scored = checks.filter((c) => c.weight > 0 && c.status !== 'skip');
+  const n = (s: Status) => checks.filter((c) => c.weight > 0 && c.status === s).length;
+  const part = (s: Status) => `${STATUS_LABEL[s].toLowerCase()} ${n(s)}`;
+  const parts =
+    n('pass') === scored.length
+      ? [`виконано всі ${scored.length}`]
+      : [part('pass'), n('warn') ? part('warn') : '', n('fail') ? part('fail') : ''].filter(Boolean);
+  const total = n('pass') === scored.length ? '' : ` (усього ${scored.length})`;
+  const unchecked = n('skip') ? ` · ${part('skip')}` : '';
+  return `${Math.round(scoreChecks(checks).percent * 100)} % ваги · ${parts.join(' · ')}${total}${unchecked}`;
+}
+
+/** Share of a group's weight earned, shown beside its title; "" when nothing is scored. */
+export function groupScore(rows: Check[]): string {
+  const score = scoreChecks(rows);
+  if (score.max) return `${Math.round(score.percent * 100)} %`;
+  if (rows.length && rows.every((c) => c.status === 'skip')) return 'не перевірено';
+  return '';
 }

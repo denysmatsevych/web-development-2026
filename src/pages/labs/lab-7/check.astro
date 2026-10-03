@@ -10,10 +10,14 @@
  * each width — «Виконано / Частково / Не виконано», since no script can judge
  * a visual match; the Lighthouse categories — a «Виконано» checkbox, since
  * PageSpeed Insights is often out of quota and the bar is a single ≥ 90
- * (scoring rules: `withVerdicts()` in the engine). "Порівняти" opens a
- * viewer with the mockup capture and the student's page side by side, scroll
- * aligned on section starts. "Скопіювати звіт" puts the report on the
- * clipboard formatted for a reply to the student.
+ * (scoring rules: `withVerdicts()` in the engine). "Порівняти" opens the
+ * shared comparison viewer (`CourtlyCompare`, full layout): the mockup capture
+ * beside the student's page, scroll aligned on section starts, with the lab's
+ * requirements the page misses outlined and listed — hints for the verdict,
+ * which stays the instructor's. "Скопіювати звіт" puts the report on the
+ * clipboard formatted for a reply to the student. "Сформувати звіт", once
+ * Lighthouse has landed and every width is judged, opens the student's
+ * report page (`report.astro`) with the result carried in its link.
  *
  * Instructor-only by obscurity: nothing links here and the page is
  * `noindex`, but anyone who knows the URL can use it. Limiting students to
@@ -23,11 +27,11 @@
  * checker, so a collection field would be ceremony.
  */
 import Breadcrumbs from "@/components/Breadcrumbs.astro";
+import CourtlyCompare from "@/components/CourtlyCompare.astro";
 import LabHeader from "@/components/LabHeader.astro";
 import LabLayout from "@/layouts/LabLayout.astro";
 import { labHref, taskHref } from "@/lib/labs";
 import { withBase } from "@/lib/paths";
-import { MOCKUP_VIEWS } from "@/scripts/courtly-check";
 
 const title = "Автоматична перевірка Courtly";
 const summary =
@@ -42,6 +46,7 @@ const crumbs = [
 const headings = [
   { depth: 2, slug: "scope", text: "Що перевіряється" },
   { depth: 2, slug: "mark", text: "Як рахується оцінка" },
+  { depth: 2, slug: "student-report", text: "Звіт для студента" },
   { depth: 2, slug: "limits", text: "Обмеження бета-версії" },
 ];
 ---
@@ -133,6 +138,13 @@ const headings = [
               <div class="cc-bar" aria-hidden="true"><span data-cc-bar></span></div>
             </div>
             <div class="cc-actions">
+              <button
+                class="cc-copy cc-copy--primary"
+                type="button"
+                data-cc-make-report
+                aria-describedby="cc-report-state"
+                disabled>Сформувати звіт</button
+              >
               <button class="cc-copy" type="button" data-cc-copy
                 >Скопіювати звіт</button
               >
@@ -169,6 +181,13 @@ const headings = [
               </button>
             </div>
           </div>
+          <p
+            id="cc-report-state"
+            class="cc-report-state"
+            data-cc-report-state
+            aria-live="polite"
+          >
+          </p>
           <p class="cc-note">
             Відповідність макету оцінюєте ви: «Виконано», «Частково» (половина
             балів) або «Не виконано»; категорії Lighthouse — прапорцем
@@ -190,67 +209,24 @@ const headings = [
       data-cc-compare
       aria-labelledby="cc-compare-title"
     >
-      <header class="cc-compare__head">
-        <h2 id="cc-compare-title" class="cc-dialog__title">
+      <CourtlyCompare layout="full" headingLevel={3} autofocus>
+        <h2 slot="title" id="cc-compare-title" class="cc-dialog__title">
           Порівняння з макетом
         </h2>
-        <div class="cc-compare__views" role="group" aria-label="Ширина">
-          {
-            MOCKUP_VIEWS.map((view) => (
-              <button
-                class="cc-compare__view"
-                type="button"
-                data-cc-view={view.width}
-                aria-pressed="false"
-              >
-                {view.label} · {view.width}
-              </button>
-            ))
-          }
-        </div>
-        <div data-cc-compare-verdict></div>
-        <button
-          class="cc-dialog__close"
-          type="button"
-          data-cc-compare-close
-          aria-label="Закрити порівняння"
-        >
-          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-            <path d="M18 6 6 18M6 6l12 12"></path>
-          </svg>
-        </button>
-      </header>
-
-      <div class="cc-compare__body">
-        <section class="cc-compare__pane" aria-labelledby="cc-compare-mockup">
-          <div class="cc-compare__stage" data-cc-compare-stage>
-            <h3 id="cc-compare-mockup" class="cc-compare__label">Макет</h3>
-            <div
-              class="cc-compare__screen cc-compare__screen--shot"
-              data-cc-compare-mockup
-              tabindex="0"
-              role="region"
-              aria-label="Макет; прокручується разом зі сторінкою студента"
-              autofocus
-            >
-              <img data-cc-compare-img alt="" decoding="async" />
-            </div>
-          </div>
-        </section>
-        <section class="cc-compare__pane" aria-labelledby="cc-compare-page">
-          <div class="cc-compare__stage">
-            <h3 id="cc-compare-page" class="cc-compare__label">
-              Сторінка студента
-            </h3>
-            <div class="cc-compare__screen" data-cc-compare-page></div>
-          </div>
-        </section>
-      </div>
-      <p class="cc-compare__hint">
-        Прокручуйте будь-яку половину: сторінка студента вирівнюється з макетом
-        на початку кожної секції. Незначні відхилення у відступах і розмірах
-        допустимі.
-      </p>
+        <Fragment slot="tools">
+          <div data-cc-compare-verdict></div>
+          <button
+            class="cc-dialog__close"
+            type="button"
+            data-cc-compare-close
+            aria-label="Закрити порівняння"
+          >
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+              <path d="M18 6 6 18M6 6l12 12"></path>
+            </svg>
+          </button>
+        </Fragment>
+      </CourtlyCompare>
     </dialog>
   </div>
 
@@ -294,8 +270,9 @@ const headings = [
       </li>
       <li>
         <strong>Відповідність макету</strong> — вручну: «Порівняти» показує
-        макет і сторінку студента поруч на 1440, 768 і 375 px. Кожну ширину
-        оцініть: «Виконано» — як у макеті, з дрібними відхиленнями у відступах
+        макет і сторінку студента поруч на 1440, 768 і 375 px і позначає вимоги
+        з тексту лабораторної та макета, яких сторінка не виконує на цій
+        ширині. Позначки — підказки; кожну ширину оцініть самі: «Виконано» — як у макеті, з дрібними відхиленнями у відступах
         і розмірах; «Частково» — структура та адаптивність правильні, але
         окремі елементи помітно відрізняються від макета; «Не виконано» — інше
         компонування або бракує частин сторінки.
@@ -320,13 +297,26 @@ const headings = [
       7–9 — достатній, 4–6 — середній, 1–3 — початковий.
     </p>
 
+    <h2 id="student-report">Звіт для студента</h2>
+    <p>
+      Коли Lighthouse завершився й відповідність макету оцінено на всіх трьох
+      ширинах, «Сформувати звіт» відкриває окрему сторінку для студента:
+      оцінка, усі пункти з вашими оцінками й коментарями та порівняння
+      сторінки з макетом, де позначено вимоги лабораторної, яких сторінка не
+      виконує. Звіт зберігається в самому посиланні, тож показує результат
+      на момент перевірки; порівняння завжди показує сторінку такою, якою вона
+      є зараз. Якщо після цього змінити оцінку, сформуйте звіт ще раз.
+      Посилання також додається до «Скопіювати звіт».
+    </p>
+
     <h2 id="limits">Обмеження бета-версії</h2>
     <ul>
       <li>
         Відповідність макету не оцінюється автоматично: попіксельне порівняння
         незалежної верстки з макетом ненадійне, а незначні відхилення у
-        відступах і розмірах дозволені. Переглядач лише показує обидві версії
-        поруч; рішення — за викладачем.
+        відступах і розмірах дозволені. Переглядач показує обидві версії поруч
+        і позначає письмові вимоги, яких сторінка не виконує; рішення — за
+        викладачем.
       </li>
       <li>
         Якщо PageSpeed Insights недоступний, рядки Lighthouse без прапорця
@@ -346,22 +336,24 @@ const headings = [
 </LabLayout>
 
 <script>
-  import mockup from "@/data/courtly-mockup.json";
-  import { withBase } from "@/lib/paths";
   import {
     CheckError,
     GROUPS,
-    MOCKUP_VIEWS,
+    STATUS_ICON as ICON,
+    STATUS_LABEL as LABEL,
+    groupScore,
     inspect,
     normalizeUrl,
     scoreChecks,
-    sectionAnchors,
+    summaryLine,
     withVerdicts,
     type Check,
     type GroupId,
     type Status,
     type Verdict,
   } from "@/scripts/courtly-check";
+  import { mountCompare } from "@/scripts/courtly-compare";
+  import { reportHref } from "@/scripts/courtly-report";
 
   const root = document.querySelector<HTMLElement>("[data-cc]")!;
   const form = root.querySelector<HTMLFormElement>("[data-cc-form]")!;
@@ -381,19 +373,6 @@ const headings = [
   )!;
 
   const PSI_KEY: string = import.meta.env.PUBLIC_PSI_API_KEY ?? "";
-
-  const LABEL: Record<Status, string> = {
-    pass: "Виконано",
-    warn: "Частково",
-    fail: "Не виконано",
-    skip: "Не перевірено",
-  };
-  const ICON: Record<Status, string> = {
-    pass: "✓",
-    warn: "!",
-    fail: "✕",
-    skip: "–",
-  };
 
   let current: {
     pageUrl: string;
@@ -420,6 +399,71 @@ const headings = [
   /** Checks as scored and reported, verdicts and comments applied. */
   const reported = () => withVerdicts(current!.checks, verdicts, notes);
 
+  const makeReport = report.querySelector<HTMLButtonElement>(
+    "[data-cc-make-report]",
+  )!;
+  const reportState = report.querySelector<HTMLElement>(
+    "[data-cc-report-state]",
+  )!;
+
+  /**
+   * The student's report last generated: the run it belongs to, the rows it
+   * holds (as JSON, to tell when a verdict or comment changed since) and its
+   * link (`/labs/lab-7/report/`).
+   */
+  let generated: { entry: object; rows: string; href: string } | null = null;
+
+  /** The generated report's link, while it still matches the run and its verdicts. */
+  function freshReport(): string | null {
+    return generated &&
+      generated.entry === current &&
+      generated.rows === JSON.stringify(reported())
+      ? generated.href
+      : null;
+  }
+
+  /**
+   * Why a report cannot be generated yet, or "": Lighthouse has to land and
+   * each width needs a mockup verdict. Lighthouse ticks are optional — an
+   * unticked row already counts as «Не виконано».
+   */
+  function reportBlocker(): string {
+    if (!current?.lighthouseDone)
+      return "Звіт для студента можна сформувати, коли завершиться Lighthouse.";
+    const unjudged = reported().filter(
+      (c) => c.confirmable === "verdict" && !c.manual && c.status !== "pass",
+    );
+    if (!unjudged.length) return "";
+    const widths = unjudged.map((c) => c.id.replace("mockup-", "")).join(", ");
+    return `Щоб сформувати звіт для студента, оцініть відповідність макету на ${widths} px.`;
+  }
+
+  /** «Сформувати звіт» and the line under the summary that explains it. */
+  function syncReport() {
+    const blocker = reportBlocker();
+    const fresh = freshReport();
+    makeReport.disabled = !!blocker;
+    if (blocker) {
+      reportState.textContent = blocker;
+    } else if (fresh) {
+      const link = el("a", undefined, "відкрити");
+      link.href = fresh;
+      link.target = "_blank";
+      link.rel = "noopener";
+      reportState.replaceChildren(
+        "Звіт для студента сформовано: ",
+        link,
+        ". Посилання на нього додається до «Скопіювати звіт».",
+      );
+    } else if (generated?.entry === current) {
+      reportState.textContent =
+        "Оцінки змінилися після того, як звіт сформовано, — сформуйте його ще раз.";
+    } else {
+      reportState.textContent =
+        "«Сформувати звіт» відкриє сторінку для студента: результати й порівняння з макетом.";
+    }
+  }
+
   /** Under a group with confirmable rows: how to judge them. */
   const VERDICT_HINT: Partial<Record<GroupId, string>> = {
     mockup:
@@ -431,11 +475,7 @@ const headings = [
   /** Share of a group's weight earned, shown beside its title. */
   function groupScoreText(id: GroupId, rows: Check[]): string {
     if (id === "lighthouse" && !current!.lighthouseDone) return "виконується…";
-    const score = scoreChecks(rows);
-    if (score.max) return `${Math.round(score.percent * 100)} %`;
-    if (rows.length && rows.every((c) => c.status === "skip"))
-      return "не перевірено";
-    return "";
+    return groupScore(rows);
   }
 
   /** A `tick` row's «Виконано» box; locked when PageSpeed Insights already passed it. */
@@ -531,30 +571,6 @@ const headings = [
   function setStatus(text: string, busy: boolean) {
     status.textContent = text;
     status.toggleAttribute("data-busy", busy);
-  }
-
-  /**
-   * "92 % ваги · виконано 49 · частково 2 · не виконано 4 (усього 55)": the
-   * dialog's summary, repeated in the copied report. Partial rows earn half,
-   * so they are counted apart from failed ones; zero counts are left out; rows
-   * nothing could check come after the total.
-   */
-  function summaryLine(checks: Check[]): string {
-    const scored = checks.filter((c) => c.weight > 0 && c.status !== "skip");
-    const n = (s: Status) =>
-      checks.filter((c) => c.weight > 0 && c.status === s).length;
-    const part = (s: Status) => `${LABEL[s].toLowerCase()} ${n(s)}`;
-    const parts =
-      n("pass") === scored.length
-        ? [`виконано всі ${scored.length}`]
-        : [
-            part("pass"),
-            n("warn") ? part("warn") : "",
-            n("fail") ? part("fail") : "",
-          ].filter(Boolean);
-    const total = n("pass") === scored.length ? "" : ` (усього ${scored.length})`;
-    const unchecked = n("skip") ? ` · ${part("skip")}` : "";
-    return `${Math.round(scoreChecks(checks).percent * 100)} % ваги · ${parts.join(" · ")}${total}${unchecked}`;
   }
 
   function render() {
@@ -684,6 +700,7 @@ const headings = [
       }),
     );
     syncToggleAll();
+    syncReport();
     // Here rather than in run(): ticking a row changes the mark.
     if (lighthouseDone)
       setStatus(
@@ -717,7 +734,8 @@ const headings = [
   /**
    * The report as it goes into a reply to the student: HTML with inline
    * styles for mail clients, plain text for everything else. No `?url=`
-   * link — this page is instructor-only.
+   * link — this page is instructor-only — but the student's report page,
+   * once one is generated and still matches the verdicts.
    */
   function mailReport(): { html: string; text: string } {
     const { pageUrl, lighthouseDone, at } = current!;
@@ -729,11 +747,23 @@ const headings = [
     const legend = (["pass", "warn", "fail", "skip"] as const)
       .map((s) => `${ICON[s]} ${LABEL[s].toLowerCase()}`)
       .join(" · ");
+    const reportLink = freshReport();
 
-    const text = [headline, pageUrl, when, results, legend, ""];
+    const text = [
+      headline,
+      pageUrl,
+      ...(reportLink ? [`Звіт: ${reportLink}`] : []),
+      when,
+      results,
+      legend,
+      "",
+    ];
     const html = [
       `<p style="margin:0 0 4px"><b style="font-size:16px">${escapeHtml(headline)}</b></p>`,
       `<p style="margin:0"><a href="${escapeHtml(pageUrl)}">${escapeHtml(pageUrl)}</a></p>`,
+      reportLink
+        ? `<p style="margin:0">Звіт: <a href="${escapeHtml(reportLink)}">результати й порівняння з макетом</a></p>`
+        : "",
       `<p style="margin:0;color:${MAIL_MUTED}">${escapeHtml(when)}<br>${escapeHtml(results)}<br>${escapeHtml(legend)}</p>`,
       `<table cellpadding="0" cellspacing="0" style="border-collapse:collapse">`,
     ];
@@ -831,6 +861,7 @@ const headings = [
     openState.clear();
     verdicts.clear();
     notes.clear();
+    generated = null;
     setStatus("Підготовка…", true);
     reopen.hidden = false;
     if (!dialog.open) dialog.showModal();
@@ -942,6 +973,7 @@ const headings = [
       ?.querySelector<HTMLElement>(".cc-check__detail");
     const row = reported().find((c) => c.id === id);
     if (detail && row?.detail) detail.textContent = row.detail;
+    syncReport();
   });
 
   groupsEl.addEventListener("click", (event) => {
@@ -971,6 +1003,22 @@ const headings = [
       setTimeout(() => (button.textContent = "Скопіювати звіт"), 2000);
     });
 
+  // The report opens in a new tab for a last look; its link is also on the
+  // line under the summary, in case the browser blocks the tab.
+  makeReport.addEventListener("click", async () => {
+    if (!current || reportBlocker()) return;
+    const entry = current;
+    const checks = reported();
+    const href = await reportHref({
+      pageUrl: entry.pageUrl,
+      at: entry.at,
+      checks,
+    });
+    generated = { entry, rows: JSON.stringify(checks), href };
+    syncReport();
+    window.open(href, "_blank", "noopener");
+  });
+
   report
     .querySelector("[data-cc-copy-link]")!
     .addEventListener("click", async (event) => {
@@ -990,195 +1038,35 @@ const headings = [
     });
 
   // -------------------------------------------------------------------------
-  // Mockup viewer: the capture and the student's page side by side at one
-  // width. The capture is a native scroller and drives the page's frame,
-  // mapped piecewise-linearly between section starts (`sectionAnchors()`), so
-  // a section taller or shorter than in the mockup does not push the rest of
-  // the page out of line.
+  // «Порівняти»: the shared viewer (`courtly-compare.ts`, full layout) — the
+  // capture beside the student's page, with the lab's requirements the page
+  // misses outlined and listed. The findings are hints; the verdict in the
+  // toolbar is the instructor's.
 
-  type View = (typeof MOCKUP_VIEWS)[number];
   const compare = root.querySelector<HTMLDialogElement>("[data-cc-compare]")!;
-  const stage = compare.querySelector<HTMLElement>("[data-cc-compare-stage]")!;
-  const shot = compare.querySelector<HTMLElement>("[data-cc-compare-mockup]")!;
-  const shotImg = shot.querySelector<HTMLImageElement>("[data-cc-compare-img]")!;
-  const pageScreen = compare.querySelector<HTMLElement>(
-    "[data-cc-compare-page]",
-  )!;
   const compareVerdict = compare.querySelector<HTMLElement>(
     "[data-cc-compare-verdict]",
   )!;
-  const viewButtons = [
-    ...compare.querySelectorAll<HTMLButtonElement>("[data-cc-view]"),
-  ];
-
-  let view: View = MOCKUP_VIEWS[0];
-  let scale = 1;
-  let frame: HTMLIFrameElement | null = null;
-  /** The `preview` the frame holds; a run with another page reloads it. */
-  let framePreview = "";
-
-  const captureOf = (v: View) =>
-    mockup[String(v.width) as keyof typeof mockup];
-  const viewOf = (width: number) =>
-    MOCKUP_VIEWS.find((v) => v.width === width) ?? MOCKUP_VIEWS[0];
-  const nextFrames = () =>
-    new Promise<void>((resolve) =>
-      requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-    );
-
-  /**
-   * [capture y, page y] pairs from the top: the section starts both pages
-   * have, kept while they increase on both sides, then both last scroll
-   * positions, so the bottoms line up too.
-   */
-  function anchorPairs(doc: Document): [number, number][] {
-    const ref: Record<string, number> = captureOf(view).anchors;
-    const page = sectionAnchors(doc);
-    const pairs: [number, number][] = [[0, 0]];
-    for (const [name, y] of Object.entries(ref)) {
-      if (name === "end" || page[name] === undefined) continue;
-      const [lastRef, lastPage] = pairs[pairs.length - 1];
-      if (y > lastRef && page[name] > lastPage) pairs.push([y, page[name]]);
-    }
-    const bottom: [number, number] = [
-      ref.end - view.height,
-      page.end - view.height,
-    ];
-    while (pairs.length > 1) {
-      const [r, p] = pairs[pairs.length - 1];
-      if (r < bottom[0] && p < bottom[1]) break;
-      pairs.pop();
-    }
-    if (bottom[0] > 0 && bottom[1] > 0) pairs.push(bottom);
-    return pairs;
-  }
-
-  /** Capture y → page y: linear between pairs, and past the last one. */
-  function toPage(y: number, pairs: [number, number][]): number {
-    let i = 1;
-    while (i < pairs.length - 1 && y > pairs[i][0]) i++;
-    const [r0, p0] = pairs[i - 1];
-    const [r1, p1] = pairs[i] ?? [r0 + 1, p0 + 1];
-    return p0 + ((y - r0) * (p1 - p0)) / (r1 - r0);
-  }
-
-  /** Anchors are re-read every time: late fonts and images move sections. */
-  function sync() {
-    const doc = frame?.contentDocument;
-    if (!doc?.body) return;
-    const y = toPage(shot.scrollTop / scale, anchorPairs(doc));
-    frame!.contentWindow!.scrollTo(0, Math.max(0, y));
-  }
-
-  /** Scale both screens to the space the panes have, keeping the place. */
-  function fit() {
-    const label = stage.querySelector<HTMLElement>(".cc-compare__label")!;
-    const room =
-      stage.clientHeight -
-      label.offsetHeight -
-      parseFloat(getComputedStyle(stage).rowGap);
-    const next = Math.min(
-      1,
-      stage.clientWidth / view.width,
-      room / view.height,
-    );
-    if (!(next > 0)) return;
-    const y = shot.scrollTop / scale;
-    scale = next;
-    for (const screen of [shot, pageScreen]) {
-      screen.style.width = `${view.width * scale}px`;
-      screen.style.height = `${view.height * scale}px`;
-    }
-    shotImg.style.width = `${view.width * scale}px`;
-    shotImg.style.height = `${captureOf(view).height * scale}px`;
-    if (frame) frame.style.transform = `scale(${scale})`;
-    shot.scrollTop = y * scale;
-    sync();
-  }
-
-  /** Same isolation as the layout pass: same-origin, no scripts. */
-  async function loadFrame() {
-    if (frame && framePreview === current!.preview) return;
-    frame?.remove();
-    const next = el("iframe", "cc-compare__frame");
-    next.title = "Сторінка студента";
-    next.setAttribute("sandbox", "allow-same-origin");
-    next.setAttribute("tabindex", "-1");
-    frame = next;
-    framePreview = current!.preview;
-    const loaded = new Promise<void>((resolve) => {
-      const timer = setTimeout(resolve, 20000);
-      next.addEventListener(
-        "load",
-        () => {
-          clearTimeout(timer);
-          resolve();
-        },
-        { once: true },
-      );
-    });
-    next.srcdoc = framePreview;
-    pageScreen.replaceChildren(next);
-    await loaded;
-    const fonts = next.contentDocument?.fonts.ready;
-    if (fonts)
-      await Promise.race([fonts, new Promise((r) => setTimeout(r, 5000))]);
-  }
+  const viewer = mountCompare(
+    compare.querySelector<HTMLElement>("[data-cv]")!,
+  );
 
   /** The toolbar's picker: the verdict on the width being shown. */
   function renderCompareVerdict() {
-    const check = reported().find((c) => c.id === `mockup-${view.width}`);
+    const check = reported().find((c) => c.id === `mockup-${viewer.width}`);
     compareVerdict.replaceChildren(
       ...(check ? [verdictPicker(check, "cc-compare-verdict")] : []),
     );
   }
 
-  async function showView(next: View) {
-    view = next;
-    for (const button of viewButtons)
-      button.setAttribute(
-        "aria-pressed",
-        String(Number(button.dataset.ccView) === view.width),
-      );
-    renderCompareVerdict();
-    shotImg.src = withBase(captureOf(view).src);
-    shotImg.alt = `Макет Courtly на ширині ${view.width} px`;
-    shot.scrollTop = 0;
-    await loadFrame();
-    if (view !== next) return; // another width was picked while loading
-    frame!.style.width = `${view.width}px`;
-    frame!.style.height = `${view.height}px`;
-    fit();
-    await nextFrames();
-    sync();
-  }
-
   function openCompare(width: number) {
     if (!current) return;
     if (!compare.open) compare.showModal();
-    showView(viewOf(width));
+    viewer.show(current.preview, width);
   }
 
-  shot.addEventListener("scroll", sync, { passive: true });
-  // The frame takes no pointer events — a click on a link would navigate it
-  // to the live site — so a wheel over it scrolls the capture instead.
-  pageScreen.addEventListener(
-    "wheel",
-    (event) => {
-      event.preventDefault();
-      const unit =
-        event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? shot.clientHeight : 1;
-      shot.scrollTop += event.deltaY * unit;
-    },
-    { passive: false },
-  );
-  new ResizeObserver(() => {
-    if (compare.open) fit();
-  }).observe(stage);
-  for (const button of viewButtons)
-    button.addEventListener("click", () =>
-      showView(viewOf(Number(button.dataset.ccView))),
-    );
+  // Every width change — a tab or `openCompare()` — re-renders the picker.
+  compare.addEventListener("cv:view", renderCompareVerdict);
   compareVerdict.addEventListener("change", (event) => {
     const radio = event.target;
     if (!(radio instanceof HTMLInputElement) || !radio.dataset.ccVerdict) return;
@@ -1193,7 +1081,7 @@ const headings = [
   // be gone; focus its current copy.
   compare.addEventListener("close", () =>
     groupsEl
-      .querySelector<HTMLElement>(`[data-cc-compare-open="${view.width}"]`)
+      .querySelector<HTMLElement>(`[data-cc-compare-open="${viewer.width}"]`)
       ?.focus(),
   );
 
@@ -1210,18 +1098,13 @@ const headings = [
 <style is:global>
   /* Global because the report rows are built at runtime and carry no scoped
      attribute; every selector is prefixed `.cc`. */
+  /* Status colours: lab.css, shared with the report page. */
   .cc {
-    --cc-pass: #177245;
-    --cc-warn: #9a5800;
-    --cc-fail: #c0262d;
+    --cc-pass: var(--lab-pass);
+    --cc-warn: var(--lab-warn);
+    --cc-fail: var(--lab-fail);
     --cc-skip: var(--muted-foreground);
     margin-block: 0 3rem;
-  }
-
-  .dark .cc {
-    --cc-pass: #5fd39a;
-    --cc-warn: #f0b75a;
-    --cc-fail: #ff8f87;
   }
 
   .cc-form {
@@ -1264,9 +1147,7 @@ const headings = [
   .cc-reopen:focus-visible,
   .cc-dialog__close:focus-visible,
   .cc-toggle-all:focus-visible,
-  .cc-group__head:focus-visible,
-  .cc-compare__view:focus-visible,
-  .cc-compare__screen:focus-visible {
+  .cc-group__head:focus-visible {
     outline: 2px solid var(--color-brand-blue);
     outline-offset: 2px;
   }
@@ -1554,6 +1435,7 @@ const headings = [
   .cc-actions {
     grid-column: 1 / -1;
     display: flex;
+    flex-wrap: wrap;
     gap: 0.5rem;
   }
 
@@ -1576,6 +1458,31 @@ const headings = [
   .cc-copy--icon {
     width: 2.25rem;
     padding: 0;
+  }
+
+  .cc-copy--primary {
+    background: var(--color-brand-blue);
+    color: #fff;
+  }
+
+  .cc-copy:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  .cc-report-state {
+    margin: 0.75rem 0 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--foreground);
+  }
+
+  .cc-report-state:empty {
+    display: none;
+  }
+
+  .cc-report-state a {
+    color: var(--brand-text);
   }
 
   .cc-copy--icon svg {
@@ -1946,7 +1853,8 @@ const headings = [
     }
   }
 
-  /* Viewer: full viewport, over the report dialog. */
+  /* «Порівняти»: full viewport, over the report dialog; the viewer
+     (CourtlyCompare, full layout) fills it. */
   .cc-compare {
     margin: 0;
     width: 100vw;
@@ -1965,139 +1873,13 @@ const headings = [
     flex-direction: column;
   }
 
-  .cc-compare__head {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.75rem 1rem;
-    padding: 0.75rem 1.25rem;
-    border-bottom: 1px solid var(--border);
+  .cc-compare > .cv {
+    flex: 1;
+    min-height: 0;
   }
 
-  .cc-compare__head .cc-dialog__title {
+  .cc-compare .cc-dialog__title {
     margin-right: auto;
-  }
-
-  .cc-compare__views {
-    display: flex;
-    gap: 0.25rem;
-    padding: 0.2rem;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-  }
-
-  .cc-compare__view {
-    min-height: 2rem;
-    padding: 0 0.75rem;
-    border: 0;
-    border-radius: calc(var(--radius-md) - 0.2rem);
-    background: none;
-    color: var(--foreground);
-    font: inherit;
-    font-size: 0.875rem;
-    font-weight: 600;
-    white-space: nowrap;
-    cursor: pointer;
-  }
-
-  .cc-compare__view[aria-pressed="true"] {
-    background: var(--color-brand-blue);
-    color: #fff;
-  }
-
-  .cc-compare__body {
-    flex: 1;
-    min-height: 0;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
-    padding: 0.75rem 1.25rem 0;
-  }
-
-  .cc-compare__pane {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    min-height: 0;
-  }
-
-  .cc-compare__label {
-    margin: 0;
-    font-size: 0.875rem;
-    font-weight: 700;
-    color: var(--muted-foreground);
-  }
-
-  /* Measured by the script; the screen inside gets an explicit size. A wide
-     view is width-bound, so its screens sit mid-height, not at the top. */
-  .cc-compare__stage {
-    flex: 1;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 0.4rem;
-    overflow: hidden;
-  }
-
-  /* Outline, not border: the capture and the frame fill the box exactly. */
-  .cc-compare__screen {
-    position: relative;
-    flex: none;
-    overflow: hidden;
-    outline: 1px solid var(--border);
-    background: #fff;
-  }
-
-  /* Inset: the stage clips anything outside the screen. */
-  .cc-compare__screen:focus-visible {
-    outline-offset: -2px;
-  }
-
-  .cc-compare__screen--shot {
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    scrollbar-width: none;
-  }
-
-  .cc-compare__screen--shot::-webkit-scrollbar {
-    display: none;
-  }
-
-  .cc-compare__screen--shot img {
-    display: block;
-    max-width: none;
-  }
-
-  .cc-compare__frame {
-    position: absolute;
-    top: 0;
-    left: 0;
-    border: 0;
-    transform-origin: 0 0;
-    pointer-events: none;
-    background: #fff;
-  }
-
-  .cc-compare__hint {
-    margin: 0;
-    padding: 0.6rem 1.25rem 0.9rem;
-    font-size: 0.8125rem;
-    text-align: center;
-    color: var(--muted-foreground);
-  }
-
-  @media (max-width: 639px) {
-    .cc-compare__head,
-    .cc-compare__body,
-    .cc-compare__hint {
-      padding-inline: 1rem;
-    }
-
-    .cc-compare__body {
-      gap: 0.5rem;
-    }
   }
 
   .cc-group__hint {

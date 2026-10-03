@@ -107,9 +107,12 @@ cannot reach the course site.
   them.
 - **Mockup match** is judged by the instructor, not computed: a pixel diff of
   an independent implementation is unreliable, and the handout allows minor
-  spacing and size deviations. «Порівняти» opens the capture and the student's
-  page side by side at that width; the capture's scroll drives the page,
-  re-aligned at every section start. The guidance shown with the rows:
+  spacing and size deviations. «Порівняти» opens the comparison viewer at that
+  width — the same one as the report page's, described under "Report page":
+  the capture beside the student's page, scroll re-aligned at every section
+  start, and the written requirements the page misses outlined and listed.
+  The outlines are hints for the verdict, not the verdict; the picker in the
+  viewer's toolbar is. The guidance shown with the rows:
   «Частково» = structure and responsiveness right, but some elements visibly
   differ. A deviation an automated row measures (columns, form grid, header)
   is that row's to penalise; don't take it off the mockup verdict as well.
@@ -124,3 +127,41 @@ cannot reach the course site.
 - **Verified against** the local reference solution (with canonical, OG,
   robots and sitemap added): 12 / 12 with the 7 confirmable rows judged or
   ticked «Виконано», all 55 checks pass.
+
+## Report page
+
+`/labs/lab-7/report/` (`src/pages/labs/lab-7/report.astro`) is what the
+student receives. «Сформувати звіт» in the check dialog opens it. The button
+becomes active once Lighthouse has landed and all 3 mockup rows are judged;
+Lighthouse ticks are optional, since an unticked row already counts as
+failed. Plan and decisions: [report-page-plan.md](report-page-plan.md).
+
+- **The report lives in its link.** The URL fragment holds the rows as
+  graded, as compressed JSON (`src/scripts/courtly-report.ts`, about 3 KB).
+  The report never changes when the student edits the site, and nothing is
+  stored anywhere. Anyone who decodes the link can edit it, which is fine for
+  the student's copy; the mark of record is the gradebook. A changed verdict
+  needs a new link: the dialog says so, and «Скопіювати звіт» then leaves the
+  stale «Звіт:» line out.
+- **Results** are the dialog's groups and rows, read-only, with the
+  instructor's verdicts and comments.
+- **«Порівняння з макетом»** renders the page as it is *now* beside the
+  mockup capture, and outlines the written requirements it misses at that
+  width (`src/scripts/courtly-spec.ts`: 29 criteria, each citing the handout
+  or the spec, plus an amber hint for a section over 30 % taller or shorter
+  than in the mockup). The outlines are hints and never feed the mark. A
+  criterion whose elements can't be found shows «не перевірено» rather than a
+  red outline. Columns, the form grid and the header are measured with the
+  checker's own `locate()` / `snapshot()`, so an outline cannot contradict a
+  scored row.
+- **One viewer, two layouts** (`CourtlyCompare` + `courtly-compare.ts`): the
+  report shows it `inline`, the findings under the panes; the check dialog's
+  «Порівняти» shows it `full`, the panes as large as the screen allows and the
+  findings beside them, with the verdict picker in its toolbar.
+- **Calibration:** the reference solution must show zero red findings at
+  1440, 768 and 375, in both places. A red finding there means a wrong
+  criterion, so fix the criterion, not the page. To test a criterion, break
+  the reference in the viewer's frame with injected CSS rather than editing
+  the files. The viewer waits for the frame's styles to follow a width
+  change before measuring; measuring a fixed number of animation frames
+  after it read the previous width's `clamp()` sizes and media queries.

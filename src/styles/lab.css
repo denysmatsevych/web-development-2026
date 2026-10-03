@@ -23,6 +23,12 @@
   --lab-text: #2f3640;
   --lab-code: #188038;
   --lab-link: #1155cc;
+
+  /* Result statuses on the ЛР-7 check and report pages. AA as text on white
+     and on their own 14 % tint (pass 4.86, warn 4.59, fail 4.72 : 1). */
+  --lab-pass: #177245;
+  --lab-warn: #9a5800;
+  --lab-fail: #c0262d;
 }
 
 .dark .lab-page {
@@ -31,6 +37,9 @@
   --lab-text: var(--foreground);
   --lab-code: var(--foreground);
   --lab-link: var(--brand-text);
+  --lab-pass: #5fd39a;
+  --lab-warn: #f0b75a;
+  --lab-fail: #ff8f87;
 }
 
 .lab-page .lab-shell {

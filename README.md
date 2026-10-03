@@ -53,14 +53,16 @@ src/
 │             LabLayout (lab reading shell: article + "on this page" rail)
 ├─ components/ SiteHeader/Footer · ThemeToggle · deck (Slide, DeckChrome, RichText) ·
 │               lab (LabHeader, AcceptanceChecklist, PricingMockup, MockupLightbox,
-│                    CourtlyMockup) · OnThisPage, PrevNext, Breadcrumbs
+│                    CourtlyMockup, CourtlyCompare) · OnThisPage, PrevNext, Breadcrumbs
 ├─ data/
 │  ├─ site.ts                     site meta + the section list
 │  ├─ courtly-mockup.json         lab-7 mockup captures' section offsets (generated)
 │  └─ lectures/                   lecture registry + per-lecture slide data
 ├─ lib/        paths.ts (withBase) · labs.ts (lab/task lookups) · utils.ts (cn)
 ├─ scripts/    deck.ts (deck navigation + theme) · docs.ts (lab scrollspy, ToC, theme, copy buttons) ·
-│              courtly-check.ts (client-side grader behind the lab-7 auto-check route)
+│              courtly-check.ts (client-side grader behind the lab-7 auto-check route) ·
+│              courtly-report.ts (the lab-7 student report, carried in its link) ·
+│              courtly-spec.ts + courtly-compare.ts (the report's mockup comparison)
 └─ styles/     global.css (design tokens, single Tailwind entry, hub styles) ·
                deck.css (deck-only, scoped to .deck-page) ·
                lab.css (lab-only, scoped to .lab-page, deliberately unlayered)

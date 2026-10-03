@@ -1,0 +1,572 @@
+---
+/**
+ * CourtlyCompare — the ЛР-7 mockup comparison: width tabs, the mockup capture
+ * beside the student's page, requirement outlines on the page and the list of
+ * findings. Inert until `mountCompare()` from `src/scripts/courtly-compare.ts`
+ * wires it and `show()` loads a page.
+ *
+ * Two layouts. `inline` sits in a page (the report), the findings under the
+ * panes. `full` fills its box (the check dialog's «Порівняти») with the panes
+ * as large as the screen allows and the findings beside them — or under them
+ * for a desktop view, which is width-bound.
+ *
+ * Slots: `title` opens the bar, `tools` ends it (the dialog's verdict and
+ * close button). `headingLevel` is the level of the viewer's own headings
+ * (the pane labels and the findings title); the findings' groups go one
+ * level below. `autofocus` puts a dialog's initial focus on the capture, so
+ * the arrow keys scroll both halves at once.
+ */
+import { MOCKUP_VIEWS } from "@/scripts/courtly-check";
+
+interface Props {
+  headingLevel?: 2 | 3;
+  layout?: "inline" | "full";
+  autofocus?: boolean;
+}
+
+const { headingLevel = 2, layout = "inline", autofocus = false } = Astro.props;
+const Heading = `h${headingLevel}` as "h2";
+---
+
+<div class="cv" data-cv data-layout={layout}>
+  <div class="cv-bar">
+    <slot name="title" />
+    <div class="cv-views" role="group" aria-label="Ширина">
+      {
+        MOCKUP_VIEWS.map((view) => (
+          <button
+            class="cv-view"
+            type="button"
+            data-cv-view={view.width}
+            aria-pressed="false"
+          >
+            {view.label} · {view.width}
+          </button>
+        ))
+      }
+    </div>
+    <label class="cv-toggle">
+      <input type="checkbox" data-cv-marks checked />
+      Позначки на сторінці
+    </label>
+    <slot name="tools" />
+  </div>
+
+  <p class="cv-summary" data-cv-summary role="status" aria-live="polite"></p>
+
+  <div class="cv-main" data-cv-main>
+    <div class="cv-panes" data-cv-panes>
+      <section class="cv-pane" aria-labelledby="cv-mockup">
+        <div class="cv-stage" data-cv-stage>
+          <Heading id="cv-mockup" class="cv-label">Макет</Heading>
+          <div
+            class="cv-screen cv-screen--shot"
+            data-cv-shot
+            tabindex="0"
+            role="region"
+            aria-label="Макет; прокручується разом зі сторінкою студента"
+            autofocus={autofocus}
+          >
+            <img data-cv-img alt="" decoding="async" />
+          </div>
+        </div>
+      </section>
+      <section class="cv-pane" aria-labelledby="cv-page">
+        <div class="cv-stage">
+          <Heading id="cv-page" class="cv-label">Сторінка студента</Heading>
+          <div class="cv-screen" data-cv-page>
+            <div class="cv-overlay" data-cv-overlay aria-hidden="true"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <p class="cv-hint">
+      Прокручуйте будь-яку половину: сторінка вирівнюється з макетом на
+      початку кожної секції. Червоним позначено вимоги з тексту лабораторної
+      та макета, яких сторінка не виконує на цій ширині; жовтим — секції,
+      помітно вищі або нижчі, ніж у макеті. Це підказки: на оцінку вони не
+      впливають.
+    </p>
+
+    <section class="cv-findings" aria-labelledby="cv-findings-title">
+      <Heading id="cv-findings-title" class="cv-findings__title">
+        Вимоги на цій ширині
+      </Heading>
+      <div data-cv-findings data-cv-level={headingLevel + 1}></div>
+    </section>
+  </div>
+</div>
+
+<style is:global>
+  /* Global because the outlines and findings are built at runtime and carry
+     no scoped attribute; every selector is prefixed `.cv`. Status colours
+     come from lab.css. */
+  .cv {
+    --cv-fail: var(--lab-fail);
+    --cv-warn: var(--lab-warn);
+    --cv-pass: var(--lab-pass);
+    --cv-skip: var(--muted-foreground);
+    /* Drawn over the student's page, which is light whatever the theme. */
+    --cv-mark-fail: #c0262d;
+    --cv-mark-info: #9a5800;
+    /* The most the panes may take; the page they sit on may set it. */
+    --cv-panes-h: min(calc(100dvh - 9rem), 60rem);
+  }
+
+  .cv-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.25rem;
+  }
+
+  .cv-views {
+    display: flex;
+    gap: 0.25rem;
+    padding: 0.2rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+  }
+
+  .cv-view {
+    min-height: 2rem;
+    padding: 0 0.75rem;
+    border: 0;
+    border-radius: calc(var(--radius-md) - 0.2rem);
+    background: none;
+    color: var(--foreground);
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .cv-view[aria-pressed="true"] {
+    background: var(--color-brand-blue);
+    color: #fff;
+  }
+
+  .cv-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 2.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--foreground);
+    cursor: pointer;
+  }
+
+  .cv-toggle input {
+    width: 1.125rem;
+    height: 1.125rem;
+    margin: 0;
+    accent-color: var(--color-brand-blue);
+  }
+
+  .cv-view:focus-visible,
+  .cv-toggle input:focus-visible,
+  .cv-screen:focus-visible,
+  .cv-finding__title:is(button):focus-visible,
+  .cv-passed__summary:focus-visible {
+    outline: 2px solid var(--color-brand-blue);
+    outline-offset: 2px;
+  }
+
+  .cv-summary {
+    margin: 0.75rem 0 0;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--foreground);
+  }
+
+  .cv-summary:empty {
+    display: none;
+  }
+
+  /* As tall as the scaled screens, which the script fits into `max-height`:
+     a wide view is width-bound and leaves no empty band below. */
+  .cv-panes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    max-height: var(--cv-panes-h);
+    margin-top: 0.75rem;
+    scroll-margin-top: calc(var(--header-h, 4rem) + 1rem);
+  }
+
+  .cv-pane {
+    min-width: 0;
+  }
+
+  .cv .cv-label {
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--muted-foreground);
+  }
+
+  /* Its width is measured by the script; the screen inside gets an
+     explicit size. */
+  .cv-stage {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.4rem;
+    overflow: hidden;
+  }
+
+  /* Outline, not border: the capture and the frame fill the box exactly. */
+  .cv-screen {
+    position: relative;
+    flex: none;
+    overflow: hidden;
+    outline: 1px solid var(--border);
+    background: #fff;
+  }
+
+  /* Inset: the stage clips anything outside the screen. */
+  .cv-screen:focus-visible {
+    outline-offset: -2px;
+  }
+
+  .cv-screen--shot {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+  }
+
+  .cv-screen--shot::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cv-screen--shot img {
+    display: block;
+    max-width: none;
+  }
+
+  .cv-frame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 0;
+    transform-origin: 0 0;
+    pointer-events: none;
+    background: #fff;
+  }
+
+  .cv-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  /* A white halo keeps the outline visible on dark sections too. */
+  .cv-mark {
+    position: absolute;
+    border: 2px solid var(--cv-mark);
+    box-shadow:
+      0 0 0 1px #fff,
+      inset 0 0 0 1px #fff;
+  }
+
+  .cv-mark[data-status="fail"],
+  .cv-mark__tag[data-status="fail"] {
+    --cv-mark: var(--cv-mark-fail);
+  }
+
+  .cv-mark[data-status="info"],
+  .cv-mark__tag[data-status="info"] {
+    --cv-mark: var(--cv-mark-info);
+  }
+
+  .cv-mark[data-status="info"] {
+    border-style: dashed;
+  }
+
+  /* No fill: a tint would change the colours the outline is about. */
+  .cv-mark[data-active] {
+    border-width: 4px;
+  }
+
+  /* White on the mark colour: 5.9 : 1 (fail), 5.6 : 1 (info). */
+  .cv-mark__tag {
+    position: absolute;
+    padding: 0 0.3rem;
+    border-radius: 0 0 0.25rem 0;
+    background: var(--cv-mark);
+    color: #fff;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    line-height: 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .cv-hint {
+    margin: 0.6rem 0 0;
+    font-size: 0.8125rem;
+    color: var(--muted-foreground);
+  }
+
+  .cv-findings {
+    margin-top: 1.5rem;
+  }
+
+  .cv .cv-findings__title {
+    margin: 0 0 0.5rem;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--lab-heading, var(--foreground));
+  }
+
+  .cv-group {
+    margin-top: 0.75rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+  }
+
+  .cv .cv-group__title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 0.75rem;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--lab-subheading, var(--foreground));
+  }
+
+  .cv-group__count {
+    font-family: var(--lab-font-text, inherit);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--cv-fail);
+  }
+
+  .cv-group__empty {
+    margin: 0.5rem 0 0;
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+  }
+
+  .cv-list {
+    margin: 0.25rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .cv-finding {
+    display: grid;
+    grid-template-columns: 1.5rem minmax(0, 1fr);
+    gap: 0.65rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid color-mix(in oklab, var(--border) 70%, transparent);
+  }
+
+  .cv-finding:last-child {
+    border-bottom: 0;
+  }
+
+  .cv-finding[data-status="fail"] {
+    --cv-color: var(--cv-fail);
+  }
+  .cv-finding[data-status="info"] {
+    --cv-color: var(--cv-warn);
+  }
+  .cv-finding[data-status="pass"] {
+    --cv-color: var(--cv-pass);
+  }
+  .cv-finding[data-status="skip"] {
+    --cv-color: var(--cv-skip);
+  }
+
+  .cv-finding__icon {
+    display: grid;
+    place-items: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 999px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--cv-color);
+    background: color-mix(in oklab, var(--cv-color) 14%, transparent);
+  }
+
+  .cv-finding__title,
+  .cv-finding__detail,
+  .cv-finding__source {
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .cv-finding__title {
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--foreground);
+  }
+
+  button.cv-finding__title {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: 0.9375rem;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .cv-finding__id {
+    font-weight: 700;
+    color: var(--cv-color);
+  }
+
+  .cv-finding__go {
+    margin-left: 0.5rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--brand-text);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    white-space: nowrap;
+  }
+
+  button.cv-finding__title:hover .cv-finding__go {
+    text-decoration-thickness: 2px;
+  }
+
+  .cv-finding__detail {
+    margin-top: 0.15rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--cv-color);
+  }
+
+  .cv-finding[data-status="skip"] .cv-finding__detail {
+    color: var(--muted-foreground);
+  }
+
+  .cv-finding__source {
+    margin-top: 0.1rem;
+    font-size: 0.8125rem;
+    color: var(--muted-foreground);
+  }
+
+  .cv-passed {
+    margin-top: 0.5rem;
+  }
+
+  .cv-passed__summary {
+    width: fit-content;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--brand-text);
+    cursor: pointer;
+  }
+
+  /* The full layout (the check dialog's «Порівняти») fills its box: the bar,
+     the summary, then the panes as large as the screen allows with the
+     findings scrolling beside them, so a finding can be picked without
+     leaving. The script fits the panes to `.cv-main`'s height here, not to
+     `--cv-panes-h`. */
+  .cv[data-layout="full"] {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 0.75rem 1.25rem 1rem;
+    background: var(--background);
+    overflow: hidden;
+  }
+
+  .cv[data-layout="full"] .cv-main {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(16rem, 22rem);
+    column-gap: 1.25rem;
+    margin-top: 0.75rem;
+  }
+
+  .cv[data-layout="full"] .cv-panes {
+    margin-top: 0;
+  }
+
+  @media (min-width: 900px) {
+    .cv[data-layout="full"] .cv-panes {
+      max-height: none;
+    }
+  }
+
+  .cv[data-layout="full"] .cv-hint {
+    display: none;
+  }
+
+  .cv[data-layout="full"] .cv-findings {
+    min-height: 0;
+    margin-top: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  /* A desktop view is width-bound, so beside the findings its screens would
+     be short; it takes the full width and the findings go under it. */
+  .cv[data-layout="full"][data-wide] .cv-main {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    row-gap: 0.75rem;
+  }
+
+  /* Narrow screens: one column that scrolls as a whole. */
+  @media (max-width: 899px) {
+    .cv[data-layout="full"] {
+      padding: 0.75rem 1rem;
+      overflow-y: auto;
+    }
+
+    .cv[data-layout="full"] .cv-main {
+      flex: none;
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: 0.75rem;
+    }
+
+    .cv[data-layout="full"] .cv-findings {
+      overflow: visible;
+    }
+  }
+
+  /* Phones: two thin columns still beat one tall one — the alignment needs
+     both halves on screen — so only the spacing tightens. */
+  @media (max-width: 639px) {
+    .cv-panes {
+      gap: 0.5rem;
+    }
+
+    .cv-bar {
+      gap: 0.5rem 1rem;
+    }
+
+    .cv-view {
+      padding: 0 0.5rem;
+      font-size: 0.8125rem;
+    }
+  }
+
+  .cv .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+</style>

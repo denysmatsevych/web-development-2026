@@ -9,7 +9,8 @@
  *   SiteFooter
  *
  * Two columns on `lg+`, collapsing to one below `lg` with the ToC as a sticky
- * bar under the header (current section + dropdown list).
+ * bar under the header (current section + dropdown list). A page without
+ * `headings` has no ToC and gets the full width.
  *
  * `initDocs()` wires the ToC scrollspy and dropdown; the theme toggle is
  * handled the same way on every page.
@@ -61,14 +62,18 @@ const fontHref =
   <div class="lab-page">
     <SiteHeader />
 
-    <div class="lab-shell">
+    <div class:list={["lab-shell", { "lab-shell--wide": !headings.length }]}>
       <main id="main-content" class="area-main" tabindex="-1">
         <slot />
       </main>
 
-      <div class="area-toc">
-        <OnThisPage headings={headings} />
-      </div>
+      {
+        headings.length > 0 && (
+          <div class="area-toc">
+            <OnThisPage headings={headings} />
+          </div>
+        )
+      }
     </div>
 
     <SiteFooter />
@@ -130,5 +135,11 @@ const fontHref =
       overflow-y: auto;
       overscroll-behavior: contain;
     }
+  }
+
+  /* After the `lg` rule, which it overrides. */
+  .lab-shell--wide {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "main";
   }
 </style>
