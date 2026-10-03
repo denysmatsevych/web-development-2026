@@ -41,13 +41,15 @@ handout.
 
 ```sh
 node docs/lab-7/generate-assets.mjs   # courtly-assets/img/*.webp (deterministic)
-node docs/lab-7/render-mockup.mjs     # public/labs/lab-7/*.webp + og-image.jpg (Edge, network)
+node docs/lab-7/render-mockup.mjs     # public/labs/lab-7/*.webp + og-image.jpg + src/data/courtly-mockup.json (Edge, network)
 python docs/lab-7/build-pack.py        # public/labs/courtly-assets.zip (+ SPEC.md, mockup/)
 python docs/build-handout.py lab-7    # public/labs/lab-7.pdf
 ```
 
 Order matters: render the captures before building the pack, since the pack
-copies them. `SPEC.md` in the zip is generated from §2–5 of
+copies them. `src/data/courtly-mockup.json` records where each section starts
+in the full-page captures; the auto-check's viewer aligns on it, so it is
+written in the same run as the captures. `SPEC.md` in the zip is generated from §2–5 of
 `src/content/tasks/lab-7.md`, so edit the spec there, never in the zip.
 
 If a capture's height changes, update the `height` in
@@ -66,7 +68,7 @@ the menu.
 
 `/labs/lab-7/check/` (`src/pages/labs/lab-7/check.astro`, engine in
 `src/scripts/courtly-check.ts`): the instructor pastes a student's deployed
-URL and gets a report with an estimated mark on the 12-point scale. It runs
+URL and gets a report with a mark on the 12-point scale. It runs
 entirely in the browser — GitHub Pages and Vercel both send
 `Access-Control-Allow-Origin: *`, so the page's HTML, CSS, `robots.txt` and
 `sitemap.xml` can be fetched directly. Layout is measured in a script-less,
@@ -87,19 +89,38 @@ cannot reach the course site.
   `http://localhost:4400/` with CORS, adding the canonical, Open Graph,
   `robots.txt` and `sitemap.xml` it lacks at serve time
   (`docs/lab-7/serve-mockup.mjs`). Paste that URL into the checker on
-  `npm run dev`; expected 12 / 12 (Lighthouse rows are skipped — PageSpeed
-  Insights cannot reach localhost). To test failures, break a copy of the
-  mockup's HTML/CSS and reload — the server reads files on every request.
+  `npm run dev`; expected 12 / 12 once the 3 mockup rows are judged «Виконано»
+  and the 4 Lighthouse rows ticked (PageSpeed Insights cannot reach localhost). To test
+  failures, break a copy of the mockup's HTML/CSS and reload — the server
+  reads files on every request.
 - **Scoring:** each check has a weight; pass = full, partial = half, fail = 0,
   not-checked rows leave the denominator; `round(percent × 12)`, min 1. Tune
   weights in the `add(...)` calls and the mapping in `scoreChecks()`.
-- **Not automated:** visual match with the mockup, the email, the Lighthouse
-  screenshot, the AI write-up. The page says so.
+- **Confirmable rows**, 3 points each, take the instructor's verdict: mockup
+  match at 1440 / 768 / 375 — «Виконано / Частково / Не виконано» (full / half
+  / 0); the four Lighthouse categories — a «Виконано» checkbox, since their
+  only bar is ≥ 90. A row nothing could check and nobody judged counts as
+  **fail**, not "left out" (`withVerdicts()`), so judge them before copying
+  the report. A judged mockup row gets a one-line comment field; the comment
+  becomes the row's detail («оцінено вручну: …»), so the student reads why.
+  Verdicts and comments are kept in memory only: a reload or a new run clears
+  them.
+- **Mockup match** is judged by the instructor, not computed: a pixel diff of
+  an independent implementation is unreliable, and the handout allows minor
+  spacing and size deviations. «Порівняти» opens the capture and the student's
+  page side by side at that width; the capture's scroll drives the page,
+  re-aligned at every section start. The guidance shown with the rows:
+  «Частково» = structure and responsiveness right, but some elements visibly
+  differ. A deviation an automated row measures (columns, form grid, header)
+  is that row's to penalise; don't take it off the mockup verdict as well.
+- **Not automated, not scored:** the email and the AI write-up.
 - **Lighthouse** uses the PageSpeed Insights API. The keyless quota is shared
   and usually exhausted, so set a repository variable `PSI_API_KEY` (Google
   Cloud → PageSpeed Insights API → API key, restricted to the HTTP referrer
   `denysmatsevych.github.io/*`); the deploy workflow passes it in as
-  `PUBLIC_PSI_API_KEY`. Without it the Lighthouse rows show "not checked" and
-  do not affect the mark.
+  `PUBLIC_PSI_API_KEY`. Without it the Lighthouse rows show «Не виконано»
+  until ticked from the student's screenshot; a category PSI passes is locked
+  as passed.
 - **Verified against** the local reference solution (with canonical, OG,
-  robots and sitemap added): 12 / 12, all 48 checks pass.
+  robots and sitemap added): 12 / 12 with the 7 confirmable rows judged or
+  ticked «Виконано», all 55 checks pass.

@@ -20,15 +20,21 @@
  *
  * Lighthouse comes from the PageSpeed Insights API when `PUBLIC_PSI_API_KEY`
  * is set at build time; without a key the shared quota is usually exhausted,
- * so those rows fall back to "not checked" and drop out of the score.
+ * so those rows come back "not checked". They are `confirmable`: the
+ * instructor ticks a category from the student's screenshot. Match with the
+ * mockup is confirmable too — no script can judge it — with a three-way
+ * verdict, and the report shows the capture and the student's page side by
+ * side for it.
  *
  * Every check carries a weight; `pass` earns it, `warn` half, `fail` none,
- * `skip` leaves the denominator. See `scoreChecks()`.
+ * `skip` leaves the denominator. A confirmable row is the exception: the
+ * instructor's verdict decides, and a row nothing could check and nobody has
+ * judged counts as `fail`. See `withVerdicts()` and `scoreChecks()`.
  */
 
 export type Status = 'pass' | 'warn' | 'fail' | 'skip';
 
-export type GroupId = 'layout' | 'structure' | 'a11y' | 'css' | 'media' | 'seo' | 'lighthouse';
+export type GroupId = 'layout' | 'structure' | 'a11y' | 'css' | 'media' | 'seo' | 'mockup' | 'lighthouse';
 
 export const GROUPS: { id: GroupId; title: string }[] = [
   { id: 'layout', title: 'Адаптивність і макет' },
@@ -37,8 +43,19 @@ export const GROUPS: { id: GroupId; title: string }[] = [
   { id: 'css', title: 'CSS: токени, типографіка, Grid і Flexbox' },
   { id: 'media', title: 'Зображення' },
   { id: 'seo', title: 'SEO' },
+  { id: 'mockup', title: 'Відповідність макету' },
   { id: 'lighthouse', title: 'Lighthouse (Mobile)' },
 ];
+
+/**
+ * The widths the mockup is captured at — one confirmable row each. `height`
+ * is the viewport the side-by-side viewer shows: a typical screen at that width.
+ */
+export const MOCKUP_VIEWS = [
+  { width: 1440, height: 900, label: 'Desktop' },
+  { width: 768, height: 1024, label: 'Tablet' },
+  { width: 375, height: 812, label: 'Mobile' },
+] as const;
 
 export interface Check {
   id: string;
@@ -48,7 +65,17 @@ export interface Check {
   weight: number;
   status: Status;
   detail?: string;
+  /**
+   * The instructor judges it by hand: `tick` — a «Виконано» checkbox, for a
+   * single bar to meet; `verdict` — «Виконано / Частково / Не виконано».
+   */
+  confirmable?: 'tick' | 'verdict';
+  /** Set by `withVerdicts()`: the status is the instructor's verdict. */
+  manual?: boolean;
 }
+
+/** What the instructor can say about a confirmable row. */
+export type Verdict = Exclude<Status, 'skip'>;
 
 /** A problem with the input or the site as a whole — no report possible. */
 export class CheckError extends Error {}
@@ -58,6 +85,11 @@ export interface Inspection {
   checks: Check[];
   /** Resolves later (PSI takes 20–60 s); rows to append to `checks`. */
   lighthouse: Promise<Check[]>;
+  /**
+   * The page as the layout pass renders it — scripts stripped, `<base>` at
+   * the student's URL — for a `srcdoc` frame sandboxed to `allow-same-origin`.
+   */
+  preview: string;
 }
 
 export interface Score {
@@ -133,6 +165,25 @@ async function tryGet(url: string, timeout?: number): Promise<Fetched | null> {
   }
 }
 
+/**
+ * Loads as an image? Works where `fetch()` cannot — a cross-origin URL without
+ * CORS, such as a 404 page — but cannot say why it failed.
+ */
+function imageLoads(url: string, timeout = 10000): Promise<boolean> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    const done = (ok: boolean) => {
+      clearTimeout(timer);
+      img.onload = img.onerror = null;
+      resolve(ok);
+    };
+    const timer = setTimeout(() => done(false), timeout);
+    img.onload = () => done(true);
+    img.onerror = () => done(false);
+    img.src = url;
+  });
+}
+
 /** A 200 that is really the host's HTML fallback (SPA rewrite) is not a file. */
 function isRealFile(res: Fetched | null): res is Fetched {
   return !!res && res.ok && !/^\s*(<!doctype html|<html)/i.test(res.text);
@@ -185,6 +236,18 @@ function samePage(a: string, b: string): boolean {
     }
   };
   return norm(a) === norm(b);
+}
+
+/** Different site, not just a different path? Ignores scheme and `www.`. */
+function otherSite(a: string, b: string): boolean {
+  const host = (value: string) => {
+    try {
+      return new URL(value).hostname.replace(/^www\./, '').toLowerCase();
+    } catch {
+      return value;
+    }
+  };
+  return host(a) !== host(b);
 }
 
 // ---------------------------------------------------------------------------
@@ -485,7 +548,8 @@ interface Snapshot {
   toggleShown: boolean | null;
   navShown: boolean;
   heroSideBySide: boolean | null;
-  formColumns: number | null;
+  /** Columns by left edge; rows by vertical centre, so bottom-aligned buttons share a row. */
+  form: { cols: number; rows: number } | null;
   stepsRow: { cols: number; rows: number } | null;
   h1: number | null;
   h2: number | null;
@@ -599,6 +663,7 @@ async function measure(doc: Document, base: string, focusVar: string, onWidth: (
       }
 
       const stepRects = steps.map((s) => s.getBoundingClientRect());
+      const controlRects = controls.map((c) => c.getBoundingClientRect());
       snaps.set(width, {
         width,
         overflow,
@@ -608,7 +673,13 @@ async function measure(doc: Document, base: string, focusVar: string, onWidth: (
         toggleShown: toggle ? shownIn(win, toggle) : null,
         navShown: navLinks.some((a) => shownIn(win, a)),
         heroSideBySide,
-        formColumns: controls.length >= 3 ? distinct(controls.map((c) => c.getBoundingClientRect().left)) : null,
+        form:
+          controlRects.length >= 3
+            ? {
+                cols: distinct(controlRects.map((r) => r.left)),
+                rows: distinct(controlRects.map((r) => r.top + r.height / 2), 16),
+              }
+            : null,
         stepsRow:
           stepRects.length >= 3
             ? { cols: distinct(stepRects.map((r) => r.left)), rows: distinct(stepRects.map((r) => r.top)) }
@@ -669,6 +740,49 @@ function heroImage(doc: Document): HTMLImageElement | null {
     imgs.find((img) => img.getAttribute('fetchpriority') === 'high') ??
     doc.querySelector('main img')
   );
+}
+
+// ---------------------------------------------------------------------------
+// Section anchors (mockup viewer)
+
+/**
+ * Where each Courtly section starts, in CSS px from the top of a rendered
+ * page, top to bottom, then `end` (the page height). A section the page lacks
+ * is left out. The viewer aligns the student's page with a mockup capture on
+ * these points.
+ *
+ * Self-contained on purpose — no helpers from this module: it is also
+ * serialised with `toString()` and run in the reference page when the
+ * captures are rendered, so both sides are measured by the same code.
+ */
+export function sectionAnchors(doc: Document): Record<string, number> {
+  const win = doc.defaultView!;
+  const main = doc.querySelector('main') ?? doc.body;
+  // The <section> holding `el`, else its ancestor that is a child of <main>.
+  const block = (el: Element | null | undefined): Element | null => {
+    if (!el) return null;
+    const section = el.closest('section');
+    if (section) return section;
+    let node = el;
+    while (node.parentElement && node.parentElement !== main) node = node.parentElement;
+    return node.parentElement ? node : el;
+  };
+  const ctaLinks = main.querySelectorAll('a[href="#search"]');
+  const found: [string, Element | null][] = [
+    ['hero', block(doc.querySelector('h1'))],
+    ['search', doc.getElementById('search')],
+    ['venues', doc.getElementById('venues')],
+    ['how', doc.getElementById('how')],
+    ['about', doc.getElementById('about')],
+    ['cta', block(ctaLinks[ctaLinks.length - 1])],
+    ['footer', doc.getElementById('contacts') ?? [...doc.querySelectorAll('footer')].pop() ?? null],
+  ];
+  const out: Record<string, number> = {};
+  for (const [name, el] of found) {
+    if (el) out[name] = Math.round(el.getBoundingClientRect().top + win.scrollY);
+  }
+  out.end = doc.documentElement.scrollHeight;
+  return out;
 }
 
 // ---------------------------------------------------------------------------
@@ -1019,7 +1133,9 @@ function staticChecks(add: Add, doc: Document, pageUrl: string, styles: Styles) 
     canonicalDetail = `відносний URL «${canonical}» — потрібна повна адреса сторінки`;
   } else if (!samePage(canonical, pageUrl)) {
     canonicalStatus = 'fail';
-    canonicalDetail = `canonical «${canonical}» не збігається з адресою сторінки ${pageUrl}`;
+    canonicalDetail = otherSite(canonical, pageUrl)
+      ? `canonical веде на інший сайт: «${canonical}»; адреса цієї сторінки — ${pageUrl}`
+      : `canonical «${canonical}» не збігається з адресою сторінки ${pageUrl}`;
   }
   add('canonical', 'seo', 'Canonical URL збігається з адресою сторінки', 2, canonicalStatus, canonicalDetail);
 
@@ -1143,7 +1259,7 @@ function layoutChecks(add: Add, c: Computed, fromStatic: ReturnType<typeof stati
     'Картки: 1 → 2 → 3 колонки (375 / 768 / 1440 px)',
     6,
     cols[2] === null ? 'fail' : tally(wrongCols),
-    cols[2] === null ? 'не знайдено сітку карток у #venues' : `колонок: ${cols.join(' / ')}`,
+    cols[2] === null ? 'не знайдено сітку карток у #venues' : wrongCols.length ? `колонок: ${cols.join(' / ')}` : undefined,
   );
 
   const fd = s(1440).featured;
@@ -1197,15 +1313,26 @@ function layoutChecks(add: Add, c: Computed, fromStatic: ReturnType<typeof stati
           : '1440 px: текст і зображення не поруч',
   );
 
-  const fc = [s(375).formColumns, s(768).formColumns, s(1440).formColumns];
-  const formMiss = [fc[0] !== 1, fc[1] !== 2, fc[2] !== 4].filter(Boolean).length;
+  // A 2-column form with the button alone on a third row has two left edges
+  // too — 2 × 2 needs the rows counted as well.
+  const [fm375, fm768, fm1440] = [s(375).form, s(768).form, s(1440).form];
+  const formMiss = [
+    fm375?.cols !== 1,
+    fm768?.cols !== 2 || fm768.rows !== 2,
+    fm1440?.cols !== 4 || fm1440.rows !== 1,
+  ].filter(Boolean).length;
+  const grid = (f: Snapshot['form']) => (f ? `${f.cols} × ${f.rows}` : '—');
   add(
     'form-layout',
     'layout',
     'Форма: 1 колонка → 2 × 2 → 4 в рядок',
     3,
-    fc[2] === null ? 'fail' : formMiss === 0 ? 'pass' : formMiss === 1 ? 'warn' : 'fail',
-    fc[2] === null ? 'не знайдено поля форми' : `колонок: ${fc[0]} / ${fc[1]} / ${fc[2]}`,
+    !fm1440 ? 'fail' : formMiss === 0 ? 'pass' : formMiss === 1 ? 'warn' : 'fail',
+    !fm1440
+      ? 'не знайдено поля форми'
+      : formMiss
+        ? `колонок × рядків: ${grid(fm375)} / ${grid(fm768)} / ${grid(fm1440)}`
+        : undefined,
   );
 
   const st = s(1440).stepsRow;
@@ -1228,13 +1355,16 @@ function layoutChecks(add: Add, c: Computed, fromStatic: ReturnType<typeof stati
     near(s(375).h2, 26),
     near(s(1440).h2, 40),
   ].filter(Boolean).length;
+  const fluidOk = sizes === 4 && fromStatic.hasClamp;
   add(
     'fluid-type',
     'css',
     'Заголовки масштабуються через clamp(): h1 32 → 56 px, h2 26 → 40 px',
     2,
-    sizes === 4 && fromStatic.hasClamp ? 'pass' : sizes >= 2 ? 'warn' : 'fail',
-    `h1: ${px(s(375).h1)} → ${px(s(1440).h1)} px, h2: ${px(s(375).h2)} → ${px(s(1440).h2)} px`,
+    fluidOk ? 'pass' : sizes >= 2 ? 'warn' : 'fail',
+    fluidOk
+      ? undefined
+      : `h1: ${px(s(375).h1)} → ${px(s(1440).h1)} px, h2: ${px(s(375).h2)} → ${px(s(1440).h2)} px${fromStatic.hasClamp ? '' : '; clamp() у CSS не знайдено'}`,
   );
 
   const colorsOk = [c.background === 'rgb(246, 248, 245)', c.color === 'rgb(19, 32, 26)'].filter(Boolean).length;
@@ -1326,13 +1456,22 @@ async function seoFiles(add: Add, doc: Document, pageUrl: string, base: string) 
   const ogProblems: string[] = [];
   for (const p of ['title', 'description', 'url', 'image']) if (!og(p)) ogProblems.push(`немає og:${p}`);
   const ogUrl = og('url');
-  if (ogUrl && !samePage(ogUrl, pageUrl)) ogProblems.push(`og:url «${ogUrl}» не збігається з адресою сторінки`);
+  if (ogUrl && !samePage(ogUrl, pageUrl)) {
+    ogProblems.push(
+      otherSite(ogUrl, pageUrl)
+        ? `og:url веде на інший сайт: «${ogUrl}»`
+        : `og:url «${ogUrl}» не збігається з адресою сторінки`,
+    );
+  }
   const ogImage = og('image');
   if (ogImage && !/^https?:\/\//i.test(ogImage)) ogProblems.push(`og:image «${ogImage}» — не абсолютний URL`);
   else if (ogImage) {
     if (!/og-image\.jpg(\?|$)/i.test(ogImage)) ogProblems.push('og:image має вести на og-image.jpg');
+    // A cross-origin error without CORS hides its status from fetch(); an
+    // <img> still tells loaded from not.
     const res = await tryGet(ogImage, 10000);
-    if (!res || !res.ok) ogProblems.push(`og:image не завантажується (${res ? res.status : 'помилка мережі'})`);
+    if (res && !res.ok) ogProblems.push(`og:image «${ogImage}» не відкривається (${res.status})`);
+    else if (!res && !(await imageLoads(ogImage))) ogProblems.push(`og:image «${ogImage}» не відкривається`);
   }
   add('og', 'seo', 'Open Graph: og:title, og:description, og:url, абсолютний og:image', 2, tally(ogProblems), ogProblems.join('; ') || undefined);
 
@@ -1377,22 +1516,31 @@ async function seoFiles(add: Add, doc: Document, pageUrl: string, base: string) 
 // Lighthouse via PageSpeed Insights
 
 async function lighthouse(pageUrl: string, key: string): Promise<Check[]> {
-  const cats: [string, string, string, number][] = [
-    ['accessibility', 'lh-a11y', 'Accessibility ≥ 90', 3],
-    ['best-practices', 'lh-bp', 'Best Practices ≥ 90', 3],
-    ['seo', 'lh-seo', 'SEO ≥ 90', 3],
-    ['performance', 'lh-perf', 'Performance (без порогу, для інформації)', 0],
+  // In the order of the Lighthouse report, so ticking follows the screenshot.
+  const cats: [string, string, string][] = [
+    ['performance', 'lh-perf', 'Performance ≥ 90'],
+    ['accessibility', 'lh-a11y', 'Accessibility ≥ 90'],
+    ['best-practices', 'lh-bp', 'Best Practices ≥ 90'],
+    ['seo', 'lh-seo', 'SEO ≥ 90'],
   ];
   const params = new URLSearchParams({ url: pageUrl, strategy: 'mobile', locale: 'uk' });
   for (const [cat] of cats) params.append('category', cat.toUpperCase().replace('-', '_'));
   if (key) params.set('key', key);
 
-  const skipped = (why: string): Check[] =>
-    cats.map(([, id, title, weight]) => ({ id, group: 'lighthouse', title, weight, status: 'skip', detail: why }));
+  const row = (id: string, title: string, status: Status, detail: string): Check => ({
+    id,
+    group: 'lighthouse',
+    title,
+    weight: 3,
+    status,
+    detail,
+    confirmable: 'tick',
+  });
+  const skipped = (why: string): Check[] => cats.map(([, id, title]) => row(id, title, 'skip', why));
 
   // PSI fetches the page from Google's servers, which cannot see localhost.
   if (/^(localhost|127\.0\.0\.1)$/.test(new URL(pageUrl).hostname)) {
-    return skipped('PageSpeed Insights не бачить localhost — Lighthouse працює лише для опублікованих сторінок.');
+    return skipped('PageSpeed Insights не бачить localhost');
   }
 
   let data: {
@@ -1405,24 +1553,24 @@ async function lighthouse(pageUrl: string, key: string): Promise<Check[]> {
     });
     data = await res.json();
   } catch {
-    return skipped('PageSpeed Insights не відповів. Запустіть Lighthouse у DevTools вручну.');
+    return skipped('PageSpeed Insights не відповів');
   }
   if (data.error) {
     return skipped(
       data.error.code === 429
-        ? 'вичерпано ліміт PageSpeed Insights. Запустіть Lighthouse у DevTools вручну.'
+        ? 'вичерпано ліміт PageSpeed Insights'
         : `PageSpeed Insights: ${data.error.message ?? 'помилка'}`,
     );
   }
   const categories = data.lighthouseResult?.categories;
   if (!categories) return skipped(data.lighthouseResult?.runtimeError?.message ?? 'Lighthouse не повернув результат');
 
-  return cats.map(([cat, id, title, weight]) => {
+  return cats.map(([cat, id, title]) => {
     const raw = categories[cat]?.score;
-    if (raw === null || raw === undefined) return { id, group: 'lighthouse', title, weight, status: 'skip', detail: 'немає оцінки' };
+    if (raw === null || raw === undefined) return row(id, title, 'skip', 'PageSpeed Insights: немає оцінки');
     const value = Math.round(raw * 100);
-    const status: Status = weight === 0 ? (value >= 50 ? 'pass' : 'warn') : value >= 90 ? 'pass' : value >= 80 ? 'warn' : 'fail';
-    return { id, group: 'lighthouse', title, weight, status, detail: `${value} / 100` };
+    const status: Status = value >= 90 ? 'pass' : value >= 80 ? 'warn' : 'fail';
+    return row(id, title, status, `PageSpeed Insights: ${value} / 100`);
   });
 }
 
@@ -1495,9 +1643,50 @@ export async function inspect(rawUrl: string, onProgress: (text: string) => void
   menuCheck(add, await probeMenu(doc, base));
   await seoDone;
 
-  return { pageUrl, checks, lighthouse: lighthousePromise };
+  // Nothing to measure: the instructor compares in the viewer and ticks.
+  for (const view of MOCKUP_VIEWS) {
+    checks.push({
+      id: `mockup-${view.width}`,
+      group: 'mockup',
+      title: `${view.label} ${view.width} px — як у макеті`,
+      weight: 3,
+      status: 'skip',
+      confirmable: 'verdict',
+    });
+  }
+
+  return { pageUrl, checks, lighthouse: lighthousePromise, preview: frameSource(doc, base, 'layout') };
 }
 
+/**
+ * The checks as scored and reported, with the instructor's verdicts applied
+ * to confirmable rows (a tick is the verdict `pass`). A verdict replaces
+ * whatever the checker said, except a checker `pass`, which stands. With no
+ * verdict, a row the checker graded keeps its status, and one it could not
+ * check (`skip`) becomes `fail`, so it costs its weight instead of leaving the
+ * denominator. A note on a judged row is the reason the student will read.
+ */
+export function withVerdicts(
+  checks: Check[],
+  verdicts: ReadonlyMap<string, Verdict>,
+  notes: ReadonlyMap<string, string> = new Map(),
+): Check[] {
+  return checks.map((c): Check => {
+    if (!c.confirmable || c.status === 'pass') return c;
+    const done = c.confirmable === 'tick' ? 'підтверджено вручну' : 'оцінено вручну';
+    const verdict = verdicts.get(c.id);
+    if (verdict) {
+      const note = notes.get(c.id)?.trim();
+      const said = note ? `${done}: ${note}` : done;
+      const auto = c.status !== 'skip' && c.detail;
+      return { ...c, status: verdict, manual: true, detail: auto ? `${said}; ${c.detail}` : said };
+    }
+    if (c.status !== 'skip') return c;
+    return { ...c, status: 'fail', detail: c.detail ? `не ${done}; ${c.detail}` : `не ${done}` };
+  });
+}
+
+/** Weighted share → 12-point mark. Pass it `withVerdicts()` output, or confirmable rows leave the denominator. */
 export function scoreChecks(checks: Check[]): Score {
   let earned = 0;
   let max = 0;

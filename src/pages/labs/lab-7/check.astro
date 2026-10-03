@@ -1,15 +1,19 @@
 ---
 /**
  * ЛР-7 auto-check (beta) — `/labs/lab-7/check/`. The instructor pastes the URL
- * of a student's deployed Courtly page; progress and the report (an estimated
- * mark on the 12-point scale) open in a modal dialog. All checking happens in
+ * of a student's deployed Courtly page; progress and the report (a mark on
+ * the 12-point scale) open in a modal dialog. All checking happens in
  * the browser; the engine and its trade-offs are documented in
  * src/scripts/courtly-check.ts.
  *
- * Scored Lighthouse rows carry a "Виконано" checkbox: PageSpeed Insights is
- * often out of quota, so the instructor confirms a category from the
- * student's screenshot and it counts as passed. "Скопіювати звіт" puts the
- * report on the clipboard formatted for a reply to the student.
+ * Confirmable rows take the instructor's verdict: the match with the mockup at
+ * each width — «Виконано / Частково / Не виконано», since no script can judge
+ * a visual match; the Lighthouse categories — a «Виконано» checkbox, since
+ * PageSpeed Insights is often out of quota and the bar is a single ≥ 90
+ * (scoring rules: `withVerdicts()` in the engine). "Порівняти" opens a
+ * viewer with the mockup capture and the student's page side by side, scroll
+ * aligned on section starts. "Скопіювати звіт" puts the report on the
+ * clipboard formatted for a reply to the student.
  *
  * Instructor-only by obscurity: nothing links here and the page is
  * `noindex`, but anyone who knows the URL can use it. Limiting students to
@@ -23,10 +27,11 @@ import LabHeader from "@/components/LabHeader.astro";
 import LabLayout from "@/layouts/LabLayout.astro";
 import { labHref, taskHref } from "@/lib/labs";
 import { withBase } from "@/lib/paths";
+import { MOCKUP_VIEWS } from "@/scripts/courtly-check";
 
 const title = "Автоматична перевірка Courtly";
 const summary =
-  "Вставте адресу опублікованої сторінки студента. Перевірка відкриє її на 320, 375, 768 і 1440 px, прочитає HTML і CSS та складе звіт з орієнтовною оцінкою за 12-бальною шкалою.";
+  "Вставте адресу опублікованої сторінки студента. Перевірка відкриє її на 320, 375, 768 і 1440 px, прочитає HTML і CSS та складе звіт з оцінкою за 12-бальною шкалою.";
 
 const crumbs = [
   { label: "Labs", href: withBase("/labs/") },
@@ -123,7 +128,7 @@ const headings = [
               <span class="cc-mark__max">/ 12</span>
             </p>
             <div class="cc-summary__text">
-              <p class="cc-summary__title" data-cc-title>Орієнтовна оцінка</p>
+              <p class="cc-summary__title" data-cc-title>Оцінка</p>
               <p class="cc-summary__meta" data-cc-meta></p>
               <div class="cc-bar" aria-hidden="true"><span data-cc-bar></span></div>
             </div>
@@ -165,9 +170,10 @@ const headings = [
             </div>
           </div>
           <p class="cc-note">
-            Оцінка — лише за автоматичну частину. Відповідність макету, лист і
-            опис роботи з AI перевіряються вручну; категорії Lighthouse можна
-            зарахувати прапорцем за скриншотом студента.
+            Відповідність макету оцінюєте ви: «Виконано», «Частково» (половина
+            балів) або «Не виконано»; категорії Lighthouse — прапорцем
+            «Виконано». Пункт без оцінки дає 0 балів, тож оцініть їх до того,
+            як копіювати звіт. Лист і опис роботи з AI в оцінку не входять.
           </p>
           <div class="cc-groups-bar">
             <button class="cc-toggle-all" type="button" data-cc-toggle-all
@@ -177,6 +183,74 @@ const headings = [
           <div data-cc-groups></div>
         </section>
       </div>
+    </dialog>
+
+    <dialog
+      class="cc-compare"
+      data-cc-compare
+      aria-labelledby="cc-compare-title"
+    >
+      <header class="cc-compare__head">
+        <h2 id="cc-compare-title" class="cc-dialog__title">
+          Порівняння з макетом
+        </h2>
+        <div class="cc-compare__views" role="group" aria-label="Ширина">
+          {
+            MOCKUP_VIEWS.map((view) => (
+              <button
+                class="cc-compare__view"
+                type="button"
+                data-cc-view={view.width}
+                aria-pressed="false"
+              >
+                {view.label} · {view.width}
+              </button>
+            ))
+          }
+        </div>
+        <div data-cc-compare-verdict></div>
+        <button
+          class="cc-dialog__close"
+          type="button"
+          data-cc-compare-close
+          aria-label="Закрити порівняння"
+        >
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+            <path d="M18 6 6 18M6 6l12 12"></path>
+          </svg>
+        </button>
+      </header>
+
+      <div class="cc-compare__body">
+        <section class="cc-compare__pane" aria-labelledby="cc-compare-mockup">
+          <div class="cc-compare__stage" data-cc-compare-stage>
+            <h3 id="cc-compare-mockup" class="cc-compare__label">Макет</h3>
+            <div
+              class="cc-compare__screen cc-compare__screen--shot"
+              data-cc-compare-mockup
+              tabindex="0"
+              role="region"
+              aria-label="Макет; прокручується разом зі сторінкою студента"
+              autofocus
+            >
+              <img data-cc-compare-img alt="" decoding="async" />
+            </div>
+          </div>
+        </section>
+        <section class="cc-compare__pane" aria-labelledby="cc-compare-page">
+          <div class="cc-compare__stage">
+            <h3 id="cc-compare-page" class="cc-compare__label">
+              Сторінка студента
+            </h3>
+            <div class="cc-compare__screen" data-cc-compare-page></div>
+          </div>
+        </section>
+      </div>
+      <p class="cc-compare__hint">
+        Прокручуйте будь-яку половину: сторінка студента вирівнюється з макетом
+        на початку кожної секції. Незначні відхилення у відступах і розмірах
+        допустимі.
+      </p>
     </dialog>
   </div>
 
@@ -219,7 +293,16 @@ const headings = [
         <code>sitemap.xml</code>.
       </li>
       <li>
-        <strong>Lighthouse</strong> — через PageSpeed Insights (Mobile), якщо сервіс
+        <strong>Відповідність макету</strong> — вручну: «Порівняти» показує
+        макет і сторінку студента поруч на 1440, 768 і 375 px. Кожну ширину
+        оцініть: «Виконано» — як у макеті, з дрібними відхиленнями у відступах
+        і розмірах; «Частково» — структура та адаптивність правильні, але
+        окремі елементи помітно відрізняються від макета; «Не виконано» — інше
+        компонування або бракує частин сторінки.
+      </li>
+      <li>
+        <strong>Lighthouse</strong> — Performance, Accessibility, Best Practices
+        і SEO не нижче 90 — через PageSpeed Insights (Mobile), якщо сервіс
         доступний; інакше категорії зараховуються прапорцем «Виконано» за
         скриншотом студента.
       </li>
@@ -228,22 +311,31 @@ const headings = [
     <h2 id="mark">Як рахується оцінка</h2>
     <p>
       Кожна перевірка має вагу: «виконано» — повна вага, «частково» — половина,
-      «не виконано» — 0. Перевірки, які не вдалося виконати, в оцінку не
-      входять. Категорія Lighthouse, позначена прапорцем, рахується як
-      «виконано» незалежно від PageSpeed Insights. Відсоток переводиться у 12-бальну шкалу й округлюється: 10–12 —
-      високий рівень, 7–9 — достатній, 4–6 — середній, 1–3 — початковий.
+      «не виконано» — 0. Автоматичні перевірки, які не вдалося виконати, в
+      оцінку не входять. Виняток — пункти, які оцінюєте ви (три ширини макета
+      й чотири категорії Lighthouse з прапорцем «Виконано»): пункт без вашої
+      оцінки рахується як «не виконано», якщо PageSpeed Insights не оцінив
+      його сам. Відсоток
+      переводиться у 12-бальну шкалу й округлюється: 10–12 — високий рівень,
+      7–9 — достатній, 4–6 — середній, 1–3 — початковий.
     </p>
 
     <h2 id="limits">Обмеження бета-версії</h2>
     <ul>
       <li>
-        Перевірка не порівнює сторінку з макетом візуально: кольори секцій,
-        відступи й компонування всередині карток треба звірити вручну.
+        Відповідність макету не оцінюється автоматично: попіксельне порівняння
+        незалежної верстки з макетом ненадійне, а незначні відхилення у
+        відступах і розмірах дозволені. Переглядач лише показує обидві версії
+        поруч; рішення — за викладачем.
       </li>
       <li>
-        Якщо PageSpeed Insights недоступний, рядки Lighthouse позначаються «не
-        перевірено» — звірте скриншот студента або запустіть Lighthouse у
-        DevTools, як описано в §4, і позначте виконані категорії прапорцями.
+        Якщо PageSpeed Insights недоступний, рядки Lighthouse без прапорця
+        рахуються як невиконані — звірте скриншот студента або запустіть
+        Lighthouse у DevTools, як описано в §4, і позначте виконані категорії.
+      </li>
+      <li>
+        Оцінки й прапорці не зберігаються: після перезавантаження сторінки
+        або нової перевірки їх треба поставити знову.
       </li>
       <li>
         Помилка перевірки можлива: сумнівні пункти варто переглянути у DevTools
@@ -254,15 +346,21 @@ const headings = [
 </LabLayout>
 
 <script>
+  import mockup from "@/data/courtly-mockup.json";
+  import { withBase } from "@/lib/paths";
   import {
     CheckError,
     GROUPS,
+    MOCKUP_VIEWS,
     inspect,
     normalizeUrl,
     scoreChecks,
+    sectionAnchors,
+    withVerdicts,
     type Check,
     type GroupId,
     type Status,
+    type Verdict,
   } from "@/scripts/courtly-check";
 
   const root = document.querySelector<HTMLElement>("[data-cc]")!;
@@ -303,6 +401,8 @@ const headings = [
     lighthouseDone: boolean;
     /** ISO timestamp of the run. */
     at: string;
+    /** `srcdoc` for the viewer's frame. */
+    preview: string;
   } | null = null;
 
   /**
@@ -311,33 +411,22 @@ const headings = [
    */
   const openState = new Map<string, boolean>();
 
-  /** Lighthouse rows the instructor ticked as passed, by check id. Cleared per run. */
-  const manual = new Set<string>();
+  /** The instructor's verdicts on confirmable rows, by check id. Cleared per run. */
+  const verdicts = new Map<string, Verdict>();
 
-  /** A check as scored and reported; `manual` — ticked by the instructor. */
-  type Row = Check & { manual?: boolean };
+  /** The instructor's comments on judged mockup rows, by check id. Cleared per run. */
+  const notes = new Map<string, string>();
 
-  /** Scored Lighthouse rows get the "Виконано" checkbox; Performance has no threshold. */
-  const canTick = (c: Check) => c.group === "lighthouse" && c.weight > 0;
+  /** Checks as scored and reported, verdicts and comments applied. */
+  const reported = () => withVerdicts(current!.checks, verdicts, notes);
 
-  /**
-   * Checks as scored and reported: a ticked Lighthouse row counts as passed
-   * whatever PageSpeed Insights said, or could not say.
-   */
-  function reported(): Row[] {
-    return current!.checks.map((c): Row => {
-      if (!manual.has(c.id) || c.status === "pass") return c;
-      const psi = c.status !== "skip" && c.detail;
-      return {
-        ...c,
-        status: "pass",
-        manual: true,
-        detail: psi
-          ? `підтверджено вручну; PageSpeed Insights: ${c.detail}`
-          : "підтверджено вручну",
-      };
-    });
-  }
+  /** Under a group with confirmable rows: how to judge them. */
+  const VERDICT_HINT: Partial<Record<GroupId, string>> = {
+    mockup:
+      "Відкрийте «Порівняти» й оцініть кожну ширину: «Виконано» — як у макеті, з дрібними відхиленнями у відступах і розмірах; «Частково» — структура й адаптивність правильні, але окремі елементи помітно відрізняються; «Не виконано» — інше компонування. Без оцінки — 0 балів. Коментар під оцінкою потрапить у звіт для студента.",
+    lighthouse:
+      "Прапорець «Виконано» зараховує категорію вручну — за скриншотом Lighthouse з листа студента, якщо там 90 або більше. Без прапорця неоцінена категорія — 0 балів.",
+  };
 
   /** Share of a group's weight earned, shown beside its title. */
   function groupScoreText(id: GroupId, rows: Check[]): string {
@@ -349,17 +438,66 @@ const headings = [
     return "";
   }
 
-  /** Checked and locked when PageSpeed Insights already passed the row. */
-  function tickBox(check: Row): HTMLLabelElement {
+  /** A `tick` row's «Виконано» box; locked when PageSpeed Insights already passed it. */
+  function tickBox(check: Check): HTMLLabelElement {
     const label = el("label", "cc-manual");
     const box = el("input");
     box.type = "checkbox";
-    box.dataset.ccManual = check.id;
+    box.dataset.ccTick = check.id;
     box.checked = check.status === "pass";
     box.disabled = check.status === "pass" && !check.manual;
     if (box.disabled) label.title = "Зараховано за PageSpeed Insights";
     label.append(box, "Виконано", el("span", "visually-hidden", `: ${check.title}`));
     return label;
+  }
+
+  /** Under a judged mockup row: the reason, which goes into the student's report. */
+  function noteField(check: Check): HTMLInputElement {
+    const field = el("input", "cc-check__note");
+    field.type = "text";
+    field.maxLength = 200;
+    field.value = notes.get(check.id) ?? "";
+    field.placeholder = "Коментар для студента (необов’язково)";
+    field.setAttribute("aria-label", `Коментар: ${check.title}`);
+    field.dataset.ccNote = check.id;
+    return field;
+  }
+
+  const VERDICTS: Verdict[] = ["pass", "warn", "fail"];
+
+  /**
+   * «Виконано / Частково / Не виконано» radios for a `verdict` row; none
+   * picked until the instructor judges it. Locked on «Виконано» when PageSpeed
+   * Insights already passed the row. `name` must be unique in the document.
+   */
+  function verdictPicker(check: Check, name: string): HTMLFieldSetElement {
+    const set = el("fieldset", "cc-verdict");
+    set.append(el("legend", "visually-hidden", `Оцінка: ${check.title}`));
+    const locked = check.status === "pass" && !check.manual;
+    if (locked) set.title = "Зараховано за PageSpeed Insights";
+    for (const verdict of VERDICTS) {
+      const option = el("label", "cc-verdict__option");
+      option.dataset.status = verdict;
+      const radio = el("input");
+      radio.type = "radio";
+      radio.name = name;
+      radio.value = verdict;
+      radio.dataset.ccVerdict = check.id;
+      radio.checked = check.manual ? check.status === verdict : locked && verdict === "pass";
+      radio.disabled = locked;
+      option.append(radio, LABEL[verdict]);
+      set.append(option);
+    }
+    return set;
+  }
+
+  /** «Порівняти» on a mockup row: opens the viewer at that width. */
+  function compareButton(check: Check): HTMLButtonElement {
+    const button = el("button", "cc-copy", "Порівняти");
+    button.type = "button";
+    button.dataset.ccCompareOpen = check.id.replace("mockup-", "");
+    button.append(el("span", "visually-hidden", `: ${check.title}`));
+    return button;
   }
 
   const CHEVRON =
@@ -395,20 +533,41 @@ const headings = [
     status.toggleAttribute("data-busy", busy);
   }
 
+  /**
+   * "92 % ваги · виконано 49 · частково 2 · не виконано 4 (усього 55)": the
+   * dialog's summary, repeated in the copied report. Partial rows earn half,
+   * so they are counted apart from failed ones; zero counts are left out; rows
+   * nothing could check come after the total.
+   */
+  function summaryLine(checks: Check[]): string {
+    const scored = checks.filter((c) => c.weight > 0 && c.status !== "skip");
+    const n = (s: Status) =>
+      checks.filter((c) => c.weight > 0 && c.status === s).length;
+    const part = (s: Status) => `${LABEL[s].toLowerCase()} ${n(s)}`;
+    const parts =
+      n("pass") === scored.length
+        ? [`виконано всі ${scored.length}`]
+        : [
+            part("pass"),
+            n("warn") ? part("warn") : "",
+            n("fail") ? part("fail") : "",
+          ].filter(Boolean);
+    const total = n("pass") === scored.length ? "" : ` (усього ${scored.length})`;
+    const unchecked = n("skip") ? ` · ${part("skip")}` : "";
+    return `${Math.round(scoreChecks(checks).percent * 100)} % ваги · ${parts.join(" · ")}${total}${unchecked}`;
+  }
+
   function render() {
     if (!current) return;
     const { pageUrl, lighthouseDone, at } = current;
     const checks = reported();
     const score = scoreChecks(checks);
-    const scored = checks.filter((c) => c.weight > 0 && c.status !== "skip");
-    const passed = scored.filter((c) => c.status === "pass").length;
 
     report.querySelector("[data-cc-mark]")!.textContent = String(score.mark);
     report.querySelector("[data-cc-title]")!.textContent = lighthouseDone
-      ? "Орієнтовна оцінка"
+      ? "Оцінка"
       : "Попередня оцінка — чекаємо на Lighthouse";
-    report.querySelector("[data-cc-meta]")!.textContent =
-      `${Math.round(score.percent * 100)} % ваги · виконано ${passed} з ${scored.length} перевірок`;
+    report.querySelector("[data-cc-meta]")!.textContent = summaryLine(checks);
     setUrl(pageUrl);
     report.querySelector<HTMLElement>("[data-cc-bar]")!.style.width =
       `${score.percent * 100}%`;
@@ -428,12 +587,11 @@ const headings = [
           rows.filter((c) => c.status === status).length;
 
         // Collapsed by default when every row passed; open when there is
-        // something to read — or a Lighthouse row left to tick.
-        const toTick = rows.some((c) => canTick(c) && c.status === "skip");
+        // something to read — an unjudged confirmable row counts as failed.
         const section = el("details", "cc-group");
         section.dataset.group = group.id;
         section.open =
-          openState.get(group.id) ?? (count("fail") + count("warn") > 0 || toTick);
+          openState.get(group.id) ?? count("fail") + count("warn") > 0;
 
         const head = el("summary", "cc-group__head");
         head.insertAdjacentHTML("afterbegin", CHEVRON);
@@ -464,14 +622,12 @@ const headings = [
         head.append(meta);
         section.append(head);
 
-        if (rows.some((c) => canTick(c) && (c.status !== "pass" || c.manual))) {
-          section.append(
-            el(
-              "p",
-              "cc-group__hint",
-              "Прапорець «Виконано» зараховує категорію вручну — наприклад, за скриншотом Lighthouse з листа студента.",
-            ),
-          );
+        const hint = VERDICT_HINT[group.id];
+        if (
+          hint &&
+          rows.some((c) => c.confirmable && (c.status !== "pass" || c.manual))
+        ) {
+          section.append(el("p", "cc-group__hint", hint));
         }
 
         const list = el("ul", "cc-list");
@@ -507,10 +663,19 @@ const headings = [
           body.append(titleRow);
           if (check.detail)
             body.append(el("p", "cc-check__detail", check.detail));
+          if (check.confirmable === "verdict" && check.manual)
+            body.append(noteField(check));
           li.append(icon, body);
-          if (canTick(check)) {
-            li.classList.add("cc-check--tick");
-            li.append(tickBox(check));
+          if (check.confirmable) {
+            li.classList.add("cc-check--judged");
+            const actions = el("div", "cc-check__actions");
+            if (check.group === "mockup") actions.append(compareButton(check));
+            actions.append(
+              check.confirmable === "tick"
+                ? tickBox(check)
+                : verdictPicker(check, `cc-verdict-${check.id}`),
+            );
+            li.append(actions);
           }
           list.append(li);
         }
@@ -558,17 +723,18 @@ const headings = [
     const { pageUrl, lighthouseDone, at } = current!;
     const checks = reported();
     const score = scoreChecks(checks);
-    const headline = `ЛР-7 · Автоматична перевірка: ${lighthouseDone ? "орієнтовна" : "попередня"} оцінка ${score.mark} / 12 (${Math.round(score.percent * 100)} %)`;
+    const headline = `ЛР-7 · Автоматична перевірка: ${lighthouseDone ? "оцінка" : "попередня оцінка"} ${score.mark} / 12 (${Math.round(score.percent * 100)} %)`;
     const when = `Перевірено ${formatDate(at)}${lighthouseDone ? "" : " · Lighthouse ще не завершився"}`;
+    const results = summaryLine(checks);
     const legend = (["pass", "warn", "fail", "skip"] as const)
       .map((s) => `${ICON[s]} ${LABEL[s].toLowerCase()}`)
       .join(" · ");
 
-    const text = [headline, pageUrl, when, legend, ""];
+    const text = [headline, pageUrl, when, results, legend, ""];
     const html = [
       `<p style="margin:0 0 4px"><b style="font-size:16px">${escapeHtml(headline)}</b></p>`,
       `<p style="margin:0"><a href="${escapeHtml(pageUrl)}">${escapeHtml(pageUrl)}</a></p>`,
-      `<p style="margin:0;color:${MAIL_MUTED}">${escapeHtml(when)}<br>${escapeHtml(legend)}</p>`,
+      `<p style="margin:0;color:${MAIL_MUTED}">${escapeHtml(when)}<br>${escapeHtml(results)}<br>${escapeHtml(legend)}</p>`,
       `<table cellpadding="0" cellspacing="0" style="border-collapse:collapse">`,
     ];
     for (const group of GROUPS) {
@@ -663,7 +829,8 @@ const headings = [
     report.hidden = true;
     runError.hidden = true;
     openState.clear();
-    manual.clear();
+    verdicts.clear();
+    notes.clear();
     setStatus("Підготовка…", true);
     reopen.hidden = false;
     if (!dialog.open) dialog.showModal();
@@ -681,6 +848,7 @@ const headings = [
         checks: result.checks,
         lighthouseDone: false,
         at: new Date().toISOString(),
+        preview: result.preview,
       };
       current = entry;
       history.replaceState(null, "", reportLink(result.pageUrl));
@@ -688,7 +856,7 @@ const headings = [
       render();
       report.hidden = false;
       setStatus(
-        `Попередня оцінка ${scoreChecks(entry.checks).mark} з 12 — Lighthouse ще виконується.`,
+        `Попередня оцінка ${scoreChecks(reported()).mark} з 12 — Lighthouse ще виконується.`,
         false,
       );
       setBusy(false);
@@ -727,19 +895,60 @@ const headings = [
   // `toggle` does not bubble — capture it to keep the button label honest.
   groupsEl.addEventListener("toggle", syncToggleAll, true);
 
-  // A tick re-renders the report (mark, group score, row); keep the group
-  // open and focus on the new copy of the checkbox.
-  groupsEl.addEventListener("change", (event) => {
-    const box = event.target;
-    if (!(box instanceof HTMLInputElement) || !box.dataset.ccManual) return;
-    const id = box.dataset.ccManual;
-    if (box.checked) manual.add(id);
-    else manual.delete(id);
-    openState.set("lighthouse", true);
+  /**
+   * A verdict — or `null`, an untick — re-renders the report (mark, group
+   * score, row) and the viewer's picker, and keeps the row's group open.
+   */
+  function setVerdict(id: string, verdict: Verdict | null) {
+    if (verdict) verdicts.set(id, verdict);
+    else verdicts.delete(id);
+    const group = current?.checks.find((c) => c.id === id)?.group;
+    if (group) openState.set(group, true);
     render();
-    groupsEl
-      .querySelector<HTMLInputElement>(`[data-cc-manual="${id}"]`)
-      ?.focus();
+    if (compare.open) renderCompareVerdict();
+  }
+
+  /** The checked radio of a verdict picker re-rendered inside `scope`. */
+  const pickedRadio = (scope: Element, id: string) =>
+    scope.querySelector<HTMLInputElement>(
+      `[data-cc-verdict="${id}"]:checked`,
+    );
+
+  // Focus moves to the new copy of the radio or checkbox.
+  groupsEl.addEventListener("change", (event) => {
+    const input = event.target;
+    if (!(input instanceof HTMLInputElement)) return;
+    const { ccVerdict, ccTick } = input.dataset;
+    if (ccVerdict) {
+      setVerdict(ccVerdict, input.value as Verdict);
+      pickedRadio(groupsEl, ccVerdict)?.focus();
+    } else if (ccTick) {
+      setVerdict(ccTick, input.checked ? "pass" : null);
+      groupsEl
+        .querySelector<HTMLInputElement>(`[data-cc-tick="${ccTick}"]`)
+        ?.focus();
+    }
+  });
+
+  // A comment changes only its row's detail: a full re-render would take the
+  // focus away mid-word. The copied report reads `notes` when it is copied.
+  groupsEl.addEventListener("input", (event) => {
+    const field = event.target;
+    if (!(field instanceof HTMLInputElement) || !field.dataset.ccNote) return;
+    const id = field.dataset.ccNote;
+    notes.set(id, field.value);
+    const detail = field
+      .closest(".cc-check")
+      ?.querySelector<HTMLElement>(".cc-check__detail");
+    const row = reported().find((c) => c.id === id);
+    if (detail && row?.detail) detail.textContent = row.detail;
+  });
+
+  groupsEl.addEventListener("click", (event) => {
+    const button = (event.target as Element).closest<HTMLElement>(
+      "[data-cc-compare-open]",
+    );
+    if (button) openCompare(Number(button.dataset.ccCompareOpen));
   });
   dialog
     .querySelector("[data-cc-close]")!
@@ -779,6 +988,214 @@ const headings = [
         announce.textContent = "";
       }, 2000);
     });
+
+  // -------------------------------------------------------------------------
+  // Mockup viewer: the capture and the student's page side by side at one
+  // width. The capture is a native scroller and drives the page's frame,
+  // mapped piecewise-linearly between section starts (`sectionAnchors()`), so
+  // a section taller or shorter than in the mockup does not push the rest of
+  // the page out of line.
+
+  type View = (typeof MOCKUP_VIEWS)[number];
+  const compare = root.querySelector<HTMLDialogElement>("[data-cc-compare]")!;
+  const stage = compare.querySelector<HTMLElement>("[data-cc-compare-stage]")!;
+  const shot = compare.querySelector<HTMLElement>("[data-cc-compare-mockup]")!;
+  const shotImg = shot.querySelector<HTMLImageElement>("[data-cc-compare-img]")!;
+  const pageScreen = compare.querySelector<HTMLElement>(
+    "[data-cc-compare-page]",
+  )!;
+  const compareVerdict = compare.querySelector<HTMLElement>(
+    "[data-cc-compare-verdict]",
+  )!;
+  const viewButtons = [
+    ...compare.querySelectorAll<HTMLButtonElement>("[data-cc-view]"),
+  ];
+
+  let view: View = MOCKUP_VIEWS[0];
+  let scale = 1;
+  let frame: HTMLIFrameElement | null = null;
+  /** The `preview` the frame holds; a run with another page reloads it. */
+  let framePreview = "";
+
+  const captureOf = (v: View) =>
+    mockup[String(v.width) as keyof typeof mockup];
+  const viewOf = (width: number) =>
+    MOCKUP_VIEWS.find((v) => v.width === width) ?? MOCKUP_VIEWS[0];
+  const nextFrames = () =>
+    new Promise<void>((resolve) =>
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+    );
+
+  /**
+   * [capture y, page y] pairs from the top: the section starts both pages
+   * have, kept while they increase on both sides, then both last scroll
+   * positions, so the bottoms line up too.
+   */
+  function anchorPairs(doc: Document): [number, number][] {
+    const ref: Record<string, number> = captureOf(view).anchors;
+    const page = sectionAnchors(doc);
+    const pairs: [number, number][] = [[0, 0]];
+    for (const [name, y] of Object.entries(ref)) {
+      if (name === "end" || page[name] === undefined) continue;
+      const [lastRef, lastPage] = pairs[pairs.length - 1];
+      if (y > lastRef && page[name] > lastPage) pairs.push([y, page[name]]);
+    }
+    const bottom: [number, number] = [
+      ref.end - view.height,
+      page.end - view.height,
+    ];
+    while (pairs.length > 1) {
+      const [r, p] = pairs[pairs.length - 1];
+      if (r < bottom[0] && p < bottom[1]) break;
+      pairs.pop();
+    }
+    if (bottom[0] > 0 && bottom[1] > 0) pairs.push(bottom);
+    return pairs;
+  }
+
+  /** Capture y → page y: linear between pairs, and past the last one. */
+  function toPage(y: number, pairs: [number, number][]): number {
+    let i = 1;
+    while (i < pairs.length - 1 && y > pairs[i][0]) i++;
+    const [r0, p0] = pairs[i - 1];
+    const [r1, p1] = pairs[i] ?? [r0 + 1, p0 + 1];
+    return p0 + ((y - r0) * (p1 - p0)) / (r1 - r0);
+  }
+
+  /** Anchors are re-read every time: late fonts and images move sections. */
+  function sync() {
+    const doc = frame?.contentDocument;
+    if (!doc?.body) return;
+    const y = toPage(shot.scrollTop / scale, anchorPairs(doc));
+    frame!.contentWindow!.scrollTo(0, Math.max(0, y));
+  }
+
+  /** Scale both screens to the space the panes have, keeping the place. */
+  function fit() {
+    const label = stage.querySelector<HTMLElement>(".cc-compare__label")!;
+    const room =
+      stage.clientHeight -
+      label.offsetHeight -
+      parseFloat(getComputedStyle(stage).rowGap);
+    const next = Math.min(
+      1,
+      stage.clientWidth / view.width,
+      room / view.height,
+    );
+    if (!(next > 0)) return;
+    const y = shot.scrollTop / scale;
+    scale = next;
+    for (const screen of [shot, pageScreen]) {
+      screen.style.width = `${view.width * scale}px`;
+      screen.style.height = `${view.height * scale}px`;
+    }
+    shotImg.style.width = `${view.width * scale}px`;
+    shotImg.style.height = `${captureOf(view).height * scale}px`;
+    if (frame) frame.style.transform = `scale(${scale})`;
+    shot.scrollTop = y * scale;
+    sync();
+  }
+
+  /** Same isolation as the layout pass: same-origin, no scripts. */
+  async function loadFrame() {
+    if (frame && framePreview === current!.preview) return;
+    frame?.remove();
+    const next = el("iframe", "cc-compare__frame");
+    next.title = "Сторінка студента";
+    next.setAttribute("sandbox", "allow-same-origin");
+    next.setAttribute("tabindex", "-1");
+    frame = next;
+    framePreview = current!.preview;
+    const loaded = new Promise<void>((resolve) => {
+      const timer = setTimeout(resolve, 20000);
+      next.addEventListener(
+        "load",
+        () => {
+          clearTimeout(timer);
+          resolve();
+        },
+        { once: true },
+      );
+    });
+    next.srcdoc = framePreview;
+    pageScreen.replaceChildren(next);
+    await loaded;
+    const fonts = next.contentDocument?.fonts.ready;
+    if (fonts)
+      await Promise.race([fonts, new Promise((r) => setTimeout(r, 5000))]);
+  }
+
+  /** The toolbar's picker: the verdict on the width being shown. */
+  function renderCompareVerdict() {
+    const check = reported().find((c) => c.id === `mockup-${view.width}`);
+    compareVerdict.replaceChildren(
+      ...(check ? [verdictPicker(check, "cc-compare-verdict")] : []),
+    );
+  }
+
+  async function showView(next: View) {
+    view = next;
+    for (const button of viewButtons)
+      button.setAttribute(
+        "aria-pressed",
+        String(Number(button.dataset.ccView) === view.width),
+      );
+    renderCompareVerdict();
+    shotImg.src = withBase(captureOf(view).src);
+    shotImg.alt = `Макет Courtly на ширині ${view.width} px`;
+    shot.scrollTop = 0;
+    await loadFrame();
+    if (view !== next) return; // another width was picked while loading
+    frame!.style.width = `${view.width}px`;
+    frame!.style.height = `${view.height}px`;
+    fit();
+    await nextFrames();
+    sync();
+  }
+
+  function openCompare(width: number) {
+    if (!current) return;
+    if (!compare.open) compare.showModal();
+    showView(viewOf(width));
+  }
+
+  shot.addEventListener("scroll", sync, { passive: true });
+  // The frame takes no pointer events — a click on a link would navigate it
+  // to the live site — so a wheel over it scrolls the capture instead.
+  pageScreen.addEventListener(
+    "wheel",
+    (event) => {
+      event.preventDefault();
+      const unit =
+        event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? shot.clientHeight : 1;
+      shot.scrollTop += event.deltaY * unit;
+    },
+    { passive: false },
+  );
+  new ResizeObserver(() => {
+    if (compare.open) fit();
+  }).observe(stage);
+  for (const button of viewButtons)
+    button.addEventListener("click", () =>
+      showView(viewOf(Number(button.dataset.ccView))),
+    );
+  compareVerdict.addEventListener("change", (event) => {
+    const radio = event.target;
+    if (!(radio instanceof HTMLInputElement) || !radio.dataset.ccVerdict) return;
+    const id = radio.dataset.ccVerdict;
+    setVerdict(id, radio.value as Verdict);
+    pickedRadio(compareVerdict, id)?.focus();
+  });
+  compare
+    .querySelector("[data-cc-compare-close]")!
+    .addEventListener("click", () => compare.close());
+  // A tick re-rendered the report, so the button that opened the viewer may
+  // be gone; focus its current copy.
+  compare.addEventListener("close", () =>
+    groupsEl
+      .querySelector<HTMLElement>(`[data-cc-compare-open="${view.width}"]`)
+      ?.focus(),
+  );
 
   // `?url=` prefills and runs — the address bar keeps it after a run, so a
   // report can be reopened or bookmarked as a link.
@@ -847,7 +1264,9 @@ const headings = [
   .cc-reopen:focus-visible,
   .cc-dialog__close:focus-visible,
   .cc-toggle-all:focus-visible,
-  .cc-group__head:focus-visible {
+  .cc-group__head:focus-visible,
+  .cc-compare__view:focus-visible,
+  .cc-compare__screen:focus-visible {
     outline: 2px solid var(--color-brand-blue);
     outline-offset: 2px;
   }
@@ -1378,7 +1797,7 @@ const headings = [
     color: var(--muted-foreground);
   }
 
-  .cc-check--tick {
+  .cc-check--judged {
     grid-template-columns: 1.5rem minmax(0, 1fr) auto;
   }
 
@@ -1411,6 +1830,274 @@ const headings = [
   .cc-manual:has(input:disabled) {
     color: var(--muted-foreground);
     cursor: default;
+  }
+
+  /* «Виконано / Частково / Не виконано»: native radios, stretched invisibly
+     over each option, so arrow keys work. Checked text on its 14 % tint, light
+     theme: pass 4.86, warn 4.59, fail 4.72 : 1. */
+  .cc-verdict {
+    display: inline-flex;
+    gap: 0.2rem;
+    min-width: 0;
+    margin: 0;
+    padding: 0.2rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+  }
+
+  .cc-verdict__option {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 2rem;
+    padding: 0 0.65rem;
+    border-radius: calc(var(--radius-md) - 0.2rem);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--muted-foreground);
+    cursor: pointer;
+  }
+
+  .cc-verdict__option[data-status="pass"] {
+    --cc-color: var(--cc-pass);
+  }
+  .cc-verdict__option[data-status="warn"] {
+    --cc-color: var(--cc-warn);
+  }
+  .cc-verdict__option[data-status="fail"] {
+    --cc-color: var(--cc-fail);
+  }
+
+  .cc-verdict__option input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: inherit;
+  }
+
+  .cc-verdict__option:hover {
+    color: var(--foreground);
+  }
+
+  .cc-verdict__option:has(input:checked) {
+    color: var(--cc-color);
+    background: color-mix(in oklab, var(--cc-color) 14%, transparent);
+  }
+
+  .cc-verdict__option:has(input:focus-visible) {
+    outline: 2px solid var(--color-brand-blue);
+    outline-offset: 1px;
+  }
+
+  .cc-verdict:has(input:disabled) .cc-verdict__option {
+    cursor: default;
+  }
+
+  .cc-verdict:has(input:disabled) .cc-verdict__option:not(:has(input:checked)) {
+    opacity: 0.6;
+  }
+
+  .cc-check__note {
+    display: block;
+    width: 100%;
+    max-width: 32rem;
+    min-height: 2.25rem;
+    margin-top: 0.45rem;
+    padding: 0 0.65rem;
+    border: 1px solid color-mix(in oklab, var(--foreground) 25%, transparent);
+    border-radius: var(--radius-md);
+    background: var(--background);
+    color: var(--foreground);
+    font: inherit;
+    font-size: 0.875rem;
+  }
+
+  .cc-check__note::placeholder {
+    color: var(--muted-foreground);
+  }
+
+  .cc-check__note:focus-visible {
+    outline: 2px solid var(--color-brand-blue);
+    outline-offset: 2px;
+  }
+
+  .cc-check__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.5rem 0.9rem;
+    align-self: center;
+  }
+
+  /* Phones: the actions drop under the title instead of squeezing it. */
+  @media (max-width: 639px) {
+    .cc-check--judged {
+      grid-template-columns: 1.5rem minmax(0, 1fr);
+    }
+
+    .cc-check__actions {
+      grid-column: 2;
+      justify-content: flex-start;
+    }
+  }
+
+  /* Viewer: full viewport, over the report dialog. */
+  .cc-compare {
+    margin: 0;
+    width: 100vw;
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    padding: 0;
+    border: 0;
+    background: var(--background);
+    color: var(--foreground);
+    overflow: hidden;
+  }
+
+  .cc-compare[open] {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cc-compare__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1rem;
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .cc-compare__head .cc-dialog__title {
+    margin-right: auto;
+  }
+
+  .cc-compare__views {
+    display: flex;
+    gap: 0.25rem;
+    padding: 0.2rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+  }
+
+  .cc-compare__view {
+    min-height: 2rem;
+    padding: 0 0.75rem;
+    border: 0;
+    border-radius: calc(var(--radius-md) - 0.2rem);
+    background: none;
+    color: var(--foreground);
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .cc-compare__view[aria-pressed="true"] {
+    background: var(--color-brand-blue);
+    color: #fff;
+  }
+
+  .cc-compare__body {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    padding: 0.75rem 1.25rem 0;
+  }
+
+  .cc-compare__pane {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+  }
+
+  .cc-compare__label {
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--muted-foreground);
+  }
+
+  /* Measured by the script; the screen inside gets an explicit size. A wide
+     view is width-bound, so its screens sit mid-height, not at the top. */
+  .cc-compare__stage {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.4rem;
+    overflow: hidden;
+  }
+
+  /* Outline, not border: the capture and the frame fill the box exactly. */
+  .cc-compare__screen {
+    position: relative;
+    flex: none;
+    overflow: hidden;
+    outline: 1px solid var(--border);
+    background: #fff;
+  }
+
+  /* Inset: the stage clips anything outside the screen. */
+  .cc-compare__screen:focus-visible {
+    outline-offset: -2px;
+  }
+
+  .cc-compare__screen--shot {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+  }
+
+  .cc-compare__screen--shot::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cc-compare__screen--shot img {
+    display: block;
+    max-width: none;
+  }
+
+  .cc-compare__frame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 0;
+    transform-origin: 0 0;
+    pointer-events: none;
+    background: #fff;
+  }
+
+  .cc-compare__hint {
+    margin: 0;
+    padding: 0.6rem 1.25rem 0.9rem;
+    font-size: 0.8125rem;
+    text-align: center;
+    color: var(--muted-foreground);
+  }
+
+  @media (max-width: 639px) {
+    .cc-compare__head,
+    .cc-compare__body,
+    .cc-compare__hint {
+      padding-inline: 1rem;
+    }
+
+    .cc-compare__body {
+      gap: 0.5rem;
+    }
   }
 
   .cc-group__hint {
