@@ -72,8 +72,8 @@ content itself, not the chrome around it.
 
 ## `.doc-content` — shared article typography
 
-Both labs and (previously) the handbook render their Markdown bodies through
-one shared class, `.doc-content`, defined in `global.css`'s `@layer base`.
+Rendered Markdown bodies go through one shared class, `.doc-content`,
+defined in `global.css`'s `@layer base`.
 It covers headings, lists, code blocks with copy buttons, tables,
 blockquotes, and inline code. If you're styling rendered Markdown content,
 check here first before adding a one-off rule — most typography needs are

@@ -58,7 +58,8 @@ src/
 │  ├─ site.ts                     site meta + the section list
 │  └─ lectures/                   lecture registry + per-lecture slide data
 ├─ lib/        paths.ts (withBase) · labs.ts (lab/task lookups) · utils.ts (cn)
-├─ scripts/    deck.ts (deck navigation + theme) · docs.ts (lab scrollspy, ToC, theme, copy buttons)
+├─ scripts/    deck.ts (deck navigation + theme) · docs.ts (lab scrollspy, ToC, theme, copy buttons) ·
+│              courtly-check.ts (client-side grader behind the lab-7 auto-check route)
 └─ styles/     global.css (design tokens, single Tailwind entry, hub styles) ·
                deck.css (deck-only, scoped to .deck-page) ·
                lab.css (lab-only, scoped to .lab-page, deliberately unlayered)
@@ -66,7 +67,9 @@ src/
 plugins/
 └─ base-links.mjs   rewrites root-relative URLs in Markdown bodies for the GitHub Pages base path
 
-courtly-assets/     standalone Courtly design asset pack
+courtly-assets/     design asset pack (tokens, images, spec)
+flowtask-starter/   starter project: a landing page to audit and fix
+layout-lab-starter/ starter project: responsive-layout code challenges
 ```
 
 See `docs/agents/design-system.md` for which stylesheet owns what and how
@@ -76,11 +79,10 @@ theming differs between the hub, decks, and labs.
 
 Some labs need a standalone starter project or a downloadable asset pack —
 e.g. a deliberately imperfect landing page to audit, or a design spec with
-images. These live as top-level directories named after the lab's subject,
-not under `src/`, each with its own `README.md` explaining what it's for and
-which lab it belongs to. The current design asset pack is `courtly-assets/`;
-check its own README for details. Other standalone directories may be added
-as the course grows.
+images. These live as top-level directories outside `src/` (listed in the
+tree above), each with its own `README.md` explaining what it's for and
+which lab it belongs to. A new one follows the same pattern: its own
+directory, its own README, and a line in the tree.
 
 ## Deploy
 
