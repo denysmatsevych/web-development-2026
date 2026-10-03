@@ -1,0 +1,571 @@
+---
+/**
+ * ЛР-7 check report — `/labs/lab-7/report/#<report>`. The instructor
+ * generates it from the check dialog («Сформувати звіт») once the manual part
+ * is judged and sends the link to the student.
+ *
+ * Two parts:
+ *   - **Results** — the rows and the mark exactly as graded, decoded from the
+ *     link (`src/scripts/courtly-report.ts`: format, and why a link and not
+ *     storage). Read-only.
+ *   - **Mockup comparison** — the student's page as it is *now* beside the
+ *     mockup, with the lab's requirements it misses outlined
+ *     (`CourtlyCompare`). Hints only; they do not change the mark.
+ *
+ * Unlisted like the checker: nothing links here and the page is `noindex`.
+ */
+import Breadcrumbs from "@/components/Breadcrumbs.astro";
+import CourtlyCompare from "@/components/CourtlyCompare.astro";
+import LabHeader from "@/components/LabHeader.astro";
+import LabLayout from "@/layouts/LabLayout.astro";
+import { labHref } from "@/lib/labs";
+import { withBase } from "@/lib/paths";
+
+const title = "Звіт перевірки";
+const summary =
+  "Результати перевірки сторінки Courtly з оцінкою за 12-бальною шкалою і порівняння сторінки з макетом на 1440, 768 і 375 px.";
+
+const crumbs = [
+  { label: "Labs", href: withBase("/labs/") },
+  { label: "ЛР-7", href: labHref("lab-7") },
+  { label: "Звіт перевірки", href: withBase("/labs/lab-7/report/") },
+];
+---
+
+<LabLayout title={`${title} — ЛР-7`} description={summary} lang="uk" noindex>
+  <Breadcrumbs items={crumbs} />
+
+  <LabHeader
+    eyebrow="Проміжний контроль №1 · ЛР-7"
+    title={title}
+    summary={summary}
+  />
+
+  <div class="cr" data-cr>
+    <p class="cr-status" data-cr-status role="status">Завантаження звіту…</p>
+    <p class="cr-error" data-cr-error role="alert" hidden></p>
+
+    <div data-cr-report hidden>
+      <section class="cr-summary" aria-label="Оцінка">
+        <p class="cr-mark">
+          <span class="cr-mark__value" data-cr-mark>—</span>
+          <span class="cr-mark__max">/ 12</span>
+        </p>
+        <div class="cr-summary__text">
+          <p class="cr-summary__url">
+            <a data-cr-url target="_blank" rel="noopener noreferrer"></a>
+          </p>
+          <p class="cr-summary__meta" data-cr-when></p>
+          <p class="cr-summary__meta" data-cr-meta></p>
+          <div class="cr-bar" aria-hidden="true"><span data-cr-bar></span></div>
+        </div>
+        <button class="cr-copy" type="button" data-cr-copy
+          >Скопіювати посилання</button
+        >
+        <p class="visually-hidden" data-cr-announce aria-live="polite"></p>
+      </section>
+      <p class="cr-note">
+        Це копія результатів на момент перевірки: якщо сторінку змінено
+        пізніше, оцінка в звіті не зміниться. Оцінку фіксує викладач.
+      </p>
+
+      <h2 class="cr-heading" id="results">Результати перевірки</h2>
+      <div data-cr-groups></div>
+
+      <h2 class="cr-heading" id="compare">Порівняння з макетом</h2>
+      <p class="cr-lead">
+        Сторінка показана такою, якою вона є зараз, а не на момент перевірки.
+        Позначки — вимоги з тексту{" "}
+        <a href={labHref("lab-7")}>лабораторної</a> і{" "}
+        <a href={withBase("/labs/lab-7/task/")}>макета</a>; оцінку вони не
+        змінюють.
+      </p>
+      <p class="cr-error" data-cr-compare-error role="alert" hidden></p>
+      <CourtlyCompare headingLevel={3} />
+    </div>
+  </div>
+</LabLayout>
+
+<script>
+  import {
+    GROUPS,
+    STATUS_ICON as ICON,
+    STATUS_LABEL as LABEL,
+    groupScore,
+    loadPage,
+    scoreChecks,
+    summaryLine,
+    type Status,
+  } from "@/scripts/courtly-check";
+  import { mountCompare } from "@/scripts/courtly-compare";
+  import { ReportError, decodeReport } from "@/scripts/courtly-report";
+
+  const root = document.querySelector<HTMLElement>("[data-cr]")!;
+  const pick = <T extends Element = HTMLElement>(selector: string) =>
+    root.querySelector<T>(selector)!;
+  const status = pick("[data-cr-status]");
+  const error = pick("[data-cr-error]");
+  const report = pick("[data-cr-report]");
+  const groupsEl = pick("[data-cr-groups]");
+  const compareError = pick("[data-cr-compare-error]");
+  const announce = pick("[data-cr-announce]");
+
+  const CHEVRON =
+    '<svg class="cr-group__chevron" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="m9 6 6 6-6 6"></path></svg>';
+
+  function el<K extends keyof HTMLElementTagNameMap>(
+    tag: K,
+    className?: string,
+    text?: string,
+  ) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined) node.textContent = text;
+    return node;
+  }
+
+  async function show() {
+    const fragment = location.hash.slice(1);
+    let snapshot;
+    try {
+      if (!fragment)
+        throw new ReportError(
+          "У посиланні немає звіту. Звіт відкривається за посиланням, яке надсилає викладач.",
+        );
+      snapshot = await decodeReport(fragment);
+    } catch (err) {
+      status.hidden = true;
+      error.textContent =
+        err instanceof ReportError ? err.message : String(err);
+      error.hidden = false;
+      return;
+    }
+    const { pageUrl, at, checks } = snapshot;
+    const score = scoreChecks(checks);
+
+    pick("[data-cr-mark]").textContent = String(score.mark);
+    const link = pick<HTMLAnchorElement>("[data-cr-url]");
+    link.href = pageUrl;
+    link.textContent = pageUrl;
+    pick("[data-cr-when]").textContent = `Перевірено ${new Date(
+      at,
+    ).toLocaleString("uk-UA", { dateStyle: "long", timeStyle: "short" })}`;
+    pick("[data-cr-meta]").textContent = summaryLine(checks);
+    pick("[data-cr-bar]").style.width = `${score.percent * 100}%`;
+    root.dataset.level =
+      score.mark >= 10
+        ? "high"
+        : score.mark >= 7
+          ? "good"
+          : score.mark >= 4
+            ? "mid"
+            : "low";
+
+    // Groups with something to read start open; the rest collapsed.
+    groupsEl.replaceChildren(
+      ...GROUPS.map((group) => {
+        const rows = checks.filter((c) => c.group === group.id);
+        if (!rows.length) return "";
+        const n = (s: Status) => rows.filter((c) => c.status === s).length;
+        const section = el("details", "cr-group");
+        section.open = n("fail") + n("warn") > 0;
+        const head = el("summary", "cr-group__head");
+        head.insertAdjacentHTML("afterbegin", CHEVRON);
+        head.append(el("span", "cr-group__title", group.title));
+        const meta = el("span", "cr-group__meta");
+        for (const s of ["fail", "warn"] as const) {
+          if (!n(s)) continue;
+          const pill = el("span", "cr-pill", `${ICON[s]} ${n(s)}`);
+          pill.dataset.status = s;
+          pill.setAttribute("aria-hidden", "true");
+          meta.append(
+            pill,
+            el("span", "visually-hidden", `, ${LABEL[s].toLowerCase()}: ${n(s)}`),
+          );
+        }
+        const groupText = groupScore(rows);
+        if (groupText) meta.append(el("span", "cr-group__score", groupText));
+        head.append(meta);
+
+        const list = el("ul", "cr-list");
+        for (const check of rows) {
+          const li = el("li", "cr-check");
+          li.dataset.status = check.status;
+          const icon = el("span", "cr-check__icon", ICON[check.status]);
+          icon.setAttribute("aria-hidden", "true");
+          const body = el("div", "cr-check__body");
+          const titleRow = el("p", "cr-check__title");
+          titleRow.append(
+            el("span", "visually-hidden", `${LABEL[check.status]}: `),
+            check.title,
+          );
+          if (check.weight === 0)
+            titleRow.append(
+              el("span", "cr-check__info", " · не впливає на оцінку"),
+            );
+          body.append(titleRow);
+          if (check.detail)
+            body.append(el("p", "cr-check__detail", check.detail));
+          li.append(icon, body);
+          list.append(li);
+        }
+        section.append(head, list);
+        return section;
+      }),
+    );
+
+    status.hidden = true;
+    report.hidden = false;
+
+    // The comparison loads the live page; a failure here leaves the results.
+    // On a phone it starts at the phone width.
+    const viewer = mountCompare(pick("[data-cv]"));
+    try {
+      const page = await loadPage(pageUrl);
+      await viewer.show(page.preview, innerWidth < 640 ? 375 : 1440);
+    } catch (err) {
+      compareError.textContent =
+        err instanceof Error
+          ? `Не вдалося відкрити сторінку для порівняння. ${err.message}`
+          : String(err);
+      compareError.hidden = false;
+    }
+  }
+
+  pick("[data-cr-copy]").addEventListener("click", async (event) => {
+    const button = event.currentTarget as HTMLButtonElement;
+    try {
+      await navigator.clipboard.writeText(location.href);
+      button.textContent = "Скопійовано";
+      announce.textContent = "Посилання на звіт скопійовано.";
+    } catch {
+      button.textContent = "Не вдалося скопіювати";
+    }
+    setTimeout(() => {
+      button.textContent = "Скопіювати посилання";
+      announce.textContent = "";
+    }, 2000);
+  });
+
+  // Another report pasted into the address bar changes only the fragment.
+  addEventListener("hashchange", () => location.reload());
+
+  show();
+</script>
+
+<style is:global>
+  /* Global because the rows are built at runtime and carry no scoped
+     attribute; every selector is prefixed `.cr`. Status colours: lab.css. */
+  .cr {
+    --cr-pass: var(--lab-pass);
+    --cr-warn: var(--lab-warn);
+    --cr-fail: var(--lab-fail);
+    --cr-skip: var(--muted-foreground);
+    margin-block: 0 3rem;
+  }
+
+  .cr[data-level="high"],
+  .cr[data-level="good"] {
+    --cr-level: var(--cr-pass);
+  }
+  .cr[data-level="mid"] {
+    --cr-level: var(--cr-warn);
+  }
+  .cr[data-level="low"] {
+    --cr-level: var(--cr-fail);
+  }
+
+  .cr-status {
+    color: var(--muted-foreground);
+  }
+
+  .cr-error {
+    margin: 0 0 1rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid color-mix(in oklab, var(--cr-fail) 45%, transparent);
+    border-radius: var(--radius-md);
+    background: color-mix(in oklab, var(--cr-fail) 10%, transparent);
+    color: var(--cr-fail);
+    font-size: 0.9375rem;
+    font-weight: 600;
+  }
+
+  .cr-summary {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.75rem 1.25rem;
+    align-items: center;
+    padding: 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--card);
+  }
+
+  .cr-mark {
+    display: flex;
+    align-items: baseline;
+    gap: 0.3rem;
+    margin: 0;
+    font-family: var(--lab-font-heading, inherit);
+    color: var(--cr-level, var(--foreground));
+  }
+
+  .cr-mark__value {
+    font-size: 3.25rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .cr-mark__max {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--muted-foreground);
+  }
+
+  .cr-summary__url,
+  .cr-summary__meta {
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .cr-summary__url {
+    font-weight: 600;
+  }
+
+  .cr-summary__url a {
+    color: var(--lab-link, var(--brand-text));
+  }
+
+  .cr-summary__meta {
+    margin-top: 0.2rem;
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+  }
+
+  .cr-bar {
+    height: 0.4rem;
+    margin-top: 0.6rem;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--foreground) 10%, transparent);
+    overflow: hidden;
+  }
+
+  .cr-bar span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--cr-level, var(--color-brand-blue));
+  }
+
+  .cr-copy {
+    grid-column: 1 / -1;
+    justify-self: start;
+    min-height: 2.25rem;
+    padding: 0 0.9rem;
+    border: 1px solid var(--color-brand-blue);
+    border-radius: var(--radius-md);
+    background: none;
+    color: var(--brand-text);
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .cr-copy:focus-visible,
+  .cr-group__head:focus-visible {
+    outline: 2px solid var(--color-brand-blue);
+    outline-offset: 2px;
+  }
+
+  @media (min-width: 640px) {
+    .cr-summary {
+      grid-template-columns: auto minmax(0, 1fr) auto;
+    }
+
+    .cr-copy {
+      grid-column: auto;
+      align-self: start;
+    }
+  }
+
+  .cr-note,
+  .cr-lead {
+    margin: 0.75rem 0 0;
+    font-size: 0.9375rem;
+    color: var(--muted-foreground);
+  }
+
+  .cr-lead a {
+    color: var(--lab-link, var(--brand-text));
+  }
+
+  .cr .cr-heading {
+    margin: 2.25rem 0 0.75rem;
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: var(--lab-heading, var(--foreground));
+    scroll-margin-top: calc(var(--header-h, 4rem) + 1rem);
+  }
+
+  .cr-group {
+    margin-top: 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+  }
+
+  .cr-group__head {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.75rem 1rem;
+    border-radius: inherit;
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .cr-group__head::-webkit-details-marker {
+    display: none;
+  }
+
+  .cr-group__head:hover {
+    background: color-mix(in oklab, var(--foreground) 4%, transparent);
+  }
+
+  .cr-group[open] > .cr-group__head {
+    border-bottom: 1px solid var(--border);
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+  }
+
+  .cr-group__chevron {
+    flex: none;
+    fill: none;
+    stroke: var(--muted-foreground);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.15s ease;
+  }
+
+  .cr-group[open] .cr-group__chevron {
+    transform: rotate(90deg);
+  }
+
+  .cr-group__title {
+    flex: 1;
+    min-width: 0;
+    font-weight: 700;
+    color: var(--lab-subheading, var(--foreground));
+  }
+
+  .cr-group__meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .cr-group__score {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--muted-foreground);
+    white-space: nowrap;
+  }
+
+  .cr-pill {
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    white-space: nowrap;
+    color: var(--cr-color);
+    background: color-mix(in oklab, var(--cr-color) 14%, transparent);
+  }
+
+  .cr-list {
+    margin: 0;
+    padding: 0 1rem;
+    list-style: none;
+  }
+
+  .cr-check {
+    display: grid;
+    grid-template-columns: 1.5rem minmax(0, 1fr);
+    gap: 0.65rem;
+    padding: 0.65rem 0;
+    border-bottom: 1px solid color-mix(in oklab, var(--border) 70%, transparent);
+  }
+
+  .cr-check:last-child {
+    border-bottom: 0;
+  }
+
+  .cr-check[data-status="pass"],
+  .cr-pill[data-status="pass"] {
+    --cr-color: var(--cr-pass);
+  }
+  .cr-check[data-status="warn"],
+  .cr-pill[data-status="warn"] {
+    --cr-color: var(--cr-warn);
+  }
+  .cr-check[data-status="fail"],
+  .cr-pill[data-status="fail"] {
+    --cr-color: var(--cr-fail);
+  }
+  .cr-check[data-status="skip"] {
+    --cr-color: var(--cr-skip);
+  }
+
+  .cr-check__icon {
+    display: grid;
+    place-items: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 999px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--cr-color);
+    background: color-mix(in oklab, var(--cr-color) 14%, transparent);
+  }
+
+  .cr-check__title,
+  .cr-check__detail {
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .cr-check__title {
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--foreground);
+  }
+
+  .cr-check__detail {
+    margin-top: 0.15rem;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--cr-color);
+  }
+
+  .cr-check[data-status="pass"] .cr-check__detail,
+  .cr-check__info {
+    color: var(--muted-foreground);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cr-group__chevron {
+      transition: none;
+    }
+  }
+
+  .cr .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+</style>
