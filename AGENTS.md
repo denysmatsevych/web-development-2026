@@ -1,14 +1,16 @@
 # AGENTS.md
 
-This repository is a static course website built with Astro, Tailwind CSS v4, and TypeScript. It combines a course hub, lecture decks, lab pages, and a javascript.info-style handbook for HTML, CSS, and JavaScript content.
+This repository is a static course website built with Astro, Tailwind CSS
+v4, and TypeScript. It has three surfaces: a course hub, lecture slide
+decks, and lab assignments (with per-lab practical-task briefs).
 
-## Agent Skills
-Specialized workflows are defined under `.agent/skills/`:
-- PR Review: `.agent/skills/pr-review/SKILL.md`
-- Design System: `.agent/skills/design-system/SKILL.md`
-- Commit Guidelines: `.agent/skills/commit/SKILL.md`
+## Task workflows
 
-Always consult the respective skill file when performing these tasks.
+- Before reviewing a PR, read `docs/agents/pr-review.md`.
+- Before writing a commit message, read `docs/agents/commit.md`.
+- Before changing styles or adding a component, read `docs/agents/design-system.md`.
+
+Always consult the respective file when performing these tasks.
 
 ## Tech stack
 
@@ -19,64 +21,76 @@ Always consult the respective skill file when performing these tasks.
 
 ## Project commands
 
-Run these from the repository root:
+See `README.md` → **Quick start** for Node requirements and the full command list. The verification command for changes is:
 
 ```bash
-npm install
-npm run dev
-npm run build
-npm run preview
-npm run check
+npm run check && npm run build
 ```
 
-Notes:
-
-- `npm run dev` starts the local site for development using the project base path at `/web-development-2026/`
-- `npm run build` produces a production static build in `dist/`
-- `npm run preview` serves the built site locally
-- `npm run check` runs `astro check` for TypeScript and Astro validation
+`astro check` validates TypeScript and Astro content, but does not verify route generation (`getStaticPaths`), plugin behavior, or the full build — run both to catch all issues.
 
 ## Local development
 
-Use the repository base path while developing locally:
-
-```text
-http://localhost:4321/web-development-2026/
-```
-
-The project is designed for GitHub Pages deployment as a project site. Keep the `base` path aligned with the repository name at all times.
-
-Important rule:
-
-- `astro.config.mjs` must keep `base` equal to the repository base path, currently `/web-development-2026`
-- Do not change this value casually; it affects all internal URLs and assets
+See `README.md` → **Quick start** for the local development URL, and
+`README.md` → **Deploy** for the GitHub Pages base path rule.
 
 ## Architecture guidance
 
-Follow the existing structure and keep concerns separated:
+The current `src/` layout is documented in `README.md` — read it there
+rather than relying on a second copy here, so there's one place to keep
+correct. The essentials:
 
-- `src/pages/` contains the route entry points for the hub, lecture decks, labs, and handbook pages
-- `src/content/docs/` stores the handbook Markdown sources and content collections
-- `src/layouts/` contains the shared layout shells such as the base layout, docs layout, and deck layout
-- `src/components/` holds reusable UI structures and page components
-- `src/styles/global.css` is the single Tailwind entry and the design-system source for the site
-- `src/styles/deck.css` is the deck-specific styling layer for lecture presentations
+- `src/pages/` — route entry points for the hub, lecture decks, and labs
+- `src/content/labs/` and `src/content/tasks/` — the two content
+  collections (lab assignments and their practical-task briefs), schemas in
+  `src/content.config.ts`
+- `src/layouts/` — `BaseLayout` (shared `<html>`/`<head>`), `DeckLayout`
+  (fullscreen deck shell), `LabLayout` (lab reading shell)
+- `src/components/` — reusable UI structures and page components
+- `src/styles/` — three stylesheets, each scoped to one surface; see
+  `docs/agents/design-system.md` for which one owns what and the per-surface
+  dark-mode rule
+- `plugins/base-links.mjs` — rewrites root-relative URLs in Markdown bodies
+  for the base path; see `docs/agents/pr-review.md` for its coverage and gap
 
 When adding or modifying features:
 
 - keep routing consistent with the existing Astro file structure
 - preserve content collection schemas and frontmatter conventions
 - prefer reusable layout and component patterns over page-specific duplication
-- keep visual design aligned with the site-wide design system and dark/light theme tokens
-- ensure links and asset paths still work with the configured base path
+- keep visual design aligned with the site-wide design system and dark/light theme tokens — but check `docs/agents/design-system.md` first, since decks and labs each handle theming differently from the hub
+- ensure links and asset paths still work with the configured base path (see `docs/agents/pr-review.md` → **Base-path correctness**)
 
 ## Contribution expectations
 
 - Small, reviewable diffs are preferred
 - Type-safe code and valid Astro content are required
 - Responsive layouts should work across common screen sizes
-- Docs and lecture routes must keep slug generation and schema validation coherent
-- Verify with `npm run check` before finalizing changes
+- Lab/task routes must keep slug generation and schema validation coherent
+- Verify with the command in **Project commands** above before finalizing changes
+
+## Documentation principles
+
+This applies to README.md, AGENTS.md, docs/agents/\*.md, CONTRIBUTING.md, and
+code comments alike.
+
+- **One source of truth per fact, everything else points to it.** If the
+  same rule, tree diagram, or example needs to appear in two files, put it
+  in one and link from the other. A forked copy doesn't just risk drifting —
+  it _will_ drift the first time only one side gets updated.
+- **Write for the mechanism, not the current instance.** A comment that references 
+  a specific file path or internal module name breaks the moment that file is 
+  renamed or deleted. A comment that describes the underlying rule or schema 
+  structure survives a neighboring feature's removal.
+- **Treat "deleting X touched comments in N unrelated files" as a bug in the
+  docs, not a normal cost of deletion.** If removing one surface requires
+  editing a dozen files' worth of prose that merely _mentioned_ it in
+  passing, that's duplication that should have been a pointer. Fix the
+  structure in the same change, not just the stale text.
+- **A PR that removes a feature should grep for it** — class names, file
+  paths, and the feature's name in prose — across the whole repo, not just
+  the files it directly touches, and fix or flag what turns up. See
+  `docs/agents/pr-review.md` for this as a reviewer checklist item.
 
 ## Useful repo references
 
@@ -84,4 +98,4 @@ When adding or modifying features:
 - `src/content.config.ts` for content collections and schema rules
 - `src/lib/paths.ts` for base-aware internal URL generation
 - `src/styles/global.css` for Tailwind v4 tokens and theme variables
-- `README.md` for higher-level project overview
+- `README.md` for the current `src/` tree and higher-level project overview
