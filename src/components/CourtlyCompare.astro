@@ -266,6 +266,54 @@ const Heading = `h${headingLevel}` as "h2";
     pointer-events: none;
   }
 
+  /* A screen waiting for its capture or page (`data-busy`, set by the
+     script): a veil and a spinner, faded in after a beat so a quick
+     re-measure does not flash. The screen is white in both themes. */
+  .cv-screen[data-busy]::before,
+  .cv-screen[data-busy]::after {
+    content: "";
+    position: absolute;
+    animation: cv-appear 0.2s 0.15s both;
+  }
+
+  .cv-screen[data-busy]::before {
+    inset: 0;
+    z-index: 2;
+    background: rgb(255 255 255 / 0.8);
+  }
+
+  .cv-screen[data-busy]::after {
+    top: calc(50% - 1rem);
+    left: calc(50% - 1rem);
+    z-index: 3;
+    width: 2rem;
+    height: 2rem;
+    border: 3px solid #d5dbe3;
+    border-top-color: var(--color-brand-blue);
+    border-radius: 999px;
+    animation:
+      cv-appear 0.2s 0.15s both,
+      cv-spin 0.9s linear infinite;
+  }
+
+  @keyframes cv-appear {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes cv-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cv-screen[data-busy]::after {
+      animation-duration: 0.2s, 2.5s;
+    }
+  }
+
   /* A white halo keeps the outline visible on dark sections too. */
   .cv-mark {
     position: absolute;

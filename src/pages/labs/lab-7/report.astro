@@ -2,7 +2,9 @@
 /**
  * ЛР-7 check report — `/labs/lab-7/report/#<report>`. The instructor
  * generates it from the check dialog («Сформувати звіт») once the manual part
- * is judged and sends the link to the student.
+ * is judged, then copies it from here into a reply to the student: the whole
+ * report formatted for mail with this page's link in it («Скопіювати звіт»),
+ * or the link alone.
  *
  * Two parts:
  *   - **Results** — the rows and the mark exactly as graded, decoded from the
@@ -59,9 +61,14 @@ const crumbs = [
           <p class="cr-summary__meta" data-cr-meta></p>
           <div class="cr-bar" aria-hidden="true"><span data-cr-bar></span></div>
         </div>
-        <button class="cr-copy" type="button" data-cr-copy
-          >Скопіювати посилання</button
-        >
+        <div class="cr-actions">
+          <button class="cr-copy" type="button" data-cr-copy-report
+            >Скопіювати звіт</button
+          >
+          <button class="cr-copy" type="button" data-cr-copy-link
+            >Скопіювати посилання</button
+          >
+        </div>
         <p class="visually-hidden" data-cr-announce aria-live="polite"></p>
       </section>
       <p class="cr-note">
@@ -98,7 +105,13 @@ const crumbs = [
     type Status,
   } from "@/scripts/courtly-check";
   import { mountCompare } from "@/scripts/courtly-compare";
-  import { ReportError, decodeReport } from "@/scripts/courtly-report";
+  import {
+    ReportError,
+    checkedLine,
+    copyReportMail,
+    decodeReport,
+    type ReportSnapshot,
+  } from "@/scripts/courtly-report";
 
   const root = document.querySelector<HTMLElement>("[data-cr]")!;
   const pick = <T extends Element = HTMLElement>(selector: string) =>
@@ -109,6 +122,8 @@ const crumbs = [
   const groupsEl = pick("[data-cr-groups]");
   const compareError = pick("[data-cr-compare-error]");
   const announce = pick("[data-cr-announce]");
+  /** The decoded report, once the link holds one. */
+  let snapshot: ReportSnapshot | null = null;
 
   const CHEVRON =
     '<svg class="cr-group__chevron" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="m9 6 6 6-6 6"></path></svg>';
@@ -126,7 +141,6 @@ const crumbs = [
 
   async function show() {
     const fragment = location.hash.slice(1);
-    let snapshot;
     try {
       if (!fragment)
         throw new ReportError(
@@ -147,9 +161,7 @@ const crumbs = [
     const link = pick<HTMLAnchorElement>("[data-cr-url]");
     link.href = pageUrl;
     link.textContent = pageUrl;
-    pick("[data-cr-when]").textContent = `Перевірено ${new Date(
-      at,
-    ).toLocaleString("uk-UA", { dateStyle: "long", timeStyle: "short" })}`;
+    pick("[data-cr-when]").textContent = checkedLine(at);
     pick("[data-cr-meta]").textContent = summaryLine(checks);
     pick("[data-cr-bar]").style.width = `${score.percent * 100}%`;
     root.dataset.level =
@@ -217,12 +229,15 @@ const crumbs = [
     status.hidden = true;
     report.hidden = false;
 
-    // The comparison loads the live page; a failure here leaves the results.
-    // On a phone it starts at the phone width.
+    // The comparison loads the live page, with a loader in the viewer while
+    // it waits; a failure here leaves the results. On a phone it starts at
+    // the phone width.
     const viewer = mountCompare(pick("[data-cv]"));
     try {
-      const page = await loadPage(pageUrl);
-      await viewer.show(page.preview, innerWidth < 640 ? 375 : 1440);
+      await viewer.show(
+        loadPage(pageUrl).then((page) => page.preview),
+        innerWidth < 640 ? 375 : 1440,
+      );
     } catch (err) {
       compareError.textContent =
         err instanceof Error
@@ -232,20 +247,39 @@ const crumbs = [
     }
   }
 
-  pick("[data-cr-copy]").addEventListener("click", async (event) => {
-    const button = event.currentTarget as HTMLButtonElement;
-    try {
-      await navigator.clipboard.writeText(location.href);
-      button.textContent = "Скопійовано";
-      announce.textContent = "Посилання на звіт скопійовано.";
-    } catch {
-      button.textContent = "Не вдалося скопіювати";
-    }
-    setTimeout(() => {
-      button.textContent = "Скопіювати посилання";
-      announce.textContent = "";
-    }, 2000);
-  });
+  /** A copy button: «Скопійовано» for 2 s, announced to screen readers. */
+  function copyOnClick(
+    selector: string,
+    copy: () => Promise<void>,
+    done: string,
+  ) {
+    const button = pick<HTMLButtonElement>(selector);
+    const label = button.textContent!;
+    button.addEventListener("click", async () => {
+      try {
+        await copy();
+        button.textContent = "Скопійовано";
+        announce.textContent = done;
+      } catch {
+        button.textContent = "Не вдалося скопіювати";
+      }
+      setTimeout(() => {
+        button.textContent = label;
+        announce.textContent = "";
+      }, 2000);
+    });
+  }
+
+  copyOnClick(
+    "[data-cr-copy-report]",
+    () => copyReportMail(snapshot!, location.href),
+    "Звіт скопійовано для листа.",
+  );
+  copyOnClick(
+    "[data-cr-copy-link]",
+    () => navigator.clipboard.writeText(location.href),
+    "Посилання на звіт скопійовано.",
+  );
 
   // Another report pasted into the address bar changes only the fragment.
   addEventListener("hashchange", () => location.reload());
@@ -275,8 +309,33 @@ const crumbs = [
     --cr-level: var(--cr-fail);
   }
 
+  /* Shown until the page's script has decoded the report. */
   .cr-status {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
     color: var(--muted-foreground);
+  }
+
+  .cr-status::before {
+    content: "";
+    flex: none;
+    width: 1.1rem;
+    height: 1.1rem;
+    border: 2px solid color-mix(in oklab, var(--muted-foreground) 30%, transparent);
+    border-top-color: var(--color-brand-blue);
+    border-radius: 999px;
+    animation: cr-spin 0.9s linear infinite;
+  }
+
+  .cr-status[hidden] {
+    display: none;
+  }
+
+  @keyframes cr-spin {
+    to {
+      transform: rotate(360deg);
+    }
   }
 
   .cr-error {
@@ -357,9 +416,14 @@ const crumbs = [
     background: var(--cr-level, var(--color-brand-blue));
   }
 
-  .cr-copy {
+  .cr-actions {
     grid-column: 1 / -1;
-    justify-self: start;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .cr-copy {
     min-height: 2.25rem;
     padding: 0 0.9rem;
     border: 1px solid var(--color-brand-blue);
@@ -383,9 +447,10 @@ const crumbs = [
       grid-template-columns: auto minmax(0, 1fr) auto;
     }
 
-    .cr-copy {
+    .cr-actions {
       grid-column: auto;
       align-self: start;
+      flex-direction: column;
     }
   }
 
@@ -557,6 +622,9 @@ const crumbs = [
   @media (prefers-reduced-motion: reduce) {
     .cr-group__chevron {
       transition: none;
+    }
+    .cr-status::before {
+      animation-duration: 2.5s;
     }
   }
 
