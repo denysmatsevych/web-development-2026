@@ -29,7 +29,9 @@
  * Every check carries a weight; `pass` earns it, `warn` half, `fail` none,
  * `skip` leaves the denominator. A confirmable row is the exception: the
  * instructor's verdict decides, and a row nothing could check and nobody has
- * judged counts as `fail`. See `withVerdicts()` and `scoreChecks()`.
+ * judged counts as `fail`. See `withVerdicts()` and `scoreChecks()`. The
+ * mockup verdicts carry a fixed share of the mark (`MOCKUP_POINTS`); the
+ * other rows share the rest by weight.
  */
 
 export type Status = 'pass' | 'warn' | 'fail' | 'skip';
@@ -99,7 +101,85 @@ export interface Score {
   max: number;
 }
 
-const VENUES = ['Arena Sport', 'Tennis Point', 'Riverside Court', 'Smash Club', 'City Football', 'Active Hall'];
+/** Each card's name, sport and price, as in the mockup (handout, «Картки»). */
+const VENUE_FACTS: [string, string, string][] = [
+  ['Arena Sport', 'Футбол', '450 грн'],
+  ['Tennis Point', 'Теніс', '350 грн'],
+  ['Riverside Court', 'Баскетбол', '400 грн'],
+  ['Smash Club', 'Теніс', '500 грн'],
+  ['City Football', 'Футбол', '420 грн'],
+  ['Active Hall', 'Волейбол', '380 грн'],
+];
+
+const VENUES = VENUE_FACTS.map(([name]) => name);
+
+/**
+ * The mockup's texts the page must carry (handout §1: «Тексти … — у макеті»),
+ * by section. A text listed twice must appear twice. Left out: what students
+ * may write themselves — card descriptions, ratings, the featured card's
+ * amenities (handout, «Картки») — and what other rows check: venue names,
+ * sports and prices (per card, `VENUE_FACTS`), form options.
+ */
+const MOCKUP_TEXTS: [string, string[]][] = [
+  ['Header', ['Майданчики', 'Як це працює', 'Про сервіс', 'Забронювати']],
+  [
+    'Hero',
+    [
+      'Забронюйте спортивний майданчик без зайвих дзвінків',
+      'Обирайте зручний майданчик, дату та час — і бронюйте онлайн за кілька кліків.',
+      'Знайти майданчик',
+    ],
+  ],
+  ['Форма', ['Місто', 'Оберіть місто', 'Вид спорту', 'Будь-який', 'Дата', 'Знайти']],
+  [
+    'Майданчики',
+    ['Популярні майданчики', 'Оберіть майданчик для тренування, гри або змагання.', 'Вибір тижня', 'Вільно сьогодні'],
+  ],
+  [
+    'Як це працює',
+    [
+      'Як це працює',
+      'Оберіть майданчик',
+      'Перегляньте доступні спортивні майданчики.',
+      'Оберіть дату і час',
+      'Перевірте доступність потрібного слоту.',
+      'Підтвердіть бронювання',
+      'Забронюйте майданчик онлайн.',
+    ],
+  ],
+  [
+    'Про сервіс',
+    [
+      'Спорт має бути доступним',
+      'Courtly збирає футбольні поля, корти та зали міста в одному каталозі. Ви бачите реальний розклад і бронюєте без дзвінків та передоплат телефоном.',
+      'Швидке бронювання',
+      'Від вибору майданчика до підтвердження — менше хвилини.',
+      'Актуальна доступність',
+      'Розклад оновлюється одразу після кожного бронювання.',
+      'Зручний пошук',
+      'Фільтри за містом, видом спорту та датою.',
+    ],
+  ],
+  [
+    'Final CTA',
+    ['Готові до наступної гри?', 'Знайдіть майданчик та забронюйте зручний час прямо зараз.', 'Знайти майданчик'],
+  ],
+  [
+    'Footer',
+    [
+      'Онлайн-бронювання спортивних майданчиків: футбол, теніс, баскетбол і волейбол у вашому місті.',
+      'Навігація',
+      'Контакти',
+      'Ми в соцмережах',
+      'hello@courtly.example',
+      '+380 44 123 45 67',
+      'Instagram',
+      'Facebook',
+      'Telegram',
+      '© 2026 Courtly. All rights reserved.',
+    ],
+  ],
+];
 
 const WIDTHS = [320, 375, 768, 1440] as const;
 type Width = (typeof WIDTHS)[number];
@@ -555,6 +635,38 @@ export interface Snapshot {
   stepsRow: { cols: number; rows: number } | null;
   h1: number | null;
   h2: number | null;
+  images: ImageBox[];
+}
+
+/** A content image as rendered, with the proportions the spec gives it (Макет §3, §4). */
+export interface ImageBox {
+  /** «hero», «картки» (one name for all six) or «Про сервіс». */
+  name: string;
+  el: HTMLImageElement;
+  w: number;
+  h: number;
+  /** Width : height at this width, as [label, ratio]; null where the spec sets none (Arena Sport from 1024 px fills its row). */
+  want: [string, number] | null;
+  /** `object-fit: fill` drawing the picture at proportions other than its own. */
+  stretched: boolean;
+  /** As tall as its `height` attribute, though not as wide: no CSS height overrides it (`height: auto`). */
+  attrHeight: boolean;
+}
+
+const RATIOS = { wide: ['16 : 9', 16 / 9], photo: ['4 : 3', 4 / 3], portrait: ['4 : 5', 4 / 5] } satisfies Record<
+  string,
+  [string, number]
+>;
+
+/** Off by more than 3 %, the slack a box rounded to whole pixels needs. */
+const offRatio = (got: number, want: number) => Math.abs(got / want - 1) > 0.03;
+
+/** What is wrong with an image's box, or null. */
+export function imageProblem(img: ImageBox): string | null {
+  const size = `${Math.round(img.w)} × ${Math.round(img.h)} px`;
+  if (img.want && offRatio(img.w / img.h, img.want[1])) return `${size} замість ${img.want[0]}`;
+  if (img.stretched) return `${size}, зображення розтягнуте (object-fit: fill)`;
+  return null;
 }
 
 interface Computed {
@@ -597,6 +709,35 @@ function toRgb(win: Window, value: string): string {
   return out;
 }
 
+/** The mockup's section headings, to find a section by when its `id` is off. */
+const SECTION_HEADINGS = { how: /^як це працює$/i, about: /^спорт має бути доступним$/i };
+
+/**
+ * A section by its §1 `id`, else by its heading. A wrong `id` costs points in
+ * the `ids` and `links` rows; whatever is measured inside the section should
+ * not fail over it a second time. `sectionAnchors()` inlines the same lookup.
+ */
+export function findSection(d: Document, id: keyof typeof SECTION_HEADINGS): Element | null {
+  const byId = d.getElementById(id);
+  if (byId) return byId;
+  const heading = [...d.querySelectorAll('h2')].find((h) => SECTION_HEADINGS[id].test(clean(h.textContent)));
+  return heading ? (heading.closest('section') ?? heading.parentElement) : null;
+}
+
+/**
+ * Final CTA's «Знайти майданчик»: the last link to `#search`, else — when it
+ * points elsewhere, which the `links` row scores — the last of at least two
+ * «Знайти майданчик» links, the first being the hero's. `sectionAnchors()`
+ * inlines the same lookup.
+ */
+export function ctaLink(d: Document): Element | null {
+  const main = d.querySelector('main') ?? d.body;
+  const toSearch = [...main.querySelectorAll('a[href="#search"]')];
+  if (toSearch.length) return toSearch[toSearch.length - 1];
+  const finds = [...main.querySelectorAll('a')].filter((a) => /знайти майданчик/i.test(a.textContent ?? ''));
+  return finds.length >= 2 ? finds[finds.length - 1] : null;
+}
+
 /** The parts of a Courtly page the layout is measured on; any may be missing. */
 export interface Located {
   header: Element | null;
@@ -619,6 +760,7 @@ export interface Located {
   steps: Element[];
   /** The #venues heading, else the first `<h2>`. */
   h2: Element | null;
+  aboutImage: HTMLImageElement | null;
 }
 
 export function locate(d: Document): Located {
@@ -627,7 +769,7 @@ export function locate(d: Document): Located {
   const grid = cards.length > 1 ? commonAncestor(cards) : null;
   const header = d.querySelector('header');
   const form = d.querySelector('form');
-  const how = d.getElementById('how');
+  const how = findSection(d, 'how');
   const stepList = how?.querySelector('ol, ul');
   return {
     header,
@@ -649,13 +791,14 @@ export function locate(d: Document): Located {
     how,
     steps: [...(stepList?.querySelectorAll(':scope > li') ?? how?.querySelectorAll('h3') ?? [])],
     h2: d.querySelector('#venues h2') ?? d.querySelector('h2'),
+    aboutImage: findSection(d, 'about')?.querySelector('img') ?? null,
   };
 }
 
 /** Reads the layout as `win` renders it now; the caller sets the width first. */
 export function snapshot(win: Window, at: Located, width: number): Snapshot {
   const d = win.document;
-  const { items, featuredIdx, h1, hero, steps, controls, toggle, navLinks, h2 } = at;
+  const { items, cards, featuredIdx, h1, hero, steps, controls, toggle, navLinks, h2, aboutImage } = at;
   const root = d.documentElement;
   const vw = root.clientWidth;
   const overflow = root.scrollWidth - vw;
@@ -689,6 +832,29 @@ export function snapshot(win: Window, at: Located, width: number): Snapshot {
     heroSideBySide = b.height > 0 && b.left >= a.right - 8 && b.top < a.bottom && b.bottom > a.top;
   }
 
+  const images: ImageBox[] = [];
+  const image = (name: string, el: HTMLImageElement | null, want: ImageBox['want']) => {
+    const r = el?.getBoundingClientRect();
+    if (!el || !r || r.width < 1 || r.height < 1) return;
+    // Its own proportions: the file's once loaded, else the attributes.
+    const attr = (key: 'width' | 'height') => Number(el.getAttribute(key));
+    const own = el.naturalHeight ? el.naturalWidth / el.naturalHeight : attr('width') / attr('height');
+    images.push({
+      name,
+      el,
+      w: r.width,
+      h: r.height,
+      want,
+      stretched: win.getComputedStyle(el).objectFit === 'fill' && own > 0 && Number.isFinite(own) && offRatio(r.width / r.height, own),
+      attrHeight: Math.abs(r.height - attr('height')) < 1 && Math.abs(r.width - attr('width')) >= 1,
+    });
+  };
+  image('hero', hero, width < 1024 ? RATIOS.wide : RATIOS.photo);
+  cards.forEach((card, i) =>
+    image('картки', card.querySelector('img'), i === featuredIdx && width >= 1024 ? null : RATIOS.photo),
+  );
+  image('«Про сервіс»', aboutImage, RATIOS.portrait);
+
   const stepRects = steps.map((s) => s.getBoundingClientRect());
   const controlRects = controls.map((c) => c.getBoundingClientRect());
   return {
@@ -713,6 +879,7 @@ export function snapshot(win: Window, at: Located, width: number): Snapshot {
         : null,
     h1: h1 ? parseFloat(win.getComputedStyle(h1).fontSize) : null,
     h2: h2 ? parseFloat(win.getComputedStyle(h2).fontSize) : null,
+    images,
   };
 }
 
@@ -749,7 +916,7 @@ async function measure(doc: Document, base: string, focusVar: string, onWidth: (
       return raw ? toRgb(win, raw) : null;
     };
     const footer = d.querySelector('footer');
-    const ctaLink = [...d.querySelectorAll('main a[href="#search"]')].pop() ?? null;
+    const cta = ctaLink(d);
 
     // CSS-connected FontFaces show up in `document.fonts`; the Google Fonts
     // css2 API splits Montserrat into per-subset faces by `unicode-range`.
@@ -771,7 +938,7 @@ async function measure(doc: Document, base: string, focusVar: string, onWidth: (
       fontFamily: bodyStyle.fontFamily,
       venueDisplay: grid ? win.getComputedStyle(grid).display : null,
       flex: { header: isFlex(win, header), form: isFlex(win, form), card: isFlex(win, card) },
-      focus: { footer: focusAt(footer), cta: focusAt(ctaLink), root: focusAt(d.body) },
+      focus: { footer: focusAt(footer), cta: focusAt(cta), root: focusAt(d.body) },
       montserrat,
     };
   } finally {
@@ -813,14 +980,19 @@ export function sectionAnchors(doc: Document): Record<string, number> {
     while (node.parentElement && node.parentElement !== main) node = node.parentElement;
     return node.parentElement ? node : el;
   };
-  const ctaLinks = main.querySelectorAll('a[href="#search"]');
+  // `findSection()` and `ctaLink()`, inlined.
+  const byHeading = (re: RegExp) =>
+    block([...doc.querySelectorAll('h2')].find((h) => re.test((h.textContent ?? '').replace(/\s+/g, ' ').trim())));
+  const toSearch = [...main.querySelectorAll('a[href="#search"]')];
+  const finds = [...main.querySelectorAll('a')].filter((a) => /знайти майданчик/i.test(a.textContent ?? ''));
+  const cta = toSearch.length ? toSearch[toSearch.length - 1] : finds.length >= 2 ? finds[finds.length - 1] : null;
   const found: [string, Element | null][] = [
     ['hero', block(doc.querySelector('h1'))],
     ['search', doc.getElementById('search')],
     ['venues', doc.getElementById('venues')],
-    ['how', doc.getElementById('how')],
-    ['about', doc.getElementById('about')],
-    ['cta', block(ctaLinks[ctaLinks.length - 1])],
+    ['how', doc.getElementById('how') ?? byHeading(/^як це працює$/i)],
+    ['about', doc.getElementById('about') ?? byHeading(/^спорт має бути доступним$/i)],
+    ['cta', block(cta)],
     ['footer', doc.getElementById('contacts') ?? [...doc.querySelectorAll('footer')].pop() ?? null],
   ];
   const out: Record<string, number> = {};
@@ -1011,7 +1183,7 @@ function staticChecks(add: Add, doc: Document, pageUrl: string, styles: Styles) 
     bookProblems.join('; ') || (cards.length ? undefined : 'немає карток'),
   );
 
-  const how = doc.getElementById('how');
+  const how = findSection(doc, 'how');
   const stepsList = how?.querySelector('ol, ul');
   const stepItems = stepsList ? stepsList.querySelectorAll(':scope > li').length : 0;
   add(
@@ -1025,8 +1197,47 @@ function staticChecks(add: Add, doc: Document, pageUrl: string, styles: Styles) 
         ? undefined
         : 'кроки мають порядок — краще <ol>'
       : how
-        ? `у #how знайдено ${stepItems} пунктів списку`
-        : 'немає секції #how',
+        ? `у «Як це працює» знайдено ${stepItems} пунктів списку`
+        : 'немає секції «Як це працює»',
+  );
+
+  // --- Texts ------------------------------------------------------------------
+  // As the visitor reads them: no scripts or styles, case, quotes, dashes,
+  // apostrophes, spacing and closing punctuation aside.
+  const copy = body.cloneNode(true) as HTMLElement;
+  copy.querySelectorAll('script, style, noscript, template').forEach((el) => el.remove());
+  const textKey = (value: string) =>
+    clean(
+      value
+        .normalize('NFC')
+        .toLowerCase()
+        .replace(/[’ʼ`]/g, "'")
+        .replace(/[‐‑‒–—―−]/g, '-')
+        .replace(/[«»"“”„]/g, ''),
+    ).replace(/[.!?]+$/, '');
+  const pageText = textKey(copy.textContent ?? '');
+  const times = (text: string) => pageText.split(textKey(text)).length - 1;
+  const wanted = MOCKUP_TEXTS.flatMap(([section, texts]) => texts.map((text) => [section, text] as const));
+  const missingTexts = wanted
+    .filter(([, text], i) => times(text) < wanted.slice(0, i + 1).filter(([, t]) => t === text).length)
+    .map(([section, text]) => `${section}: «${text.length > 60 ? `${text.slice(0, 57)}…` : text}»`);
+  for (const [name, sport, price] of VENUE_FACTS) {
+    const card = cards.find((c) => clean(c.querySelector('h3')?.textContent).toLowerCase() === name.toLowerCase());
+    if (!card) continue;
+    const cardText = textKey(card.textContent ?? '');
+    const off = [sport, price].filter((fact) => !cardText.includes(textKey(fact)));
+    if (off.length) missingTexts.push(`${name}: ${off.map((fact) => `«${fact}»`).join(', ')}`);
+  }
+  const textCount = wanted.length + VENUE_FACTS.length;
+  add(
+    'texts',
+    'structure',
+    'Тексти як у макеті (опис і рейтинг майданчика можна свої)',
+    3,
+    tally(missingTexts, 3),
+    missingTexts.length
+      ? `не знайдено ${missingTexts.length} з ${textCount}: ${missingTexts.slice(0, 4).join('; ')}${missingTexts.length > 4 ? ` і ще ${missingTexts.length - 4}` : ''}`
+      : undefined,
   );
 
   // --- Accessibility ----------------------------------------------------------
@@ -1359,6 +1570,34 @@ function layoutChecks(add: Add, c: Computed, fromStatic: ReturnType<typeof stati
           : '1440 px: текст і зображення не поруч',
   );
 
+  // The first width each image kind goes wrong at. A box as tall as its
+  // `height` attribute is the usual cause: the reset lacks `height: auto`, so
+  // `aspect-ratio` has nothing to size.
+  const imageProblems = new Map<string, string>();
+  const measured = new Set<string>();
+  let attrHeight = false;
+  for (const w of [375, 768, 1440] as const) {
+    for (const img of s(w).images) {
+      measured.add(img.name);
+      const problem = imageProblem(img);
+      if (!problem || imageProblems.has(img.name)) continue;
+      imageProblems.set(img.name, `${img.name} на ${w} px: ${problem}`);
+      attrHeight ||= img.attrHeight;
+    }
+  }
+  add(
+    'img-ratio',
+    'layout',
+    'Пропорції зображень: hero 16 : 9 → 4 : 3 з 1024 px, картки 4 : 3, «Про сервіс» 4 : 5',
+    3,
+    measured.size ? tally([...imageProblems.values()]) : 'fail',
+    measured.size
+      ? [...imageProblems.values(), attrHeight && 'висота береться з атрибута height — бракує img { height: auto }']
+          .filter(Boolean)
+          .join('; ') || undefined
+      : 'не знайдено зображень hero, карток і «Про сервіс»',
+  );
+
   // A 2-column form with the button alone on a third row has two left edges
   // too — 2 × 2 needs the rows counted as well.
   const [fm375, fm768, fm1440] = [s(375).form, s(768).form, s(1440).form];
@@ -1389,7 +1628,7 @@ function layoutChecks(add: Add, c: Computed, fromStatic: ReturnType<typeof stati
     '«Як це працює»: 3 в ряд з 1024 px, вертикально нижче',
     1,
     !st || !sm ? 'fail' : st.rows === 1 && st.cols === 3 && sm.cols === 1 ? 'pass' : 'warn',
-    !st || !sm ? 'не знайдено 3 кроки в #how' : undefined,
+    !st || !sm ? 'не знайдено 3 кроки «Як це працює»' : undefined,
   );
 
   // --- CSS (computed part) ---------------------------------------------------
@@ -1469,7 +1708,7 @@ function layoutChecks(add: Add, c: Computed, fromStatic: ReturnType<typeof stati
     darkOk === 2 && !repeated ? 'pass' : darkOk >= 1 ? 'warn' : 'fail',
     [
       c.focus.footer !== ACCENT_RGB && `footer: ${c.focus.footer ?? 'змінну не задано'}`,
-      c.focus.cta !== ACCENT_RGB && `Final CTA: ${c.focus.cta ?? 'не знайдено посилання на #search'}`,
+      c.focus.cta !== ACCENT_RGB && `Final CTA: ${c.focus.cta ?? 'не знайдено кнопку «Знайти майданчик»'}`,
       repeated && `повторено правило :focus-visible (${fromStatic.repeatedFocus[0].selector.slice(0, 50)})`,
     ]
       .filter(Boolean)
@@ -1752,17 +1991,45 @@ export function withVerdicts(
   });
 }
 
-/** Weighted share → 12-point mark. Pass it `withVerdicts()` output, or confirmable rows leave the denominator. */
+/**
+ * Points of the 12 that the mockup group — the instructor's verdicts at three
+ * widths — carries (instructor, 2026-10-04); the other rows share the rest by
+ * weight. A fixed share, so adding automated rows cannot dilute the verdicts:
+ * with weights alone, a page judged unlike the mockup at every width still
+ * scored 11.
+ */
+export const MOCKUP_POINTS = 4;
+
+/**
+ * The two weighted shares → 12-point mark (see `MOCKUP_POINTS`); with rows of
+ * one part only, as for a group, that part's share. Pass it `withVerdicts()`
+ * output, or confirmable rows leave the denominator.
+ */
 export function scoreChecks(checks: Check[]): Score {
-  let earned = 0;
-  let max = 0;
-  for (const c of checks) {
-    if (c.status === 'skip' || c.weight === 0) continue;
-    max += c.weight;
-    earned += c.status === 'pass' ? c.weight : c.status === 'warn' ? c.weight / 2 : 0;
-  }
-  const percent = max ? earned / max : 0;
-  return { percent, earned, max, mark: Math.min(12, Math.max(1, Math.round(percent * 12))) };
+  const part = (rows: Check[]) => {
+    let earned = 0;
+    let max = 0;
+    for (const c of rows) {
+      if (c.status === 'skip' || c.weight === 0) continue;
+      max += c.weight;
+      earned += c.status === 'pass' ? c.weight : c.status === 'warn' ? c.weight / 2 : 0;
+    }
+    return { earned, max, share: max ? earned / max : 0 };
+  };
+  const mockup = part(checks.filter((c) => c.group === 'mockup'));
+  const rest = part(checks.filter((c) => c.group !== 'mockup'));
+  const percent =
+    mockup.max && rest.max
+      ? (rest.share * (12 - MOCKUP_POINTS) + mockup.share * MOCKUP_POINTS) / 12
+      : mockup.max
+        ? mockup.share
+        : rest.share;
+  return {
+    percent,
+    earned: mockup.earned + rest.earned,
+    max: mockup.max + rest.max,
+    mark: Math.min(12, Math.max(1, Math.round(percent * 12))),
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -1783,7 +2050,7 @@ export const STATUS_ICON: Record<Status, string> = {
 };
 
 /**
- * "92 % ваги | виконано 49 | частково 2 | не виконано 4 (усього 55)". Partial
+ * "92 % | виконано 49 | частково 2 | не виконано 4 (усього 55)". Partial
  * rows earn half, so they are counted apart from failed ones; zero counts are
  * left out; rows nothing could check come after the total.
  */
@@ -1797,7 +2064,7 @@ export function summaryLine(checks: Check[]): string {
       : [part('pass'), n('warn') ? part('warn') : '', n('fail') ? part('fail') : ''].filter(Boolean);
   const total = n('pass') === scored.length ? '' : ` (усього ${scored.length})`;
   const unchecked = n('skip') ? ` | ${part('skip')}` : '';
-  return `${Math.round(scoreChecks(checks).percent * 100)} % ваги | ${parts.join(' | ')}${total}${unchecked}`;
+  return `${Math.round(scoreChecks(checks).percent * 100)} % | ${parts.join(' | ')}${total}${unchecked}`;
 }
 
 /** Share of a group's weight earned, shown beside its title; "" when nothing is scored. */

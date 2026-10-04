@@ -9,7 +9,9 @@
  * The link is a snapshot of the run as graded, so it does not change when the
  * student edits the site afterwards. It is the student's copy, not the
  * record: anyone who decodes it can edit it, and the mark lives in the
- * instructor's gradebook. A tamper-proof report needs a backend.
+ * instructor's gradebook. A tamper-proof report needs a backend. It holds the
+ * rows, not the mark, which is scored on display: a change to the scoring
+ * rules re-marks old links too, on purpose.
  *
  * The report page also copies the report formatted for a reply to the
  * student, with its own link in it (`copyReportMail()`).

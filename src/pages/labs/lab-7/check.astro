@@ -32,6 +32,7 @@ import LabHeader from "@/components/LabHeader.astro";
 import LabLayout from "@/layouts/LabLayout.astro";
 import { labHref, taskHref } from "@/lib/labs";
 import { withBase } from "@/lib/paths";
+import { MOCKUP_POINTS } from "@/scripts/courtly-check";
 
 const title = "Автоматична перевірка Courtly";
 const summary =
@@ -240,12 +241,12 @@ const headings = [
       <li>
         <strong>Адаптивність</strong> — сторінка рендериться на 320, 375, 768 і 1440
         px; вимірюються горизонтальний scroll, колонки карток, featured card, header,
-        hero, форма й кроки.
+        hero, форма, кроки й пропорції зображень.
       </li>
       <li>
         <strong>Розмітка</strong> — <code>id</code> секцій, посилання, форма, картки,
         кнопки «Забронювати», landmarks, заголовки, <code>alt</code>,
-        зображення.
+        зображення, тексти макета (опис і рейтинг майданчика студент пише сам).
       </li>
       <li>
         <strong>CSS</strong> — значення токенів, <code>clamp()</code>,
@@ -289,9 +290,12 @@ const headings = [
       оцінку не входять. Виняток — пункти, які оцінюєте ви (три ширини макета
       й чотири категорії Lighthouse з прапорцем «Виконано»): пункт без вашої
       оцінки рахується як «не виконано», якщо PageSpeed Insights не оцінив
-      його сам. Відсоток
-      переводиться у 12-бальну шкалу й округлюється: 10–12 — високий рівень,
-      7–9 — достатній, 4–6 — середній, 1–3 — початковий.
+      його сам. Відповідність макету дає {MOCKUP_POINTS} з 12 балів, решта
+      перевірок — {12 - MOCKUP_POINTS}: оцінка = частка решти ваги ×
+      {12 - MOCKUP_POINTS} + частка ваги макета × {MOCKUP_POINTS}, округлена.
+      Тож сторінка, не схожа на макет на жодній ширині, отримує не більше
+      {12 - MOCKUP_POINTS}. 10–12 — високий рівень, 7–9 — достатній, 4–6 —
+      середній, 1–3 — початковий.
     </p>
 
     <h2 id="student-report">Звіт для студента</h2>
