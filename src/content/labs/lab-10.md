@@ -398,8 +398,7 @@ GitHub repository: https://github.com/<username>/<repository>
 Опублікована сторінка: https://<username>.github.io/<repository>/
 ```
 
-(або `https://<project>.vercel.app/`). Звіт — це текст листа; PDF-файл
-додавати не обов'язково, але можна.
+(або `https://<project>.vercel.app/`).
 
 Звіт повинен містити:
 
