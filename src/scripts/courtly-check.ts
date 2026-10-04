@@ -1783,7 +1783,7 @@ export const STATUS_ICON: Record<Status, string> = {
 };
 
 /**
- * "92 % ваги · виконано 49 · частково 2 · не виконано 4 (усього 55)". Partial
+ * "92 % ваги | виконано 49 | частково 2 | не виконано 4 (усього 55)". Partial
  * rows earn half, so they are counted apart from failed ones; zero counts are
  * left out; rows nothing could check come after the total.
  */
@@ -1796,8 +1796,8 @@ export function summaryLine(checks: Check[]): string {
       ? [`виконано всі ${scored.length}`]
       : [part('pass'), n('warn') ? part('warn') : '', n('fail') ? part('fail') : ''].filter(Boolean);
   const total = n('pass') === scored.length ? '' : ` (усього ${scored.length})`;
-  const unchecked = n('skip') ? ` · ${part('skip')}` : '';
-  return `${Math.round(scoreChecks(checks).percent * 100)} % ваги · ${parts.join(' · ')}${total}${unchecked}`;
+  const unchecked = n('skip') ? ` | ${part('skip')}` : '';
+  return `${Math.round(scoreChecks(checks).percent * 100)} % ваги | ${parts.join(' | ')}${total}${unchecked}`;
 }
 
 /** Share of a group's weight earned, shown beside its title; "" when nothing is scored. */

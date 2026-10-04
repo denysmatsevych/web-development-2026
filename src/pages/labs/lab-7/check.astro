@@ -719,14 +719,19 @@ const headings = [
     toggleAll.dataset.open = String(!allOpen);
   }
 
-  /** Light-theme status colours for the mail copy: clients drop stylesheets, so inline. */
+  /**
+   * Light-theme colours for the mail copy: clients drop stylesheets, so
+   * inline. The statuses match the `--lab-*` tokens and muted text the site's
+   * `--muted-foreground`. AA on white: pass 5.95, warn 5.57, fail 5.90,
+   * muted 7.58 : 1.
+   */
+  const MAIL_MUTED = "#45556c";
   const MAIL_COLOR: Record<Status, string> = {
     pass: "#177245",
     warn: "#9a5800",
     fail: "#c0262d",
-    skip: "#6b6f76",
+    skip: MAIL_MUTED,
   };
-  const MAIL_MUTED = "#6b6f76";
 
   const escapeHtml = (value: string) =>
     value.replace(/[&<>"]/g, (ch) => `&#${ch.charCodeAt(0)};`);
@@ -746,7 +751,7 @@ const headings = [
     const results = summaryLine(checks);
     const legend = (["pass", "warn", "fail", "skip"] as const)
       .map((s) => `${ICON[s]} ${LABEL[s].toLowerCase()}`)
-      .join(" · ");
+      .join(" | ");
     const reportLink = freshReport();
 
     const text = [
