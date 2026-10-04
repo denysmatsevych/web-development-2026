@@ -495,7 +495,7 @@ GitHub Pages: https://<username>.github.io/<repository>/
 Vercel: https://<project>.vercel.app/
 ```
 
-Звіт додайте до листа одним PDF-файлом.
+Звіт — це текст листа; PDF-файл додавати не обов'язково, але можна.
 
 Звіт повинен містити:
 
