@@ -8,6 +8,11 @@ uses the same viewer, highlights included — settled question 2 is reversed.
 The criteria gained L11 and D6 and grew in D5 and C10 (29 in all), taken from
 a later, unmerged attempt without its approval workflow: findings stay hints
 and the verdict stays the instructor's.
+
+**Amended 2026-10-04** (instructor): «Скопіювати звіт» moved from the check
+dialog to the report page, beside «Скопіювати посилання», so the copied
+report always carries its own link. Flow step 3 and settled question 3 are
+superseded.
 Replaces the earlier compare-page plan: the
 comparison is no longer its own page but a section of a report the instructor
 shares. Builds on [check-grading-plan.md](check-grading-plan.md).

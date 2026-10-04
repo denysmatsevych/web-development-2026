@@ -92,9 +92,11 @@ export interface CompareViewer {
   readonly width: number;
   /**
    * Renders `preview` (a page from `loadPage()`) beside the capture at
-   * `width`. The same preview is not reloaded on a width change.
+   * `width`. The same preview is not reloaded on a width change. Given a
+   * promise, the capture shows at once and the page's half a loader until it
+   * settles; a rejection clears the loader and rejects `show()`.
    */
-  show(preview: string, width: number): Promise<void>;
+  show(preview: string | Promise<string>, width: number): Promise<void>;
 }
 
 /** Wires the `CourtlyCompare` markup inside `root`. */
@@ -126,6 +128,10 @@ export function mountCompare(root: HTMLElement): CompareViewer {
   let active = '';
   /** Bumped by every `showView()`; a superseded one stops after its awaits. */
   let run = 0;
+
+  // A screen is `data-busy` until its capture or page is ready: a loader
+  // covers it (`CourtlyCompare.astro`).
+  for (const type of ['load', 'error']) shotImg.addEventListener(type, () => shot.removeAttribute('data-busy'));
 
   // --- Alignment --------------------------------------------------------------
 
@@ -380,7 +386,7 @@ export function mountCompare(root: HTMLElement): CompareViewer {
 
   // --- Width ------------------------------------------------------------------
 
-  async function showView(next: View) {
+  async function showView(next: View, source?: string | Promise<string>) {
     const id = ++run;
     view = next;
     // Desktop views are width-bound; the full layout puts the findings under them.
@@ -393,10 +399,28 @@ export function mountCompare(root: HTMLElement): CompareViewer {
     active = '';
     overlay.replaceChildren();
     list.replaceChildren();
-    summary.textContent = `${view.width} px: вимірювання…`;
+    pageScreen.setAttribute('data-busy', '');
     shotImg.src = withBase(captureOf(view).src);
+    shot.toggleAttribute('data-busy', !shotImg.complete);
     shotImg.alt = `Макет Courtly на ширині ${view.width} px`;
     shot.scrollTop = 0;
+    if (typeof source === 'string') {
+      preview = source;
+    } else if (source) {
+      summary.textContent = 'Завантаження сторінки студента…';
+      fit();
+      try {
+        preview = await source;
+      } catch (err) {
+        if (id === run) {
+          pageScreen.removeAttribute('data-busy');
+          summary.textContent = '';
+        }
+        throw err;
+      }
+      if (id !== run) return;
+    }
+    summary.textContent = `${view.width} px: вимірювання…`;
     await loadFrame();
     if (id !== run) return;
     const sizing = resize(frame!, view.width, view.height);
@@ -411,6 +435,7 @@ export function mountCompare(root: HTMLElement): CompareViewer {
     } catch {
       summary.textContent = `${view.width} px: не вдалося виміряти сторінку`;
     }
+    pageScreen.removeAttribute('data-busy');
     sync();
   }
 
@@ -446,8 +471,7 @@ export function mountCompare(root: HTMLElement): CompareViewer {
       return view.width;
     },
     show(next, width) {
-      preview = next;
-      return showView(viewOf(width));
+      return showView(viewOf(width), next);
     },
   };
 }

@@ -10,9 +10,22 @@
  * student edits the site afterwards. It is the student's copy, not the
  * record: anyone who decodes it can edit it, and the mark lives in the
  * instructor's gradebook. A tamper-proof report needs a backend.
+ *
+ * The report page also copies the report formatted for a reply to the
+ * student, with its own link in it (`copyReportMail()`).
  */
 import { withBase } from '@/lib/paths';
-import { GROUPS, type Check, type GroupId, type Status } from '@/scripts/courtly-check';
+import {
+  GROUPS,
+  STATUS_ICON,
+  STATUS_LABEL,
+  groupScore,
+  scoreChecks,
+  summaryLine,
+  type Check,
+  type GroupId,
+  type Status,
+} from '@/scripts/courtly-check';
 
 export interface ReportSnapshot {
   pageUrl: string;
@@ -118,4 +131,91 @@ export async function reportHref(report: ReportSnapshot): Promise<string> {
   const url = new URL(withBase('/labs/lab-7/report/'), location.origin);
   url.hash = await encodeReport(report);
   return url.href;
+}
+
+/** «Перевірено 4 жовтня 2026 р. о 11:04» for the time of a run. */
+export function checkedLine(at: string): string {
+  return `Перевірено ${new Date(at).toLocaleString('uk-UA', { dateStyle: 'long', timeStyle: 'short' })}`;
+}
+
+/**
+ * Light-theme colours for the mail copy: clients drop stylesheets, so
+ * inline. The statuses match the `--lab-*` tokens and muted text the site's
+ * `--muted-foreground`. AA on white: pass 5.95, warn 5.57, fail 5.90,
+ * muted 7.58 : 1.
+ */
+const MAIL_MUTED = '#45556c';
+const MAIL_COLOR: Record<Status, string> = {
+  pass: '#177245',
+  warn: '#9a5800',
+  fail: '#c0262d',
+  skip: MAIL_MUTED,
+};
+
+const escapeHtml = (value: string) => value.replace(/[&<>"]/g, (ch) => `&#${ch.charCodeAt(0)};`);
+
+/**
+ * The report as it goes into a reply to the student: HTML with inline styles
+ * for mail clients, plain text for everything else. `href` is the report's
+ * own link; the HTML hides it behind a phrase, plain text cannot.
+ */
+export function reportMail(report: ReportSnapshot, href: string): { html: string; text: string } {
+  const { pageUrl, checks } = report;
+  const score = scoreChecks(checks);
+  const headline = `ЛР-7 · Автоматична перевірка: оцінка ${score.mark} / 12 (${Math.round(score.percent * 100)} %)`;
+  const when = checkedLine(report.at);
+  const results = summaryLine(checks);
+  const legend = STATUSES.map((s) => `${STATUS_ICON[s]} ${STATUS_LABEL[s].toLowerCase()}`).join(' | ');
+
+  const text = [headline, pageUrl, `Звіт: ${href}`, when, results, legend, ''];
+  const html = [
+    `<p style="margin:0 0 4px"><b style="font-size:16px">${escapeHtml(headline)}</b></p>`,
+    `<p style="margin:0"><a href="${escapeHtml(pageUrl)}">${escapeHtml(pageUrl)}</a></p>`,
+    `<p style="margin:0">Звіт: <a href="${escapeHtml(href)}">результати й порівняння з макетом</a></p>`,
+    `<p style="margin:0;color:${MAIL_MUTED}">${escapeHtml(when)}<br>${escapeHtml(results)}<br>${escapeHtml(legend)}</p>`,
+    `<table cellpadding="0" cellspacing="0" style="border-collapse:collapse">`,
+  ];
+  for (const group of GROUPS) {
+    const rows = checks.filter((c) => c.group === group.id);
+    if (!rows.length) continue;
+    const share = groupScore(rows);
+    text.push(share ? `${group.title} — ${share}` : group.title);
+    html.push(
+      `<tr><td colspan="2" style="padding:14px 0 4px"><b>${escapeHtml(group.title)}</b>${share ? `<span style="color:${MAIL_MUTED}"> — ${escapeHtml(share)}</span>` : ''}</td></tr>`,
+    );
+    for (const c of rows) {
+      const info = c.weight === 0 ? ' · не впливає на оцінку' : '';
+      text.push(`  ${STATUS_ICON[c.status]} ${c.title}${c.detail ? ` — ${c.detail}` : ''}${info}`);
+      const detailColor = c.status === 'warn' || c.status === 'fail' ? MAIL_COLOR[c.status] : MAIL_MUTED;
+      html.push(
+        `<tr><td style="padding:2px 8px 2px 0;vertical-align:top;font-weight:bold;color:${MAIL_COLOR[c.status]}">${STATUS_ICON[c.status]}</td>` +
+          `<td style="padding:2px 0">${escapeHtml(c.title)}` +
+          (c.detail ? `<span style="color:${detailColor}"> — ${escapeHtml(c.detail)}</span>` : '') +
+          (info ? `<span style="color:${MAIL_MUTED}">${info}</span>` : '') +
+          `</td></tr>`,
+      );
+    }
+    text.push('');
+  }
+  html.push('</table>');
+  return { html: html.join(''), text: text.join('\n').trimEnd() };
+}
+
+/** Both flavours, so a mail client pastes it formatted; plain text if the browser cannot. */
+export async function copyReportMail(report: ReportSnapshot, href: string): Promise<void> {
+  const { html, text } = reportMail(report, href);
+  if (typeof ClipboardItem !== 'undefined' && navigator.clipboard.write) {
+    try {
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          'text/html': new Blob([html], { type: 'text/html' }),
+          'text/plain': new Blob([text], { type: 'text/plain' }),
+        }),
+      ]);
+      return;
+    } catch {
+      // fall through to plain text
+    }
+  }
+  await navigator.clipboard.writeText(text);
 }

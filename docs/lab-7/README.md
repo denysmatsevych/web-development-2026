@@ -81,7 +81,7 @@ cannot reach the course site.
   self-check with a one-attempt limit was tried and dropped (2026-09-29): a
   limit kept in the browser is trivially reset, so it needs a backend.
 - **`?url=<student URL>`** runs the check on load; the address bar keeps it
-  after every run, and the link icon next to «Скопіювати звіт» copies it. The
+  after every run, and the link icon next to «Сформувати звіт» copies it. The
   link re-runs the check when opened, so it cannot be forged — but it shows
   the site as it is at that moment, not at the first run. A frozen snapshot
   (or a PDF) would be editable by students without a backend to sign it.
@@ -100,8 +100,8 @@ cannot reach the course site.
   match at 1440 / 768 / 375 — «Виконано / Частково / Не виконано» (full / half
   / 0); the four Lighthouse categories — a «Виконано» checkbox, since their
   only bar is ≥ 90. A row nothing could check and nobody judged counts as
-  **fail**, not "left out" (`withVerdicts()`), so judge them before copying
-  the report. A judged mockup row gets a one-line comment field; the comment
+  **fail**, not "left out" (`withVerdicts()`), so judge them before
+  generating the report. A judged mockup row gets a one-line comment field; the comment
   becomes the row's detail («оцінено вручну: …»), so the student reads why.
   Verdicts and comments are kept in memory only: a reload or a new run clears
   them.
@@ -141,8 +141,13 @@ failed. Plan and decisions: [report-page-plan.md](report-page-plan.md).
   The report never changes when the student edits the site, and nothing is
   stored anywhere. Anyone who decodes the link can edit it, which is fine for
   the student's copy; the mark of record is the gradebook. A changed verdict
-  needs a new link: the dialog says so, and «Скопіювати звіт» then leaves the
-  stale «Звіт:» line out.
+  needs a new link, and the dialog says so.
+- **Copying for the student** happens here, not in the dialog, so a copy
+  always carries a link that matches its marks. «Скопіювати звіт» puts the
+  whole report on the clipboard for a reply: HTML with inline colours, the
+  link behind «результати й порівняння з макетом», and plain text with the
+  full link as a fallback (`copyReportMail()`). «Скопіювати посилання» copies
+  the link alone.
 - **Results** are the dialog's groups and rows, read-only, with the
   instructor's verdicts and comments.
 - **«Порівняння з макетом»** renders the page as it is *now* beside the
@@ -153,7 +158,8 @@ failed. Plan and decisions: [report-page-plan.md](report-page-plan.md).
   criterion whose elements can't be found shows «не перевірено» rather than a
   red outline. Columns, the form grid and the header are measured with the
   checker's own `locate()` / `snapshot()`, so an outline cannot contradict a
-  scored row.
+  scored row. While the student's page loads and is measured, its half shows
+  a loader, and so does the capture's until the image arrives.
 - **One viewer, two layouts** (`CourtlyCompare` + `courtly-compare.ts`): the
   report shows it `inline`, the findings under the panes; the check dialog's
   «Порівняти» shows it `full`, the panes as large as the screen allows and the

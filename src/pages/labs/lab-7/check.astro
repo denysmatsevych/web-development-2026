@@ -14,10 +14,10 @@
  * shared comparison viewer (`CourtlyCompare`, full layout): the mockup capture
  * beside the student's page, scroll aligned on section starts, with the lab's
  * requirements the page misses outlined and listed — hints for the verdict,
- * which stays the instructor's. "Скопіювати звіт" puts the report on the
- * clipboard formatted for a reply to the student. "Сформувати звіт", once
- * Lighthouse has landed and every width is judged, opens the student's
- * report page (`report.astro`) with the result carried in its link.
+ * which stays the instructor's. "Сформувати звіт", once Lighthouse has
+ * landed and every width is judged, opens the student's report page
+ * (`report.astro`) with the result carried in its link; that page copies the
+ * report for a reply to the student.
  *
  * Instructor-only by obscurity: nothing links here and the page is
  * `noindex`, but anyone who knows the URL can use it. Limiting students to
@@ -145,9 +145,6 @@ const headings = [
                 aria-describedby="cc-report-state"
                 disabled>Сформувати звіт</button
               >
-              <button class="cc-copy" type="button" data-cc-copy
-                >Скопіювати звіт</button
-              >
               <button
                 class="cc-copy cc-copy--icon"
                 type="button"
@@ -192,7 +189,7 @@ const headings = [
             Відповідність макету оцінюєте ви: «Виконано», «Частково» (половина
             балів) або «Не виконано»; категорії Lighthouse — прапорцем
             «Виконано». Пункт без оцінки дає 0 балів, тож оцініть їх до того,
-            як копіювати звіт. Лист і опис роботи з AI в оцінку не входять.
+            як формувати звіт. Лист і опис роботи з AI в оцінку не входять.
           </p>
           <div class="cc-groups-bar">
             <button class="cc-toggle-all" type="button" data-cc-toggle-all
@@ -305,8 +302,9 @@ const headings = [
       сторінки з макетом, де позначено вимоги лабораторної, яких сторінка не
       виконує. Звіт зберігається в самому посиланні, тож показує результат
       на момент перевірки; порівняння завжди показує сторінку такою, якою вона
-      є зараз. Якщо після цього змінити оцінку, сформуйте звіт ще раз.
-      Посилання також додається до «Скопіювати звіт».
+      є зараз. Якщо після цього змінити оцінку, сформуйте звіт ще раз. На
+      сторінці звіту «Скопіювати звіт» копіює його для листа студентові разом
+      із посиланням, а «Скопіювати посилання» — лише посилання.
     </p>
 
     <h2 id="limits">Обмеження бета-версії</h2>
@@ -453,14 +451,14 @@ const headings = [
       reportState.replaceChildren(
         "Звіт для студента сформовано: ",
         link,
-        ". Посилання на нього додається до «Скопіювати звіт».",
+        ". Там його можна скопіювати для листа студентові.",
       );
     } else if (generated?.entry === current) {
       reportState.textContent =
         "Оцінки змінилися після того, як звіт сформовано, — сформуйте його ще раз.";
     } else {
       reportState.textContent =
-        "«Сформувати звіт» відкриє сторінку для студента: результати й порівняння з макетом.";
+        "«Сформувати звіт» відкриє сторінку для студента: результати й порівняння з макетом. Звідти звіт копіюється в лист.";
     }
   }
 
@@ -720,111 +718,6 @@ const headings = [
   }
 
   /**
-   * Light-theme colours for the mail copy: clients drop stylesheets, so
-   * inline. The statuses match the `--lab-*` tokens and muted text the site's
-   * `--muted-foreground`. AA on white: pass 5.95, warn 5.57, fail 5.90,
-   * muted 7.58 : 1.
-   */
-  const MAIL_MUTED = "#45556c";
-  const MAIL_COLOR: Record<Status, string> = {
-    pass: "#177245",
-    warn: "#9a5800",
-    fail: "#c0262d",
-    skip: MAIL_MUTED,
-  };
-
-  const escapeHtml = (value: string) =>
-    value.replace(/[&<>"]/g, (ch) => `&#${ch.charCodeAt(0)};`);
-
-  /**
-   * The report as it goes into a reply to the student: HTML with inline
-   * styles for mail clients, plain text for everything else. No `?url=`
-   * link — this page is instructor-only — but the student's report page,
-   * once one is generated and still matches the verdicts.
-   */
-  function mailReport(): { html: string; text: string } {
-    const { pageUrl, lighthouseDone, at } = current!;
-    const checks = reported();
-    const score = scoreChecks(checks);
-    const headline = `ЛР-7 · Автоматична перевірка: ${lighthouseDone ? "оцінка" : "попередня оцінка"} ${score.mark} / 12 (${Math.round(score.percent * 100)} %)`;
-    const when = `Перевірено ${formatDate(at)}${lighthouseDone ? "" : " · Lighthouse ще не завершився"}`;
-    const results = summaryLine(checks);
-    const legend = (["pass", "warn", "fail", "skip"] as const)
-      .map((s) => `${ICON[s]} ${LABEL[s].toLowerCase()}`)
-      .join(" | ");
-    const reportLink = freshReport();
-
-    const text = [
-      headline,
-      pageUrl,
-      ...(reportLink ? [`Звіт: ${reportLink}`] : []),
-      when,
-      results,
-      legend,
-      "",
-    ];
-    const html = [
-      `<p style="margin:0 0 4px"><b style="font-size:16px">${escapeHtml(headline)}</b></p>`,
-      `<p style="margin:0"><a href="${escapeHtml(pageUrl)}">${escapeHtml(pageUrl)}</a></p>`,
-      reportLink
-        ? `<p style="margin:0">Звіт: <a href="${escapeHtml(reportLink)}">результати й порівняння з макетом</a></p>`
-        : "",
-      `<p style="margin:0;color:${MAIL_MUTED}">${escapeHtml(when)}<br>${escapeHtml(results)}<br>${escapeHtml(legend)}</p>`,
-      `<table cellpadding="0" cellspacing="0" style="border-collapse:collapse">`,
-    ];
-    for (const group of GROUPS) {
-      const rows = checks.filter((c) => c.group === group.id);
-      if (!rows.length) continue;
-      const groupScore = groupScoreText(group.id, rows);
-      text.push(groupScore ? `${group.title} — ${groupScore}` : group.title);
-      html.push(
-        `<tr><td colspan="2" style="padding:14px 0 4px"><b>${escapeHtml(group.title)}</b>${groupScore ? `<span style="color:${MAIL_MUTED}"> — ${escapeHtml(groupScore)}</span>` : ""}</td></tr>`,
-      );
-      for (const c of rows) {
-        const info = c.weight === 0 ? " · не впливає на оцінку" : "";
-        text.push(
-          `  ${ICON[c.status]} ${c.title}${c.detail ? ` — ${c.detail}` : ""}${info}`,
-        );
-        const detailColor =
-          c.status === "warn" || c.status === "fail"
-            ? MAIL_COLOR[c.status]
-            : MAIL_MUTED;
-        html.push(
-          `<tr><td style="padding:2px 8px 2px 0;vertical-align:top;font-weight:bold;color:${MAIL_COLOR[c.status]}">${ICON[c.status]}</td>` +
-            `<td style="padding:2px 0">${escapeHtml(c.title)}` +
-            (c.detail
-              ? `<span style="color:${detailColor}"> — ${escapeHtml(c.detail)}</span>`
-              : "") +
-            (info ? `<span style="color:${MAIL_MUTED}">${info}</span>` : "") +
-            `</td></tr>`,
-        );
-      }
-      text.push("");
-    }
-    html.push("</table>");
-    return { html: html.join(""), text: text.join("\n").trimEnd() };
-  }
-
-  /** Both flavours, so a mail client pastes it formatted; plain text if the browser cannot. */
-  async function copyMailReport() {
-    const { html, text } = mailReport();
-    if (typeof ClipboardItem !== "undefined" && navigator.clipboard.write) {
-      try {
-        await navigator.clipboard.write([
-          new ClipboardItem({
-            "text/html": new Blob([html], { type: "text/html" }),
-            "text/plain": new Blob([text], { type: "text/plain" }),
-          }),
-        ]);
-        return;
-      } catch {
-        // fall through to plain text
-      }
-    }
-    await navigator.clipboard.writeText(text);
-  }
-
-  /**
    * `?url=` link to this page. Opening it re-runs the check on the live site,
    * so the result cannot be edited on the way — but it reflects the site at
    * the time of the click, not of the first run.
@@ -994,22 +887,9 @@ const headings = [
     if (event.target === dialog) dialog.close();
   });
 
-  report
-    .querySelector("[data-cc-copy]")!
-    .addEventListener("click", async (event) => {
-      const button = event.currentTarget as HTMLButtonElement;
-      if (!current) return;
-      try {
-        await copyMailReport();
-        button.textContent = "Скопійовано";
-      } catch {
-        button.textContent = "Не вдалося скопіювати";
-      }
-      setTimeout(() => (button.textContent = "Скопіювати звіт"), 2000);
-    });
-
-  // The report opens in a new tab for a last look; its link is also on the
-  // line under the summary, in case the browser blocks the tab.
+  // The report opens in a new tab, where it is copied for the student; its
+  // link is also on the line under the summary, in case the browser blocks
+  // the tab.
   makeReport.addEventListener("click", async () => {
     if (!current || reportBlocker()) return;
     const entry = current;
