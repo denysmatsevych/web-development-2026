@@ -1,9 +1,9 @@
-# Lab 8 — JavaScript debugging (Courtly Booking)
+# Lab 10 — JavaScript debugging (Courtly Booking)
 
 | Route | Source | What it is |
 | --- | --- | --- |
-| `/labs/lab-8/` | `src/content/labs/lab-8.md` | the handout: research, scenarios A / B / C, report, defence |
-| `/labs/lab-8/task/` | `src/content/tasks/lab-8.md` | the brief: how the starter **should** behave; a defect is any deviation from it |
+| `/labs/lab-10/` | `src/content/labs/lab-10.md` | the handout: research, scenarios A / B / C, report, defence |
+| `/labs/lab-10/task/` | `src/content/tasks/lab-10.md` | the brief: how the starter **should** behave; a defect is any deviation from it |
 | `/labs/courtly-booking-starter.zip` | `courtly-booking-starter/` | the seeded starter students debug |
 
 ## Why a separate starter
@@ -19,17 +19,17 @@
 
 ## The defect map is local-only
 
-`docs/lab-8/starter-defects.md` (the seeded defects, their correct fixes, the
-AI traps and the answer keys) and `docs/lab-8/calibration/` (the Edge harness
+`docs/lab-10/starter-defects.md` (the seeded defects, their correct fixes, the
+AI traps and the answer keys) and `docs/lab-10/calibration/` (the Edge harness
 that checks them) are **gitignored**: the repository is public. Back both up
 outside the repo.
 
 ## Regenerating
 
 ```sh
-node docs/lab-8/copy-assets.mjs      # tokens, logo, favicon, venue images from courtly-assets/
-python docs/lab-8/build-pack.py      # public/labs/courtly-booking-starter.zip
-python docs/build-handout.py lab-8   # public/labs/lab-8.pdf
+node docs/lab-10/copy-assets.mjs     # tokens, logo, favicon, venue images from courtly-assets/
+python docs/lab-10/build-pack.py     # public/labs/courtly-booking-starter.zip
+python docs/build-handout.py lab-10  # public/labs/lab-10.pdf
 ```
 
 Edit the starter in `courtly-booking-starter/`, then rebuild the zip. After

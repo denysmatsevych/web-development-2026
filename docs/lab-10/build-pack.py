@@ -2,10 +2,10 @@
 
 Run from the repo root:
 
-    python docs/lab-8/build-pack.py
+    python docs/lab-10/build-pack.py
 
 Files sit at the zip root, with no top-level folder, so the archive unpacks
-straight into a repository or a lab-8/ folder. Python's zipfile rather than
+straight into a repository or a lab-10/ folder. Python's zipfile rather than
 `tar -a`, for the reason in docs/lab-4/starter-defects.md §6.
 """
 import pathlib

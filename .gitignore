@@ -24,6 +24,6 @@ Thumbs.db
 # Lab 7 — reference mockup source (instructor-only; see docs/lab-7/README.md)
 docs/lab-7/mockup/
 
-# Lab 8 — defect map + calibration harness (instructor-only: they name every seeded defect and fix)
-docs/lab-8/starter-defects.md
-docs/lab-8/calibration/
+# Lab 10 — defect map + calibration harness (instructor-only: they name every seeded defect and fix)
+docs/lab-10/starter-defects.md
+docs/lab-10/calibration/

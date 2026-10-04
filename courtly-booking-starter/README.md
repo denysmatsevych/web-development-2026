@@ -1,4 +1,4 @@
-# Courtly Booking — starter-проєкт для ЛР №8
+# Courtly Booking — starter-проєкт для ЛР №10
 
 Каталог майданчиків вигаданого сервісу Courtly: пошук за містом, видом спорту й
 датою, картки майданчиків, діалог бронювання та список бронювань. Це
@@ -7,8 +7,8 @@
 довести й виправити їх і є завданням лабораторної роботи.
 
 Опис завдання та очікувана поведінка застосунку:
-<https://denysmatsevych.github.io/web-development-2026/labs/lab-8/> і
-<https://denysmatsevych.github.io/web-development-2026/labs/lab-8/task/>.
+<https://denysmatsevych.github.io/web-development-2026/labs/lab-10/> і
+<https://denysmatsevych.github.io/web-development-2026/labs/lab-10/task/>.
 
 ## Склад
 
@@ -48,7 +48,7 @@ python -m http.server 8000
 ## Як задеплоїти
 
 Вміст цієї теки можна покласти або в **окремий репозиторій**, або у теку
-`lab-8/` спільного репозиторію з лабораторними. Усі шляхи в проєкті відносні,
+`lab-10/` спільного репозиторію з лабораторними. Усі шляхи в проєкті відносні,
 тому він працює і з кореня origin, і з підтеки.
 
 ### GitHub Pages
@@ -56,7 +56,7 @@ python -m http.server 8000
 1. Завантажте файли в репозиторій.
 2. Settings → Pages → Source: *Deploy from a branch*, гілка `main`, тека `/`.
 3. Сторінка з'явиться за адресою `https://<username>.github.io/<repository>/`
-   (або `…/<repository>/lab-8/`, якщо проєкт у вкладеній теці).
+   (або `…/<repository>/lab-10/`, якщо проєкт у вкладеній теці).
 
 Якщо проєкт у вкладеній теці, скопіюйте `.nojekyll` ще й у корінь репозиторію:
 GitHub Pages шукає цей файл у корені опублікованої гілки.
@@ -66,7 +66,7 @@ GitHub Pages шукає цей файл у корені опубліковано
 1. [vercel.com](https://vercel.com) → Add New → Project → імпорт репозиторію.
 2. Framework Preset: **Other**. Build Command і Output Directory залиште
    порожніми — збирати нічого не потрібно.
-3. Якщо проєкт лежить у вкладеній теці — **Root Directory → `lab-8`**.
+3. Якщо проєкт лежить у вкладеній теці — **Root Directory → `lab-10`**.
 
 ## Обмеження
 
