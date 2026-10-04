@@ -1,7 +1,7 @@
 /**
- * Lab 8 — copies the Courtly design assets into the Courtly Booking starter.
+ * Lab 10 — copies the Courtly design assets into the Courtly Booking starter.
  *
- *   node docs/lab-8/copy-assets.mjs        (run from the repo root)
+ *   node docs/lab-10/copy-assets.mjs        (run from the repo root)
  *
  * The starter reuses Lab 7's public asset pack (courtly-assets/): tokens,
  * favicon, logo mark and the six venue illustrations. The catalogue has
