@@ -495,8 +495,6 @@ GitHub Pages: https://<username>.github.io/<repository>/
 Vercel: https://<project>.vercel.app/
 ```
 
-Звіт додайте до листа одним PDF-файлом.
-
 Звіт повинен містити:
 
 1. результати дослідницьких завдань;

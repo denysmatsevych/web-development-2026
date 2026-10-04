@@ -398,7 +398,7 @@ GitHub repository: https://github.com/<username>/<repository>
 Опублікована сторінка: https://<username>.github.io/<repository>/
 ```
 
-(або `https://<project>.vercel.app/`). Звіт додайте до листа одним PDF-файлом.
+(або `https://<project>.vercel.app/`).
 
 Звіт повинен містити:
 

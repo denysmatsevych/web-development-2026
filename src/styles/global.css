@@ -355,6 +355,12 @@ a.glass-panel:hover {
     text-decoration: underline;
   }
 
+  /* Code shows the characters a reader types: no ligatures turning `===` or
+     `>=` into one glyph (a retyped `≥` is a SyntaxError). */
+  .doc-content code {
+    font-variant-ligatures: none;
+  }
+
   /* Inline code — chip on --muted. */
   .doc-content :not(pre) > code {
     padding: 0.15em 0.4em;
