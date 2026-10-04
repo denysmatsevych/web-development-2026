@@ -16,15 +16,18 @@
  * - `info` — a section much taller or shorter than in the mockup. The handout
  *   allows minor deviations, so this only points at where to look.
  *
- * Columns, the form grid and the header are measured by the scored checks'
- * own `locate()` / `snapshot()`, so a highlight cannot disagree with a scored
- * row. Fluid sizes come from the `clamp()` token strings at the shown width.
+ * Columns, the form grid, the header and image proportions are measured by
+ * the scored checks' own `locate()` / `snapshot()`, so a highlight cannot
+ * disagree with a scored row. Fluid sizes come from the `clamp()` token strings at the shown width.
  */
 import mockup from '@/data/courtly-mockup.json';
 import {
   TOKENS,
   commonAncestor,
+  ctaLink,
   distinct,
+  findSection,
+  imageProblem,
   locate,
   sectionAnchors,
   shownIn,
@@ -77,9 +80,9 @@ export const CRITERIA = {
   },
   L3: {
     group: 'grid',
-    label: 'Hero-зображення',
-    title: 'Hero-зображення 16 : 9 до 1024 px, 4 : 3 з 1024 px',
-    source: 'Макет §3, §4 · Hero',
+    label: 'Зображення',
+    title: 'Зображення: hero 16 : 9 до 1024 px, 4 : 3 з 1024 px; картки 4 : 3; «Про сервіс» 4 : 5; без розтягування',
+    source: 'Макет §3, §4 · Hero, Картка, Інформаційний блок',
   },
   L4: {
     group: 'grid',
@@ -486,8 +489,7 @@ const socialLinks = (footer: Element) =>
 
 /** Final CTA: its «Знайти майданчик» link, the dark block and the heading. */
 function ctaParts(doc: Document, win: Window) {
-  const main = doc.querySelector('main') ?? doc.body;
-  const link = [...main.querySelectorAll('a[href="#search"]')].pop();
+  const link = ctaLink(doc);
   if (!link?.parentElement) return null;
   const block = surface(win, link.parentElement);
   // Nearest first: the block may be <body> when the CTA paints no background.
@@ -561,28 +563,15 @@ const RULES: Record<Exclude<CriterionId, 'H1'>, Rule> = {
     };
   },
 
-  L3: ({ at, tier }) => {
-    if (!at.hero) return 'не знайдено hero-зображення';
-    const r = at.hero.getBoundingClientRect();
-    if (r.height < 1) return 'hero-зображення не видно';
-    const RATIOS: [string, number][] = [
-      ['16 : 9', 16 / 9],
-      ['4 : 3', 4 / 3],
-      ['3 : 2', 3 / 2],
-      ['1 : 1', 1],
-      ['4 : 5', 4 / 5],
-      ['3 : 4', 3 / 4],
-      ['21 : 9', 21 / 9],
-    ];
-    const near = (ratio: number, want: number) => Math.abs(ratio / want - 1) <= 0.03;
-    const ratio = r.width / r.height;
-    const [name, want] = tier === 2 ? RATIOS[1] : RATIOS[0];
-    return {
-      ok: near(ratio, want),
-      expected: name,
-      actual: RATIOS.find(([, v]) => near(ratio, v))?.[0] ?? `${ratio.toFixed(2)} : 1`,
-      els: [at.hero],
-    };
+  L3: ({ snap, tier }) => {
+    if (!snap.images.length) return 'не знайдено зображень hero, карток і «Про сервіс»';
+    return judge(
+      `hero ${tier === 2 ? '4 : 3' : '16 : 9'}, картки 4 : 3, «Про сервіс» 4 : 5`,
+      snap.images.map((img): [Element, (string | null)[]] => {
+        const problem = imageProblem(img);
+        return [img.el, [problem && `${img.name} ${problem}`]];
+      }),
+    );
   },
 
   L4: ({ at, snap, tier }) => {
@@ -632,7 +621,7 @@ const RULES: Record<Exclude<CriterionId, 'H1'>, Rule> = {
 
   L7: ({ at, snap, tier }) => {
     const s = snap.stepsRow;
-    if (!s) return 'не знайдено 3 кроки в #how';
+    if (!s) return 'не знайдено 3 кроки «Як це працює»';
     const name = s.cols === 1 ? 'вертикально' : s.rows === 1 ? `${s.cols} в ряд` : `${s.cols} × ${s.rows}`;
     return tier === 2
       ? { ok: s.cols === 3 && s.rows === 1, expected: '3 в ряд', actual: name, els: [commonAncestor(at.steps) ?? at.how!] }
@@ -640,12 +629,12 @@ const RULES: Record<Exclude<CriterionId, 'H1'>, Rule> = {
   },
 
   L8: ({ doc, width }) => {
-    const about = doc.getElementById('about');
+    const about = findSection(doc, 'about');
     const img = about?.querySelector('img');
     const head = about?.querySelector('h2, h3');
-    if (!about || !img || !head) return 'не знайдено зображення й заголовок у #about';
+    if (!about || !img || !head) return 'не знайдено зображення й заголовок у «Про сервіс»';
     const grid = commonAncestor([img, head]);
-    if (!grid) return 'не знайдено сітку #about';
+    if (!grid) return 'не знайдено сітку «Про сервіс»';
     // The image's and the text's columns: the grid's children that hold them.
     const column = (el: Element) => {
       let node = el;
@@ -724,8 +713,8 @@ const RULES: Record<Exclude<CriterionId, 'H1'>, Rule> = {
     const bad: string[] = [];
     const els: Element[] = [];
     let found = 0;
-    for (const id of ['venues', 'how', 'about']) {
-      const el = doc.getElementById(id);
+    for (const id of ['venues', 'how', 'about'] as const) {
+      const el = id === 'venues' ? doc.getElementById(id) : findSection(doc, id);
       if (!el) continue;
       found++;
       const block = sectionOf(el);
@@ -761,8 +750,8 @@ const RULES: Record<Exclude<CriterionId, 'H1'>, Rule> = {
     const main = doc.querySelector('main') ?? doc.body;
     const heroLink = [...main.querySelectorAll('a[href="#venues"]')].find((a) => /знайти/i.test(a.textContent ?? ''));
     if (heroLink) rows.push(['кнопка hero', heroLink, PX.controlLarge]);
-    const ctaLink = [...main.querySelectorAll('a[href="#search"]')].pop();
-    if (ctaLink) rows.push(['кнопка CTA', ctaLink, PX.controlLarge]);
+    const cta = ctaLink(doc);
+    if (cta) rows.push(['кнопка CTA', cta, PX.controlLarge]);
     const shown = rows.filter(([, el]) => shownIn(win, el));
     if (!shown.length) return 'не знайдено поля й кнопки';
     return judge(
@@ -856,10 +845,9 @@ const RULES: Record<Exclude<CriterionId, 'H1'>, Rule> = {
     ]);
   },
 
-  C3: ({ doc, win, at }) => {
-    const how = doc.getElementById('how');
-    if (!how) return 'не знайдено секцію #how';
-    const block = sectionOf(how);
+  C3: ({ win, at }) => {
+    if (!at.how) return 'не знайдено секцію «Як це працює»';
+    const block = sectionOf(at.how);
     const steps = at.steps.map((st) => (st.tagName === 'LI' ? st : st.parentElement!));
     return judge(
       `секція ${token('--color-surface-alt')}; кроки ${token('--color-surface')}, радіус ${PX.radiusLg} px`,
@@ -929,7 +917,7 @@ const RULES: Record<Exclude<CriterionId, 'H1'>, Rule> = {
         ],
       ]);
     });
-    const cta = [...main.querySelectorAll('a[href="#search"]')].pop();
+    const cta = ctaLink(doc);
     if (cta) {
       rows.push([
         cta,

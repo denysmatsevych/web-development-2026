@@ -94,8 +94,14 @@ cannot reach the course site.
   failures, break a copy of the mockup's HTML/CSS and reload — the server
   reads files on every request.
 - **Scoring:** each check has a weight; pass = full, partial = half, fail = 0,
-  not-checked rows leave the denominator; `round(percent × 12)`, min 1. Tune
-  weights in the `add(...)` calls and the mapping in `scoreChecks()`.
+  not-checked rows leave the denominator. The mockup verdicts carry a fixed
+  4 of the 12 points (`MOCKUP_POINTS`, instructor's call, 2026-10-04) and
+  every other row shares the other 8 by weight: mark = round(rest share × 8 +
+  mockup share × 4), min 1. With one weighted pool, the 9 mockup points were
+  7 % of the total, so a page judged unlike the mockup at all three widths
+  still scored 11; a fixed share also keeps new automated rows from diluting
+  the verdicts. Tune weights in the `add(...)` calls and the split in
+  `scoreChecks()`.
 - **Confirmable rows**, 3 points each, take the instructor's verdict: mockup
   match at 1440 / 768 / 375 — «Виконано / Частково / Не виконано» (full / half
   / 0); the four Lighthouse categories — a «Виконано» checkbox, since their
@@ -114,8 +120,19 @@ cannot reach the course site.
   The outlines are hints for the verdict, not the verdict; the picker in the
   viewer's toolbar is. The guidance shown with the rows:
   «Частково» = structure and responsiveness right, but some elements visibly
-  differ. A deviation an automated row measures (columns, form grid, header)
-  is that row's to penalise; don't take it off the mockup verdict as well.
+  differ. A deviation an automated row measures (columns, form grid, header,
+  image proportions, texts) is that row's to penalise; don't take it off the
+  mockup verdict as well.
+- **Texts** are compared with the mockup's, listed in the engine
+  (`MOCKUP_TEXTS`, plus each card's sport and price), ignoring case, quotes,
+  dashes, spacing and closing punctuation. Card descriptions, ratings and the
+  featured card's amenities are the student's own (handout, «Картки»), so
+  they are not listed. The mockup source is the reference for the list; its
+  texts are public anyway, since the captures show them.
+- **A section under the wrong `id`** costs points in the `ids` and `links`
+  rows only: «Як це працює» and «Про сервіс» are found by their heading, and
+  Final CTA by its «Знайти майданчик» link, so the checks inside them don't
+  fail a second time (`findSection()`, `ctaLink()`).
 - **Not automated, not scored:** the email and the AI write-up.
 - **Lighthouse** uses the PageSpeed Insights API. The keyless quota is shared
   and usually exhausted, so set a repository variable `PSI_API_KEY` (Google
@@ -126,7 +143,7 @@ cannot reach the course site.
   as passed.
 - **Verified against** the local reference solution (with canonical, OG,
   robots and sitemap added): 12 / 12 with the 7 confirmable rows judged or
-  ticked «Виконано», all 55 checks pass.
+  ticked «Виконано», every automated check passes.
 
 ## Report page
 
@@ -141,7 +158,10 @@ failed. Plan and decisions: [report-page-plan.md](report-page-plan.md).
   The report never changes when the student edits the site, and nothing is
   stored anywhere. Anyone who decodes the link can edit it, which is fine for
   the student's copy; the mark of record is the gradebook. A changed verdict
-  needs a new link, and the dialog says so.
+  needs a new link, and the dialog says so. The link stores rows, not the
+  mark: the page scores them with the current rules, so a scoring change
+  re-marks old links too, in either direction. That is accepted (instructor,
+  2026-10-04), for the same reason — the gradebook is the record.
 - **Copying for the student** happens here, not in the dialog, so a copy
   always carries a link that matches its marks. «Скопіювати звіт» puts the
   whole report on the clipboard for a reply: HTML with inline colours, the
@@ -156,9 +176,9 @@ failed. Plan and decisions: [report-page-plan.md](report-page-plan.md).
   or the spec, plus an amber hint for a section over 30 % taller or shorter
   than in the mockup). The outlines are hints and never feed the mark. A
   criterion whose elements can't be found shows «не перевірено» rather than a
-  red outline. Columns, the form grid and the header are measured with the
-  checker's own `locate()` / `snapshot()`, so an outline cannot contradict a
-  scored row. While the student's page loads and is measured, its half shows
+  red outline. Columns, the form grid, the header and image proportions are
+  measured with the checker's own `locate()` / `snapshot()`, so an outline
+  cannot contradict a scored row. While the student's page loads and is measured, its half shows
   a loader, and so does the capture's until the image arrives.
 - **One viewer, two layouts** (`CourtlyCompare` + `courtly-compare.ts`): the
   report shows it `inline`, the findings under the panes; the check dialog's
