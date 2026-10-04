@@ -73,6 +73,7 @@ plugins/
 courtly-assets/     design asset pack (tokens, images, spec)
 courtly-booking-starter/  starter project: a catalogue app with seeded JS defects to debug
 flowtask-starter/   starter project: a landing page to audit and fix
+js-basics-starter/  starter project: pure data functions with provided node --test tests
 layout-lab-starter/ starter project: responsive-layout code challenges
 ```
 
