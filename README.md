@@ -71,6 +71,7 @@ plugins/
 └─ base-links.mjs   rewrites root-relative URLs in Markdown bodies for the GitHub Pages base path
 
 courtly-assets/     design asset pack (tokens, images, spec)
+courtly-booking-starter/  starter project: a catalogue app with seeded JS defects to debug
 flowtask-starter/   starter project: a landing page to audit and fix
 layout-lab-starter/ starter project: responsive-layout code challenges
 ```
