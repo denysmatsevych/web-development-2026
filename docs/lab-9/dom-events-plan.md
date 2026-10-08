@@ -19,6 +19,9 @@ Deviations from the plan:
 - `check.html` loads every check through `srcdoc`, not a plain `src` iframe.
   That way it can count listeners, catch `alert()` and errors, and swap the
   data through an import map before the app's modules run.
+- The handout is about 4,100 words, not 2,500 or fewer. After review, each
+  experiment and challenge spells out its context, what to predict or build,
+  what the starter already provides and how it is checked.
 - Experiment 15: the browser does return focus to the opener only if it is
   still in the document. Without it, focus can sit on the button inside the
   closed dialog for a frame, then moves to `<body>`, so the handout points to
