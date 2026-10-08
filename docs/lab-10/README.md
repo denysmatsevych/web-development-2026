@@ -27,9 +27,9 @@ outside the repo.
 ## Regenerating
 
 ```sh
-node docs/lab-10/copy-assets.mjs     # tokens, logo, favicon, venue images from courtly-assets/
-python docs/lab-10/build-pack.py     # public/labs/courtly-booking-starter.zip
-python docs/build-handout.py lab-10  # public/labs/lab-10.pdf
+node docs/lab-10/copy-assets.mjs                   # tokens, logo, favicon, venue images from courtly-assets/
+python docs/build-pack.py courtly-booking-starter  # public/labs/courtly-booking-starter.zip
+python docs/build-handout.py lab-10                # public/labs/lab-10.pdf
 ```
 
 Edit the starter in `courtly-booking-starter/`, then rebuild the zip. After
