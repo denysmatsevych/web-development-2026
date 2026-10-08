@@ -11,8 +11,7 @@ export const groups = [
   { id: 'C1', title: 'C1 · Картки' },
   { id: 'C2', title: 'C2 · Кнопки карток' },
   { id: 'C3', title: 'C3 · Фільтри' },
-  { id: 'C4', title: 'C4 · Діалог «Детальніше»' },
-  { id: 'C5', title: 'C5 · Моя оцінка й нотатка' },
+  { id: 'C4', title: 'C4 · Діалог «Детальніше» і нотатка' },
 ];
 
 export class Fail extends Error {}
@@ -362,7 +361,7 @@ export function defineChecks(data) {
     }
   });
 
-  /* ---------------- C4 · Діалог «Детальніше» ---------------- */
+  /* ---------------- C4 · Діалог «Детальніше» і нотатка ---------------- */
 
   check('C4.1', '«Детальніше» відкриває <dialog id="details"> як модальний (showModal), і фокус переходить у діалог', async () => {
     const app = await withCards();
@@ -427,9 +426,7 @@ export function defineChecks(data) {
     }
   });
 
-  /* ---------------- C5 · Моя оцінка й нотатка ---------------- */
-
-  check('C5.1', 'Форма відкривається з даними саме цього серіалу: збережені оцінка й нотатка або порожні поля, без помилок з минулого разу', async () => {
+  check('C4.6', 'Форма відкривається з даними саме цього серіалу: збережені оцінка й нотатка або порожні поля, без помилок з минулого разу', async () => {
     const app = await withCards();
     await openDetails(app, BREAKING_BAD);
     let f = note(app);
@@ -455,7 +452,7 @@ export function defineChecks(data) {
     expect(f.rating.value === '8' && f.text.value === 'Сильний фінал', `збережену нотатку не показано: «${f.rating.value}», «${f.text.value}»`);
   });
 
-  check('C5.2', 'Невалідна оцінка (порожня, не ціле число, поза 1–10): діалог лишається відкритим без alert(); помилка поруч із полем через aria-describedby, у поля aria-invalid="true"', async () => {
+  check('C4.7', 'Невалідна оцінка (порожня, не ціле число, поза 1–10): діалог лишається відкритим без alert(); помилка поруч із полем через aria-describedby, у поля aria-invalid="true"', async () => {
     const app = await withCards();
     const dialog = await openDetails(app, BREAKING_BAD);
     const f = note(app);
@@ -470,7 +467,7 @@ export function defineChecks(data) {
     }
   });
 
-  check('C5.3', 'Після невдалого надсилання фокус — на першому полі з помилкою', async () => {
+  check('C4.8', 'Після невдалого надсилання фокус — на першому полі з помилкою', async () => {
     const app = await withCards();
     await openDetails(app, BREAKING_BAD);
     const f = note(app);
@@ -479,7 +476,7 @@ export function defineChecks(data) {
     expect(app.active() === f.rating, `фокус на ${describe(app.active())}, а не на полі оцінки`);
   });
 
-  check('C5.4', 'Щойно значення виправлено (input), помилка зникає, і форма зберігається', async () => {
+  check('C4.9', 'Щойно значення виправлено (input), помилка зникає, і форма зберігається', async () => {
     const app = await withCards();
     const dialog = await openDetails(app, BREAKING_BAD);
     const f = note(app);
@@ -493,7 +490,7 @@ export function defineChecks(data) {
     expect(!dialog.open, 'виправлену оцінку 7 не збережено: діалог лишився відкритим (поле досі невалідне?)');
   });
 
-  check('C5.5', 'Після збереження картка показує «Моя оцінка: 8/10» і нотатку; розмітка в нотатці лишається текстом', async () => {
+  check('C4.10', 'Після збереження картка показує «Моя оцінка: 8/10» і нотатку; розмітка в нотатці лишається текстом', async () => {
     const app = await withCards();
     await openDetails(app, BREAKING_BAD);
     const f = note(app);
@@ -510,7 +507,7 @@ export function defineChecks(data) {
     expect(text.includes(HOSTILE), `нотатку не показано як текст: «${text}»`);
   });
 
-  check('C5.6', 'Після збереження діалог закривається, статус: «Нотатку до <назва> збережено»', async () => {
+  check('C4.11', 'Після збереження діалог закривається, статус: «Нотатку до <назва> збережено»', async () => {
     const app = await withCards();
     const dialog = await openDetails(app, BREAKING_BAD);
     const f = note(app);
@@ -520,7 +517,7 @@ export function defineChecks(data) {
     expect(app.status() === 'Нотатку до Breaking Bad збережено', `статус «${app.status()}», очікувався «Нотатку до Breaking Bad збережено»`);
   });
 
-  check('C5.7', 'Після збереження фокус — на «Детальніше» цієї картки (картку перемальовано, тож це нова кнопка)', async () => {
+  check('C4.12', 'Після збереження фокус — на «Детальніше» цієї картки (картку перемальовано, тож це нова кнопка)', async () => {
     const app = await withCards();
     await openDetails(app, BREAKING_BAD);
     const f = note(app);
