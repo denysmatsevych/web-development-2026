@@ -2,11 +2,11 @@
 
 Status: built on 2026-10-08 on branch `feat/lab-9-dom-events`. Both Lab 8
 branches had already merged, so the branch starts from `main` (step 1). Not yet
-done: the prompt calibration in other agents (step 4) and the timed dry run.
-The three open decisions below are still open: the build follows the
-recommended options, with the deadline 16.10.2026, and Lab 10 is unchanged.
-Delete this file once the lab is published. The facts that last are in this
-folder's `README.md`.
+done, and both gate publishing: the prompt calibration in other agents
+(step 4) and the timed dry run. Decision 2 is settled: Lab 9 and Lab 10 are
+both due 19.10.2026. Decisions 1 and 3 are still open; the
+build follows the recommended option for 1. Delete this file once the lab is
+published. The facts that last are in this folder's `README.md`.
 
 Deviations from the plan:
 
@@ -26,6 +26,35 @@ Deviations from the plan:
   still in the document. Without it, focus can sit on the button inside the
   closed dialog for a frame, then moves to `<body>`, so the handout points to
   the Live Expression instead of an immediate read.
+- §4 and §5 asked for the same write-up: most experiments are a minimal repro
+  of a rule that `check.html` then tests. After review, the experiments have
+  no AI step or column. Their «Де це трапиться» questions are defence prep and
+  aren't written up. The report has no per-subsection conclusions and no §4.5
+  write-up.
+- The audit is two commits per challenge, `Challenge N: AI draft` and
+  `Challenge N: fixes`, and the defence walks through one finding in a fixes
+  commit. Fix commits named by rule (`fix(C2): C2.4 …`) and a per-challenge
+  report table were both tried and dropped: the first was too hard to grade,
+  the second only repeated the commit and the defence.
+- C4 and C5 are one challenge, C4.1–C4.12, with one prompt. That is the
+  fallback the **Timing** paragraph names. The manual checklist keeps only the
+  keyboard and visible focus, because the Accessibility and Event Listeners
+  panes repeated existing checks.
+- Review on 2026-10-09:
+  - The checklist's lines are tagged C2–C4. Each challenge walks its own
+    lines, and the final version gets one full pass for the report.
+  - The draft commit is untouched except for the protected files, which the
+    student restores if the agent edited them. A fixes commit waits for the
+    earlier blocks too.
+  - The probe now records timer callbacks that move focus, timers started in
+    an event handler, and `fetch`/XHR URLs. The five focus checks fail on a
+    deferred `focus()`, and C1.1 fails on loading `data/shows.json` directly.
+    Other failures note a fetch or a deferred reaction as the likely cause.
+    There are four new traps: fetch, `requestAnimationFrame` focus, a
+    debounced search and `setTimeout` focus after saving.
+  - The handout names Chrome or Edge, and splits the work into home
+    (§4 before class; checklist, deploy and report after) and class (setup
+    and the challenges).
 
 ## Context
 
@@ -186,6 +215,11 @@ has to confirm these:
 challenge: 2 for the draft, 5 for the checks and the audit, and 8 for the fix.
 That's about 80 minutes for all five. If the dry run takes much longer, fold C4
 into C5 or drop the checkbox from C3.
+
+After the merge, C4 has 12 rules against 7 in each of C1–C3, so budget about
+15 minutes each for C1–C3 and 30 for C4, plus about 10 for setup: roughly 85 of
+the 90 minutes. The checklist, deploy and report are homework. The dry run has
+to confirm this before publishing.
 
 ## Self-check: `check.html`
 
@@ -453,9 +487,8 @@ Open:
    writes, the AI explains), with one AI-generated feature audited at the end.
    Choose that alternative if ЛР-8 shows that students need to write more code
    from scratch first.
-2. **Deadline.** A week after ЛР-8 is 16.10.2026, the same date as ЛР-10. ЛР-10
-   also needs Лекція 6, and it builds on ЛР-9's delegation. Recommended: ЛР-9 on
-   16.10, and move ЛР-10 to 23.10 while its branch is still unmerged, since
-   students haven't seen that date yet. This depends on when Лекція 6 is.
+2. **Deadline.** Settled on 2026-10-09: ЛР-9 and ЛР-10 are both due
+   19.10.2026, so ЛР-10, which builds on ЛР-9's delegation, is no longer due
+   first. The original options were both on 16.10, or ЛР-10 moved to 23.10.
 3. **Лекція 5:** its content isn't in this repo. Before writing §4, confirm
    that it covers the DOM API and events; its self-study lists both.
