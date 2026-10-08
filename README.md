@@ -75,6 +75,7 @@ courtly-booking-starter/  starter project: a catalogue app with seeded JS defect
 flowtask-starter/   starter project: a landing page to audit and fix
 js-basics-starter/  starter project: pure data functions with provided node --test tests
 layout-lab-starter/ starter project: responsive-layout code challenges
+watchlist-starter/  starter project: a DOM app to build from AI drafts, with an in-browser self-check
 ```
 
 See `docs/agents/design-system.md` for which stylesheet owns what and how

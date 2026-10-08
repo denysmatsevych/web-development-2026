@@ -57,9 +57,9 @@ Back the folder up outside the repo.
 ## Regenerating
 
 ```sh
-python docs/lab-8/build-pack.py      # public/labs/js-basics-starter.zip
-python docs/build-handout.py lab-8   # public/labs/lab-8.pdf
-node docs/lab-8/solution/verify.mjs  # local only
+python docs/build-pack.py js-basics-starter  # public/labs/js-basics-starter.zip
+python docs/build-handout.py lab-8           # public/labs/lab-8.pdf
+node docs/lab-8/solution/verify.mjs          # local only
 ```
 
 Edit the starter in `js-basics-starter/`, then rebuild the zip. Re-run
