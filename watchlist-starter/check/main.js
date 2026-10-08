@@ -1,6 +1,6 @@
 // Запускає перевірки по черзі й показує результат. Змінювати цей файл не потрібно.
 import { Fail, defineChecks, groups } from './checks.js';
-import { loadSource, openApp } from './harness.js';
+import { fetchedData, loadSource, openApp } from './harness.js';
 
 const results = /** @type {HTMLElement} */ (document.querySelector('#results'));
 const summary = /** @type {HTMLElement} */ (document.querySelector('#summary'));
@@ -56,13 +56,30 @@ async function run() {
       ok = false;
       detail = error instanceof Fail ? error.message : `перевірка зупинилася з помилкою: ${error instanceof Error ? error.message : error}`;
     }
+    /** @type {string[]} */
+    let requests = [];
+    /** @type {string[]} */
+    let deferred = [];
+    /** @type {string[]} */
+    let delayedFocus = [];
     const frame = /** @type {HTMLIFrameElement | null} */ (document.querySelector('#stage iframe'));
     try {
-      errors = /** @type {any} */ (frame?.contentWindow)?.__check?.errors ?? [];
+      const probe = /** @type {any} */ (frame?.contentWindow)?.__check;
+      errors = probe?.errors ?? [];
+      requests = probe?.requests ?? [];
+      deferred = probe?.deferred ?? [];
+      delayedFocus = probe?.delayedFocus ?? [];
     } catch {
       errors = [];
     }
     if (!ok && errors.length) detail += ` · Помилка в Console застосунку: ${errors[0]}`;
+    if (!ok && check.id !== 'C1.1' && fetchedData(requests)) {
+      detail += ' · Застосунок сам завантажує data/shows.json, тож дані, які перевірка підставляє через src/state.js, до нього не потрапляють (C1.1)';
+    }
+    // Відкладений фокус перевірки фокусу вже пояснюють самі.
+    if (!ok && deferred.length && !delayedFocus.length) {
+      detail += ` · Застосунок відкладає реакцію на дію через ${deferred[0]}(): перевірка читає результат одразу, а таймерів ТЗ не дозволяє (§5)`;
+    }
     if (ok) passed += 1;
     report.push({ id: check.id, title: check.title, ok, detail });
     showResult(lists.get(check.group), check, ok, detail);

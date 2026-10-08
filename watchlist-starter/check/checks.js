@@ -67,6 +67,13 @@ export function defineChecks(data) {
     need(app.button(id, 'details'), `на картці ${nameOf(id)} немає кнопки [data-action="details"]`);
   const pressed = (/** @type {App} */ app, /** @type {number} */ id) => app.button(id, 'toggle')?.getAttribute('aria-pressed');
 
+  /** Фокус переходить одразу, у тому самому обробнику, а не з таймера (ТЗ, §5). */
+  async function focusedDirectly(/** @type {App} */ app) {
+    await sleep(35); // відкладені колбеки, зокрема requestAnimationFrame, встигають виконатися
+    const via = app.probe.delayedFocus[0];
+    expect(!via, `фокус переводить відкладений колбек ${via}(): доти фокус деінде, найчастіше на <body>. Таймерів ТЗ не дозволяє (§5): переведіть фокус одразу, у тому самому обробнику`);
+  }
+
   const filters = (/** @type {App} */ app) => ({
     form: /** @type {HTMLFormElement} */ (need(app.$('#filters'), 'немає форми #filters')),
     query: need(app.field('#filters', 'query'), 'у формі #filters немає поля name="query"'),
@@ -113,8 +120,9 @@ export function defineChecks(data) {
 
   /* ---------------- C1 · Картки ---------------- */
 
-  check('C1.1', `На старті — ${total} карток: кожна є клоном шаблону #show-card, <li data-id> у #results, у порядку даних`, async () => {
+  check('C1.1', `На старті — ${total} карток з shows у src/state.js: кожна є клоном шаблону #show-card, <li data-id> у #results, у порядку даних`, async () => {
     const app = await openApp();
+    expect(!app.fetchedData(), 'застосунок сам завантажує data/shows.json (fetch): дані беруться лише з shows у src/state.js, без fetch (ТЗ, §5)');
     const ids = app.ids();
     expect(ids.length === total, `у #results ${ids.length} карток <li data-id>, очікувалося ${total}`);
     const order = shows.map((show) => String(show.id));
@@ -264,6 +272,7 @@ export function defineChecks(data) {
   check('C2.7', 'Після натискання «До списку» фокус залишається на цій кнопці тієї самої картки', async () => {
     const app = await withCards();
     await app.press(toggleOf(app, BREAKING_BAD));
+    await focusedDirectly(app);
     const active = app.active();
     expect(active === app.button(BREAKING_BAD, 'toggle'), `фокус на ${describe(active)}: стару кнопку замінено під час перемальовування, а фокус на нову не перенесено`);
   });
@@ -356,6 +365,7 @@ export function defineChecks(data) {
     ]);
     for (const [id, target, where] of steps) {
       await app.press(toggleOf(app, id));
+      await focusedDirectly(app);
       expect(!app.card(id), `${nameOf(id)} прибрано зі списку, а картка лишилася`);
       expect(app.active() === target(), `після прибирання ${nameOf(id)} фокус на ${describe(app.active())}, а мав перейти ${where}`);
     }
@@ -421,6 +431,7 @@ export function defineChecks(data) {
       const dialog = await openDetails(app, BREAKING_BAD);
       if (how === 'Esc') await app.escape(dialog);
       else await app.press(note(app).cancel);
+      await focusedDirectly(app);
       expect(!dialog.open, `${how} не закриває діалог`);
       expect(app.active() === app.button(BREAKING_BAD, 'details'), `після закриття (${how}) фокус на ${describe(app.active())}, а не на «Детальніше» картки Breaking Bad`);
     }
@@ -473,6 +484,7 @@ export function defineChecks(data) {
     const f = note(app);
     await app.type(f.text, 'Без оцінки');
     await app.submit(f.form, f.save);
+    await focusedDirectly(app);
     expect(app.active() === f.rating, `фокус на ${describe(app.active())}, а не на полі оцінки`);
   });
 
@@ -523,6 +535,7 @@ export function defineChecks(data) {
     const f = note(app);
     await app.type(f.rating, '9');
     await app.submit(f.form, f.save);
+    await focusedDirectly(app);
     const target = app.button(BREAKING_BAD, 'details');
     expect(app.active() === target && target?.isConnected, `фокус на ${describe(app.active())}, а не на «Детальніше» картки Breaking Bad`);
   });

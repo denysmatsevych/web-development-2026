@@ -3,11 +3,16 @@
 // фокус і те, що застосунок робить у відповідь на дії.
 //
 // Сторінка потрапляє у фрейм через srcdoc, щоб до запуску її модулів додати невеликий скрипт:
-// він рахує обробники подій (addEventListener), перехоплює alert() і помилки в Console. Для
-// кількох перевірок той самий index.html отримує інші дані: import map підмінює
-// data/shows.json, а сам файл даних не змінюється.
+// він рахує обробники подій (addEventListener), перехоплює alert() і помилки в Console,
+// помічає фокус, переведений із таймера, і запити до data/shows.json. Для кількох перевірок
+// той самий index.html отримує інші дані: import map підмінює data/shows.json, а сам файл
+// даних не змінюється.
 
 export const sleep = (/** @type {number} */ ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/** Чи серед запитів застосунку є data/shows.json: дані мали б прийти з src/state.js. */
+export const fetchedData = (/** @type {readonly string[]} */ requests) =>
+  requests.some((url) => /(^|\/)data\/shows\.json(\?|$)/.test(url));
 
 /** Пробіли й переноси — як один пробіл; без пробілів на краях. */
 export const norm = (/** @type {string | null | undefined} */ text) => (text ?? '').replace(/\s+/g, ' ').trim();
@@ -50,11 +55,50 @@ const PROBE = `(() => {
     drop(this, type, fn, capture(options));
     return remove.call(this, type, fn, options);
   };
-  const probe = { registry, alerts: [], errors: [], xss: 0, initialStatus: null };
+  const probe = { registry, alerts: [], errors: [], xss: 0, initialStatus: null, delayedFocus: [], deferred: [], requests: [] };
   window.__check = probe;
   window.alert = (message) => { probe.alerts.push(String(message)); };
   window.confirm = (message) => { probe.alerts.push(String(message)); return false; };
   window.prompt = (message) => { probe.alerts.push(String(message)); return null; };
+  // Перевірка діє зі скрипта, тож мікрозадачі виконуються лише після всіх обробників події:
+  // до того часу inEvent показує, що триває реакція застосунку на дію.
+  let inEvent = false;
+  const afterEvent = window.queueMicrotask.bind(window);
+  for (const type of ['click', 'input', 'change', 'submit', 'reset']) {
+    add.call(window, type, () => {
+      if (!inEvent) afterEvent(() => { inEvent = false; });
+      inEvent = true;
+    }, true);
+  }
+  // Відкладений колбек, що переводить фокус: до нього фокус був деінде, найчастіше на <body>.
+  // Таймер, запущений в обробнику події: реакцію на дію відкладено (наприклад, debounce).
+  for (const name of ['setTimeout', 'setInterval', 'requestAnimationFrame', 'queueMicrotask']) {
+    const original = window[name];
+    window[name] = function (callback, ...rest) {
+      if (inEvent) probe.deferred.push(name);
+      if (typeof callback !== 'function') return original.call(window, callback, ...rest);
+      const wrapped = function (...args) {
+        const before = document.activeElement;
+        try {
+          return callback.apply(this, args);
+        } finally {
+          if (document.activeElement !== before) probe.delayedFocus.push(name);
+        }
+      };
+      return original.call(window, wrapped, ...rest);
+    };
+  }
+  // Запити застосунку: дані мають приходити з src/state.js, а не окремим завантаженням.
+  const request = window.fetch;
+  window.fetch = function (input, init) {
+    probe.requests.push(String(input instanceof Request ? input.url : input));
+    return request.call(window, input, init);
+  };
+  const open = XMLHttpRequest.prototype.open;
+  XMLHttpRequest.prototype.open = function (method, url, ...rest) {
+    probe.requests.push(String(url));
+    return open.call(this, method, url, ...rest);
+  };
   add.call(window, 'error', (event) => probe.errors.push(event.message || String(event.error)));
   add.call(window, 'unhandledrejection', (event) => probe.errors.push('Uncaught (in promise) ' + String(event.reason)));
 })();`;
@@ -107,9 +151,14 @@ export class App {
     this.win.focus();
   }
 
-  /** @returns {{ registry: WeakMap<EventTarget, {type: string}[]>, alerts: string[], errors: string[], xss: number, initialStatus: Element | null }} */
+  /** @returns {{ registry: WeakMap<EventTarget, {type: string}[]>, alerts: string[], errors: string[], xss: number, initialStatus: Element | null, delayedFocus: string[], deferred: string[], requests: string[] }} */
   get probe() {
     return this.win.__check;
+  }
+
+  /** Чи застосунок сам завантажував data/shows.json (fetch або XMLHttpRequest). */
+  fetchedData() {
+    return fetchedData(this.probe.requests);
   }
 
   /** Сторінку перезавантажено або відкрито іншу: стан застосунку втрачено. */
