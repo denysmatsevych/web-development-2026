@@ -19,7 +19,7 @@ src/main.js        точка входу: показує список і під�
 src/render.js      C1 · картки й рядок статусу
 src/list.js        C2 · кнопки карток
 src/filters.js     C3 · форма фільтрів
-src/details.js     C4–C5 · діалог «Детальніше» і форма нотатки
+src/details.js     C4 · діалог «Детальніше» і форма нотатки
 check.html         самоперевірка; її код — у check/
 experiments.html   розмітка для експериментів §4
 ```
@@ -31,7 +31,8 @@ experiments.html   розмітка для експериментів §4
 
 ## Як запустити
 
-Відкрийте `index.html` через **Live Preview** у VS Code (або `npx serve .`).
+Відкрийте `index.html` через **Live Preview** у VS Code (або `npx serve .`) у
+Chrome або Edge.
 Через `file://` сторінка не запрацює: браузер не завантажує звідти ES-модулі й
 JSON (див. ЛР-8, §5.1). `npm install` не потрібен.
 
@@ -50,13 +51,24 @@ JSON (див. ЛР-8, §5.1). `npm install` не потрібен.
 ## Як задеплоїти
 
 Вміст цієї теки можна покласти або в **окремий репозиторій**, або в теку
-`lab-9/` спільного репозиторію з лабораторними. Усі шляхи в проєкті відносні.
+`lab-9/` спільного репозиторію з лабораторними. Усі шляхи в проєкті відносні,
+тому він працює і з кореня сайту, і з підтеки. Самоперевірка — за адресою
+сторінки з `check.html` у кінці.
+
+### GitHub Pages
 
 1. Завантажте файли в репозиторій.
 2. Settings → Pages → Source: _Deploy from a branch_, гілка `main`, тека `/`.
 3. Сторінка з'явиться за адресою `https://<username>.github.io/<repository>/`
-   (або `…/<repository>/lab-9/`), а самоперевірка — за тією самою адресою з
-   `check.html` у кінці.
+   (або `…/<repository>/lab-9/`).
+
+### Vercel
+
+1. [vercel.com](https://vercel.com) → Add New → Project → імпорт репозиторію.
+2. Framework Preset: **Other**. Build Command і Output Directory залиште
+   порожніми — збирати нічого не потрібно.
+3. Якщо проєкт лежить у теці `lab-9/` — **Root Directory → `lab-9`**.
+4. Сторінка з'явиться за адресою `https://<project>.vercel.app/`.
 
 ## Дані
 
