@@ -7,7 +7,7 @@ update both in the same sitting. Part 2 was revised on 2026-10-04 (see
 
 ## How the site maps to the plan
 
-As of 2026-10-04. The site's lab id is the file name in `src/content/labs/`.
+As of 2026-10-08. The site's lab id is the file name in `src/content/labs/`.
 
 | Plan | Site | Note |
 | --- | --- | --- |
@@ -16,7 +16,7 @@ As of 2026-10-04. The site's lab id is the file name in `src/content/labs/`.
 | ЛР 5 topic + ЛР 6 | `lab-6` | responsive layout and container queries in one code-challenge lab |
 | ЛР 7 | `lab-7` | Проміжний контроль №1 |
 | ЛР 8 | `lab-8` | JavaScript basics; [lab-8/README.md](lab-8/README.md) |
-| ЛР 9 | not built | |
+| ЛР 9 | `lab-9` | DOM, events and forms; [lab-9/README.md](lab-9/README.md) |
 | ЛР 10 | `lab-10` | JavaScript debugging; [lab-10/README.md](lab-10/README.md) |
 | ЛР 11–15 | not built | |
 
