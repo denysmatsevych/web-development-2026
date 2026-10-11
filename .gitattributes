@@ -1,0 +1,3 @@
+# Starter packs are zipped from the working tree, so pin their text files to
+# LF: the zip a student downloads then doesn't depend on core.autocrlf.
+*-starter/** text=auto eol=lf
