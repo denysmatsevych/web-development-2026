@@ -42,6 +42,10 @@ Deviations from the plan:
   §5 keeps setup, the AI loop and commits. The report's last item is a short
   summary of what was done, not the «context vs defaults» comparison; the
   defence still asks what `AGENTS.md` changed.
+- **Defence questions are an interview list.** §7 lists typical frontend
+  interview questions on the lab's topics, grouped, instead of a few tasks
+  and questions mixed together; the live change is mentioned only as
+  something the instructor may ask for.
 
 ## Context
 
