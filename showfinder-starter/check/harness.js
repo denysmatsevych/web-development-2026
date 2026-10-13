@@ -9,8 +9,12 @@
 
 export const sleep = (/** @type {number} */ ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-/** Пробіли й переноси — як один пробіл; без пробілів на краях. */
-export const norm = (/** @type {string | null | undefined} */ text) => (text ?? '').replace(/\s+/g, ' ').trim();
+/**
+ * Пробіли й переноси — як один пробіл; без пробілів на краях. Апострофи ’ і ʼ — як ': сторінка ТЗ
+ * показує «з’єднання» з типографським апострофом, і текст, скопійований з неї, теж правильний.
+ */
+export const norm = (/** @type {string | null | undefined} */ text) =>
+  (text ?? '').replace(/\s+/g, ' ').replace(/[’ʼ]/g, "'").trim();
 
 let html = '';
 
