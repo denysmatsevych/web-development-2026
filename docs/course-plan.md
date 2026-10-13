@@ -81,40 +81,46 @@ As of 2026-10-13. The site's lab id is the file name in `src/content/labs/`.
 ## Порядок оцінювання результатів навчання
 
 Section 5 of the programme, copied from the approved PDF (26 August 2026) on
-2026-10-13. The second row is already updated here and not yet in the `.docx`
-(see **Mismatches** below).
+2026-10-13, then changed on 2026-10-13: ЛР 8–11, Проміжний контроль 2, the
+total for current work and Підсумковий контроль differ from the PDF and are not
+yet in the `.docx` (see **Mismatches** below).
 
 | Результати навчання | Контрольні заходи | Вимоги до виду контролю | Оцінювання |
 | --- | --- | --- | --- |
 | Застосування HTML, CSS, семантичної розмітки, принципів SEO та Web Accessibility для створення якісних вебсторінок і вебінтерфейсів. | Лабораторні роботи №1-6; проміжний контроль №1 (Частина 1) | Виконання та захист лабораторних робіт із використанням AI-агентів для генерації, аналізу, рефакторингу та debugging коду. Проміжний контроль передбачає самостійне виконання комплексного завдання з HTML, CSS, SEO, a11y та responsive design. | Лабораторні: 12 балів (6 робіт × 2 б.). Проміжний контроль 1: 12 балів |
-| Розробка динамічних вебінтерфейсів із використанням JavaScript, DOM, подієвої моделі браузера, асинхронного програмування та Web API. | Лабораторні роботи №8-11 | Виконання практичних завдань із JavaScript, DOM, Events, Event Loop, Promise, async/await та Fetch API. Застосування AI-агентів для генерації, debugging та рефакторингу з обов’язковою перевіркою отриманого результату. | 8 балів: ЛР 8–10 — 3 роботи × 2 б. (захист); ЛР 11 — 2 б. (самоперевірка 0,5 + процес 0,5 + захист 1) |
-| Застосування TypeScript, REST API, сучасного frontend toolchain та AI-агентів у повному циклі розробки вебзастосунку. | Лабораторні роботи №12-14; проміжний контроль №2 (Частина 2) | Типізація JavaScript-коду, міграція JS у TS, інтеграція REST API, тестування та використання AI-агента для розробки, debugging і code review. Проміжний контроль передбачає комплексне завдання з JavaScript/TypeScript та REST API. | Лабораторні: 6 балів (3 роботи × 2 б.). Проміжний контроль 2: 12 балів |
+| Розробка динамічних вебінтерфейсів із використанням JavaScript, DOM, подієвої моделі браузера, асинхронного програмування та Web API. | Лабораторні роботи №8-11 | Виконання практичних завдань із JavaScript, DOM, Events, Event Loop, Promise, async/await та Fetch API. Застосування AI-агентів для генерації, debugging та рефакторингу з обов’язковою перевіркою отриманого результату. | 12 балів (4 роботи × 3 б.) |
+| Застосування TypeScript, REST API, сучасного frontend toolchain та AI-агентів у повному циклі розробки вебзастосунку. | Лабораторні роботи №12-14; проміжний контроль №2 (Частина 2) | Типізація JavaScript-коду, міграція JS у TS, інтеграція REST API, тестування та використання AI-агента для розробки, debugging і code review. Проміжний контроль передбачає комплексне завдання з JavaScript/TypeScript та REST API. | Лабораторні: 6 балів (3 роботи × 2 б.). Проміжний контроль 2: 10 балів |
 | Самостійне вивчення та поглиблений аналітичний аналіз сучасних технологій веброзробки, критична оцінка AI-generated code та обґрунтування вибору технологічних рішень. | Захист презентацій (доповідей за темами лекцій) | Підготовка та публічна презентація аналітичного матеріалу за обраною темою з поясненням принципів роботи технології, практичними прикладами, аналізом переваг і обмежень. | 20 балів (4 презентації × 5 б.) |
-| **Усього за поточну роботу** | | | **70 балів** |
-| Підтвердження системного теоретичного фундаменту та практичних навичок сучасної веброзробки з використанням AI-агентів. | Підсумковий контроль | Комплексне практичне завдання з розробки та доопрацювання вебзастосунку із застосуванням HTML, CSS, JavaScript/TypeScript та REST API. Захист результату, пояснення коду й архітектурних рішень, демонстрація debugging та критична оцінка використаних AI-рішень. | 30 балів |
+| **Усього за поточну роботу** | | | **72 бали** |
+| Підтвердження системного теоретичного фундаменту та практичних навичок сучасної веброзробки з використанням AI-агентів. | Підсумковий контроль | Комплексне практичне завдання з розробки та доопрацювання вебзастосунку із застосуванням HTML, CSS, JavaScript/TypeScript та REST API. Захист результату, пояснення коду й архітектурних рішень, демонстрація debugging та критична оцінка використаних AI-рішень. | 28 балів |
 | **Усього за семестр** | | | **100 балів** |
 
-**How the labs apply it.** Each lab slot is worth 2 points, as above; `lab-4`
-takes two slots, so it is worth 4. Most handouts also give a bonus the
-programme doesn't mention.
+**How the labs apply it.** A lab slot in Part 1 and ЛР 12–14 is worth 2
+points; `lab-4` takes two slots, so it is worth 4. ЛР 8–11 are worth 3 each,
+which matches their handouts' maximum: 2 points plus a +1 bonus. Part 1
+handouts give a bonus the table doesn't count.
 
 - **ЛР 2–4, 8–10:** a successful defence earns the points; +1 (`lab-4`: +2)
   for submitting by the deadline or working in class.
 - **`lab-6`:** 2 points for a successful defence or work in class, no bonus.
 - **`lab-1`, `lab-7`:** the handouts state no points.
-- **ЛР 11:** the 2 points are split into the self-check, the process (commits,
+- **ЛР 11:** 2 points are split into the self-check, the process (commits,
   `API.md`, `AGENTS.md`) and the defence, scored by a published rubric, and
-  the bonus is for on-time submission only. The rubric is in its handout, §8
+  the +1 is for on-time submission only. The rubric is in its handout, §8
   ([lab-11.md](../src/content/labs/lab-11.md)). This is the scheme proposed
   for later labs; earlier labs keep theirs.
 
 **Mismatches with the plan** (fix them in the `.docx`):
 
-- The second row reads ЛР №8-11 here but ЛР №7-10 in the PDF. ЛР 7 is
+- **ЛР 8–11:** the PDF says ЛР №7-10 for 8 points (4 × 2). ЛР 7 is
   Проміжний контроль №1, already counted in the first row, and ЛР 11 was in
-  no row. The row's total stays 8; its breakdown now shows ЛР 11's split.
-- The bonus points are outside this table. If they count towards the 100,
-  current work can exceed 70; the programme should say how they are capped.
+  no row. Here: ЛР №8-11 for 12 points (4 × 3).
+- **Проміжний контроль 2:** 10 points here, 12 in the PDF.
+- **Totals:** current work 72 here, 70 in the PDF; Підсумковий контроль 28
+  here, 30 in the PDF. The semester stays 100.
+- **Part 1 bonuses** (ЛР 2–4) are still outside the table. If they count
+  towards the 100, current work can exceed 72; the programme should say how
+  they are capped.
 
 ## Рекомендована література
 
