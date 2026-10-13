@@ -2,12 +2,17 @@
 
 | Route | Source | What it is |
 | --- | --- | --- |
-| `/labs/lab-11/` | `src/content/labs/lab-11.md` | the handout: 13 experiments against the live TVmaze API, `API.md`, three challenges built as AI draft → audit → fix by hand, `AGENTS.md` before the last one, report, defence |
-| `/labs/lab-11/task/` | `src/content/tasks/lab-11.md` | the brief: the DOM contract, the API, the states and their texts, numbered rules and the Network checklist |
+| `/labs/lab-11/` | `src/content/labs/lab-11.md` | the handout: 13 experiments against the live TVmaze API, `API.md`, how to work (the AI draft → audit → fix loop, commits), report, defence |
+| `/labs/lab-11/task/` | `src/content/tasks/lab-11.md` | the brief: the DOM contract, the API, the states and their texts, then every task — three challenges with their prompts and numbered rules, the `AGENTS.md` step — and the Network checklist |
 | `/labs/showfinder-starter.zip` | `showfinder-starter/` | the static shell, the view module, stubs, `check.html` with recorded TVmaze responses, `offline.html` and `experiments.html` |
 
 ## Why it looks like this
 
+- **Every task is in the brief.** Lab 9 split each challenge between the
+  handout (what to build, the prompt) and the brief (the rules). For Lab 11
+  that read as two pages of tasks, so the brief holds each challenge's
+  prompt, files and rules in one place, and the handout's §5 keeps only how
+  to work: setup, the AI loop, commits.
 - **A real, documented API.** The programme names API documentation, status
   codes, headers, CORS and the Network panel; only a live API gives all five.
   TVmaze is the same data as Labs 8 and 9, needs no key and sends CORS
@@ -27,8 +32,9 @@
 - **The docs become the agent's context.** Readings 30–34 are about rules
   files. The student writes `API.md` from the docs, each row checked by a
   real request, and before Challenge 3 turns it and the Challenge 1–2
-  findings into an `AGENTS.md`. The report compares the Challenge 3 draft
-  with the earlier ones. The handout asks for their own words, not a copy of
+  findings into an `AGENTS.md`. The defence asks what the file changed in
+  the Challenge 3 draft; the report only sums up what was done. The handout
+  asks for their own words, not a copy of
   the brief.
 - **No seeded network defects.** Lab 10 already used a seeded starter. The
   bugs to debug in the Network panel are the ones in the AI's draft.

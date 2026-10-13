@@ -37,6 +37,11 @@ Deviations from the plan:
   lab was built, so nothing can be done before it. Handout §3 lists the steps
   in order without saying where; §4 and `API.md` are no longer homework, and
   the **Timing** estimate below, which assumed they were, no longer holds.
+- **All tasks in the brief.** The handout's challenge sections (5.3–5.6) moved
+  into the brief's §4 with their prompts, next to their rules; the handout's
+  §5 keeps setup, the AI loop and commits. The report's last item is a short
+  summary of what was done, not the «context vs defaults» comparison; the
+  defence still asks what `AGENTS.md` changed.
 
 ## Context
 
