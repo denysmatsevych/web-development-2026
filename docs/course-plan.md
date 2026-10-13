@@ -81,12 +81,13 @@ As of 2026-10-13. The site's lab id is the file name in `src/content/labs/`.
 ## Порядок оцінювання результатів навчання
 
 Section 5 of the programme, copied from the approved PDF (26 August 2026) on
-2026-10-13.
+2026-10-13. The second row is already updated here and not yet in the `.docx`
+(see **Mismatches** below).
 
 | Результати навчання | Контрольні заходи | Вимоги до виду контролю | Оцінювання |
 | --- | --- | --- | --- |
 | Застосування HTML, CSS, семантичної розмітки, принципів SEO та Web Accessibility для створення якісних вебсторінок і вебінтерфейсів. | Лабораторні роботи №1-6; проміжний контроль №1 (Частина 1) | Виконання та захист лабораторних робіт із використанням AI-агентів для генерації, аналізу, рефакторингу та debugging коду. Проміжний контроль передбачає самостійне виконання комплексного завдання з HTML, CSS, SEO, a11y та responsive design. | Лабораторні: 12 балів (6 робіт × 2 б.). Проміжний контроль 1: 12 балів |
-| Розробка динамічних вебінтерфейсів із використанням JavaScript, DOM, подієвої моделі браузера, асинхронного програмування та Web API. | Лабораторні роботи №7-10 | Виконання практичних завдань із JavaScript, DOM, Events, Event Loop, Promise, async/await та Fetch API. Застосування AI-агентів для генерації, debugging та рефакторингу з обов’язковою перевіркою отриманого результату. | 8 балів (4 роботи × 2 б.) |
+| Розробка динамічних вебінтерфейсів із використанням JavaScript, DOM, подієвої моделі браузера, асинхронного програмування та Web API. | Лабораторні роботи №8-11 | Виконання практичних завдань із JavaScript, DOM, Events, Event Loop, Promise, async/await та Fetch API. Застосування AI-агентів для генерації, debugging та рефакторингу з обов’язковою перевіркою отриманого результату. | 8 балів: ЛР 8–10 — 3 роботи × 2 б. (захист); ЛР 11 — 2 б. (самоперевірка 0,5 + процес 0,5 + захист 1) |
 | Застосування TypeScript, REST API, сучасного frontend toolchain та AI-агентів у повному циклі розробки вебзастосунку. | Лабораторні роботи №12-14; проміжний контроль №2 (Частина 2) | Типізація JavaScript-коду, міграція JS у TS, інтеграція REST API, тестування та використання AI-агента для розробки, debugging і code review. Проміжний контроль передбачає комплексне завдання з JavaScript/TypeScript та REST API. | Лабораторні: 6 балів (3 роботи × 2 б.). Проміжний контроль 2: 12 балів |
 | Самостійне вивчення та поглиблений аналітичний аналіз сучасних технологій веброзробки, критична оцінка AI-generated code та обґрунтування вибору технологічних рішень. | Захист презентацій (доповідей за темами лекцій) | Підготовка та публічна презентація аналітичного матеріалу за обраною темою з поясненням принципів роботи технології, практичними прикладами, аналізом переваг і обмежень. | 20 балів (4 презентації × 5 б.) |
 | **Усього за поточну роботу** | | | **70 балів** |
@@ -109,9 +110,9 @@ programme doesn't mention.
 
 **Mismatches with the plan** (fix them in the `.docx`):
 
-- The second row lists ЛР №7-10, but ЛР 7 is Проміжний контроль №1, already
-  counted in the first row, and ЛР 11 is in no row. After the 2026-10-04
-  revision the row covers ЛР 8–11; the total stays 4 × 2 = 8.
+- The second row reads ЛР №8-11 here but ЛР №7-10 in the PDF. ЛР 7 is
+  Проміжний контроль №1, already counted in the first row, and ЛР 11 was in
+  no row. The row's total stays 8; its breakdown now shows ЛР 11's split.
 - The bonus points are outside this table. If they count towards the 100,
   current work can exceed 70; the programme should say how they are capped.
 
