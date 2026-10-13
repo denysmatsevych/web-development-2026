@@ -25,8 +25,8 @@
   prompts are short on purpose and never mention errors, cancellation,
   encoding or headers.
 - **The docs become the agent's context.** Readings 30–34 are about rules
-  files. The student writes `API.md` at home from the docs, each row checked
-  by a real request, and before Challenge 3 turns it and the Challenge 1–2
+  files. The student writes `API.md` from the docs, each row checked by a
+  real request, and before Challenge 3 turns it and the Challenge 1–2
   findings into an `AGENTS.md`. The report compares the Challenge 3 draft
   with the earlier ones. The handout asks for their own words, not a copy of
   the brief.

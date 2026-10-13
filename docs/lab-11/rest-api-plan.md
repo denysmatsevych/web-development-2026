@@ -33,6 +33,10 @@ Deviations from the plan:
 - **The handout is about 3,800 words**, not 3,000 or fewer (ЛР-9 has about
   4,100). Each experiment spells out its question, and §5 repeats ЛР-9's
   four-step loop because the students meet it without ЛР-9 open.
+- **No home/class split.** The class is on 2026-10-14, the morning after the
+  lab was built, so nothing can be done before it. Handout §3 lists the steps
+  in order without saying where; §4 and `API.md` are no longer homework, and
+  the **Timing** estimate below, which assumed they were, no longer holds.
 
 ## Context
 
