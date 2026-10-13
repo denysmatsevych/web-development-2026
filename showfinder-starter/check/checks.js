@@ -106,10 +106,19 @@ export function defineChecks(fixtures) {
   const shows = (/** @type {App} */ app, /** @type {Element} */ region, /** @type {string} */ wanted, timeout = 1500) =>
     app.until(() => text(region).includes(wanted), timeout);
 
+  /** Пояснення, якщо область досі «Завантаження…», бо застосунок сам повторює той самий запит. */
+  function autoRetried(/** @type {App} */ app, /** @type {Element} */ region) {
+    if (!text(region).includes(LOADING)) return '';
+    const urls = (region === app.results ? app.searches() : app.api(/^\/shows\//)).map((entry) => entry.url);
+    const repeats = urls.length - new Set(urls).size;
+    return repeats ? ` — застосунок сам повторив запит (${repeats}): автоматично повторюється лише 429 (C3.6)` : '';
+  }
+
   /** Помилка з текстом і «Спробувати ще» в області. */
   function expectError(/** @type {App} */ app, /** @type {Element} */ region, /** @type {string} */ message, /** @type {string} */ cause) {
     const where = region === app.results ? '#results' : '#details';
-    expect(text(region).includes(message), `${cause}: ${where} показує «${short(text(region))}», очікувалося «${message}»`);
+    const retried = message === RATE ? '' : autoRetried(app, region);
+    expect(text(region).includes(message), `${cause}: ${where} показує «${short(text(region))}», очікувалося «${message}»${retried}`);
     expect(app.retry(region), `${cause}: у ${where} є повідомлення, але немає кнопки «Спробувати ще» (шаблон #state-error)`);
   }
 
@@ -506,7 +515,7 @@ export function defineChecks(fixtures) {
       await app.type('girls');
       await searchSent(app, 'girls');
       await sleep(400);
-      expect(!busy(app.results), `пошук, ${name}: #results досі має aria-busy="true"`);
+      expect(!busy(app.results), `пошук, ${name}: #results досі має aria-busy="true"${autoRetried(app, app.results)}`);
       expect(!text(app.results).includes(LOADING) && app.status() !== LOADING, `пошук, ${name}: досі видно «${LOADING}»`);
     }
     for (const [name, spec] of [['404', { status: 404 }], ...failures]) {
@@ -514,7 +523,7 @@ export function defineChecks(fixtures) {
       answer(app, isShow(GIRLS), /** @type {object} */ (spec));
       await app.open(GIRLS);
       await sleep(400);
-      expect(!busy(app.details), `сторінка серіалу, ${name}: #details досі має aria-busy="true"`);
+      expect(!busy(app.details), `сторінка серіалу, ${name}: #details досі має aria-busy="true"${autoRetried(app, app.details)}`);
       expect(!text(app.details).includes(LOADING), `сторінка серіалу, ${name}: #details досі показує «${LOADING}»`);
     }
   });
