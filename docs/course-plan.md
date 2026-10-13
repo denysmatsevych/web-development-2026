@@ -7,7 +7,7 @@ update both in the same sitting. Part 2 was revised on 2026-10-04 (see
 
 ## How the site maps to the plan
 
-As of 2026-10-08. The site's lab id is the file name in `src/content/labs/`.
+As of 2026-10-13. The site's lab id is the file name in `src/content/labs/`.
 
 | Plan | Site | Note |
 | --- | --- | --- |
@@ -18,7 +18,8 @@ As of 2026-10-08. The site's lab id is the file name in `src/content/labs/`.
 | ЛР 8 | `lab-8` | JavaScript basics; [lab-8/README.md](lab-8/README.md) |
 | ЛР 9 | `lab-9` | DOM, events and forms; [lab-9/README.md](lab-9/README.md) |
 | ЛР 10 | `lab-10` | JavaScript debugging; [lab-10/README.md](lab-10/README.md) |
-| ЛР 11–15 | not built | |
+| ЛР 11 | `lab-11` | REST API integration; [lab-11/README.md](lab-11/README.md) |
+| ЛР 12–15 | not built | |
 
 ## Part 2 revision (2026-10-04)
 
