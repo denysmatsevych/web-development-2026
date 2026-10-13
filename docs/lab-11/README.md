@@ -36,6 +36,10 @@
   the Challenge 3 draft; the report only sums up what was done. The handout
   asks for their own words, not a copy of
   the brief.
+- **Graded by components.** Unlike Labs 2–10, the 2 points are split into the
+  self-check, the process and a rubric-scored defence, and the bonus is for
+  on-time submission only. The rubric is in the handout, §8; the course-level
+  picture is in [../course-plan.md](../course-plan.md).
 - **No seeded network defects.** Lab 10 already used a seeded starter. The
   bugs to debug in the Network panel are the ones in the AI's draft.
 - **Lab 10 order.** Lab 11 builds correctly some of the async patterns that

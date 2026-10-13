@@ -2,9 +2,9 @@
 
 Status: built on 2026-10-13 on branch `feat/lab-11-rest-api`, from `main`.
 Not yet done, and both gate publishing: the prompt calibration in other agents
-and the timed dry run. Decisions 1 and 2 follow the recommendation; decision 3
-is settled (ЛР-10 due 21.10.2026, ЛР-11 due 23.10.2026); decisions 4 and 5 are
-still open. Delete this file once the lab is published. The facts that last
+and the timed dry run. Decisions 1 and 2 follow the recommendation; decisions 3
+and 4 are settled (ЛР-10 due 21.10.2026, ЛР-11 due 23.10.2026; 3 hours of
+self-study); decision 5 is still open. Delete this file once the lab is published. The facts that last
 are in this folder's `README.md`.
 
 Deviations from the plan:
@@ -46,6 +46,10 @@ Deviations from the plan:
   interview questions on the lab's topics, grouped, instead of a few tasks
   and questions mixed together; the live change is mentioned only as
   something the instructor may ask for.
+- **Grading by components.** The 2 points (the programme's weight for a lab)
+  are split into the self-check (0.5), the process (0.5) and a defence scored
+  by a rubric (1), and the bonus is for on-time submission only, not «or work
+  in class». Labs 8–10 keep their scheme.
 
 ## Context
 
@@ -466,9 +470,8 @@ Open:
 3. **Deadline.** Settled on 2026-10-13: ЛР-11 is due 23.10.2026, and ЛР-10
    moved to 21.10.2026. The original proposal was to publish after ЛР-10's
    deadline (principle 7); see **Deviations** at the top.
-4. **Self-study hours.** The programme text says 2 hours, `course-plan.md`
-   says 3. Which is current? Fix `course-plan.md` to match the `.docx`. The
-   handout says 3 hours, as the other Part 2 labs do, until this is settled.
+4. **Self-study hours.** Settled on 2026-10-13: the approved programme (PDF of
+   26 August 2026) says 3 hours, as `course-plan.md` and the handout do.
 5. **Лекція 6 coverage.** Its content isn't in this repo. Confirm it covers
    `AbortController`, preflight requests and HTTP caching before §4 relies on
    them. Its self-study lists Fetch, CORS and caching, but not cancellation.
