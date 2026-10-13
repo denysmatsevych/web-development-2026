@@ -1,8 +1,9 @@
 # Plan: ЛР-11 «AI-агент для інтеграції REST API»
 
 Status: built on 2026-10-13 on branch `feat/lab-11-rest-api`, from `main`.
-Not yet done, and both gate publishing: the prompt calibration in other agents
-and the timed dry run. Decisions 1 and 2 follow the recommendation; decisions 3
+The prompt calibration ran on 2026-10-13 in two Claude models (Sonnet and
+Haiku; the record is in `solution/calibration.md`). Not yet done, and both gate
+publishing: the calibration in Copilot and Cursor, and the timed dry run. Decisions 1 and 2 follow the recommendation; decisions 3
 and 4 are settled (ЛР-10 due 21.10.2026, ЛР-11 due 23.10.2026; 3 hours of
 self-study); decision 5 is still open. Delete this file once the lab is published. The facts that last
 are in this folder's `README.md`.
@@ -46,6 +47,16 @@ Deviations from the plan:
   interview questions on the lab's topics, grouped, instead of a few tasks
   and questions mixed together; the live change is mentioned only as
   something the instructor may ask for.
+- **Calibration changed the brief, the starter and the check.**
+  - Each prompt now ends with «check.html, теку check/ і offline.html не
+    відкривай і не змінюй».
+  - The starter README no longer names the `embed` request.
+  - C3 says that only `429` is retried automatically, and C3.3 and C3.4 say so
+    when an app retries by itself.
+  - The check reads ’ and ʼ as ', because the brief page renders «з'єднання»
+    with ’.
+  - `check/net.js` stops `history.pushState` and `replaceState` from throwing
+    in the `srcdoc` frame.
 - **Grading by components.** The 2 points (the programme's weight for a lab)
   are split into the self-check (0.5), the process (0.5) and a defence scored
   by a rubric (1), and the bonus is for on-time submission only, not «or work

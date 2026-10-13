@@ -28,7 +28,9 @@
 - **The AI writes a draft; the student owns the result.** Same loop and
   commits as Lab 9 (`Challenge N: AI draft`, `Challenge N: fixes`). The
   prompts are short on purpose and never mention errors, cancellation,
-  encoding or headers.
+  encoding or headers. Each ends with «check.html, теку check/ і offline.html
+  не відкривай і не змінюй»: in calibration, an agent that could see them
+  read `check/checks.js`, wrote to it and left nothing to audit.
 - **The docs become the agent's context.** Readings 30–34 are about rules
   files. The student writes `API.md` from the docs, each row checked by a
   real request, and before Challenge 3 turns it and the Challenge 1–2
@@ -64,7 +66,10 @@ reads the app's source. Each check opens a fresh `srcdoc` copy of
   `AbortSignal`, exposes only CORS-safelisted response headers, and fails a
   request that would need a preflight, goes to another origin, or uses
   `credentials: 'include'`, with Chrome's own Console message. `mode:
-  'no-cors'` gets an opaque response.
+  'no-cors'` gets an opaque response. In a `srcdoc` frame,
+  `history.pushState` and `replaceState` with a URL throw a `SecurityError`
+  that a real page never sees, so the stub retries them without the URL:
+  an app that syncs the query to `?q=` passes as it would on its own page.
 
 The race checks (C1.8, C2.5) release the newer response first in one copy and
 the older first in another, and also check that the region shows
@@ -102,11 +107,13 @@ record gets empty episode and cast lists.
 `docs/lab-11/solution/` is **gitignored**, because the repository is public:
 
 - `src/` — the reference `api.js` and `app.js`;
-- `traps.mjs` — 33 typical wrong answers and 5 valid alternatives, each a
+- `traps.mjs` — 33 typical wrong answers and 7 valid alternatives, each a
   patch on the solution;
 - `verify.mjs` + `cdp.mjs` — the headless Edge harness;
 - `experiments.mjs` + `answer-key.md` — the §4 answer key, run against the
-  live API.
+  live API;
+- `calibration.md` — which checks each agent's draft of each prompt failed,
+  and what that changed.
 
 `verify.mjs` checks five things:
 
