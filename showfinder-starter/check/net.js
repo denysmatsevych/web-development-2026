@@ -14,6 +14,10 @@
 //
 // Самоперевірка керує відповідями через window.__net: затримує їх, повертає помилки або
 // обриває з'єднання. В офлайн-режимі (offline.html) відповіді приходять через 0,25–0,9 с.
+//
+// Обидві сторінки відкривають застосунок у srcdoc-фреймі з адресою about:srcdoc. Там
+// history.pushState і replaceState з новою адресою (наприклад, ?q=girls) кидають SecurityError,
+// хоча в index.html працюють, тож скрипт зберігає стан, але адресу не змінює.
 (() => {
   const API = 'https://api.tvmaze.com';
   const script = document.currentScript;
@@ -38,6 +42,20 @@
     answer: null,
   };
   window.__net = net;
+
+  /* ---------------- history у srcdoc-фреймі ---------------- */
+
+  for (const name of ['pushState', 'replaceState']) {
+    const original = history[name].bind(history);
+    history[name] = function (state, unused, url) {
+      try {
+        original(state, unused, url);
+      } catch (error) {
+        if (error?.name !== 'SecurityError') throw error;
+        original(state, unused);
+      }
+    };
+  }
 
   net.ready = Promise.all(
     ['search.json', 'shows.json'].map((name) => realFetch(new URL(name, base), { cache: 'no-store' }).then((r) => r.json())),
