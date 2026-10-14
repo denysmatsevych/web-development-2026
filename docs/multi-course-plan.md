@@ -50,7 +50,7 @@ src/
 │     └─ web-accessibility/   lecture-1.ts (stub)
 ├─ content/
 │  ├─ labs/
-│  │  ├─ web-development/     lab-1.md … lab-10.md, individual.md
+│  │  ├─ web-development/     lab-1.md … lab-11.md, individual.md
 │  │  ├─ react/               lab-1.md (stub)
 │  │  └─ web-accessibility/   lab-1.md (stub)
 │  └─ tasks/
@@ -93,7 +93,7 @@ Branch `refactor/courses`, small Conventional Commits, `npm run check && npm run
 - [ ] `git mv` the pages into `src/pages/[course]/…`, building paths from registry × entries; add `[course]/index.astro`; turn `src/pages/index.astro` into the hub of course cards
 - [ ] Update imports and breadcrumbs in `check.astro` and `report.astro` (they use `labHref` / `taskHref`) and keep them at `/labs/lab-7/…`
 
-**Done when:** `npm run check && npm run build` passes and the build has `/web-development/labs/` for all 10 labs, 6 task pages and 2 decks.
+**Done when:** `npm run check && npm run build` passes and the build has `/web-development/labs/` for all 11 labs, 7 task pages and 2 decks.
 
 ### Step 2 · Header, titles, labels (0.5 d)
 - [ ] Set the site name to "Modern Web Development" in `site.ts`
@@ -107,7 +107,7 @@ Branch `refactor/courses`, small Conventional Commits, `npm run check && npm run
 ### Step 3 · Old links and redirects (0.5 d)
 - [ ] Thin redirect pages at the old paths (`src/pages/labs/[lab].astro`, `labs/[lab]/task.astro`, `lectures/[lecture].astro`): `getStaticPaths` lists the Web Development entries and each page returns `Astro.redirect(withBase(…), 301)`. The status must be passed explicitly: the default 302 builds into a meta-refresh page with a 2-second delay
 - [ ] Parameterless redirects (`/lectures`, `/labs`) in the `redirects` config, with the base taken from the existing `BASE` constant in `astro.config.mjs`
-- [ ] Repoint the 19 Markdown links to pages (the 11 starter ZIP links stay at `/labs/`)
+- [ ] Repoint the 22 Markdown links to pages (the 14 PDF/ZIP links stay at `/labs/`)
 - [ ] Check that every PDF and ZIP in `public/labs/` still loads
 
 **Done when:** every URL from step 0 returns its page or a valid redirect, and every PDF and ZIP loads.
@@ -139,6 +139,6 @@ Step 1 moves every file in `src/content/labs/` and `src/content/tasks/`, so it c
 
 - **Site name:** "Modern Web Development" (decided). It replaces "Web Development 2026" in the header; page titles end with the course name.
 - **`base`:** keep `/web-development-2026`. The site stays at the same address, so no link students already have breaks. Changing it would mean renaming the GitHub repository, and GitHub Pages doesn't redirect from the old address, so every existing link would stop working.
-- **PDFs and ZIPs:** keep them in `public/labs/`. This also leaves the 11 ZIP links and every `handout:` path in the frontmatter untouched.
+- **PDFs and ZIPs:** keep them in `public/labs/`. This also leaves the 14 ZIP links and every `handout:` path in the frontmatter untouched.
 
 **Alternative considered:** serve Web Development without a course prefix (like `prefixDefaultLocale: false` in Astro i18n). That would remove the redirects, but Web Development URLs would then differ in shape from the React and Web Accessibility ones, so I chose one consistent prefix.
