@@ -1,13 +1,13 @@
 # Course plan — програма навчальної дисципліни
 
-A copy of the structure table from the official course programme (a `.docx`
-outside this repo). The `.docx` is authoritative: when the programme changes,
+A copy of the structure and grading tables from the official course programme
+(a `.docx` outside this repo). The `.docx` is authoritative: when the programme changes,
 update both in the same sitting. Part 2 was revised on 2026-10-04 (see
 **Part 2 revision** below).
 
 ## How the site maps to the plan
 
-As of 2026-10-08. The site's lab id is the file name in `src/content/labs/`.
+As of 2026-10-13. The site's lab id is the file name in `src/content/labs/`.
 
 | Plan | Site | Note |
 | --- | --- | --- |
@@ -18,7 +18,8 @@ As of 2026-10-08. The site's lab id is the file name in `src/content/labs/`.
 | ЛР 8 | `lab-8` | JavaScript basics; [lab-8/README.md](lab-8/README.md) |
 | ЛР 9 | `lab-9` | DOM, events and forms; [lab-9/README.md](lab-9/README.md) |
 | ЛР 10 | `lab-10` | JavaScript debugging; [lab-10/README.md](lab-10/README.md) |
-| ЛР 11–15 | not built | |
+| ЛР 11 | `lab-11` | REST API integration; [lab-11/README.md](lab-11/README.md) |
+| ЛР 12–15 | not built | |
 
 ## Part 2 revision (2026-10-04)
 
@@ -76,6 +77,50 @@ As of 2026-10-08. The site's lab id is the file name in `src/content/labs/`.
 | 2.10 | Інструменти, тестування та AI-агенти у сучасній frontend-розробці | Лекція 8 (2 год.) | Опрацювання npm, Vite, ESLint, Prettier, Git, testing, CI/CD, AI coding assistants та AI-агентів (3 год.) | Основна: 1, 5. Допоміжна: 20, 21, 29-42, 44, 45 | Захист презентації |
 | 2.11 | AI-assisted testing та agentic coding workflow: генерація та перевірка тестів, рефакторинг під захистом тестів і code review за допомогою AI-агента | Лабораторна робота №14 (2 год.) | Аналіз тестових сценаріїв і coverage; перевірка AI-згенерованих тестів навмисно внесеними помилками; аналіз повного AI coding workflow (3 год.) | Основна: 1, 5. Допоміжна: 30-34, 42, 44, 45 | Захист лабораторної роботи |
 | 2.12 | Проміжний контроль №2. Виконання комплексного завдання з JavaScript, DOM, REST API та TypeScript | Лабораторна робота №15 (2 год.) | Самостійне виконання комплексного завдання з JavaScript/TypeScript та REST API (2 год.) | Основна: 1, 2. Допоміжна: 1, 13, 15 | Проміжний контроль |
+
+## Порядок оцінювання результатів навчання
+
+Section 5 of the programme, copied from the approved PDF (26 August 2026) on
+2026-10-13, then changed on 2026-10-13: ЛР 8–11, Проміжний контроль 2, the
+total for current work and Підсумковий контроль differ from the PDF and are not
+yet in the `.docx` (see **Mismatches** below).
+
+| Результати навчання | Контрольні заходи | Вимоги до виду контролю | Оцінювання |
+| --- | --- | --- | --- |
+| Застосування HTML, CSS, семантичної розмітки, принципів SEO та Web Accessibility для створення якісних вебсторінок і вебінтерфейсів. | Лабораторні роботи №1-6; проміжний контроль №1 (Частина 1) | Виконання та захист лабораторних робіт із використанням AI-агентів для генерації, аналізу, рефакторингу та debugging коду. Проміжний контроль передбачає самостійне виконання комплексного завдання з HTML, CSS, SEO, a11y та responsive design. | Лабораторні: 12 балів (6 робіт × 2 б.). Проміжний контроль 1: 12 балів |
+| Розробка динамічних вебінтерфейсів із використанням JavaScript, DOM, подієвої моделі браузера, асинхронного програмування та Web API. | Лабораторні роботи №8-11 | Виконання практичних завдань із JavaScript, DOM, Events, Event Loop, Promise, async/await та Fetch API. Застосування AI-агентів для генерації, debugging та рефакторингу з обов’язковою перевіркою отриманого результату. | 12 балів (4 роботи × 3 б.) |
+| Застосування TypeScript, REST API, сучасного frontend toolchain та AI-агентів у повному циклі розробки вебзастосунку. | Лабораторні роботи №12-14; проміжний контроль №2 (Частина 2) | Типізація JavaScript-коду, міграція JS у TS, інтеграція REST API, тестування та використання AI-агента для розробки, debugging і code review. Проміжний контроль передбачає комплексне завдання з JavaScript/TypeScript та REST API. | Лабораторні: 6 балів (3 роботи × 2 б.). Проміжний контроль 2: 10 балів |
+| Самостійне вивчення та поглиблений аналітичний аналіз сучасних технологій веброзробки, критична оцінка AI-generated code та обґрунтування вибору технологічних рішень. | Захист презентацій (доповідей за темами лекцій) | Підготовка та публічна презентація аналітичного матеріалу за обраною темою з поясненням принципів роботи технології, практичними прикладами, аналізом переваг і обмежень. | 20 балів (4 презентації × 5 б.) |
+| **Усього за поточну роботу** | | | **72 бали** |
+| Підтвердження системного теоретичного фундаменту та практичних навичок сучасної веброзробки з використанням AI-агентів. | Підсумковий контроль | Комплексне практичне завдання з розробки та доопрацювання вебзастосунку із застосуванням HTML, CSS, JavaScript/TypeScript та REST API. Захист результату, пояснення коду й архітектурних рішень, демонстрація debugging та критична оцінка використаних AI-рішень. | 28 балів |
+| **Усього за семестр** | | | **100 балів** |
+
+**How the labs apply it.** A lab slot in Part 1 and ЛР 12–14 is worth 2
+points; `lab-4` takes two slots, so it is worth 4. ЛР 8–11 are worth 3 each,
+which matches their handouts' maximum: 2 points plus a +1 bonus. Part 1
+handouts give a bonus the table doesn't count.
+
+- **ЛР 2–4, 8–10:** a successful defence earns the points; +1 (`lab-4`: +2)
+  for submitting by the deadline or working in class.
+- **`lab-6`:** 2 points for a successful defence or work in class, no bonus.
+- **`lab-1`, `lab-7`:** the handouts state no points.
+- **ЛР 11:** 2 points are split into the self-check, the process (commits,
+  `API.md`, `AGENTS.md`) and the defence, scored by a published rubric, and
+  the +1 is for on-time submission only. The rubric is in its handout, §8
+  ([lab-11.md](../src/content/labs/lab-11.md)). This is the scheme proposed
+  for later labs; earlier labs keep theirs.
+
+**Mismatches with the plan** (fix them in the `.docx`):
+
+- **ЛР 8–11:** the PDF says ЛР №7-10 for 8 points (4 × 2). ЛР 7 is
+  Проміжний контроль №1, already counted in the first row, and ЛР 11 was in
+  no row. Here: ЛР №8-11 for 12 points (4 × 3).
+- **Проміжний контроль 2:** 10 points here, 12 in the PDF.
+- **Totals:** current work 72 here, 70 in the PDF; Підсумковий контроль 28
+  here, 30 in the PDF. The semester stays 100.
+- **Part 1 bonuses** (ЛР 2–4) are still outside the table. If they count
+  towards the 100, current work can exceed 72; the programme should say how
+  they are capped.
 
 ## Рекомендована література
 
