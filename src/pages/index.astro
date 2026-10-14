@@ -1,38 +1,63 @@
 ---
 /**
- * Course hub — the `/` landing. Short intro + one card per section from
- * `src/data/site.ts` (`sections`): Lectures and Labs.
+ * Course hub — the `/` landing. The registry controls which course cards are
+ * shown in development and production.
  */
 import SiteFooter from '@/components/SiteFooter.astro';
 import SiteHeader from '@/components/SiteHeader.astro';
-import { sections, site } from '@/data/site';
+import { getCourses } from '@/data/courses';
+import { site } from '@/data/site';
 import { withBase } from '@/lib/paths';
 import BaseLayout from '@/layouts/BaseLayout.astro';
+
+const courses = getCourses();
 ---
 
-<BaseLayout title={site.name} description={site.description}>
+<BaseLayout
+  title="Courses"
+  description={site.description}
+>
   <SiteHeader />
 
   <main id="main-content" class="home" tabindex="-1">
-    <section class="hero">
-      <p class="hero__eyebrow">{site.eyebrow}</p>
-      <h1 class="hero__title">{site.name}</h1>
-      <p class="hero__lead">
-        Everything for the course in one place — the lecture slide decks and the
-        lab assignments for modern HTML, CSS and JavaScript.
-      </p>
+    <section class="hero" aria-labelledby="page-title">
+      <p class="hero__eyebrow">{site.hubEyebrow}</p>
+      <h1 id="page-title" class="hero__title">{site.hubTitle}</h1>
+      <p class="hero__lead">{site.description}</p>
     </section>
 
-    <ul class="sections">
+    <ul class="courses" aria-label="Доступні курси">
       {
-        sections.map((section) => (
+        courses.map((course) => (
           <li>
-            <a href={withBase(section.href)} class="section glass-panel">
-              <div class="section__top-panel">
-                <span class="section__name">{section.label}</span>
-                <span class="section__arrow" aria-hidden="true">→</span>
-              </div>
-              <span class="section__blurb">{section.blurb}</span>
+            <a
+              href={withBase(`/${course.slug}/`)}
+              class="course-card glass-panel"
+              aria-label={`${course.title}: ${course.description}`}
+            >
+              <span class="course-card__top">
+                <data class="course-card__year" value={`${course.year}`}>
+                  {course.year}
+                </data>
+                <span
+                  class:list={[
+                    'course-card__status',
+                    { 'course-card__status--draft': course.status === 'draft' },
+                  ]}
+                >
+                  {course.status === 'published' ? 'Доступний' : 'В розробці'}
+                </span>
+              </span>
+              <span class="course-card__body">
+                <span class="course-card__title">{course.courseUk}</span>
+                <span class="course-card__description">{course.description}</span>
+              </span>
+              <span class="course-card__bottom">
+                <span class="course-card__action">
+                  {course.status === 'published' ? 'Перейти до курсу' : 'Переглянути курс'}
+                </span>
+                <span class="course-card__arrow" aria-hidden="true">→</span>
+              </span>
             </a>
           </li>
         ))
@@ -45,9 +70,10 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 
 <style>
   .home {
-    max-width: 64rem;
+    max-width: 80rem;
+    width: 100%;
     margin-inline: auto;
-    padding: 3.5rem 1rem 5rem;
+    padding: 3.5rem 1rem;
   }
 
   @media (min-width: 640px) {
@@ -57,89 +83,148 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   }
 
   .hero {
-    margin-bottom: 3.5rem;
+    max-width: 48rem;
+    margin-bottom: 2.5rem;
   }
 
   .hero__eyebrow {
-    margin: 0 0 0.75rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
+    margin: 0 0 0.85rem;
     color: var(--brand-text);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
   }
 
   .hero__title {
     margin: 0 0 1rem;
+    color: var(--foreground);
     font-size: clamp(2rem, 5vw, 2.75rem);
     font-weight: 700;
-    line-height: 1.15;
-    letter-spacing: -0.02em;
-    color: var(--foreground);
+    letter-spacing: -0.045em;
+    line-height: 1.05;
   }
 
   .hero__lead {
-    margin: 0;
     max-width: 42rem;
-    font-size: 1.0625rem;
-    line-height: 1.7;
+    margin: 0;
     color: var(--muted-foreground);
+    font-size: clamp(1rem, 2vw, 1.125rem);
+    line-height: 1.75;
   }
 
-  .sections {
+  .courses {
     display: grid;
-    gap: 1.25rem;
-    list-style: none;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
     margin: 0;
     padding: 0;
-    grid-template-columns: 1fr;
+    list-style: none;
   }
-
-  @media (min-width: 640px) {
-    .sections {
-      grid-template-columns: repeat(2, 1fr);
+  @media (min-width: 680px) {
+    .courses {
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     }
   }
-
-  .section {
+  @media (min-width: 980px) {
+    .courses {
+      grid-template-columns: repeat(auto-fit, minmax(300px, 0.5fr));
+    }
+  }
+  .course-card {
     display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
     height: 100%;
-    padding: 2.25rem 1.75rem;
-    border-radius: var(--radius-lg);
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 1.5rem;
+    border-radius: var(--radius-xl);
+    color: inherit;
     text-decoration: none;
     transition:
       border-color 0.15s ease,
       transform 0.15s ease;
   }
 
-  .section__top-panel{
+  @media (min-width: 680px) {
+    .course-card {
+      padding: 1.75rem;
+    }
+  }
+
+  .course-card__top,
+  .course-card__bottom {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
   }
-
-  .section__name {
-    font-size: 1.5rem;
+  .course-card__bottom{
+    margin-top: 0.75rem;
+  }
+  .course-card__year {
+    color: var(--brand-text);
+    font-size: 0.85rem;
     font-weight: 700;
-    color: var(--foreground);
+    letter-spacing: 0.12em;
   }
 
-  .section__blurb {
-    flex: 1;
-    font-size: 0.975rem;
-    line-height: 1.6;
+  .course-card__status {
+    padding: 0.35rem 0.65rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--brand-text);
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+
+  .course-card__status--draft {
     color: var(--muted-foreground);
   }
 
-  .section__arrow {
-    font-size: 1.1rem;
-    color: var(--brand-text);
-    transition: transform 0.15s ease;
+  .course-card__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.5rem;
   }
 
-  .section:hover .section__arrow {
-    transform: translateX(0.2rem);
+  .course-card__title {
+    color: var(--foreground);
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+  }
+
+  .course-card__uk {
+    color: var(--foreground);
+    font-size: 0.95rem;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+
+  .course-card__description {
+    margin-top: 0.15rem;
+    color: var(--muted-foreground);
+    font-size: 0.975rem;
+    line-height: 1.65;
+  }
+
+  .course-card__uk {
+    color: var(--muted-foreground);
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .course-card__action {
+    color: var(--brand-text);
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .course-card__arrow {
+    color: var(--brand-text);
+    font-size: 1.25rem;
   }
 </style>

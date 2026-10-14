@@ -31,6 +31,10 @@ interface Props {
   title: string;
   /** Lab summary → meta description. */
   description?: string;
+  /** Course name appended to the document title. */
+  titleSuffix?: string;
+  /** Course context for the shared header and footer. */
+  courseSlug?: string;
   /** Body language — `'uk'` for the current handouts. */
   lang?: string;
   /** h2/h3 headings from `render(entry)` — feed the "on this page" rail. */
@@ -39,14 +43,28 @@ interface Props {
   noindex?: boolean;
 }
 
-const { title, description, lang = 'uk', headings = [], noindex = false } = Astro.props;
+const {
+  title,
+  description,
+  titleSuffix,
+  courseSlug,
+  lang = 'uk',
+  headings = [],
+  noindex = false,
+} = Astro.props;
 
 // Same non-blocking `media="print"` → `all` swap as BaseLayout's Roboto.
 const fontHref =
   'https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400..700;1,400..700&family=Montserrat:wght@600..700&display=swap';
 ---
 
-<BaseLayout title={title} description={description} lang={lang} ogType="article">
+<BaseLayout
+  title={title}
+  description={description}
+  titleSuffix={titleSuffix}
+  lang={lang}
+  ogType="article"
+>
   <Fragment slot="head">
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link id="font-lab" rel="stylesheet" href={fontHref} media="print" />
@@ -60,7 +78,7 @@ const fontHref =
   </Fragment>
 
   <div class="lab-page">
-    <SiteHeader />
+    <SiteHeader courseSlug={courseSlug} />
 
     <div class:list={["lab-shell", { "lab-shell--wide": !headings.length }]}>
       <main id="main-content" class="area-main" tabindex="-1">
@@ -76,7 +94,7 @@ const fontHref =
       }
     </div>
 
-    <SiteFooter />
+    <SiteFooter courseSlug={courseSlug} />
   </div>
 </BaseLayout>
 

@@ -20,21 +20,31 @@ import Breadcrumbs from "@/components/Breadcrumbs.astro";
 import CourtlyCompare from "@/components/CourtlyCompare.astro";
 import LabHeader from "@/components/LabHeader.astro";
 import LabLayout from "@/layouts/LabLayout.astro";
-import { labHref } from "@/lib/labs";
+import { labHref, taskHref } from "@/lib/labs";
 import { withBase } from "@/lib/paths";
+
+const course = "web-development";
 
 const title = "Звіт перевірки";
 const summary =
   "Результати перевірки сторінки Courtly з оцінкою за 12-бальною шкалою і порівняння сторінки з макетом на 1440, 768 і 375 px.";
 
 const crumbs = [
-  { label: "Labs", href: withBase("/labs/") },
-  { label: "ЛР-7", href: labHref("lab-7") },
+  { label: "Web Development", href: withBase(`/${course}/`) },
+  { label: "Labs", href: withBase(`/${course}/labs/`) },
+  { label: "ЛР-7", href: labHref(course, "lab-7") },
   { label: "Звіт перевірки", href: withBase("/labs/lab-7/report/") },
 ];
 ---
 
-<LabLayout title={`${title} — ЛР-7`} description={summary} lang="uk" noindex>
+<LabLayout
+  title={`${title} — ЛР-7`}
+  titleSuffix="Web Development"
+  courseSlug={course}
+  description={summary}
+  lang="uk"
+  noindex
+>
   <Breadcrumbs items={crumbs} />
 
   <LabHeader
@@ -83,8 +93,8 @@ const crumbs = [
       <p class="cr-lead">
         Сторінка показана такою, якою вона є зараз, а не на момент перевірки.
         Позначки — вимоги з тексту{" "}
-        <a href={labHref("lab-7")}>лабораторної</a> і{" "}
-        <a href={withBase("/labs/lab-7/task/")}>макета</a>; оцінку вони не
+        <a href={labHref(course, "lab-7")}>лабораторної</a> і{" "}
+        <a href={taskHref(course, "lab-7")}>макета</a>; оцінку вони не
         змінюють.
       </p>
       <p class="cr-error" data-cr-compare-error role="alert" hidden></p>

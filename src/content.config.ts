@@ -4,12 +4,12 @@ import { z } from 'astro/zod';
 
 /**
  * The `labs` collection — one Markdown file per lab assignment under
- * `src/content/labs/`. The files are flat (no locale folder): the course's lab
- * handouts are Ukrainian, and `lang` carries that to `<html lang>` rather than
- * the file path. Ordering is `number`, not folder position.
+ * `src/content/labs/<course>/`. Files are grouped by course, not locale;
+ * `lang` carries each handout's language to `<html lang>`. Ordering is
+ * `number`, not folder position.
  */
 const labs = defineCollection({
-  // ids look like "lab-1" — ".md" stripped, no prefix.
+  // ids look like "web-development/lab-1" — course folder + slug, no extension.
   loader: glob({ pattern: '**/*.md', base: './src/content/labs' }),
   schema: z.object({
     /**
@@ -47,16 +47,16 @@ const labs = defineCollection({
 
 /**
  * The `tasks` collection — one practical brief (ТЗ) per lab, under
- * `src/content/tasks/`. The entry id **is** the owning lab's id (`lab-2`), and
- * that is the whole relation: no `lab:` field to keep in sync, and the route
- * `/labs/<id>/task/` falls straight out of the id.
+ * `src/content/tasks/<course>/`. The entry id **is** the owning lab's id
+ * (`web-development/lab-2`), and that is the whole relation: no `lab:` field
+ * to keep in sync, and the route `/<course>/labs/<slug>/task/` follows from it.
  *
  * A brief lives outside its lab because the two are read differently — the lab
  * once, top to bottom; the brief kept open beside the editor for two hours.
  * See docs/lab-2/README.md §3.
  */
 const tasks = defineCollection({
-  // ids look like "lab-2" — the owning lab's id, ".md" stripped.
+  // ids look like "web-development/lab-2" — the owning lab's id, no extension.
   loader: glob({ pattern: '**/*.md', base: './src/content/tasks' }),
   schema: z.object({
     /** Brief title (Ukrainian) — `<h1>` / card heading / `<title>` base. */

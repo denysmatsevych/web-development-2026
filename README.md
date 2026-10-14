@@ -2,12 +2,14 @@
 
 One Astro + Tailwind CSS v4 project for the whole course:
 
-| Path                                | What                                                 |
-| ----------------------------------- | ---------------------------------------------------- |
-| `/`                                 | Course hub — links to the main sections              |
-| `/lectures/`, `/lectures/lecture-1` | Lecture slide decks (keyboard-driven, print to PDF)  |
-| `/labs/`, `/labs/lab-1`             | Lab assignments                                      |
-| `/labs/lab-2/task`                  | The practical-task brief (ТЗ) for a lab that has one |
+| Path | What |
+| --- | --- |
+| `/` | Course hub |
+| `/<course>/` | Course landing page |
+| `/<course>/lectures/`, `/<course>/lectures/<lecture>` | Lecture index and slide decks (keyboard-driven, print to PDF) |
+| `/<course>/labs/`, `/<course>/labs/<lab>` | Lab index and assignments |
+| `/<course>/labs/<lab>/task` | Practical-task brief (ТЗ), when the lab has one |
+| `/lectures/*`, `/labs/*` | Legacy Web Development addresses redirect to the course-prefixed routes; PDFs and ZIPs remain under `/labs/` |
 
 ## Quick start
 
@@ -27,7 +29,7 @@ npm run dev      # http://localhost:4321/web-development-2026/
 | `npm run check`   | `astro check` (types)                                               |
 | `npm run mockup`  | local Courtly preview (requires the ignored reference mockup files) |
 
-## Deck hotkeys (`/lectures/*`)
+## Deck hotkeys (`/<course>/lectures/*`)
 
 `→` `Space` next · `←` previous · `Home`/`End` first/last · `N` speaker notes ·
 `F` fullscreen · `T` light/dark · `Ctrl+P` export to PDF
@@ -37,17 +39,13 @@ npm run dev      # http://localhost:4321/web-development-2026/
 ```
 src/
 ├─ pages/
-│  ├─ index.astro                 hub
-│  ├─ lectures/                   deck index + [lecture].astro (one deck per slug)
-│  └─ labs/                       labs index + [lab].astro + [lab]/task.astro (ТЗ brief);
-│                                  a lab can also get a one-off static route beside
-│                                  these (e.g. an instructor tool) when a collection
-│                                  field would be ceremony for something only one lab
-│                                  needs — see that route's own file comment
+│  ├─ index.astro                 course hub
+│  ├─ [course]/                   course landing, lectures and labs
+│  ├─ labs/                       legacy redirects + ЛР-7 check/report routes
+│  └─ lectures/                   legacy redirects
 ├─ content/
-│  ├─ labs/                       one .md per lab assignment (the `labs` collection)
-│  └─ tasks/                      one .md per practical-task brief (the `tasks` collection),
-│                                  id-linked 1:1 to its lab
+│  ├─ labs/<course>/              one .md per lab assignment (the `labs` collection)
+│  └─ tasks/<course>/             one .md per practical-task brief, id-linked 1:1 to its lab
 ├─ content.config.ts              schemas for `labs` and `tasks`
 ├─ layouts/   BaseLayout (shared <html>/<head>) · DeckLayout (fullscreen deck) ·
 │             LabLayout (lab reading shell: article + "on this page" rail)
@@ -55,10 +53,11 @@ src/
 │               lab (LabHeader, AcceptanceChecklist, PricingMockup, MockupLightbox,
 │                    CourtlyMockup, CourtlyCompare) · OnThisPage, PrevNext, Breadcrumbs
 ├─ data/
-│  ├─ site.ts                     site meta + the section list
+│  ├─ site.ts                     site metadata + course-relative section definitions
+│  ├─ courses.ts                  course registry
 │  ├─ courtly-mockup.json         lab-7 mockup captures' section offsets (generated)
-│  └─ lectures/                   lecture registry + per-lecture slide data
-├─ lib/        paths.ts (withBase) · labs.ts (lab/task lookups) · utils.ts (cn)
+│  └─ lectures/                   shared schema + course-indexed lecture registry and slide data
+├─ lib/        paths.ts (withBase) · labs.ts (course-aware lab/task lookups) · utils.ts (cn)
 ├─ scripts/    deck.ts (deck navigation + theme) · docs.ts (lab scrollspy, ToC, theme, copy buttons) ·
 │              courtly-check.ts (client-side grader behind the lab-7 auto-check route) ·
 │              courtly-report.ts (the lab-7 student report, carried in its link) ·

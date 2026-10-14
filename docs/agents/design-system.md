@@ -4,13 +4,15 @@ The site has three surfaces, each with its own theme mechanism and its own
 stylesheet. There is no single global rule that covers all three — check
 which surface you're in before applying any of the rules below.
 
-| Surface | Route(s)                                  | Stylesheet                | Layout       |
-| ------- | ----------------------------------------- | ------------------------- | ------------ |
-| Hub     | `/`                                       | `global.css`              | `BaseLayout` |
-| Decks   | `/lectures/`, `/lectures/<slug>`          | `global.css` + `deck.css` | `DeckLayout` |
-| Labs    | `/labs/`, `/labs/<id>`, `/labs/<id>/task` | `global.css` + `lab.css`  | `LabLayout`  |
+| Surface | Route(s) | Stylesheet | Layout |
+| --- | --- | --- | --- |
+| Hub | `/` | `global.css` | `BaseLayout` |
+| Course index | `/<course>/`, `/<course>/lectures/`, `/<course>/labs/` | `global.css` | `BaseLayout` |
+| Decks | `/<course>/lectures/<slug>` | `global.css` + `deck.css` | `DeckLayout` |
+| Labs | `/<course>/labs/<id>`, `/<course>/labs/<id>/task` | `global.css` + `lab.css` | `LabLayout` |
+| Legacy routes | `/lectures/*`, `/labs/*` | Redirects, except fixed ЛР-7 tools | — |
 
-Note: `/lectures/` and `/labs/` are index pages that use `BaseLayout` (no deck.css or lab.css). Individual lecture pages use `DeckLayout`, and individual lab pages use `LabLayout`.
+Note: the course, lecture, and lab index pages use `BaseLayout` (no deck.css or lab.css). Individual lecture pages use `DeckLayout`, and individual lab pages use `LabLayout`. The ЛР-7 check and report remain under `/labs/lab-7/`.
 
 ## Source of truth — three stylesheets, not two
 
