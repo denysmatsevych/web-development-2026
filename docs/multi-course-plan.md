@@ -14,7 +14,7 @@ Today every route, collection and helper assumes one course. I'll make the site 
 - URL and check logic of the ЛР-7 check and report pages and the `courtly-*` scripts. They stay at their current URLs; only their imports and breadcrumbs change.
 - Visual design, lab handouts and lecture content.
 - React islands (interactive demos in lectures): postponed until the React course content is decided.
-- The `docs/` folder and the gitignored instructor files (reference solutions, defect maps, mockup source). They stay where they are and move in a separate docs PR.
+- The `docs/` folder and the gitignored instructor files (reference solutions, defect maps, mockup source). They stay where they are and move in a separate docs PR. The only `docs/` edit here is the routes table in `docs/agents/design-system.md`.
 
 ---
 
@@ -77,7 +77,7 @@ The entry id keeps its folder (`web-development/lab-4`), and a task keeps the sa
 
 ## Steps
 
-Branch `refactor/courses`, small Conventional Commits, `npm run check && npm run build` after every step. `git mv` is Git's command for moving a file while keeping its history. About 4–5 working days.
+Branch `refactor/courses`, small Conventional Commits, `npm run check && npm run build` after every step. `git mv` is Git's command for moving a file while keeping its history. About 4–5 working days. All steps ship in one PR, so Step 1 (new addresses) and Step 3 (redirects from the old ones) reach the site in the same deploy and no old student link returns 404.
 
 ### Step 0 · Baseline (0.25 d)
 - [ ] Create the branch `refactor/courses` from `main`
@@ -86,7 +86,7 @@ Branch `refactor/courses`, small Conventional Commits, `npm run check && npm run
 **Done when:** the build is green and the URL list is saved.
 
 ### Step 1 · Registry, content and routes (2 d)
-- [ ] Add `src/data/courses.ts` (slug, titles, description, `status`, `eyebrow`, `courseUk` moved from `site.ts`)
+- [ ] Add `src/data/courses.ts` (slug, titles, description, `status`, `eyebrow`, `courseUk` moved from `site.ts`) with one helper, `getCourses()`, that filters on `status` and `import.meta.env.DEV`; the hub, the course switcher, the footer and `getStaticPaths` all use it
 - [ ] `git mv` `src/content/labs/*` into `src/content/labs/web-development/` and `src/content/tasks/*` into `src/content/tasks/web-development/`
 - [ ] `git mv` lecture data into `src/data/lectures/web-development/`; `src/data/lectures/index.ts` exposes `getLectures(course)` (no separate `src/lib/lectures.ts`)
 - [ ] Update `src/lib/labs.ts` so the helpers split the entry id (`web-development/lab-4`) into course and slug
@@ -105,8 +105,8 @@ Branch `refactor/courses`, small Conventional Commits, `npm run check && npm run
 **Done when:** every page names the right course.
 
 ### Step 3 · Old links and redirects (0.5 d)
-- [ ] Thin redirect pages at the old paths (`src/pages/labs/[lab].astro`, `labs/[lab]/task.astro`, `lectures/[lecture].astro`): `getStaticPaths` lists the Web Development entries and each page returns `Astro.redirect(withBase(…))`
-- [ ] Parameterless redirects (`/lectures`, `/labs`) in the `redirects` config, with the base included in the destination
+- [ ] Thin redirect pages at the old paths (`src/pages/labs/[lab].astro`, `labs/[lab]/task.astro`, `lectures/[lecture].astro`): `getStaticPaths` lists the Web Development entries and each page returns `Astro.redirect(withBase(…), 301)`. The status must be passed explicitly: the default 302 builds into a meta-refresh page with a 2-second delay
+- [ ] Parameterless redirects (`/lectures`, `/labs`) in the `redirects` config, with the base taken from the existing `BASE` constant in `astro.config.mjs`
 - [ ] Repoint the 19 Markdown links to pages (the 11 starter ZIP links stay at `/labs/`)
 - [ ] Check that every PDF and ZIP in `public/labs/` still loads
 
@@ -116,13 +116,14 @@ Branch `refactor/courses`, small Conventional Commits, `npm run check && npm run
 - [ ] Register `react` and `web-accessibility` in `courses.ts` with `status: 'draft'`
 - [ ] Add one placeholder lecture to each (`src/data/lectures/react/lecture-1.ts` and `src/data/lectures/web-accessibility/lecture-1.ts`: a title slide and one content slide)
 - [ ] Add one placeholder lab to each (`src/content/labs/react/lab-1.md` and `src/content/labs/web-accessibility/lab-1.md`: title, summary and one paragraph). The stubs are hidden by the course `status`, not by the lab's `draft` field, so they stay visible in dev
-- [ ] Render drafts in dev (`import.meta.env.DEV`) and exclude them from the production build
+- [ ] Render drafts in dev (`import.meta.env.DEV`) and exclude them from the production build, including the hub cards, the course switcher and the footer links (all go through `getCourses()`)
 
 **Done when:** the stubs build locally in dev and produce no public routes in production.
 
 ### Step 5 · README, AGENTS.md and final check (0.5 d)
 - [ ] Update the `README.md` *Layout* section and the `AGENTS.md` architecture list to match the new `src/`
-- [ ] Grep the repo for hard-coded `/labs/` and `/lectures/` paths in `.astro` and `.ts` files
+- [ ] Update the comments and docs that describe the old structure: `content.config.ts` (lines 7, 12, 50–52), `astro.config.mjs:12`, `courtly-spec.ts:6–7` (comment only, check logic untouched), the header comments of the pages that moved into `[course]/`, and the routes table in `docs/agents/design-system.md` (a content edit; the docs PR only moves folders)
+- [ ] Grep comments, `.astro` and `.ts` files and `docs/agents/*.md` for the old routes and content paths. Leave asset paths under `/labs/` alone: the ЛР-7 mockup images used by `CourtlyMockup.astro` live in `public/labs/lab-7/`, like the PDFs and ZIPs
 - [ ] Run `npm run check && npm run build`
 - [ ] On a preview deploy, click through the hub, a lab, a task, a deck and the ЛР-7 check page
 
