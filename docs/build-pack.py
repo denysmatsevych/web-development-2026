@@ -15,7 +15,8 @@ not by its modification time, which every checkout resets. A file that has
 no commit yet keeps its modification time.
 
 A pack that adds files from outside its folder (Lab 7's asset pack) has its
-own script beside the lab's docs.
+own script beside the lab's docs. Installed or built folders (`node_modules/`,
+`dist/`) stay out of the zip, so a starter that was run locally packs clean.
 """
 import datetime
 import pathlib
@@ -23,7 +24,8 @@ import subprocess
 import sys
 import zipfile
 
-TEXT = {".css", ".html", ".js", ".json", ".md", ".mjs", ".svg", ".txt", ".nojekyll"}
+TEXT = {".css", ".html", ".js", ".json", ".md", ".mjs", ".svg", ".ts", ".txt", ".gitignore", ".nojekyll"}
+SKIP = {"node_modules", "dist"}
 
 
 def committed(path):
@@ -41,7 +43,7 @@ if not SRC.is_dir():
     sys.exit(f"no folder {sys.argv[1]}/ at the repo root")
 OUT = ROOT / f"public/labs/{SRC.name}.zip"
 
-files = sorted(p for p in SRC.rglob("*") if p.is_file())
+files = sorted(p for p in SRC.rglob("*") if p.is_file() and not SKIP & set(p.relative_to(SRC).parts))
 with zipfile.ZipFile(OUT, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as z:
     for p in files:
         info = zipfile.ZipInfo.from_file(p, p.relative_to(SRC).as_posix())
