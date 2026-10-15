@@ -1,0 +1,20 @@
+{
+  "name": "showfinder-ts-starter",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ЛР-11-12 «REST API і TypeScript»: застосунок ShowFinder на TypeScript і TVmaze API, перевірки типів і тести до нього",
+  "type": "module",
+  "scripts": {
+    "watch": "tsc --watch",
+    "build": "tsc",
+    "typecheck": "tsc -p check",
+    "test": "node --test \"check/*.test.js\"",
+    "check": "node check/run.js"
+  },
+  "devDependencies": {
+    "typescript": "7.0.2"
+  },
+  "engines": {
+    "node": ">=22.18"
+  }
+}
