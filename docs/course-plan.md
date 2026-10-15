@@ -2,12 +2,12 @@
 
 A copy of the structure and grading tables from the official course programme
 (a `.docx` outside this repo). The `.docx` is authoritative: when the programme changes,
-update both in the same sitting. Part 2 was revised on 2026-10-04 (see
-**Part 2 revision** below).
+update both in the same sitting. Part 2 was revised on 2026-10-04 and
+2026-10-15 (see **Part 2 revision** below).
 
 ## How the site maps to the plan
 
-As of 2026-10-13. The site's lab id is the file name in `src/content/labs/`.
+As of 2026-10-15. The site's lab id is the file name in `src/content/labs/`.
 
 | Plan | Site | Note |
 | --- | --- | --- |
@@ -18,8 +18,8 @@ As of 2026-10-13. The site's lab id is the file name in `src/content/labs/`.
 | ЛР 8 | `lab-8` | JavaScript basics; [lab-8/README.md](lab-8/README.md) |
 | ЛР 9 | `lab-9` | DOM, events and forms; [lab-9/README.md](lab-9/README.md) |
 | ЛР 10 | `lab-10` | JavaScript debugging; [lab-10/README.md](lab-10/README.md) |
-| ЛР 11 | `lab-11` | REST API integration; [lab-11/README.md](lab-11/README.md) |
-| ЛР 12–15 | not built | |
+| ЛР 11 + ЛР 12 | `lab-11` (shown as ЛР-11-12) | REST API and TypeScript by hand in one lab; [lab-11/README.md](lab-11/README.md) |
+| ЛР 13–15 | not built | |
 
 ## Part 2 revision (2026-10-04)
 
@@ -42,6 +42,13 @@ As of 2026-10-13. The site's lab id is the file name in `src/content/labs/`.
 - **Лекція 7 adds compiler setup** (`tsconfig`, strict mode), since ЛР 12–13
   need it before Лекція 8 covers tooling.
 - Hours per row are unchanged, so the totals are the same.
+
+**2026-10-15: ЛР 11 and ЛР 12 joined.** The ЛР-11 published on 2026-10-13
+was too large to reach its goals in a straight line. It was replaced by one
+simpler lab that covers rows 2.6 and 2.8, shown as ЛР-11-12 the way `lab-4`
+covers two slots. The types and requests are written by hand (ЛР 12), and the
+AI agent writes the app on top of them (ЛР 11). ЛР 13 still audits AI-written
+TypeScript and owns runtime validation of API responses at scale.
 
 ## Структура дисципліни
 
@@ -97,24 +104,28 @@ yet in the `.docx` (see **Mismatches** below).
 
 **How the labs apply it.** A lab slot in Part 1 and ЛР 12–14 is worth 2
 points; `lab-4` takes two slots, so it is worth 4. ЛР 8–11 are worth 3 each,
-which matches their handouts' maximum: 2 points plus a +1 bonus. Part 1
-handouts give a bonus the table doesn't count.
+which matches their handouts' maximum: 2 points plus a +1 bonus. `lab-11`
+takes the ЛР 11 and ЛР 12 slots, so it is worth 3 + 2 = 5: 4 points plus the
++1. Part 1 handouts give a bonus the table doesn't count.
 
 - **ЛР 2–4, 8–10:** a successful defence earns the points; +1 (`lab-4`: +2)
   for submitting by the deadline or working in class.
 - **`lab-6`:** 2 points for a successful defence or work in class, no bonus.
 - **`lab-1`, `lab-7`:** the handouts state no points.
-- **ЛР 11:** 2 points are split into the self-check, the process (commits,
-  `API.md`, `AGENTS.md`) and the defence, scored by a published rubric, and
-  the +1 is for on-time submission only. The rubric is in its handout, §8
-  ([lab-11.md](../src/content/labs/lab-11.md)). This is the scheme proposed
-  for later labs; earlier labs keep theirs.
+- **`lab-11` (ЛР 11-12):** 4 points are split into the self-check
+  (`npm run check`), the process (commits and report) and the defence, scored
+  by a published rubric, and the +1 is for on-time submission only. The rubric
+  is in its handout, §8 ([lab-11.md](../src/content/labs/lab-11.md)). This is
+  the scheme proposed for later labs; earlier labs keep theirs.
 
 **Mismatches with the plan** (fix them in the `.docx`):
 
 - **ЛР 8–11:** the PDF says ЛР №7-10 for 8 points (4 × 2). ЛР 7 is
   Проміжний контроль №1, already counted in the first row, and ЛР 11 was in
   no row. Here: ЛР №8-11 for 12 points (4 × 3).
+- **ЛР 11 and ЛР 12:** separate rows (2.6, 2.8) in the programme, one lab
+  on the site since 2026-10-15. Their points are unchanged, so only the
+  `.docx` wording needs a note that the two labs are done together.
 - **Проміжний контроль 2:** 10 points here, 12 in the PDF.
 - **Totals:** current work 72 here, 70 in the PDF; Підсумковий контроль 28
   here, 30 in the PDF. The semester stays 100.
