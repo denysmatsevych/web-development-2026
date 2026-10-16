@@ -33,11 +33,16 @@
   `solution/answer-key.md`, not here, because the repository is public.
 - **No type assertions anywhere in `src/`.** The §5 tests reject `as` (except
   `as const`), a postfix `!`, `<T>value`, `querySelector<T>` and
-  `closest<T>`, as well as `any` and `@ts-` comments. Each place where an
+  `closest<T>`, as well as `any` and `@ts-` comments. They also reject
+  `declare` and `.d.ts` files: a global interface merge such as
+  `declare global { interface EventTarget … }` silences an error the way an
+  assertion does, without any of the other banned tokens. Each place where an
   agent tends to assert has a narrowing alternative (`instanceof`, `in`,
-  `typeof`), and the reference solution uses no assertion. The tests blank
-  out comments and string contents before matching, and skip `as` in import
-  renames.
+  `typeof`), and the reference solution uses no assertion. The tests read
+  every file under `src/`, subfolders included, blank out comments and string
+  contents before matching, and skip `as` in import renames. `<T>value` never
+  gets that far: `erasableSyntaxOnly` makes `tsc` reject it (TS1294), and
+  Node's type stripping refuses to run it.
 - **`tsconfig.json` stays as shipped.** T4.2 compares both configs with the
   starter's, so an agent that turns strict mode off fails a named rule
   instead of passing more checks.
@@ -50,16 +55,16 @@
 
 `npm run check` runs `check/run.js`: `tsc -p check` (all of `src/` and
 `check/types.check.ts`), then `node:test` over `check/*.test.js`, and prints
-one summary line. There are 47 tests: 17 for T2, 12 for T3, 15 for T4 and 3
+one summary line. There are 48 tests: 17 for T2, 12 for T3, 15 for T4 and 4
 for §5. `types.check.ts` imports `app` and `view` with a `.js` extension, so
 the T4 signature checks resolve to the JavaScript before the migration (where
 the inferred `any` passes) and to the TypeScript after it.
 
 | State | Types | Tests |
 | --- | --- | --- |
-| the starter | 25 errors | 7 of 47 |
-| T1–T3 done, JavaScript not migrated | no errors | 38 of 47 |
-| the reference solution | no errors | 47 of 47 |
+| the starter | 25 errors | 8 of 48 |
+| T1–T3 done, JavaScript not migrated | no errors | 39 of 48 |
+| the reference solution | no errors | 48 of 48 |
 
 ## The fixtures
 

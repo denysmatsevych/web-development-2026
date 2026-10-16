@@ -37,14 +37,29 @@ function readConfig(path) {
   return JSON.parse(text.replace(/^\s*\/\/.*$/gm, '').replace(/,(\s*[}\]])/g, '$1'));
 }
 
+/** Відносні шляхи з розширенням .js в імпортах рядка: `from './view.js'`, `import('./view.js')`. */
+function jsImports({ code, text }) {
+  return [...code.matchAll(/(?:\bfrom|\bimport)\s*\(?\s*(['"])/g)]
+    .map((match) => {
+      const start = match.index + match[0].length;
+      return text.slice(start, text.indexOf(match[1], start));
+    })
+    .filter((specifier) => /^\.\.?\/.*\.[cm]?js$/.test(specifier));
+}
+
 /* ---------------- T4.1–T4.2 · Файли й налаштування ---------------- */
 
-test('T4.1 у src/ лише файли .ts: app, view, dom і main переведено на TypeScript', () => {
+test('T4.1 у src/ лише файли .ts: app, view, dom і main переведено на TypeScript й імпортують модулі з .ts', () => {
   const files = srcFiles();
   const left = files.filter((name) => /\.[cm]?js$/.test(name));
-  const missing = MIGRATED.map((name) => `${name}.ts`).filter((name) => !files.includes(name));
+  const migrated = MIGRATED.map((name) => `${name}.ts`);
+  const missing = migrated.filter((name) => !files.includes(name));
   assert.deepEqual(left, [], 'у src/ лишилися файли JavaScript');
   assert.deepEqual(missing, [], 'немає файлів TypeScript');
+  const found = srcLines(migrated)
+    .filter((line) => jsImports(line).length)
+    .map(({ where, text }) => `${where}  ${text.trim()}`);
+  assert.deepEqual(found, [], `імпорт з розширенням .js, а не .ts:\n${found.join('\n')}`);
 });
 
 test('T4.2 tsconfig.json і check/tsconfig.json не змінено', () => {

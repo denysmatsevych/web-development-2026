@@ -1,12 +1,12 @@
 /**
- * §5 · Обмеження ТЗ для всіх файлів src/: без any, без тверджень типу і без коментарів, що
- * вимикають перевірку типів. Не змінюйте цей файл.
+ * §5 · Обмеження ТЗ для всіх файлів src/, разом із підтеками: без any, без тверджень типу, без
+ * declare і без коментарів, що вимикають перевірку типів. Не змінюйте цей файл.
  *
  * Тести читають код як текст: коментарі й вміст рядків (лапки, шаблонні рядки) не рахуються.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { srcLines } from './support.js';
+import { srcFiles, srcLines } from './support.js';
 
 const lines = srcLines();
 
@@ -28,7 +28,7 @@ for (const line of lines) {
 }
 
 test('§5 у src/ немає типу any', () => {
-  const found = find(/(?:[:<,|&=(]|\bas)\s*any\b|\bany\s*\[\s*\]/);
+  const found = find(/(?:[:<>,|&=(?[]|\b(?:as|extends|keyof))\s*any\b|\bany\s*\[\s*\]/);
   assert.deepEqual(found, [], `any знайдено:\n${found.join('\n')}`);
 });
 
@@ -40,6 +40,16 @@ test('§5 у src/ немає тверджень типу: as (крім as const)
     ...find(/\.(?:querySelector|querySelectorAll|closest)\s*</),
   ];
   assert.deepEqual([...new Set(found)], [], `твердження типу знайдено:\n${[...new Set(found)].join('\n')}`);
+});
+
+test('§5 у src/ немає declare і файлів .d.ts', () => {
+  const found = [
+    ...find(/(?<![.$\w])declare\s+[\w$]/),
+    ...srcFiles()
+      .filter((name) => /\.d\.[cm]?ts$/.test(name))
+      .map((name) => `src/${name}`),
+  ];
+  assert.deepEqual(found, [], `знайдено:\n${found.join('\n')}`);
 });
 
 test('§5 у src/ немає @ts-ignore, @ts-nocheck і @ts-expect-error', () => {

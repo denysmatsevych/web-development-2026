@@ -6,8 +6,10 @@
  * або записаний файл з check/fixtures/ (як справжній TVmaze), або сам тест — статус 404, 429,
  * 500, 503, тіло не тієї форми чи збій мережі.
  */
-import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import assert from 'node:assert/strict';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const read = (name) => JSON.parse(readFileSync(new URL(`./fixtures/${name}`, import.meta.url), 'utf8'));
 
@@ -74,6 +76,7 @@ export async function rejection(promise) {
 }
 
 const SRC = new URL('../src/', import.meta.url);
+const SRC_DIR = fileURLToPath(SRC);
 
 /**
  * Модуль src/<name>: файл .ts, а якщо його ще немає — .js. До міграції (T4) тести виконують
@@ -84,9 +87,12 @@ export function importSrc(name) {
   return import(existsSync(ts) ? ts : new URL(`${name}.js`, SRC));
 }
 
-/** Імена файлів у src/. */
+/** Файли src/ разом із підтеками: шляхи відносно src/ через «/», наприклад `app.ts` чи `lib/util.ts`. */
 export function srcFiles() {
-  return readdirSync(SRC).sort();
+  return readdirSync(SRC_DIR, { recursive: true })
+    .map((name) => name.replaceAll('\\', '/'))
+    .filter((name) => statSync(path.join(SRC_DIR, name)).isFile())
+    .sort();
 }
 
 /**
@@ -96,7 +102,7 @@ export function srcFiles() {
  */
 export function srcLines(names = srcFiles().filter((name) => /\.[cm]?[jt]s$/.test(name))) {
   return names.flatMap((name) => {
-    const text = readFileSync(new URL(name, SRC), 'utf8');
+    const text = readFileSync(path.join(SRC_DIR, name), 'utf8');
     const code = stripCode(text).split('\n');
     return text.split('\n').map((line, index) => ({
       where: `src/${name}:${index + 1}`,
