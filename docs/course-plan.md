@@ -107,7 +107,7 @@ handouts give a bonus the table doesn't count.
 - **ЛР 11:** 2 points are split into the self-check, the process (commits,
   `API.md`, `AGENTS.md`) and the defence, scored by a published rubric, and
   the +1 is for on-time submission only. The rubric is in its handout, §8
-  ([lab-11.md](../src/content/labs/lab-11.md)). This is the scheme proposed
+  ([lab-11.md](../src/content/labs/web-development/lab-11.md)). This is the scheme proposed
   for later labs; earlier labs keep theirs.
 
 **Mismatches with the plan** (fix them in the `.docx`):

@@ -2,19 +2,16 @@
 /**
  * Legacy lab URL — redirect `/labs/<lab>/` to its course-prefixed route.
  */
-import { getCourses } from '@/data/courses';
 import { getLabs, labHref, splitId } from '@/lib/labs';
+import { LEGACY_COURSE } from '@/data/courses';
 
 export async function getStaticPaths() {
-  const course = getCourses().find(({ slug }) => slug === 'web-development');
-  if (!course) return [];
-
-  const labs = await getLabs(course.slug);
+  const labs = await getLabs(LEGACY_COURSE);
   return labs.map((lab) => {
     const { slug } = splitId(lab.id);
     return {
       params: { lab: slug },
-      props: { destination: labHref(course.slug, slug) },
+      props: { destination: labHref(LEGACY_COURSE, slug) },
     };
   });
 }

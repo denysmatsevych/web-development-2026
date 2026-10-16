@@ -2,18 +2,15 @@
 /**
  * Legacy lecture URL — redirect `/lectures/<lecture>/` to its course route.
  */
-import { getCourses } from '@/data/courses';
 import { getLectures } from '@/data/lectures';
 import { withBase } from '@/lib/paths';
+import { LEGACY_COURSE } from '@/data/courses';
 
 export function getStaticPaths() {
-  const course = getCourses().find(({ slug }) => slug === 'web-development');
-  if (!course) return [];
-
-  return getLectures(course.slug).map((lecture) => ({
+  return getLectures(LEGACY_COURSE).map((lecture) => ({
     params: { lecture: lecture.slug },
     props: {
-      destination: withBase(`/${course.slug}/lectures/${lecture.slug}/`),
+      destination: withBase(`/${LEGACY_COURSE}/lectures/${lecture.slug}/`),
     },
   }));
 }

@@ -2,12 +2,12 @@
 /**
  * Course landing page — the entry point from the course hub to its materials.
  */
-import SiteFooter from '@/components/SiteFooter.astro';
-import SiteHeader from '@/components/SiteHeader.astro';
-import { getCourses, type Course } from '@/data/courses';
-import { getSections } from '@/data/site';
-import { withBase } from '@/lib/paths';
-import BaseLayout from '@/layouts/BaseLayout.astro';
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import { getCourses, type Course } from "@/data/courses";
+import { getSections } from "@/data/site";
+import { withBase } from "@/lib/paths";
+import BaseLayout from "@/layouts/BaseLayout.astro";
 
 export function getStaticPaths() {
   return getCourses().map((course) => ({
@@ -32,7 +32,7 @@ const sections = getSections(course.slug);
   <SiteHeader courseSlug={course.slug} />
 
   <main id="main-content" class="page" tabindex="-1">
-    <a class="back-link" href={withBase('/')}>
+    <a class="back-link" href={withBase("/")} lang="uk">
       <span aria-hidden="true">←</span>
       Усі курси
     </a>
@@ -49,7 +49,9 @@ const sections = getSections(course.slug);
             <a href={withBase(section.href)} class="section glass-panel">
               <div class="section__top-panel">
                 <span class="section__name">{section.label}</span>
-                <span class="section__arrow" aria-hidden="true">→</span>
+                <span class="section__arrow" aria-hidden="true">
+                  →
+                </span>
               </div>
               <span class="section__blurb">{section.blurb}</span>
             </a>
@@ -92,15 +94,6 @@ const sections = getSections(course.slug);
   .hero {
     max-width: 48rem;
     margin-bottom: 3rem;
-  }
-
-  .hero__eyebrow {
-    margin: 0 0 0.85rem;
-    color: var(--brand-text);
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
   }
 
   .hero__title {
@@ -149,7 +142,7 @@ const sections = getSections(course.slug);
       transform 0.15s ease;
   }
 
-  .section__top-panel{
+  .section__top-panel {
     display: flex;
     justify-content: space-between;
     align-items: center;

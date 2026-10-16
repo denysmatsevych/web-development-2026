@@ -25,18 +25,18 @@ const courses = getCourses();
         >
           Courses
         </p>
-        <ul class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4 space-y-0">
+        <ul class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
           {
             courses.map((course) => (
               <li>
                 <a
                   href={withBase(`/${course.slug}/`)}
-                  class="inline-flex items-center gap-1 text-md font-bold text-pure-white/80 transition-colors hover:text-brand-blue-light"
-                  aria-current={course.slug === courseSlug ? 'page' : undefined}
+                  class="inline-flex items-center gap-1 text-base font-bold text-pure-white/80 transition-colors hover:text-brand-blue-light"
+                  aria-current={course.slug === courseSlug ? 'location' : undefined}
                 >
                   {course.title}
                 </a>
-                <ul class="mt-2 space-y-2 border-pure-white/15">
+                <ul class="mt-2 space-y-2">
                   {getSections(course.slug).map((section) => (
                     <li>
                       <a

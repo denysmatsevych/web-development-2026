@@ -22,17 +22,16 @@ import LabHeader from "@/components/LabHeader.astro";
 import LabLayout from "@/layouts/LabLayout.astro";
 import { labHref, taskHref } from "@/lib/labs";
 import { withBase } from "@/lib/paths";
-
-const course = "web-development";
+import { LEGACY_COURSE } from '@/data/courses';
 
 const title = "Звіт перевірки";
 const summary =
   "Результати перевірки сторінки Courtly з оцінкою за 12-бальною шкалою і порівняння сторінки з макетом на 1440, 768 і 375 px.";
 
 const crumbs = [
-  { label: "Web Development", href: withBase(`/${course}/`) },
-  { label: "Labs", href: withBase(`/${course}/labs/`) },
-  { label: "ЛР-7", href: labHref(course, "lab-7") },
+  { label: "Web Development", href: withBase(`/${LEGACY_COURSE}/`) },
+  { label: "Labs", href: withBase(`/${LEGACY_COURSE}/labs/`) },
+  { label: "ЛР-7", href: labHref(LEGACY_COURSE, "lab-7") },
   { label: "Звіт перевірки", href: withBase("/labs/lab-7/report/") },
 ];
 ---
@@ -40,7 +39,7 @@ const crumbs = [
 <LabLayout
   title={`${title} — ЛР-7`}
   titleSuffix="Web Development"
-  courseSlug={course}
+  courseSlug={LEGACY_COURSE}
   description={summary}
   lang="uk"
   noindex
@@ -93,8 +92,8 @@ const crumbs = [
       <p class="cr-lead">
         Сторінка показана такою, якою вона є зараз, а не на момент перевірки.
         Позначки — вимоги з тексту{" "}
-        <a href={labHref(course, "lab-7")}>лабораторної</a> і{" "}
-        <a href={taskHref(course, "lab-7")}>макета</a>; оцінку вони не
+        <a href={labHref(LEGACY_COURSE, "lab-7")}>лабораторної</a> і{" "}
+        <a href={taskHref(LEGACY_COURSE, "lab-7")}>макета</a>; оцінку вони не
         змінюють.
       </p>
       <p class="cr-error" data-cr-compare-error role="alert" hidden></p>

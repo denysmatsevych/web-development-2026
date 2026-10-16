@@ -5,12 +5,12 @@
  * the lectures index so the two sections read as one site; the `.panel` empty state stays
  * for the case where every lab is still a draft.
  */
-import SiteFooter from '@/components/SiteFooter.astro';
-import SiteHeader from '@/components/SiteHeader.astro';
-import { getCourses, type Course } from '@/data/courses';
-import { getLabs, getTasks, labHref, labNumber, splitId } from '@/lib/labs';
-import { withBase } from '@/lib/paths';
-import BaseLayout from '@/layouts/BaseLayout.astro';
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import { getCourses, type Course } from "@/data/courses";
+import { getLabs, getTasks, labHref, labNumber, splitId } from "@/lib/labs";
+import { withBase } from "@/lib/paths";
+import BaseLayout from "@/layouts/BaseLayout.astro";
 
 export function getStaticPaths() {
   return getCourses().map((course) => ({
@@ -32,6 +32,7 @@ const [labs, tasks] = await Promise.all([
 // Lab id -> its brief's badge text, for the pill on that lab's card. A Map
 // rather than a Set so the badge stays whatever the brief's frontmatter says.
 const taskLabels = new Map(tasks.map((task) => [task.id, task.data.label]));
+const hasIndividual = labs.some((lab) => lab.data.kind === "individual");
 ---
 
 <BaseLayout
@@ -42,7 +43,7 @@ const taskLabels = new Map(tasks.map((task) => [task.id, task.data.label]));
   <SiteHeader courseSlug={course.slug} />
 
   <main id="main-content" class="page" tabindex="-1">
-    <a class="back-link" href={withBase(`/${course.slug}/`)}>
+    <a class="back-link" href={withBase(`/${course.slug}/`)} lang="uk">
       <span aria-hidden="true">←</span>
       До курсу
     </a>
@@ -52,8 +53,14 @@ const taskLabels = new Map(tasks.map((task) => [task.id, task.data.label]));
       <h1 class="hero__title">Labs</h1>
       <p class="hero__lead">
         Hands-on assignments that build on each lecture. Each lab is a full
-        walkthrough with a downloadable handout; the individual assignment,
-        pinned at 00, runs alongside them all semester.
+        walkthrough with a downloadable handout{
+          hasIndividual && (
+            <>
+              ; the individual assignment, pinned at 00, runs alongside them all
+              semester
+            </>
+          )
+        }.
       </p>
     </section>
 
@@ -65,17 +72,17 @@ const taskLabels = new Map(tasks.map((task) => [task.id, task.data.label]));
               <a
                 href={labHref(course.slug, splitId(lab.id).slug)}
                 class:list={[
-                  'lab-card glass-panel',
-                  { 'lab-card--individual': lab.data.kind === 'individual' },
+                  "lab-card glass-panel",
+                  { "lab-card--individual": lab.data.kind === "individual" },
                 ]}
               >
                 <span class="lab-card__index">
                   {labNumber(lab)
-                    .split('-')
+                    .split("-")
                     .map((n, i) => (
                       <>
                         {i > 0 && <span class="sr-only">-</span>}
-                        <span>{n.padStart(2, '0')}</span>
+                        <span>{n.padStart(2, "0")}</span>
                       </>
                     ))}
                 </span>
@@ -83,7 +90,9 @@ const taskLabels = new Map(tasks.map((task) => [task.id, task.data.label]));
                   <span class="lab-card__title">
                     {lab.data.title}
                     {taskLabels.has(lab.id) && (
-                      <span class="lab-card__pill">{taskLabels.get(lab.id)}</span>
+                      <span class="lab-card__pill">
+                        {taskLabels.get(lab.id)}
+                      </span>
                     )}
                   </span>
                   <span class="lab-card__summary">{lab.data.summary}</span>

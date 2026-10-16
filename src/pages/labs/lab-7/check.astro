@@ -33,17 +33,16 @@ import LabLayout from "@/layouts/LabLayout.astro";
 import { labHref, taskHref } from "@/lib/labs";
 import { withBase } from "@/lib/paths";
 import { MOCKUP_POINTS } from "@/scripts/courtly-check";
-
-const course = "web-development";
+import { LEGACY_COURSE } from '@/data/courses';
 
 const title = "Автоматична перевірка Courtly";
 const summary =
   "Вставте адресу опублікованої сторінки студента. Перевірка відкриє її на 320, 375, 768 і 1440 px, прочитає HTML і CSS та складе звіт з оцінкою за 12-бальною шкалою.";
 
 const crumbs = [
-  { label: "Web Development", href: withBase(`/${course}/`) },
-  { label: "Labs", href: withBase(`/${course}/labs/`) },
-  { label: "ЛР-7", href: labHref(course,"lab-7") },
+  { label: "Web Development", href: withBase(`/${LEGACY_COURSE}/`) },
+  { label: "Labs", href: withBase(`/${LEGACY_COURSE}/labs/`) },
+  { label: "ЛР-7", href: labHref(LEGACY_COURSE,"lab-7") },
   { label: "Автоперевірка", href: withBase("/labs/lab-7/check/") },
 ];
 
@@ -62,7 +61,7 @@ const headings = [
   headings={headings}
   noindex
   titleSuffix="Web Development"
-  courseSlug={course}
+  courseSlug={LEGACY_COURSE}
 >
   <Breadcrumbs items={crumbs} />
 
@@ -236,8 +235,8 @@ const headings = [
   <article class="doc-content">
     <h2 id="scope">Що перевіряється</h2>
     <p>
-      Критерії — з тексту <a href={labHref(course, "lab-7")}>лабораторної роботи</a> і <a
-        href={taskHref(course, "lab-7")}
+      Критерії — з тексту <a href={labHref(LEGACY_COURSE, "lab-7")}>лабораторної роботи</a> і <a
+        href={taskHref(LEGACY_COURSE, "lab-7")}
       >
         макета
       </a>. Сторінка завантажується з опублікованої адреси, як у браузері відвідувача:

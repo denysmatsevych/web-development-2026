@@ -3,6 +3,7 @@
  * Legacy labs index — redirect `/labs/` to the course-prefixed index.
  */
 import { withBase } from '@/lib/paths';
+import { LEGACY_COURSE } from '@/data/courses';
 
-return Astro.redirect(withBase('/web-development/labs/'), 301);
+return Astro.redirect(withBase(`/${LEGACY_COURSE}/labs/`), 301);
 ---

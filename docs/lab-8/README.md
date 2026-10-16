@@ -2,8 +2,8 @@
 
 | Route | Source | What it is |
 | --- | --- | --- |
-| `/labs/lab-8/` | `src/content/labs/lab-8.md` | the handout: experiments under the predict → ask the AI → run protocol, five code challenges, report, defence |
-| `/labs/lab-8/task/` | `src/content/tasks/lab-8.md` | the brief: the spec of every function; each test checks one rule from it |
+| `/web-development/labs/lab-8/` | `src/content/labs/web-development/lab-8.md` | the handout: experiments under the predict → ask the AI → run protocol, five code challenges, report, defence |
+| `/web-development/labs/lab-8/task/` | `src/content/tasks/web-development/lab-8.md` | the brief: the spec of every function; each test checks one rule from it |
 | `/labs/js-basics-starter.zip` | `js-basics-starter/` | the stubs, the tests, the TVmaze snapshot and the report page |
 
 ## Why it looks like this

@@ -6,6 +6,9 @@
 
 export type CourseStatus = 'published' | 'draft';
 
+/** Constant for redirects */
+export const LEGACY_COURSE = 'web-development';
+
 export interface Course {
   /** Actual year when course was created (can be updated with the course information) */
   year: number;
@@ -15,8 +18,6 @@ export interface Course {
   title: string;
   /** Ukrainian course name — muted top line on every lecture-deck title slide. */
   courseUk: string;
-  /** Hero eyebrow on the course page. */
-  eyebrow: string;
   /** Meta + og description, and the text on the hub card. */
   description: string;
   /** `draft` courses are visible in dev only. */
@@ -28,8 +29,7 @@ const courses: Course[] = [
     year: 2026,
     slug: 'web-development',
     title: 'Web Development',
-    courseUk: 'Сучасна веброзробка: HTML, CSS, JS/TS',
-    eyebrow: 'Modern Web Development · HTML, CSS, JS/TS',
+    courseUk: 'Сучасна веброзробка · HTML, CSS, JS/TS',
     description:
       'Lecture slide decks and lab assignments for modern HTML, CSS and JavaScript/TypeScript.',
     status: 'published',
@@ -39,7 +39,6 @@ const courses: Course[] = [
     slug: 'react',
     title: 'React',
     courseUk: 'Розробка вебзастосунків на React',
-    eyebrow: 'Web applications with React',
     description: 'Lectures and labs on building web applications with React.',
     status: 'draft',
   },
@@ -47,8 +46,7 @@ const courses: Course[] = [
     year: 2026,
     slug: 'web-accessibility',
     title: 'Web Accessibility',
-    courseUk: 'Web Accessibility',
-    eyebrow: 'Accessible web interfaces',
+    courseUk: 'Вебдоступність',
     description: 'Lectures and labs on building accessible web interfaces.',
     status: 'draft',
   },
@@ -57,8 +55,4 @@ const courses: Course[] = [
 /** Courses to show: everything in dev, only published ones in production. */
 export function getCourses(): Course[] {
   return import.meta.env.DEV ? courses : courses.filter((c) => c.status === 'published');
-}
-
-export function getCourse(slug: string): Course | undefined {
-  return getCourses().find((c) => c.slug === slug);
 }

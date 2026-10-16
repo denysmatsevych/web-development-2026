@@ -12,7 +12,6 @@ export interface SiteConfig {
   description: string;
   /** Homepage hero copy. */
   hubEyebrow: string;
-  hubTitle: string;
   /** Footer contact — label shown, URL linked. */
   contactLabel: string;
   contactUrl: string;
@@ -34,7 +33,6 @@ export const site: SiteConfig = {
   description:
     'A collection of courses with lecture slide decks and hands-on lab assignments.',
   hubEyebrow: 'Навчальна платформа',
-  hubTitle: 'Modern Web Development',
 
   contactLabel: 'denys.matsevych@oa.edu.ua',
   contactUrl: 'mailto:denys.matsevych@oa.edu.ua',

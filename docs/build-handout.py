@@ -1,4 +1,4 @@
-"""Build public/labs/<lab>.pdf from src/content/labs/<lab>.md.
+"""Build public/labs/<lab>.pdf from src/content/labs/web-development/<lab>.md.
 
 Matches the look of lab-3.pdf (Noto Sans, navy headings, green deadline line,
 grey code blocks, US Letter). Run from the repo root with the lab's id:
@@ -20,7 +20,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 if len(sys.argv) != 2:
     sys.exit("usage: python docs/build-handout.py <lab-id>   (e.g. lab-6)")
 LAB = sys.argv[1]
-SRC = ROOT / f"src/content/labs/{LAB}.md"
+SRC = ROOT / f"src/content/labs/web-development/{LAB}.md"
 OUT = ROOT / f"public/labs/{LAB}.pdf"
 SITE = "https://denysmatsevych.github.io/web-development-2026"
 EDGE = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"

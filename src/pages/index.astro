@@ -3,60 +3,79 @@
  * Course hub — the `/` landing. The registry controls which course cards are
  * shown in development and production.
  */
-import SiteFooter from '@/components/SiteFooter.astro';
-import SiteHeader from '@/components/SiteHeader.astro';
-import { getCourses } from '@/data/courses';
-import { site } from '@/data/site';
-import { withBase } from '@/lib/paths';
-import BaseLayout from '@/layouts/BaseLayout.astro';
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import { getCourses } from "@/data/courses";
+import { site } from "@/data/site";
+import { withBase } from "@/lib/paths";
+import BaseLayout from "@/layouts/BaseLayout.astro";
 
 const courses = getCourses();
 ---
 
-<BaseLayout
-  title="Courses"
-  description={site.description}
->
+<BaseLayout title="Courses" description={site.description}>
   <SiteHeader />
 
   <main id="main-content" class="home" tabindex="-1">
     <section class="hero" aria-labelledby="page-title">
-      <p class="hero__eyebrow">{site.hubEyebrow}</p>
-      <h1 id="page-title" class="hero__title">{site.hubTitle}</h1>
+      <p class="hero__eyebrow" lang="uk">{site.hubEyebrow}</p>
+      <h1 id="page-title" class="hero__title">{site.name}</h1>
       <p class="hero__lead">{site.description}</p>
     </section>
 
-    <ul class="courses" aria-label="Доступні курси">
+    <ul class="courses" aria-label="Available courses">
       {
         courses.map((course) => (
           <li>
             <a
               href={withBase(`/${course.slug}/`)}
               class="course-card glass-panel"
-              aria-label={`${course.title}: ${course.description}`}
+              aria-labelledby={`course-${course.slug}-title`}
+              aria-describedby={`course-${course.slug}-year course-${course.slug}-status course-${course.slug}-desc`}
             >
               <span class="course-card__top">
-                <data class="course-card__year" value={`${course.year}`}>
+                <data
+                  class="course-card__year"
+                  id={`course-${course.slug}-year`}
+                  value={`${course.year}`}
+                >
                   {course.year}
                 </data>
                 <span
                   class:list={[
-                    'course-card__status',
-                    { 'course-card__status--draft': course.status === 'draft' },
+                    "course-card__status",
+                    { "course-card__status--draft": course.status === "draft" },
                   ]}
+                  id={`course-${course.slug}-status`}
+                  lang="uk"
                 >
-                  {course.status === 'published' ? 'Доступний' : 'В розробці'}
+                  {course.status === "published" ? "Доступний" : "В розробці"}
                 </span>
               </span>
               <span class="course-card__body">
-                <span class="course-card__title">{course.courseUk}</span>
-                <span class="course-card__description">{course.description}</span>
+                <span
+                  class="course-card__title"
+                  id={`course-${course.slug}-title`}
+                  lang="uk"
+                >
+                  {course.courseUk}
+                </span>
+                <span
+                  class="course-card__description"
+                  id={`course-${course.slug}-desc`}
+                >
+                  {course.description}
+                </span>
               </span>
               <span class="course-card__bottom">
-                <span class="course-card__action">
-                  {course.status === 'published' ? 'Перейти до курсу' : 'Переглянути курс'}
+                <span class="course-card__action" lang="uk">
+                  {course.status === "published"
+                    ? "Перейти до курсу"
+                    : "Переглянути курс"}
                 </span>
-                <span class="course-card__arrow" aria-hidden="true">→</span>
+                <span class="course-card__arrow" aria-hidden="true">
+                  →
+                </span>
               </span>
             </a>
           </li>
@@ -76,12 +95,6 @@ const courses = getCourses();
     padding: 3.5rem 1rem;
   }
 
-  @media (min-width: 640px) {
-    .home {
-      padding-inline: 1.5rem;
-    }
-  }
-
   .hero {
     max-width: 48rem;
     margin-bottom: 2.5rem;
@@ -99,7 +112,7 @@ const courses = getCourses();
   .hero__title {
     margin: 0 0 1rem;
     color: var(--foreground);
-    font-size: clamp(2rem, 5vw, 2.75rem);
+    font-size: clamp(2.5rem, 5vw, 2.75rem);
     font-weight: 700;
     letter-spacing: -0.045em;
     line-height: 1.05;
@@ -121,16 +134,7 @@ const courses = getCourses();
     padding: 0;
     list-style: none;
   }
-  @media (min-width: 680px) {
-    .courses {
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    }
-  }
-  @media (min-width: 980px) {
-    .courses {
-      grid-template-columns: repeat(auto-fit, minmax(300px, 0.5fr));
-    }
-  }
+
   .course-card {
     display: flex;
     height: 100%;
@@ -146,12 +150,6 @@ const courses = getCourses();
       transform 0.15s ease;
   }
 
-  @media (min-width: 680px) {
-    .course-card {
-      padding: 1.75rem;
-    }
-  }
-
   .course-card__top,
   .course-card__bottom {
     display: flex;
@@ -159,7 +157,7 @@ const courses = getCourses();
     justify-content: space-between;
     gap: 1rem;
   }
-  .course-card__bottom{
+  .course-card__bottom {
     margin-top: 0.75rem;
   }
   .course-card__year {
@@ -197,24 +195,11 @@ const courses = getCourses();
     line-height: 1.15;
   }
 
-  .course-card__uk {
-    color: var(--foreground);
-    font-size: 0.95rem;
-    font-weight: 500;
-    line-height: 1.5;
-  }
-
   .course-card__description {
     margin-top: 0.15rem;
     color: var(--muted-foreground);
     font-size: 0.975rem;
     line-height: 1.65;
-  }
-
-  .course-card__uk {
-    color: var(--muted-foreground);
-    font-size: 0.9rem;
-    line-height: 1.5;
   }
 
   .course-card__action {
@@ -226,5 +211,21 @@ const courses = getCourses();
   .course-card__arrow {
     color: var(--brand-text);
     font-size: 1.25rem;
+  }
+
+  @media (min-width: 640px) {
+    .home {
+      padding-inline: 1.5rem;
+    }
+  }
+  @media (min-width: 680px) {
+    .course-card {
+      padding: 1.75rem;
+    }
+  }
+  @media (min-width: 980px) {
+    .courses {
+      grid-template-columns: repeat(auto-fit, minmax(300px, 0.5fr));
+    }
   }
 </style>

@@ -2,25 +2,25 @@
 /**
  * Legacy task URL — redirect `/labs/<lab>/task/` to the course-prefixed route.
  */
-import { getCourses } from '@/data/courses';
 import { getLabs, getTasks, splitId, taskHref } from '@/lib/labs';
+import { LEGACY_COURSE } from '@/data/courses';
 
 export async function getStaticPaths() {
-  const course = getCourses().find(({ slug }) => slug === 'web-development');
-  if (!course) return [];
-
   const [labs, tasks] = await Promise.all([
-    getLabs(course.slug),
-    getTasks(course.slug),
+    getLabs(LEGACY_COURSE),
+    getTasks(LEGACY_COURSE),
   ]);
   const publishedLabIds = new Set(labs.map(({ id }) => id));
 
   return tasks
     .filter(({ id }) => publishedLabIds.has(id))
-    .map((task) => ({
-      params: { lab: splitId(task.id).slug },
-      props: { destination: taskHref(course.slug, splitId(task.id).slug) },
-    }));
+    .map((task) => {
+      const { slug } = splitId(task.id);
+      return {
+        params: { lab: slug },
+        props: { destination: taskHref(LEGACY_COURSE, slug) },
+      };
+    });
 }
 
 return Astro.redirect(Astro.props.destination, 301);
