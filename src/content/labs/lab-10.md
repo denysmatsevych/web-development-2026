@@ -395,14 +395,14 @@ btn.addEventListener('click', () => {
 [Веб] ЛР-10: AI-агент для JavaScript debugging: аналіз Console errors, Stack Trace, DOM та Event Loop
 ```
 
-У листі вкажіть:
+У листі вкажіть репозиторій і адресу опублікованого проєкту — один із двох
+рядків, GitHub Pages або Vercel:
 
 ```
 GitHub repository: https://github.com/<username>/<repository>
-Опублікована сторінка: https://<username>.github.io/<repository>/
+GitHub Pages: https://<username>.github.io/<repository>/
+Vercel: https://<project>.vercel.app/
 ```
-
-(або `https://<project>.vercel.app/`).
 
 Звіт повинен містити:
 
