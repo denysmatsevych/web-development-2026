@@ -48,7 +48,10 @@
   instead of passing more checks.
 - **Graded by components, 4 + 1.** The scheme of Lab 11, for two slots:
   self-check 1, process 1, defence 2, and +1 for on-time submission. The
-  rubric is in the handout, §8; the course-level picture is in
+  self-check's half point needs 90 % of the tests, which T1–T3 alone don't
+  reach (see the table below): otherwise skipping the migration would score
+  better than an unfinished one with type errors left. The rubric is in the
+  handout, §8; the course-level picture is in
   [../course-plan.md](../course-plan.md).
 
 ## The self-check
@@ -63,7 +66,7 @@ the inferred `any` passes) and to the TypeScript after it.
 | State | Types | Tests |
 | --- | --- | --- |
 | the starter | 25 errors | 8 of 48 |
-| T1–T3 done, JavaScript not migrated | no errors | 39 of 48 |
+| T1–T3 done, JavaScript not migrated | no errors | 39 of 48 (81 %) |
 | the reference solution | no errors | 48 of 48 |
 
 ## The fixtures
