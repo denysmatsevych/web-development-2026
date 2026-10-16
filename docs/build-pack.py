@@ -15,8 +15,9 @@ not by its modification time, which every checkout resets. A file that has
 no commit yet keeps its modification time.
 
 A pack that adds files from outside its folder (Lab 7's asset pack) has its
-own script beside the lab's docs. Installed or built folders (`node_modules/`,
-`dist/`) stay out of the zip, so a starter that was run locally packs clean.
+own script beside the lab's docs. Only files Git tracks go in, so whatever a
+local run leaves behind (`node_modules/`, `dist/`, a `package-lock.json`)
+stays out of the zip: `git add` a new file before packing it.
 """
 import datetime
 import pathlib
@@ -25,7 +26,6 @@ import sys
 import zipfile
 
 TEXT = {".css", ".html", ".js", ".json", ".md", ".mjs", ".svg", ".ts", ".txt", ".gitignore", ".nojekyll"}
-SKIP = {"node_modules", "dist"}
 
 
 def committed(path):
@@ -33,6 +33,13 @@ def committed(path):
     out = subprocess.run(["git", "log", "-1", "--format=%ct", "--", str(path)],
                          cwd=ROOT, capture_output=True, text=True).stdout.strip()
     return datetime.datetime.fromtimestamp(int(out)).timetuple()[:6] if out else None
+
+
+def tracked(folder):
+    """Files under `folder` that Git tracks (in the index), sorted."""
+    out = subprocess.run(["git", "ls-files", "-z", "--", folder.relative_to(ROOT).as_posix()],
+                         cwd=ROOT, capture_output=True, encoding="utf-8", check=True).stdout
+    return sorted(ROOT / name for name in out.split("\0") if name and (ROOT / name).is_file())
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -43,7 +50,7 @@ if not SRC.is_dir():
     sys.exit(f"no folder {sys.argv[1]}/ at the repo root")
 OUT = ROOT / f"public/labs/{SRC.name}.zip"
 
-files = sorted(p for p in SRC.rglob("*") if p.is_file() and not SKIP & set(p.relative_to(SRC).parts))
+files = tracked(SRC)
 with zipfile.ZipFile(OUT, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as z:
     for p in files:
         info = zipfile.ZipInfo.from_file(p, p.relative_to(SRC).as_posix())
