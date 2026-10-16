@@ -1,14 +1,14 @@
 # Lab 4-5 — FlowTask starter: defect map
 
-Instructor-side companion to `/labs/lab-4/task/`. The student brief deliberately
+Instructor-side companion to `/web-development/labs/lab-4/task/`. The student brief deliberately
 names no specific defect; this file is the build spec for the starter and the
 grading reference.
 
 | Source | Becomes |
 | --- | --- |
-| `src/content/labs/lab-4.md` | `/labs/lab-4/` |
-| `src/content/labs/lab-4.md` via `docs/build-handout.py lab-4` | `/labs/lab-4.pdf` (re-run after editing the handout) |
-| `src/content/tasks/lab-4.md` | `/labs/lab-4/task/` |
+| `src/content/labs/web-development/lab-4.md` | `/web-development/labs/lab-4/` |
+| `src/content/labs/web-development/lab-4.md` via `docs/build-handout.py lab-4` | `/labs/lab-4.pdf` (re-run after editing the handout) |
+| `src/content/tasks/web-development/lab-4.md` | `/web-development/labs/lab-4/task/` |
 | `flowtask-starter/` (see §6) | the code students audit |
 
 ## 1. Why a seeded starter

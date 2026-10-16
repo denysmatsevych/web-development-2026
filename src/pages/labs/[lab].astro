@@ -1,58 +1,20 @@
 ---
 /**
- * Lab page — one static route per Markdown file in `src/content/labs/`, at
- * `/labs/<id>` (`/labs/lab-1`). Drafts are excluded by `getLabs()`, so an
- * unpublished lab produces no route.
- *
- * The body is authored from `##` down; the `<h1>`, summary and breadcrumb
- * trail all come from frontmatter, composed here into `LabLayout`.
+ * Legacy lab URL — redirect `/labs/<lab>/` to its course-prefixed route.
  */
-import { render } from 'astro:content';
-
-import Breadcrumbs from '@/components/Breadcrumbs.astro';
-import LabHeader from '@/components/LabHeader.astro';
-import PrevNext from '@/components/PrevNext.astro';
-import LabLayout from '@/layouts/LabLayout.astro';
-import { getAdjacentLab, getLabs, labHref, labLabels } from '@/lib/labs';
-import { withBase } from '@/lib/paths';
+import { getLabs, labHref, splitId } from '@/lib/labs';
+import { LEGACY_COURSE } from '@/data/courses';
 
 export async function getStaticPaths() {
-  const labs = await getLabs();
-  return labs.map((entry) => ({
-    params: { lab: entry.id },
-    props: { entry },
-  }));
+  const labs = await getLabs(LEGACY_COURSE);
+  return labs.map((lab) => {
+    const { slug } = splitId(lab.id);
+    return {
+      params: { lab: slug },
+      props: { destination: labHref(LEGACY_COURSE, slug) },
+    };
+  });
 }
 
-const { entry } = Astro.props;
-const { data } = entry;
-
-// Body + h2/h3 headings for the "on this page" rail (Astro stamps the ids).
-const { Content, headings } = await render(entry);
-const adjacent = await getAdjacentLab(entry.id);
-const { eyebrow, crumb } = labLabels(entry);
-
-const crumbs = [
-  { label: 'Labs', href: withBase('/labs/') },
-  { label: crumb, href: labHref(entry.id) },
-];
+return Astro.redirect(Astro.props.destination, 301);
 ---
-
-<LabLayout title={data.title} description={data.summary} lang={data.lang} headings={headings}>
-  <Breadcrumbs items={crumbs} />
-
-  <LabHeader
-    eyebrow={eyebrow}
-    title={data.title}
-    summary={data.summary}
-    handout={data.handout}
-  />
-
-  {/* `data-copy-code` — copy buttons on the body's code blocks (the email
-      subject and links in "Вимоги до звіту"); see src/scripts/docs.ts. */}
-  <article class="doc-content" data-copy-code>
-    <Content />
-  </article>
-
-  <PrevNext prev={adjacent.prev} next={adjacent.next} />
-</LabLayout>

@@ -2,8 +2,8 @@
 
 | Route | Source | What it is |
 | --- | --- | --- |
-| `/labs/lab-9/` | `src/content/labs/lab-9.md` | the handout: 15 experiments (analyse, run, explain a miss), four challenges built as AI draft → audit → fix by hand, report, defence |
-| `/labs/lab-9/task/` | `src/content/tasks/lab-9.md` | the brief: the DOM contract, numbered rules and the manual checklist |
+| `/web-development/labs/lab-9/` | `src/content/labs/web-development/lab-9.md` | the handout: 15 experiments (analyse, run, explain a miss), four challenges built as AI draft → audit → fix by hand, report, defence |
+| `/web-development/labs/lab-9/task/` | `src/content/tasks/web-development/lab-9.md` | the brief: the DOM contract, numbered rules and the manual checklist |
 | `/labs/watchlist-starter.zip` | `watchlist-starter/` | the static shell, data, state module, stubs, `check.html` and `experiments.html` |
 
 ## Why it looks like this

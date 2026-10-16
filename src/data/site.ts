@@ -1,11 +1,8 @@
 /**
  * Site metadata and the list of top-level sections.
  *
- * The main sections (Lectures and Labs) are part of this Astro build.
- * `sections` is the single source for the hub cards (`src/pages/index.astro`),
- * the header nav (`SiteHeader.astro`) and the footer link group
- * (`SiteFooter.astro`) — `href`s are plain paths, run through `withBase()` at
- * the point of use.
+ * Course-independent site metadata and the section definitions used to build
+ * course-specific navigation.
  */
 
 export interface SiteConfig {
@@ -13,38 +10,35 @@ export interface SiteConfig {
   name: string;
   /** Default meta + og description (a page may override it). */
   description: string;
-  /** Homepage hero eyebrow. */
-  eyebrow: string;
-  /** Ukrainian course name — muted top line on every lecture-deck title slide. */
-  courseUk: string;
+  /** Homepage hero copy. */
+  hubEyebrow: string;
   /** Footer contact — label shown, URL linked. */
   contactLabel: string;
   contactUrl: string;
 }
 
 export interface Section {
-  /** Stable id. */
+  /** Stable section id. */
   id: 'lectures' | 'labs';
   /** Nav label / card heading. */
   label: string;
-  /** Internal path (no base prefix) — wrap in `withBase()` when rendering. */
+  /** Course-relative path — `getSections(courseSlug)` adds the course prefix. */
   href: string;
-  /** One-line description for the hub card. */
+  /** One-line description for the section card. */
   blurb: string;
 }
 
 export const site: SiteConfig = {
-  name: 'Web Development 2026',
+  name: 'Modern Web Development',
   description:
-    'Course site for Web Development 2026 — lecture slide decks and lab assignments for modern HTML, CSS and JavaScript/TypeScript.',
-  eyebrow: 'Modern Web Development · HTML, CSS, JS/TS',
-  courseUk: 'Сучасна веброзробка · HTML, CSS, JS/TS',
+    'A collection of courses with lecture slide decks and hands-on lab assignments.',
+  hubEyebrow: 'Навчальна платформа',
 
   contactLabel: 'denys.matsevych@oa.edu.ua',
   contactUrl: 'mailto:denys.matsevych@oa.edu.ua',
 };
 
-export const sections: Section[] = [
+const sections: Section[] = [
   {
     id: 'lectures',
     label: 'Lectures',
@@ -58,3 +52,10 @@ export const sections: Section[] = [
     blurb: 'Hands-on assignments that build on each lecture, with downloadable handouts.',
   },
 ];
+
+export function getSections(courseSlug: string): Section[] {
+  return sections.map((section) => ({
+    ...section,
+    href: `/${courseSlug}${section.href}`,
+  }));
+}

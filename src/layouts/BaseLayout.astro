@@ -19,8 +19,10 @@ import { site } from "@/data/site";
 import { withBase } from "@/lib/paths";
 
 interface Props {
-  /** Page-specific title. Composed as `"<title> · <site name>"` unless equal. */
+  /** Page-specific title. Composed with `titleSuffix` unless the two are equal. */
   title: string;
+  /** Optional title suffix, e.g. the current course name. Defaults to the site name. */
+  titleSuffix?: string;
   /** Meta + OG description; falls back to the site description. */
   description?: string;
   /** Document language. `'en'` now; a `uk` locale passes `'uk'` later. */
@@ -37,6 +39,7 @@ interface Props {
 
 const {
   title,
+  titleSuffix = site.name,
   description = site.description,
   lang = "en",
   ogType = "website",
@@ -45,7 +48,8 @@ const {
   skipLabel = "Skip to content",
 } = Astro.props;
 
-const documentTitle = title === site.name ? title : `${title} · ${site.name}`;
+const documentTitle =
+  title === titleSuffix || title === site.name ? title : `${title} · ${titleSuffix}`;
 const canonicalURL = Astro.site
   ? new URL(Astro.url.pathname, Astro.site).href
   : undefined;

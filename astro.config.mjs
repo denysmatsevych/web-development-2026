@@ -8,8 +8,8 @@ import baseLinks from './plugins/base-links.mjs';
 // the Markdown link rewriter both read it.
 const BASE = '/web-development-2026';
 
-// One deploy for the whole course site: the hub at `/`, the slide decks under
-// `/lectures/*`, the labs under `/labs/*`.
+// One deploy for the whole course site: the hub at `/`, with course materials
+// under `/<course>/lectures/*` and `/<course>/labs/*`.
 // GitHub Pages project site at https://denysmatsevych.github.io/web-development-2026/
 // (repo denysmatsevych/web-development-2026, Settings → Pages → Source: GitHub Actions).
 // `base` must match the repo name; every internal link/asset goes through

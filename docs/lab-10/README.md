@@ -2,8 +2,8 @@
 
 | Route | Source | What it is |
 | --- | --- | --- |
-| `/labs/lab-10/` | `src/content/labs/lab-10.md` | the handout: research, scenarios A / B / C, report, defence |
-| `/labs/lab-10/task/` | `src/content/tasks/lab-10.md` | the brief: how the starter **should** behave; a defect is any deviation from it |
+| `/web-development/labs/lab-10/` | `src/content/labs/web-development/lab-10.md` | the handout: research, scenarios A / B / C, report, defence |
+| `/web-development/labs/lab-10/task/` | `src/content/tasks/web-development/lab-10.md` | the brief: how the starter **should** behave; a defect is any deviation from it |
 | `/labs/courtly-booking-starter.zip` | `courtly-booking-starter/` | the seeded starter students debug |
 
 ## Why a separate starter

@@ -1,0 +1,77 @@
+---
+/**
+ * Lab page — one static route per published lab at
+ * `/<course>/labs/<lab>`. Drafts are excluded by `getLabs()`.
+ *
+ * The body is authored from `##` down; the `<h1>`, summary and breadcrumb
+ * trail all come from frontmatter, composed here into `LabLayout`.
+ */
+import { render } from 'astro:content';
+
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import LabHeader from '@/components/LabHeader.astro';
+import PrevNext from '@/components/PrevNext.astro';
+import LabLayout from '@/layouts/LabLayout.astro';
+import { getCourses, type Course } from '@/data/courses';
+import { getAdjacentLab, getLabs, labHref, labLabels, splitId } from '@/lib/labs';
+import { withBase } from '@/lib/paths';
+
+export async function getStaticPaths() {
+  return (
+    await Promise.all(
+      getCourses().map(async (course) =>
+        (await getLabs(course.slug)).map((entry) => ({
+          params: { course: course.slug, lab: splitId(entry.id).slug },
+          props: { course, entry },
+        })),
+      ),
+    )
+  ).flat();
+}
+
+interface Props {
+  course: Course;
+  entry: Awaited<ReturnType<typeof getLabs>>[number];
+}
+
+const { course, entry } = Astro.props;
+const { data } = entry;
+
+// Body + h2/h3 headings for the "on this page" rail (Astro stamps the ids).
+const { Content, headings } = await render(entry);
+const { slug } = splitId(entry.id);
+const adjacent = await getAdjacentLab(course.slug, slug);
+const { eyebrow, crumb } = labLabels(entry);
+
+const crumbs = [
+  { label: course.title, href: withBase(`/${course.slug}/`) },
+  { label: 'Labs', href: withBase(`/${course.slug}/labs/`) },
+  { label: crumb, href: labHref(course.slug, slug) },
+];
+---
+
+<LabLayout
+  title={data.title}
+  titleSuffix={course.title}
+  courseSlug={course.slug}
+  description={data.summary}
+  lang={data.lang}
+  headings={headings}
+>
+  <Breadcrumbs items={crumbs} />
+
+  <LabHeader
+    eyebrow={eyebrow}
+    title={data.title}
+    summary={data.summary}
+    handout={data.handout}
+  />
+
+  {/* `data-copy-code` — copy buttons on the body's code blocks (the email
+      subject and links in "Вимоги до звіту"); see src/scripts/docs.ts. */}
+  <article class="doc-content" data-copy-code>
+    <Content />
+  </article>
+
+  <PrevNext prev={adjacent.prev} next={adjacent.next} />
+</LabLayout>
