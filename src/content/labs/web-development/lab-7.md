@@ -6,7 +6,7 @@ lang: uk
 discipline: "«Сучасна веброзробка: HTML, CSS, JS/TS»"
 level: "3 курс, спеціальність «Комп'ютерні науки»"
 format: "Проміжний контроль"
-updated: 2026-09-29
+updated: 2026-10-18
 handout: /labs/lab-7.pdf
 ---
 
@@ -132,14 +132,16 @@ Performance найчастіше знижують важкі зображенн�
 [Веб] ЛР-7: Проміжний контроль №1 — Courtly
 ```
 
-У листі:
+У листі вкажіть репозиторій і адресу опублікованої сторінки — один із двох
+рядків, GitHub Pages або Vercel:
 
 ```
 GitHub repository: https://github.com/<username>/<repository>
-Опублікована сторінка: https://<username>.github.io/<repository>/
+GitHub Pages: https://<username>.github.io/<repository>/
+Vercel: https://<project>.vercel.app/
 ```
 
-(або `https://<project>.vercel.app/`), а також:
+Також додайте до листа:
 
 - **один скриншот Lighthouse** з результатами чотирьох категорій;
 - **короткий опис роботи з AI:** який інструмент і модель використовувались,

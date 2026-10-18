@@ -4,8 +4,8 @@ Status: built on 2026-10-13 on branch `feat/lab-11-rest-api`, from `main`.
 The prompt calibration ran on 2026-10-13 in two Claude models (Sonnet and
 Haiku; the record is in `solution/calibration.md`). Not yet done, and both gate
 publishing: the calibration in Copilot and Cursor, and the timed dry run. Decisions 1 and 2 follow the recommendation; decisions 3
-and 4 are settled (ЛР-10 due 21.10.2026, ЛР-11 due 23.10.2026; 3 hours of
-self-study); decision 5 is still open. Delete this file once the lab is published. The facts that last
+and 4 are settled (ЛР-10 due 21.10.2026, ЛР-11 due 22.10.2026 since
+2026-10-18; 3 hours of self-study); decision 5 is still open. Delete this file once the lab is published. The facts that last
 are in this folder's `README.md`.
 
 Deviations from the plan:
@@ -57,10 +57,11 @@ Deviations from the plan:
     with ’.
   - `check/net.js` stops `history.pushState` and `replaceState` from throwing
     in the `srcdoc` frame.
-- **Grading by components.** The 2 points (the programme's weight for a lab)
-  are split into the self-check (0.5), the process (0.5) and a defence scored
-  by a rubric (1), and the bonus is for on-time submission only, not «or work
-  in class». Labs 8–10 keep their scheme.
+- **Grading by components.** The lab was built with its 2 points split into
+  the self-check (0.5), the process (0.5) and a defence scored by a rubric
+  (1). Since 2026-10-18 Labs 8–11 share a 3-point scheme instead; the rubric
+  is in the handout, §8. The bonus stays for on-time submission only, not «or
+  work in class».
 
 ## Context
 
@@ -87,7 +88,7 @@ on TVmaze data (ЛР-8) and a DOM layer with delegation, forms and focus
 (ЛР-10). They have never called a real API.
 
 **Timeline as of 2026-10-13:** ЛР-9 is due 19.10.2026, ЛР-10 21.10.2026 and
-ЛР-11 23.10.2026.
+ЛР-11 23.10.2026 (moved to 22.10.2026 on 2026-10-18).
 
 ## Design principles
 
@@ -479,13 +480,13 @@ Open:
    only place readings 30–34 become practice. The alternative is a plain
    prompt as in C1–C2, which measures defaults three times.
 3. **Deadline.** Settled on 2026-10-13: ЛР-11 is due 23.10.2026, and ЛР-10
-   moved to 21.10.2026. The original proposal was to publish after ЛР-10's
-   deadline (principle 7); see **Deviations** at the top.
+   moved to 21.10.2026. On 2026-10-18 ЛР-11 moved to 22.10.2026. The
+   original proposal was to publish after ЛР-10's deadline (principle 7); see
+   **Deviations** at the top.
 4. **Self-study hours.** Settled on 2026-10-13: the approved programme (PDF of
    26 August 2026) says 3 hours, as `course-plan.md` and the handout do.
 5. **Лекція 6 coverage.** Its content isn't in this repo. Confirm it covers
    `AbortController`, preflight requests and HTTP caching before §4 relies on
    them. Its self-study lists Fetch, CORS and caching, but not cancellation.
 
-Grading follows the other labs (defence 2 points + 1 bonus for submitting by
-the deadline or working in class) unless decided otherwise.
+Grading was decided otherwise; see **Deviations** at the top.

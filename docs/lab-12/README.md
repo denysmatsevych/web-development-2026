@@ -46,8 +46,9 @@
 - **`tsconfig.json` stays as shipped.** T4.2 compares both configs with the
   starter's, so an agent that turns strict mode off fails a named rule
   instead of passing more checks.
-- **Graded by components, 4 + 1.** The scheme of Lab 11, for two slots:
-  self-check 1, process 1, defence 2, and +1 for on-time submission. The
+- **Graded by components, 4 + 1.** For the two slots: self-check 1, process
+  1 (commits and every report item, the experiments table included), defence
+  2, and +1 for on-time submission. The
   self-check's half point needs 90 % of the tests, which T1–T3 alone don't
   reach (see the table below): otherwise skipping the migration would score
   better than an unfinished one with type errors left. The rubric is in the

@@ -38,15 +38,15 @@
   the Challenge 3 draft; the report only sums up what was done. The handout
   asks for their own words, not a copy of
   the brief.
-- **Graded by components.** Unlike Labs 2–10, the 2 points are split into the
-  self-check, the process and a rubric-scored defence, and the bonus is for
-  on-time submission only. The rubric is in the handout, §8; the course-level
+- **Graded by components.** The scheme of Labs 8–10 (research, practical
+  part, defence), but the bonus is for on-time submission only, not for work
+  in class. The rubric is in the handout, §8; the course-level
   picture is in [../course-plan.md](../course-plan.md).
 - **No seeded network defects.** Lab 10 already used a seeded starter. The
   bugs to debug in the Network panel are the ones in the AI's draft.
 - **Lab 10 order.** Lab 11 builds correctly some of the async patterns that
   Lab 10's Scenario C asks students to find. It is published before Lab 10's
-  deadline (21.10.2026; Lab 11 is due 23.10.2026), so the brief and the check
+  deadline (21.10.2026; Lab 11 is due 22.10.2026), so the brief and the check
   names describe them in ShowFinder's terms only. They were read against Lab
   10's local defect map before publishing.
 
