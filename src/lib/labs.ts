@@ -9,6 +9,7 @@
  */
 import { getCollection, type CollectionEntry } from 'astro:content';
 
+import { isCourse } from '@/data/courses';
 import { withBase } from '@/lib/paths';
 
 export type LabEntry = CollectionEntry<'labs'>;
@@ -17,6 +18,26 @@ export type LabEntry = CollectionEntry<'labs'>;
 export function splitId(id: string): { course: string; slug: string } {
   const [course, ...rest] = id.split('/');
   return { course, slug: rest.join('/') };
+}
+
+/**
+ * Throws on an entry outside a registered course folder. The per-course
+ * filters would otherwise drop it without a word: the build stays green and
+ * the page silently disappears from the site.
+ */
+function assertInCourse(
+  collection: 'labs' | 'tasks',
+  entries: { id: string; filePath?: string }[],
+): void {
+  for (const { id, filePath } of entries) {
+    const { course, slug } = splitId(id);
+    if (!slug || !isCourse(course)) {
+      throw new Error(
+        `${filePath ?? `${collection}/${id}`} is not in a registered course folder — ` +
+          `move it to src/content/${collection}/<course>/.`,
+      );
+    }
+  }
 }
 
 export interface LabMeta {
@@ -54,11 +75,11 @@ export function toLabMeta(entry: LabEntry): LabMeta {
  * the repo.
  */
 export async function getLabs(course: string): Promise<LabEntry[]> {
-  const entries = await getCollection(
-    'labs',
-    ({ id, data }) => id.startsWith(`${course}/`) && !data.draft,
-  );
-  return entries.sort((a, b) => a.data.number - b.data.number);
+  const entries = await getCollection('labs');
+  assertInCourse('labs', entries);
+  return entries
+    .filter(({ id, data }) => id.startsWith(`${course}/`) && !data.draft)
+    .sort((a, b) => a.data.number - b.data.number);
 }
 
 /** A lab's displayed number — `numberLabel` when it spans slots, else `number`. */
@@ -116,8 +137,7 @@ export function taskHref(course: string, slug: string): string {
  * reached through its lab, never listed on its own.
  */
 export async function getTasks(course: string): Promise<TaskEntry[]> {
-  return getCollection(
-    'tasks',
-    ({ id, data }) => id.startsWith(`${course}/`) && !data.draft,
-  );
+  const entries = await getCollection('tasks');
+  assertInCourse('tasks', entries);
+  return entries.filter(({ id, data }) => id.startsWith(`${course}/`) && !data.draft);
 }

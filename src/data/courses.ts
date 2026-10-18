@@ -52,6 +52,11 @@ const courses: Course[] = [
   },
 ];
 
+/** Whether `slug` names a registered course — drafts included, in any environment. */
+export function isCourse(slug: string): boolean {
+  return courses.some((c) => c.slug === slug);
+}
+
 /** Courses to show: everything in dev, only published ones in production. */
 export function getCourses(): Course[] {
   return import.meta.env.DEV ? courses : courses.filter((c) => c.status === 'published');
