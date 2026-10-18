@@ -82,7 +82,7 @@ const tasks = defineCollection({
     highlights: z.array(z.string()).default([]),
     /**
      * The brief's §7 acceptance criteria, one line per row, for the self-check
-     * dialog. Frontmatter rather than the route (see `labs/[lab]/task.astro`)
+     * dialog. Frontmatter rather than the brief route
      * so a second brief cannot inherit another lab's criteria; empty hides the
      * dialog.
      */
