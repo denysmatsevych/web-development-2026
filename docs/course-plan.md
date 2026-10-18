@@ -2,12 +2,12 @@
 
 A copy of the structure and grading tables from the official course programme
 (a `.docx` outside this repo). The `.docx` is authoritative: when the programme changes,
-update both in the same sitting. Part 2 was revised on 2026-10-04 (see
-**Part 2 revision** below).
+update both in the same sitting. Part 2 was revised on 2026-10-04 and
+2026-10-15 (see **Part 2 revision** below).
 
 ## How the site maps to the plan
 
-As of 2026-10-13. The site's lab id is the file name in `src/content/labs/`.
+As of 2026-10-15. The site's lab id is the file name in `src/content/labs/`.
 
 | Plan | Site | Note |
 | --- | --- | --- |
@@ -19,7 +19,8 @@ As of 2026-10-13. The site's lab id is the file name in `src/content/labs/`.
 | ЛР 9 | `lab-9` | DOM, events and forms; [lab-9/README.md](lab-9/README.md) |
 | ЛР 10 | `lab-10` | JavaScript debugging; [lab-10/README.md](lab-10/README.md) |
 | ЛР 11 | `lab-11` | REST API integration; [lab-11/README.md](lab-11/README.md) |
-| ЛР 12–15 | not built | |
+| ЛР 12 + ЛР 13 | `lab-12` (shown as ЛР-12-13) | TypeScript by hand and the AI-assisted migration in one lab; [lab-12/README.md](lab-12/README.md) |
+| ЛР 14–15 | not built | |
 
 ## Part 2 revision (2026-10-04)
 
@@ -42,6 +43,12 @@ As of 2026-10-13. The site's lab id is the file name in `src/content/labs/`.
 - **Лекція 7 adds compiler setup** (`tsconfig`, strict mode), since ЛР 12–13
   need it before Лекція 8 covers tooling.
 - Hours per row are unchanged, so the totals are the same.
+
+**2026-10-15: ЛР 12 and ЛР 13 joined.** Both rows work on one app, so they
+are one lab, shown as ЛР-12-13 the way `lab-4` covers two slots. The student
+writes the types, the requests and the states by hand (ЛР 12), then an AI
+agent migrates the rest of the app from JavaScript and the student audits the
+migration (ЛР 13).
 
 ## Структура дисципліни
 
@@ -97,8 +104,9 @@ yet in the `.docx` (see **Mismatches** below).
 
 **How the labs apply it.** A lab slot in Part 1 and ЛР 12–14 is worth 2
 points; `lab-4` takes two slots, so it is worth 4. ЛР 8–11 are worth 3 each,
-which matches their handouts' maximum: 2 points plus a +1 bonus. Part 1
-handouts give a bonus the table doesn't count.
+which matches their handouts' maximum: 2 points plus a +1 bonus. `lab-12`
+takes the ЛР 12 and ЛР 13 slots, so it is worth 4. Part 1 handouts and
+`lab-12` give a bonus the table doesn't count.
 
 - **ЛР 2–4, 8–10:** a successful defence earns the points; +1 (`lab-4`: +2)
   for submitting by the deadline or working in class.
@@ -109,18 +117,25 @@ handouts give a bonus the table doesn't count.
   the +1 is for on-time submission only. The rubric is in its handout, §8
   ([lab-11.md](../src/content/labs/web-development/lab-11.md)). This is the scheme proposed
   for later labs; earlier labs keep theirs.
+- **`lab-12` (ЛР 12-13):** the same scheme for two slots: 4 points split
+  into the self-check (`npm run check`), the process (commits and report) and
+  the defence, and +1 for on-time submission. The rubric is in its handout, §8
+  ([lab-12.md](../src/content/labs/lab-12.md)).
 
 **Mismatches with the plan** (fix them in the `.docx`):
 
 - **ЛР 8–11:** the PDF says ЛР №7-10 for 8 points (4 × 2). ЛР 7 is
   Проміжний контроль №1, already counted in the first row, and ЛР 11 was in
   no row. Here: ЛР №8-11 for 12 points (4 × 3).
+- **ЛР 12 and ЛР 13:** separate rows (2.8, 2.9) in the programme, one lab
+  on the site since 2026-10-15. Their points are unchanged, so only the
+  `.docx` wording needs a note that the two labs are done together.
 - **Проміжний контроль 2:** 10 points here, 12 in the PDF.
 - **Totals:** current work 72 here, 70 in the PDF; Підсумковий контроль 28
   here, 30 in the PDF. The semester stays 100.
-- **Part 1 bonuses** (ЛР 2–4) are still outside the table. If they count
-  towards the 100, current work can exceed 72; the programme should say how
-  they are capped.
+- **Bonuses outside the table:** Part 1's (ЛР 2–4) and `lab-12`'s +1. If
+  they count towards the 100, current work can exceed 72; the programme should
+  say how they are capped.
 
 ## Рекомендована література
 
