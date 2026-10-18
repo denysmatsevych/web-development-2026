@@ -2,8 +2,8 @@
 
 | Route | Source | What it is |
 | --- | --- | --- |
-| `/labs/lab-12/` | `src/content/labs/lab-12.md` | the handout: six experiments (Е1 in the browser, Е2–Е6 in the project), how to work (T1–T3 by hand, the T4 migration → audit → fix loop, commits), report, defence, grading |
-| `/labs/lab-12/task/` | `src/content/tasks/lab-12.md` | the brief: the API, the fields, the JavaScript modules, the states and texts, then T1–T4 with numbered rules and the T4 prompt, the §5 constraints and the browser checklist |
+| `/web-development/labs/lab-12/` | `src/content/labs/web-development/lab-12.md` | the handout: six experiments (Е1 in the browser, Е2–Е6 in the project), how to work (T1–T3 by hand, the T4 migration → audit → fix loop, commits), report, defence, grading |
+| `/web-development/labs/lab-12/task/` | `src/content/tasks/web-development/lab-12.md` | the brief: the API, the fields, the JavaScript modules, the states and texts, then T1–T4 with numbered rules and the T4 prompt, the §5 constraints and the browser checklist |
 | `/labs/showfinder-ts-starter.zip` | `showfinder-ts-starter/` | TypeScript stubs for T1–T3, the JavaScript modules T4 migrates, and `check/` |
 
 ## Why it looks like this
