@@ -7,8 +7,8 @@
 довести й виправити їх і є завданням лабораторної роботи.
 
 Опис завдання та очікувана поведінка застосунку:
-<https://denysmatsevych.github.io/web-development-2026/labs/lab-10/> і
-<https://denysmatsevych.github.io/web-development-2026/labs/lab-10/task/>.
+<https://denysmatsevych.github.io/web-development-2026/web-development/labs/lab-10/> і
+<https://denysmatsevych.github.io/web-development-2026/web-development/labs/lab-10/task/>.
 
 ## Склад
 

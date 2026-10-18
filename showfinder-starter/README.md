@@ -6,8 +6,8 @@
 в лабораторній роботі.
 
 Опис завдання та специфікація:
-<https://denysmatsevych.github.io/web-development-2026/labs/lab-11/> і
-<https://denysmatsevych.github.io/web-development-2026/labs/lab-11/task/>.
+<https://denysmatsevych.github.io/web-development-2026/web-development/labs/lab-11/> і
+<https://denysmatsevych.github.io/web-development-2026/web-development/labs/lab-11/task/>.
 
 ## Склад
 
