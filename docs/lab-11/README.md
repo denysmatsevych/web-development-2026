@@ -46,7 +46,7 @@
   bugs to debug in the Network panel are the ones in the AI's draft.
 - **Lab 10 order.** Lab 11 builds correctly some of the async patterns that
   Lab 10's Scenario C asks students to find. It is published before Lab 10's
-  deadline (21.10.2026; Lab 11 is due 23.10.2026), so the brief and the check
+  deadline (21.10.2026; Lab 11 is due 22.10.2026), so the brief and the check
   names describe them in ShowFinder's terms only. They were read against Lab
   10's local defect map before publishing.
 
