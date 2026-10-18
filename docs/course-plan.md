@@ -104,22 +104,22 @@ yet in the `.docx` (see **Mismatches** below).
 
 **How the labs apply it.** A lab slot in Part 1 and ЛР 12–14 is worth 2
 points; `lab-4` takes two slots, so it is worth 4. ЛР 8–11 are worth 3 each,
-which matches their handouts' maximum: 2 points plus a +1 bonus. `lab-12`
-takes the ЛР 12 and ЛР 13 slots, so it is worth 4. Part 1 handouts and
-`lab-12` give a bonus the table doesn't count.
+which since 2026-10-18 is their base score. `lab-12` takes the ЛР 12 and
+ЛР 13 slots, so it is worth 4. The bonuses below come on top of these points,
+and the table doesn't count them.
 
-- **ЛР 2–4, 8–10:** a successful defence earns the points; +1 (`lab-4`: +2)
-  for submitting by the deadline or working in class.
+- **ЛР 2–4:** a successful defence earns the points; +1 (`lab-4`: +2) for
+  submitting by the deadline or working in class.
 - **`lab-6`:** 2 points for a successful defence or work in class, no bonus.
 - **`lab-1`, `lab-7`:** the handouts state no points.
-- **ЛР 11:** 2 points are split into the self-check, the process (commits,
-  `API.md`, `AGENTS.md`) and the defence, scored by a published rubric, and
-  the +1 is for on-time submission only. The rubric is in its handout, §8
-  ([lab-11.md](../src/content/labs/web-development/lab-11.md)). This is the scheme proposed
-  for later labs; earlier labs keep theirs.
-- **`lab-12` (ЛР 12-13):** the same scheme for two slots: 4 points split
-  into the self-check (`npm run check`), the process (commits and report) and
-  the defence, and +1 for on-time submission. The rubric is in its handout, §8
+- **ЛР 8–11:** 1 point each for research (§4), the practical part (§5) and
+  the defence (§7), scored by the rubric in each handout's §8. Without a
+  defence, research and the practical part give at most 1 point. +1 for
+  submitting by the deadline or working in class; ЛР 11 gives it for on-time
+  submission only.
+- **`lab-12` (ЛР 12-13):** 4 points for the two slots, split into the
+  self-check (`npm run check`, 1), the process (commits and report, 1) and the
+  defence (2), and +1 for on-time submission. The rubric is in its handout, §8
   ([lab-12.md](../src/content/labs/web-development/lab-12.md)).
 
 **Mismatches with the plan** (fix them in the `.docx`):
@@ -133,8 +133,8 @@ takes the ЛР 12 and ЛР 13 slots, so it is worth 4. Part 1 handouts and
 - **Проміжний контроль 2:** 10 points here, 12 in the PDF.
 - **Totals:** current work 72 here, 70 in the PDF; Підсумковий контроль 28
   here, 30 in the PDF. The semester stays 100.
-- **Bonuses outside the table:** Part 1's (ЛР 2–4) and `lab-12`'s +1. If
-  they count towards the 100, current work can exceed 72; the programme should
+- **Bonuses outside the table:** Part 1's (ЛР 2–4), ЛР 8–11's and
+  `lab-12`'s. If they count towards the 100, current work can exceed 72; the programme should
   say how they are capped.
 
 ## Рекомендована література
