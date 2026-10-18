@@ -1,4 +1,4 @@
-import type { Slide } from "./schema";
+import type { Slide } from "../schema";
 
 export const deckTitle = "Семантичний HTML5, SEO та a11y";
 

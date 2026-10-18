@@ -40,10 +40,13 @@ The current `src/` layout is documented in `README.md` — read it there
 rather than relying on a second copy here, so there's one place to keep
 correct. The essentials:
 
-- `src/pages/` — route entry points for the hub, lecture decks, and labs
-- `src/content/labs/` and `src/content/tasks/` — the two content
-  collections (lab assignments and their practical-task briefs), schemas in
-  `src/content.config.ts`
+- `src/pages/` — course hub, `src/pages/[course]/` course routes, and legacy
+  redirects / fixed ЛР-7 tools
+- `src/content/labs/<course>/` and `src/content/tasks/<course>/` — the two
+  course-keyed content collections (lab assignments and practical-task briefs),
+  schemas in `src/content.config.ts`
+- `src/data/courses.ts` — course registry; `src/data/lectures/` — shared slide
+  schema, per-course lecture registry, and slide data
 - `src/layouts/` — `BaseLayout` (shared `<html>`/`<head>`), `DeckLayout`
   (fullscreen deck shell), `LabLayout` (lab reading shell)
 - `src/components/` — reusable UI structures and page components

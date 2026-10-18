@@ -77,7 +77,7 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════════
-   Slide-deck design tokens — used only under /lectures/*, scoped by
+   Slide-deck design tokens — used only under /<course>/lectures/*, scoped by
    `.deck-page` in src/styles/deck.css (loaded by DeckLayout). A plain
    @theme (not `inline`) so the deck's `html.theme-light` overrides in
    deck.css resolve through these custom properties at runtime.

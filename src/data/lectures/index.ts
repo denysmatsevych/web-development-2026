@@ -1,15 +1,22 @@
 /**
- * Lecture registry — the ordered list of slide decks. `src/pages/lectures/`
- * reads this for the index page and for `getStaticPaths` on `[lecture].astro`
- * (route `/lectures/<slug>`). Add a lecture by creating `./lecture-N.ts`
- * (exporting `slides` + `deckTitle`) and appending an entry here.
+ * Lecture registry — the ordered slide decks of every course.
+ * `src/pages/[course]/lectures/` reads it through `getLectures(course)`
+ * for the index page and for `getStaticPaths` on `[lecture].astro`
+ * (route `/<course>/lectures/<slug>`). Add a lecture by creating
+ * `./<course>/lecture-N.ts` (exporting `slides` + `deckTitle`) and appending
+ * an entry to that course's list below.
  */
 import type { Slide } from './schema';
-import { slides as lecture1Slides, deckTitle as lecture1Title } from './lecture-1';
-import { slides as lecture2Slides, deckTitle as lecture2Title } from './lecture-2';
+import { slides as wd1Slides, deckTitle as wd1Title } from './web-development/lecture-1';
+import { slides as wd2Slides, deckTitle as wd2Title } from './web-development/lecture-2';
+import { slides as reactSlides, deckTitle as reactTitle } from './react/lecture-1';
+import {
+  slides as accessibilitySlides,
+  deckTitle as accessibilityTitle,
+} from './web-accessibility/lecture-1';
 
 export interface LectureMeta {
-  /** URL segment: `/lectures/<slug>`. */
+  /** URL segment: `/<course>/lectures/<slug>`. */
   slug: string;
   /** Deck title + index-card heading. */
   title: string;
@@ -18,23 +25,47 @@ export interface LectureMeta {
   slides: Slide[];
 }
 
-export const lectures: LectureMeta[] = [
-  {
-    slug: 'lecture-1',
-    title: lecture1Title,
-    summary: 'Вступ до вебтехнологій, HTTP, DOM та семантичний HTML5.',
-    slides: lecture1Slides,
-  },
-  {
-    slug: 'lecture-2',
-    title: lecture2Title,
-    summary:
-      'Семантичний HTML5 і Landmarks, метадані та Schema.org, On-Page SEO і вебдоступність за WCAG 2.2.',
-    slides: lecture2Slides,
-  },
-];
+/** Lectures per course, keyed by the course slug from `src/data/courses.ts`. */
+const lecturesByCourse: Record<string, LectureMeta[]> = {
+  'web-development': [
+    {
+      slug: 'lecture-1',
+      title: wd1Title,
+      summary: 'Вступ до вебтехнологій, HTTP, DOM та семантичний HTML5.',
+      slides: wd1Slides,
+    },
+    {
+      slug: 'lecture-2',
+      title: wd2Title,
+      summary:
+        'Семантичний HTML5 і Landmarks, метадані та Schema.org, On-Page SEO і вебдоступність за WCAG 2.2.',
+      slides: wd2Slides,
+    },
+  ],
+  react: [
+    {
+      slug: 'lecture-1',
+      title: reactTitle,
+      summary: 'A preview of the React course.',
+      slides: reactSlides,
+    },
+  ],
+  'web-accessibility': [
+    {
+      slug: 'lecture-1',
+      title: accessibilityTitle,
+      summary: 'A preview of the Web Accessibility course.',
+      slides: accessibilitySlides,
+    },
+  ],
+};
 
-/** Lookup by slug — `undefined` for an unknown one. */
-export function getLecture(slug: string): LectureMeta | undefined {
-  return lectures.find((lecture) => lecture.slug === slug);
+/** All lectures of a course — an empty list for a course without any. */
+export function getLectures(course: string): LectureMeta[] {
+  return lecturesByCourse[course] ?? [];
+}
+
+/** Lookup by course and slug — `undefined` for an unknown one. */
+export function getLecture(course: string, slug: string): LectureMeta | undefined {
+  return getLectures(course).find((lecture) => lecture.slug === slug);
 }

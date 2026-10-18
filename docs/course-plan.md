@@ -7,7 +7,7 @@ update both in the same sitting. Part 2 was revised on 2026-10-04 and
 
 ## How the site maps to the plan
 
-As of 2026-10-15. The site's lab id is the file name in `src/content/labs/`.
+As of 2026-10-15. The site's lab id is the file name in `src/content/labs/web-development/`.
 
 | Plan | Site | Note |
 | --- | --- | --- |
@@ -115,12 +115,12 @@ takes the ЛР 12 and ЛР 13 slots, so it is worth 4. Part 1 handouts and
 - **ЛР 11:** 2 points are split into the self-check, the process (commits,
   `API.md`, `AGENTS.md`) and the defence, scored by a published rubric, and
   the +1 is for on-time submission only. The rubric is in its handout, §8
-  ([lab-11.md](../src/content/labs/lab-11.md)). This is the scheme proposed
+  ([lab-11.md](../src/content/labs/web-development/lab-11.md)). This is the scheme proposed
   for later labs; earlier labs keep theirs.
 - **`lab-12` (ЛР 12-13):** the same scheme for two slots: 4 points split
   into the self-check (`npm run check`), the process (commits and report) and
   the defence, and +1 for on-time submission. The rubric is in its handout, §8
-  ([lab-12.md](../src/content/labs/lab-12.md)).
+  ([lab-12.md](../src/content/labs/web-development/lab-12.md)).
 
 **Mismatches with the plan** (fix them in the `.docx`):
 

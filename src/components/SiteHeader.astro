@@ -3,23 +3,24 @@
  * SiteHeader — sticky, institute-styled top bar (ported look from
  * `website_ao` Header, minus React / the site menu).
  *
- * Layout: wordmark → home · in-site "Lectures" / "Labs" section links (from
- * `src/data/site.ts`) · disabled `EN` language-switcher placeholder ·
- * `ThemeToggle`.
+ * Layout: wordmark → home · course links ·
+ * disabled `EN` language-switcher placeholder · `ThemeToggle`.
  *
  * Height is a fixed 4rem to match `--header-h` in `LabLayout` (the sticky
  * offset for the ToC rail).
  */
 import ThemeToggle from '@/components/ThemeToggle.astro';
-import { sections, site } from '@/data/site';
+import { getCourses } from '@/data/courses';
+import { site } from '@/data/site';
 import { withBase } from '@/lib/paths';
 
-const home = withBase('/');
+interface Props {
+  courseSlug?: string;
+}
 
-const crossLinks = sections.map((section) => ({
-  label: section.label,
-  href: withBase(section.href),
-}));
+const { courseSlug } = Astro.props;
+const home = withBase('/');
+const courses = getCourses();
 ---
 
 <header
@@ -33,24 +34,24 @@ const crossLinks = sections.map((section) => ({
       <span class="inline-block size-2.5 rounded-full bg-brand-blue" aria-hidden="true"></span>
       {site.name}
     </a>
-
-    <nav class="hidden items-center gap-1 sm:flex" aria-label="Course sections">
+    <nav class="hidden items-center gap-1 md:flex" aria-label="Courses">
       {
-        crossLinks.map((link) => (
+        courses.map((course) => (
           <a
-            href={link.href}
+            href={withBase(`/${course.slug}/`)}
             class="inline-flex items-center rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            aria-current={course.slug === courseSlug ? 'location' : undefined}
           >
-            {link.label}
+            {course.title}
           </a>
         ))
       }
     </nav>
 
-    <span class="mx-1 hidden h-5 w-px bg-border sm:block" aria-hidden="true"></span>
+    <span class="mx-1 hidden h-5 w-px bg-border md:block" aria-hidden="true"></span>
 
     <span
-      class="hidden cursor-not-allowed select-none rounded-lg border border-border px-2 py-1 text-xs font-medium text-muted-foreground sm:inline-block"
+      class="hidden cursor-not-allowed select-none rounded-lg border border-border px-2 py-1 text-xs font-medium text-muted-foreground md:inline-block"
       aria-disabled="true"
       title="English only for now — a language switcher lands later"
     >

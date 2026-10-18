@@ -8,8 +8,8 @@ JavaScript, і його переводять на TypeScript: типи, запи
 його роботу. Перевірки типів і тести вже є.
 
 Опис завдання та специфікація:
-<https://denysmatsevych.github.io/web-development-2026/labs/lab-12/> і
-<https://denysmatsevych.github.io/web-development-2026/labs/lab-12/task/>.
+<https://denysmatsevych.github.io/web-development-2026/web-development/labs/lab-12/> і
+<https://denysmatsevych.github.io/web-development-2026/web-development/labs/lab-12/task/>.
 
 ## Склад
 

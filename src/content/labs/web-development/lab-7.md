@@ -17,7 +17,7 @@ handout: /labs/lab-7.pdf
 або Vercel**.
 
 - **Макет, design tokens і вимоги до компонентів:**
-  [Courtly — макет і дизайн-система](/labs/lab-7/task/).
+  [Courtly — макет і дизайн-система](/web-development/labs/lab-7/task/).
 - **Зображення, `tokens.css`, специфікація, знімки макета, favicon, OG image:**
   [courtly-assets.zip](/labs/courtly-assets.zip) (≈ 900 КБ).
 - **Власний CSS**, без CSS framework і UI-бібліотек. JavaScript — лише для

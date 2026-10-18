@@ -1,68 +1,19 @@
 ---
 /**
- * Lecture deck — one static route per entry in `src/data/lectures/index.ts`,
- * at `/lectures/<slug>` (`/lectures/lecture-1`). Fullscreen `DeckLayout`; the
- * slides render through `Slide.astro` and `deck.ts` wires keyboard navigation,
- * the progress bar, speaker notes (`N`), fullscreen (`F`) and theme (`T`).
+ * Legacy lecture URL — redirect `/lectures/<lecture>/` to its course route.
  */
-import DeckChrome from '@/components/DeckChrome.astro';
-import SlideView from '@/components/Slide.astro';
-import DeckLayout from '@/layouts/DeckLayout.astro';
-import { lectures } from '@/data/lectures';
-import { site } from '@/data/site';
+import { getLectures } from '@/data/lectures';
 import { withBase } from '@/lib/paths';
+import { LEGACY_COURSE } from '@/data/courses';
 
 export function getStaticPaths() {
-  return lectures.map((lecture, index) => ({
+  return getLectures(LEGACY_COURSE).map((lecture) => ({
     params: { lecture: lecture.slug },
-    props: { lecture, lectureNumber: index + 1 },
+    props: {
+      destination: withBase(`/${LEGACY_COURSE}/lectures/${lecture.slug}/`),
+    },
   }));
 }
 
-const { lecture, lectureNumber } = Astro.props;
-const { slides } = lecture;
-const lectureLabel = `Лекція ${lectureNumber}`;
-
-/** Adjacent decks for the top-left stepper (registry order = lecture order). */
-const toLink = (entry: (typeof lectures)[number] | undefined, number: number) =>
-  entry && {
-    href: withBase(`/lectures/${entry.slug}`),
-    title: entry.title,
-    label: `Лекція ${number}`,
-  };
-const prevLecture = toLink(lectures[lectureNumber - 2], lectureNumber - 1);
-const nextLecture = toLink(lectures[lectureNumber], lectureNumber + 1);
+return Astro.redirect(Astro.props.destination, 301);
 ---
-
-<DeckLayout title={lecture.title}>
-  <main
-    id="deck"
-    class="deck flex h-dvh w-screen snap-x snap-mandatory overflow-x-auto overflow-y-hidden"
-    tabindex="-1"
-  >
-    {
-      slides.map((slide, index) => (
-        <SlideView
-          slide={slide}
-          index={index}
-          total={slides.length}
-          lectureLabel={lectureLabel}
-          courseLabel={site.courseUk}
-        />
-      ))
-    }
-  </main>
-
-  <DeckChrome
-    total={slides.length}
-    lecturesHref={withBase('/lectures/')}
-    prevLecture={prevLecture}
-    nextLecture={nextLecture}
-  />
-
-  <script>
-    import { initDeck } from '@/scripts/deck';
-
-    initDeck();
-  </script>
-</DeckLayout>
