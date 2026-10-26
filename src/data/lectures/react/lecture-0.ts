@@ -323,7 +323,7 @@ export const slides: Slide[] = [
     title: 'Література',
     subtitle: 'Основна',
     bullets: [
-      'Документація [React 19](https://react.dev/), [Vite](https://vitejs.dev/), [React Router v7](https://reactrouter.com/)',
+      'Документація [React 19](https://react.dev/), [Vite](https://vite.dev/), [React Router v7](https://reactrouter.com/)',
       'R. Wieruch — [The Road to React](https://www.roadtoreact.com/) · N. Makarevich — [Advanced React](https://www.advanced-react.com/) · K. C. Dodds — [Epic React](https://epicreact.dev/)',
       'С. Стефанов — «React: швидкий старт». К.: Фабула, 2023',
       '**Допоміжна:** [TanStack Query](https://tanstack.com/query/latest), [Zustand](https://zustand.docs.pmnd.rs/), [Redux Toolkit](https://redux-toolkit.js.org/), [Next.js](https://nextjs.org/docs), [Vitest](https://vitest.dev/), [Testing Library](https://testing-library.com/docs/react-testing-library/intro/), [Feature-Sliced Design](https://feature-sliced.design/), [WAI-ARIA APG](https://www.w3.org/WAI/ARIA/apg/)',
