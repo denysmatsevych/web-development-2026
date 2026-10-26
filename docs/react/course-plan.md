@@ -38,8 +38,9 @@ the folder layout).
 | ЛР 1–27 | not built | `lab-1` is a placeholder |
 
 Лекція 0 reads its topic slides from the **Теми презентацій** table below
-when the site is built. Keep that table's rows in their current shape. The
-build fails if a lecture's topics stop matching it.
+when the site is built. Keep that table's rows in their current shape: the
+build fails on a topic row it can't read, one that is out of order, or one
+outside its lecture's block.
 
 ## Course at a glance
 
