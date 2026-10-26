@@ -2,7 +2,9 @@
 /**
  * Легка inline-розмітка для тексту слайдів:
  *   [підпис](https://…)  →  зовнішнє посилання (нова вкладка)
+ *   [підпис](mailto:…)   →  посилання на пошту (без нової вкладки)
  *   **жирний**           →  <strong>
+ *   `код`                →  <code>
  *
  * Навмисно без `set:html`: рядок розбивається на токени, а кожен токен
  * рендериться звичайним елементом — текст екранується Astro автоматично.
@@ -16,10 +18,13 @@ const { text } = Astro.props;
 type Token =
   | { kind: 'text'; value: string }
   | { kind: 'link'; value: string; href: string }
-  | { kind: 'strong'; value: string };
+  | { kind: 'strong'; value: string }
+  | { kind: 'code'; value: string };
 
-// 1) [текст](http…)   2) **текст**
-const pattern = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)|\*\*([^*]+)\*\*/g;
+// 1) [текст](http… | mailto:…)   2) **текст**   3) `код`
+// Зворотні лапки в регулярці записано як \x60: непарна кількість сирих
+// зворотних лапок у frontmatter ламає astro check на файлах із CRLF.
+const pattern = /\[([^\]]+)\]\(((?:https?:\/\/|mailto:)[^\s)]+)\)|\*\*([^*]+)\*\*|\x60([^\x60]+)\x60/g;
 
 const tokens: Token[] = [];
 let cursor = 0;
@@ -31,8 +36,10 @@ while ((match = pattern.exec(text)) !== null) {
   }
   if (match[1] !== undefined) {
     tokens.push({ kind: 'link', value: match[1], href: match[2] });
-  } else {
+  } else if (match[3] !== undefined) {
     tokens.push({ kind: 'strong', value: match[3] });
+  } else {
+    tokens.push({ kind: 'code', value: match[4] });
   }
   cursor = pattern.lastIndex;
 }
@@ -44,12 +51,14 @@ if (cursor < text.length) {
   token.kind === 'link' ? (
     <a
       href={token.href}
-      target="_blank"
-      rel="noopener noreferrer"
+      target={token.href.startsWith('mailto:') ? undefined : '_blank'}
+      rel={token.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
       class="font-medium underline decoration-accent-500 decoration-2 underline-offset-[3px] transition-colors hover:text-accent-500 hover:decoration-accent-300"
     >{token.value}</a>
   ) : token.kind === 'strong' ? (
     <strong class="font-semibold">{token.value}</strong>
+  ) : token.kind === 'code' ? (
+    <code class="rounded bg-ink-800 px-[0.3em] font-mono text-[0.88em] whitespace-nowrap [font-variant-ligatures:none]">{token.value}</code>
   ) : (
     <Fragment>{token.value}</Fragment>
   ),

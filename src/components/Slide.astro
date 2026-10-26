@@ -1,5 +1,5 @@
 ---
-import type { Slide } from '@/data/lectures/schema';
+import type { RoadmapStepKind, Slide } from '@/data/lectures/schema';
 import RichText from './RichText.astro';
 
 interface Props {
@@ -25,7 +25,46 @@ const tones: Record<Slide['kind'], string> = {
   code: 'bg-ink-900 text-paper',
   diagram: 'bg-ink-900 text-paper',
   checklist: 'bg-ink-950 text-paper',
+  cards: 'bg-ink-950 text-paper',
+  facts: 'bg-ink-950 text-paper',
+  roadmap: 'bg-ink-900 text-paper',
+  timeline: 'bg-ink-950 text-paper',
+  topics: 'bg-ink-950 text-paper',
 };
+
+/* Схема курсу: мітка заняття за його видом. Пари кольорів — ті самі токени,
+   що й на інших слайдах, тож світла тема з deck.css перемикає їх сама.
+   Мітки, легенда й фінальна смуга друкуються з фоном (`print-color-adjust`),
+   бо без нього світлий текст лишається на білому аркуші. */
+const stepBadge: Record<RoadmapStepKind, string> = {
+  lecture: 'bg-accent-500 font-semibold text-ink-950',
+  lab: 'bg-ink-800 text-ink-200',
+  control: 'bg-warn-500 font-semibold text-ink-950',
+  project: 'border border-accent-500 bg-ink-950 text-accent-300',
+};
+const stepName: Record<RoadmapStepKind, string> = {
+  lecture: 'Лекція',
+  lab: 'Лабораторна',
+  control: 'Модульний контроль',
+  project: 'Фінальний проєкт',
+};
+/** Сітка карток: чотири колонки, коли картки заповнюють їх рівно, інакше три. */
+const cardColumns =
+  (slide.cards?.length ?? 0) % 4 === 0
+    ? 'xl:grid-cols-4 print:grid-cols-4'
+    : 'xl:grid-cols-3 print:grid-cols-3';
+
+/** Шкала етапів: усі кроки й фінал в один ряд на широкому екрані та в друці. */
+const { timeline } = slide;
+const timelineColumns = (timeline?.steps.length ?? 0) + (timeline?.finale ? 1 : 0);
+
+/** Пункти з поясненнями показуються таблицею, без них — списком. */
+const topicsHaveDetails = slide.topics?.some((topic) => topic.detail) ?? false;
+
+/** Легенда — лише ті види, що є на схемі, у порядку `stepName`. */
+const legend = (Object.keys(stepName) as RoadmapStepKind[]).filter((kind) =>
+  slide.roadmap?.parts.some((part) => part.steps.some((step) => step.kind === kind)),
+);
 ---
 
 <section
@@ -88,6 +127,152 @@ const tones: Record<Slide['kind'], string> = {
     </>
   )}
 
+  {/* Картки з мітками */}
+  {slide.kind === 'cards' && (
+    <>
+      <header class="mb-6">
+        <h2 class="text-slide-h2 font-bold text-balance">{slide.title}</h2>
+        {slide.subtitle && <p class="mt-3 text-ink-400">{slide.subtitle}</p>}
+      </header>
+      <ul class={`grid min-h-0 grid-cols-1 gap-3 overflow-y-auto sm:grid-cols-2 ${cardColumns}`}>
+        {slide.cards?.map((card) => (
+          <li class="flex flex-col gap-3 rounded-xl border border-ink-800 bg-ink-900 p-[clamp(0.9rem,1.4vw,1.4rem)]">
+            {card.label && (
+              <p class="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] text-accent-500">
+                {card.kind && (
+                  <span
+                    aria-hidden="true"
+                    class={`h-3 w-3 shrink-0 rounded-sm [print-color-adjust:exact] ${stepBadge[card.kind]}`}
+                  />
+                )}
+                {card.label}
+              </p>
+            )}
+            <h3 class="text-[clamp(1rem,1.5vw,1.4rem)] font-semibold leading-snug text-balance">
+              {card.title}
+            </h3>
+            {card.text && (
+              <p class="text-[clamp(0.85rem,1.15vw,1.1rem)] leading-snug">
+                <RichText text={card.text} />
+              </p>
+            )}
+            {card.tags && (
+              <ul class="mt-auto flex flex-wrap gap-1.5">
+                {card.tags.map((tag) => (
+                  <li class="rounded-md bg-ink-800 px-2 py-0.5 text-[clamp(0.72rem,0.95vw,0.9rem)] text-ink-200 [print-color-adjust:exact]">
+                    {tag}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))}
+      </ul>
+    </>
+  )}
+
+  {/* Шкала етапів. Лінія між вузлами є лише в рядку (xl і друк); у колонку
+      на вужчих екранах порядок тримає сам <ol>. */}
+  {slide.kind === 'timeline' && timeline && (
+    <>
+      <header class="mb-6">
+        <h2 class="text-slide-h2 font-bold text-balance">{slide.title}</h2>
+        {slide.subtitle && <p class="mt-3 text-ink-400">{slide.subtitle}</p>}
+      </header>
+      {slide.lead && (
+        <p class="mb-8 max-w-[70ch] border-l-2 border-accent-500 pl-5 text-slide-body leading-snug">
+          <RichText text={slide.lead} />
+        </p>
+      )}
+      <ol
+        style={`--steps: ${timelineColumns}`}
+        class="grid min-h-0 grid-cols-1 gap-4 overflow-y-auto sm:grid-cols-2 xl:grid-cols-[repeat(var(--steps),minmax(0,1fr))] print:grid-cols-[repeat(var(--steps),minmax(0,1fr))]"
+      >
+        {timeline.steps.map((step, i) => (
+          <li class="flex flex-col">
+            <div aria-hidden="true" class="mb-3 flex items-center">
+              <span class="grid h-9 w-9 shrink-0 place-items-center rounded-full border-2 border-accent-500 font-mono text-sm font-semibold text-accent-300">
+                {i + 1}
+              </span>
+              {(i < timeline.steps.length - 1 || timeline.finale) && (
+                <span class="-mr-4 ml-3 hidden h-0.5 flex-1 bg-ink-800 xl:block print:block [print-color-adjust:exact]" />
+              )}
+            </div>
+            <div class="flex flex-1 flex-col gap-2 rounded-xl border border-ink-800 bg-ink-900 p-[clamp(0.9rem,1.4vw,1.4rem)]">
+              <p class="font-mono text-xs uppercase tracking-[0.2em] text-accent-500">{step.label}</p>
+              <h3 class="text-[clamp(1rem,1.5vw,1.4rem)] font-semibold leading-snug">{step.title}</h3>
+              {step.items && (
+                <ul class="flex flex-col gap-1 text-[clamp(0.8rem,1.1vw,1.05rem)] leading-snug">
+                  {step.items.map((item) => (
+                    <li class="flex gap-2">
+                      <span aria-hidden="true" class="mt-[0.5em] h-1.5 w-1.5 shrink-0 rounded-full bg-accent-500 [print-color-adjust:exact]" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </li>
+        ))}
+        {timeline.finale && (
+          <li class="flex flex-col">
+            <div aria-hidden="true" class="mb-3 flex items-center">
+              <span class="h-9 w-9 rounded-full bg-accent-500 [print-color-adjust:exact]" />
+            </div>
+            <div class="flex flex-1 flex-col gap-2 rounded-xl bg-accent-700 p-[clamp(0.9rem,1.4vw,1.4rem)] text-paper [print-color-adjust:exact]">
+              <p class="font-mono text-xs uppercase tracking-[0.2em] text-accent-300">{timeline.finale.label}</p>
+              <h3 class="text-[clamp(1rem,1.5vw,1.4rem)] font-semibold leading-snug">{timeline.finale.title}</h3>
+              {timeline.finale.items && (
+                <ul class="flex flex-col gap-1 text-[clamp(0.8rem,1.1vw,1.05rem)] leading-snug">
+                  {timeline.finale.items.map((item) => (
+                    <li class="flex gap-2">
+                      <span aria-hidden="true" class="mt-[0.5em] h-1.5 w-1.5 shrink-0 rounded-full bg-paper" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </li>
+        )}
+      </ol>
+    </>
+  )}
+
+  {/* Ключові факти плитками. Значення успадковує колір слайда, а не
+      `text-paper`, тож у друці стає чорним разом зі слайдом. */}
+  {slide.kind === 'facts' && (
+    <>
+      <header class="mb-6">
+        <h2 class="text-slide-h2 font-bold text-balance">{slide.title}</h2>
+        {slide.subtitle && <p class="mt-3 text-ink-400">{slide.subtitle}</p>}
+      </header>
+      {slide.lead && (
+        <p class="mb-8 max-w-[70ch] border-l-2 border-accent-500 pl-5 text-slide-body leading-snug">
+          <RichText text={slide.lead} />
+        </p>
+      )}
+      <ul class="grid min-h-0 grid-cols-2 gap-3 overflow-y-auto lg:grid-cols-3 print:grid-cols-3">
+        {slide.facts?.map((fact) => (
+          <li class="flex flex-col gap-2 rounded-xl border border-ink-800 bg-ink-900 p-[clamp(0.9rem,1.5vw,1.5rem)]">
+            <span class="text-[clamp(0.8rem,1.1vw,1.05rem)] text-ink-400">{fact.label}</span>
+            <span class="text-[clamp(1.6rem,3.4vw,3.25rem)] font-semibold leading-none">{fact.value}</span>
+            {fact.note && (
+              <span class="text-[clamp(0.75rem,1vw,0.95rem)] leading-snug text-ink-400">{fact.note}</span>
+            )}
+          </li>
+        ))}
+      </ul>
+      {slide.bullets && (
+        <ul class="mt-6 flex flex-col gap-1 text-[clamp(0.9rem,1.3vw,1.25rem)]">
+          {slide.bullets.map((point) => (
+            <li><RichText text={point} /></li>
+          ))}
+        </ul>
+      )}
+    </>
+  )}
+
   {/* Слайд із кодом */}
   {slide.kind === 'code' && (
     <>
@@ -118,6 +303,112 @@ const tones: Record<Slide['kind'], string> = {
         aria-label={`Схема: ${slide.title}`}
         class="overflow-x-auto font-mono text-[clamp(0.65rem,1.05vw,1rem)] leading-relaxed text-accent-300"
       >{slide.diagram}</pre>
+    </>
+  )}
+
+  {/* Схема курсу */}
+  {slide.kind === 'roadmap' && slide.roadmap && (
+    <>
+      <header class="mb-4">
+        <h2 class="text-slide-h2 font-bold text-balance">{slide.title}</h2>
+        {slide.subtitle && <p class="mt-2 text-ink-400">{slide.subtitle}</p>}
+      </header>
+      <ul
+        aria-label="Умовні позначення"
+        class="mb-4 flex flex-wrap gap-x-6 gap-y-1 font-mono text-xs text-ink-400"
+      >
+        {legend.map((kind) => (
+          <li class="flex items-center gap-2">
+            <span
+              aria-hidden="true"
+              class={`h-3 w-3 rounded-sm [print-color-adjust:exact] ${stepBadge[kind]}`}
+            />
+            {stepName[kind]}
+          </li>
+        ))}
+      </ul>
+      <ol class="grid min-h-0 grid-cols-1 gap-3 overflow-y-auto sm:grid-cols-2 xl:grid-cols-4 print:grid-cols-4">
+        {slide.roadmap.parts.map((part) => (
+          <li class="flex flex-col rounded-xl border border-ink-800 bg-ink-950 p-4">
+            <p class="font-mono text-xs uppercase tracking-[0.2em] text-accent-500">{part.label}</p>
+            <h3 class="mb-3 mt-1 text-[clamp(0.85rem,1.15vw,1.1rem)] font-semibold leading-snug text-balance">
+              {part.title}
+            </h3>
+            <ol class="flex flex-col gap-1.5">
+              {part.steps.map((step) => (
+                <li class="flex items-baseline gap-2 text-[clamp(0.72rem,0.95vw,0.95rem)] leading-snug">
+                  <span
+                    class={`w-[6em] shrink-0 rounded px-1 py-0.5 text-center font-mono text-[0.8em] [print-color-adjust:exact] ${stepBadge[step.kind]}`}
+                  >
+                    {step.label}
+                  </span>
+                  <span class={step.kind === 'lecture' ? 'font-semibold' : undefined}>{step.title}</span>
+                </li>
+              ))}
+            </ol>
+            {part.summary && (
+              <p class="mt-auto pt-3 font-mono text-xs text-ink-400">{part.summary}</p>
+            )}
+          </li>
+        ))}
+      </ol>
+      {slide.roadmap.finale && (
+        <p class="mt-3 rounded-xl bg-accent-700 px-5 py-3 font-semibold text-paper [print-color-adjust:exact]">
+          <span aria-hidden="true">→ </span>{slide.roadmap.finale}
+        </p>
+      )}
+    </>
+  )}
+
+  {/* Список із власними номерами */}
+  {slide.kind === 'topics' && (
+    <>
+      <header class="mb-4">
+        <h2 class="text-slide-h2 font-bold text-balance">{slide.title}</h2>
+        {slide.subtitle && <p class="mt-3 text-accent-300">{slide.subtitle}</p>}
+      </header>
+      {topicsHaveDetails ? (
+        <div class="min-h-0 overflow-y-auto">
+          <table class="w-full border-collapse text-left text-[clamp(0.78rem,1.05vw,1.05rem)] leading-snug max-md:block">
+            <thead class="max-md:hidden">
+              <tr class="border-b border-ink-800 font-mono text-xs uppercase tracking-[0.15em] text-ink-400">
+                <th scope="col" class="w-[7ch] pb-2 pr-4 font-normal"><span class="sr-only">Номер</span></th>
+                <th scope="col" class="w-[36%] pb-2 pr-8 font-normal">{slide.topicHeaders?.title}</th>
+                <th scope="col" class="pb-2 font-normal">{slide.topicHeaders?.detail}</th>
+              </tr>
+            </thead>
+            <tbody class="max-md:block">
+              {slide.topics?.map((topic) => (
+                <tr class="border-b border-ink-800 align-top max-md:grid max-md:grid-cols-[5.5ch_1fr] max-md:gap-x-3 max-md:py-2">
+                  <th
+                    scope="row"
+                    class="py-2 pr-4 font-mono text-[0.85em] font-normal text-accent-500 tabular-nums max-md:p-0"
+                  >
+                    {topic.id}
+                  </th>
+                  <td class="py-2 pr-8 font-semibold max-md:p-0">
+                    <RichText text={topic.title} />
+                  </td>
+                  <td class="py-2 max-md:col-start-2 max-md:p-0 max-md:pt-1">
+                    {topic.detail && <RichText text={topic.detail} />}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <ol class="min-h-0 list-none gap-x-12 overflow-y-auto md:columns-2 print:columns-2">
+          {slide.topics?.map((topic) => (
+            <li class="mb-3 flex break-inside-avoid gap-3 text-[clamp(0.85rem,1.3vw,1.25rem)] leading-snug">
+              <span class="w-[5.5ch] shrink-0 font-mono text-[0.85em] text-accent-500 tabular-nums">
+                {topic.id}
+              </span>
+              <span><RichText text={topic.title} /></span>
+            </li>
+          ))}
+        </ol>
+      )}
     </>
   )}
 
