@@ -14,32 +14,33 @@ import { getLectures, type LectureMeta } from '@/data/lectures';
 interface Props {
   course: Course;
   lecture: LectureMeta;
-  lectureNumber: number;
+  /** Index in the course's registry list. */
+  position: number;
 }
 
-const { course, lecture, lectureNumber } = Astro.props;
+const { course, lecture, position } = Astro.props;
 const { slides } = lecture;
-const lectureLabel = `Лекція ${lectureNumber}`;
+const lectureLabel = `Лекція ${lecture.number}`;
 
 export async function getStaticPaths() {
   return getCourses().flatMap((course) =>
-    getLectures(course.slug).map((lecture, index) => ({
+    getLectures(course.slug).map((lecture, position) => ({
       params: { course: course.slug, lecture: lecture.slug },
-      props: { course, lecture, lectureNumber: index + 1 },
+      props: { course, lecture, position },
     })),
   );
 }
 
 /** Adjacent decks for the top-left stepper (registry order = lecture order). */
 const lectures = getLectures(course.slug);
-const toLink = (entry: LectureMeta | undefined, number: number) =>
+const toLink = (entry: LectureMeta | undefined) =>
   entry && {
     href: withBase(`/${course.slug}/lectures/${entry.slug}/`),
     title: entry.title,
-    label: `Лекція ${number}`,
+    label: `Лекція ${entry.number}`,
   };
-const prevLecture = toLink(lectures[lectureNumber - 2], lectureNumber - 1);
-const nextLecture = toLink(lectures[lectureNumber], lectureNumber + 1);
+const prevLecture = toLink(lectures[position - 1]);
+const nextLecture = toLink(lectures[position + 1]);
 ---
 
 <DeckLayout title={lecture.title} titleSuffix={course.title}>

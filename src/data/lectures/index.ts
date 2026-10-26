@@ -9,7 +9,7 @@
 import type { Slide } from './schema';
 import { slides as wd1Slides, deckTitle as wd1Title } from './web-development/lecture-1';
 import { slides as wd2Slides, deckTitle as wd2Title } from './web-development/lecture-2';
-import { slides as reactSlides, deckTitle as reactTitle } from './react/lecture-1';
+import { slides as react0Slides, deckTitle as react0Title } from './react/lecture-0';
 import {
   slides as accessibilitySlides,
   deckTitle as accessibilityTitle,
@@ -18,6 +18,8 @@ import {
 export interface LectureMeta {
   /** URL segment: `/<course>/lectures/<slug>`. */
   slug: string;
+  /** Lecture number on the deck and its index card — `0` for an introductory lecture. */
+  number: number;
   /** Deck title + index-card heading. */
   title: string;
   /** One-line summary for the lectures index card. */
@@ -30,12 +32,14 @@ const lecturesByCourse: Record<string, LectureMeta[]> = {
   'web-development': [
     {
       slug: 'lecture-1',
+      number: 1,
       title: wd1Title,
       summary: 'Вступ до вебтехнологій, HTTP, DOM та семантичний HTML5.',
       slides: wd1Slides,
     },
     {
       slug: 'lecture-2',
+      number: 2,
       title: wd2Title,
       summary:
         'Семантичний HTML5 і Landmarks, метадані та Schema.org, On-Page SEO і вебдоступність за WCAG 2.2.',
@@ -44,15 +48,17 @@ const lecturesByCourse: Record<string, LectureMeta[]> = {
   ],
   react: [
     {
-      slug: 'lecture-1',
-      title: reactTitle,
-      summary: 'A preview of the React course.',
-      slides: reactSlides,
+      slug: 'lecture-0',
+      number: 0,
+      title: react0Title,
+      summary: 'План курсу на одній схемі, оцінювання, правила й теми презентацій.',
+      slides: react0Slides,
     },
   ],
   'web-accessibility': [
     {
       slug: 'lecture-1',
+      number: 1,
       title: accessibilityTitle,
       summary: 'A preview of the Web Accessibility course.',
       slides: accessibilitySlides,

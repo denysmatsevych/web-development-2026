@@ -51,13 +51,13 @@ const lectures = getLectures(course.slug);
 
     <ul class="decks">
       {
-        lectures.map((lecture, i) => (
+        lectures.map((lecture) => (
           <li>
             <a
               href={withBase(`/${course.slug}/lectures/${lecture.slug}/`)}
               class="deck-card glass-panel"
             >
-              <span class="deck-card__index">{String(i + 1).padStart(2, '0')}</span>
+              <span class="deck-card__index">{String(lecture.number).padStart(2, '0')}</span>
               <span class="deck-card__body">
                 <span class="deck-card__title">{lecture.title}</span>
                 <span class="deck-card__summary">{lecture.summary}</span>
