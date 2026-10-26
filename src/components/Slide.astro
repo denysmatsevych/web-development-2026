@@ -364,7 +364,10 @@ const legend = (Object.keys(stepName) as RoadmapStepKind[]).filter((kind) =>
     </>
   )}
 
-  {/* Список із власними номерами */}
+  {/* Список із власними номерами. Таблиця складається в стовпчик лише на
+      вузькому екрані: у друці медіазапити бачать вужчу ширину, ніж аркуш
+      з @page, тож без not-print вона складалася б і на аркуші, губила
+      заголовки колонок і обрізала останній рядок. */}
   {slide.kind === 'topics' && (
     <>
       <header class="mb-4">
@@ -373,27 +376,27 @@ const legend = (Object.keys(stepName) as RoadmapStepKind[]).filter((kind) =>
       </header>
       {topicsHaveDetails ? (
         <div class="min-h-0 overflow-y-auto">
-          <table class="w-full border-collapse text-left text-[clamp(0.78rem,1.05vw,1.05rem)] leading-snug max-md:block">
-            <thead class="max-md:hidden">
+          <table class="w-full border-collapse text-left text-[clamp(0.78rem,1.05vw,1.05rem)] leading-snug max-md:not-print:block">
+            <thead class="max-md:not-print:hidden">
               <tr class="border-b border-ink-800 font-mono text-xs uppercase tracking-[0.15em] text-ink-400">
                 <th scope="col" class="w-[7ch] pb-2 pr-4 font-normal"><span class="sr-only">Номер</span></th>
                 <th scope="col" class="w-[36%] pb-2 pr-8 font-normal">{slide.topicHeaders?.title}</th>
                 <th scope="col" class="pb-2 font-normal">{slide.topicHeaders?.detail}</th>
               </tr>
             </thead>
-            <tbody class="max-md:block">
+            <tbody class="max-md:not-print:block">
               {slide.topics?.map((topic) => (
-                <tr class="border-b border-ink-800 align-top max-md:grid max-md:grid-cols-[5.5ch_1fr] max-md:gap-x-3 max-md:py-2">
+                <tr class="border-b border-ink-800 align-top max-md:not-print:grid max-md:not-print:grid-cols-[5.5ch_1fr] max-md:not-print:gap-x-3 max-md:not-print:py-2">
                   <th
                     scope="row"
-                    class="py-2 pr-4 font-mono text-[0.85em] font-normal text-accent-500 tabular-nums max-md:p-0"
+                    class="py-2 pr-4 font-mono text-[0.85em] font-normal text-accent-500 tabular-nums max-md:not-print:p-0"
                   >
                     {topic.id}
                   </th>
-                  <td class="py-2 pr-8 font-semibold max-md:p-0">
+                  <td class="py-2 pr-8 font-semibold max-md:not-print:p-0">
                     <RichText text={topic.title} />
                   </td>
-                  <td class="py-2 max-md:col-start-2 max-md:p-0 max-md:pt-1">
+                  <td class="py-2 max-md:not-print:col-start-2 max-md:not-print:p-0 max-md:not-print:pt-1">
                     {topic.detail && <RichText text={topic.detail} />}
                   </td>
                 </tr>
