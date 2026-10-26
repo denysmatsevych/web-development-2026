@@ -22,10 +22,10 @@ both in the same sitting. The Web Development course has its own plan in
 
 ## How the site maps to the plan
 
-As of 2026-10-26, nothing in the plan is built. The course is registered under
-the slug `react` with `status: 'draft'` (see `src/data/courses.ts`), so it shows
-in dev only. It has one placeholder lecture and one placeholder lab, which the
-first real lecture and lab replace.
+The course is registered under the slug `react` with `status: 'draft'` (see
+`src/data/courses.ts`), so it shows in dev only. As of 2026-10-26, the only
+built part is Лекція 0, an introductory deck that isn't in the programme. The
+course still has one placeholder lab, which the first real lab replaces.
 
 When a lab is built, add a row here, as the Web Development plan does, and put
 its instructor docs in `docs/react/lab-N/` (the README's **Docs** section has
@@ -33,8 +33,13 @@ the folder layout).
 
 | Plan | Site | Note |
 | --- | --- | --- |
-| Лекції 1–8 | not built | `lecture-1` is a placeholder |
+| — | `/react/lectures/lecture-0` | Лекція 0: the course on one diagram, grading, course rules and every presentation topic |
+| Лекції 1–8 | not built | |
 | ЛР 1–27 | not built | `lab-1` is a placeholder |
+
+Лекція 0 reads its topic slides from the **Теми презентацій** table below
+when the site is built. Keep that table's rows in their current shape. The
+build fails if a lecture's topics stop matching it.
 
 ## Course at a glance
 

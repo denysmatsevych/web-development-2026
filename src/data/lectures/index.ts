@@ -9,7 +9,7 @@
 import type { Slide } from './schema';
 import { slides as wd1Slides, deckTitle as wd1Title } from './web-development/lecture-1';
 import { slides as wd2Slides, deckTitle as wd2Title } from './web-development/lecture-2';
-import { slides as reactSlides, deckTitle as reactTitle } from './react/lecture-1';
+import { slides as react0Slides, deckTitle as react0Title } from './react/lecture-0';
 import {
   slides as accessibilitySlides,
   deckTitle as accessibilityTitle,
@@ -48,11 +48,11 @@ const lecturesByCourse: Record<string, LectureMeta[]> = {
   ],
   react: [
     {
-      slug: 'lecture-1',
-      number: 1,
-      title: reactTitle,
-      summary: 'A preview of the React course.',
-      slides: reactSlides,
+      slug: 'lecture-0',
+      number: 0,
+      title: react0Title,
+      summary: 'План курсу на одній схемі, оцінювання, правила й теми презентацій.',
+      slides: react0Slides,
     },
   ],
   'web-accessibility': [
