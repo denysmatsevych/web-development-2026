@@ -40,7 +40,7 @@ const courses: Course[] = [
     title: 'React',
     courseUk: 'Розробка вебзастосунків на React',
     description: 'Lectures and labs on building web applications with React.',
-    status: 'draft',
+    status: 'published',
   },
   {
     year: 2026,
