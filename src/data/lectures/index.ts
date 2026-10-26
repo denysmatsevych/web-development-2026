@@ -18,6 +18,8 @@ import {
 export interface LectureMeta {
   /** URL segment: `/<course>/lectures/<slug>`. */
   slug: string;
+  /** Lecture number on the deck and its index card — `0` for an introductory lecture. */
+  number: number;
   /** Deck title + index-card heading. */
   title: string;
   /** One-line summary for the lectures index card. */
@@ -30,12 +32,14 @@ const lecturesByCourse: Record<string, LectureMeta[]> = {
   'web-development': [
     {
       slug: 'lecture-1',
+      number: 1,
       title: wd1Title,
       summary: 'Вступ до вебтехнологій, HTTP, DOM та семантичний HTML5.',
       slides: wd1Slides,
     },
     {
       slug: 'lecture-2',
+      number: 2,
       title: wd2Title,
       summary:
         'Семантичний HTML5 і Landmarks, метадані та Schema.org, On-Page SEO і вебдоступність за WCAG 2.2.',
@@ -45,6 +49,7 @@ const lecturesByCourse: Record<string, LectureMeta[]> = {
   react: [
     {
       slug: 'lecture-1',
+      number: 1,
       title: reactTitle,
       summary: 'A preview of the React course.',
       slides: reactSlides,
@@ -53,6 +58,7 @@ const lecturesByCourse: Record<string, LectureMeta[]> = {
   'web-accessibility': [
     {
       slug: 'lecture-1',
+      number: 1,
       title: accessibilityTitle,
       summary: 'A preview of the Web Accessibility course.',
       slides: accessibilitySlides,
