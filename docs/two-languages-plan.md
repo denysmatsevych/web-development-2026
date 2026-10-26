@@ -1,154 +1,129 @@
-# Two-Language Site Plan (Ukrainian and English)
+# Plan: Ukrainian and English Versions of the Site
 
-## Goal and scope
+## In brief: what visitors will see
 
-Today the site's interface mixes Ukrainian and English, and `<html lang>` is always `en`. I'll make the language a real part of the site: every page exists in Ukrainian and English, the interface follows the page language, and a visitor can switch between the two.
+**Ukrainian is the site's primary language.** In production, the site remains Ukrainian at its current URLs. Existing links do not change.
 
-**What I'll do**
+**English will be available only on the local development server.** There, you can switch languages and check English pages. The regular production build and CI will not generate `/en/` pages.
 
-- Put every route under an optional locale segment: Ukrainian stays at the current addresses, English lives under `/en/`.
-- Move every interface string into one Ukrainian/English dictionary, and set `<html lang>`, `hreflang` alternates and `og:locale` from the page language.
-- Replace the disabled `EN` placeholder in the header with a working language switcher.
-- Make course names, descriptions and lecture labels per-language in the course registry.
-- Only if the teacher confirms English versions of the materials (see the question at the end): prepare the place for them, a locale folder per course and a fallback so a lab or lecture without an English version still shows up in Ukrainian, with a notice. These are Steps 5–6.
-- Update `README.md`, `AGENTS.md` and `docs/agents/design-system.md`.
+This PR adds the technical foundation, but **does not translate labs, assignments, or lectures**. Translations can be added later in separate PRs by adding English files, without code changes. Decisions about AI translation, who will proofread the English text, and English PDFs will be made before the first translation PR.
 
-**What I won't touch**
+## How content will work
 
-- Translating lab, task and lecture bodies (about 22,000 words of lab and task Markdown plus two decks), unless the teacher wants it (see the question at the end). If they do, I translate them with AI and check the result; no manual translation.
-- The ЛР-7 check and report pages and the `courtly-*` scripts. They are instructor tools and stay in Ukrainian at their current URLs.
-- Visual design, and automatic redirects by browser language (the site is static).
+- Ukrainian pages keep their current URLs, for example `/web-development/labs/lab-4/`.
+- In development, English pages use the `/en/` prefix, for example `/en/web-development/labs/lab-4/`.
+- If an English translation is not available yet, the English list links directly to the Ukrainian page and marks it as “In Ukrainian”. That destination is a Ukrainian page, with Ukrainian interface and content; there will be no duplicate English page.
+- If content exists only in English, its files live in the `en/` folder. It will not appear in the Ukrainian list, and no Ukrainian page will be generated for it.
+- Check for a lab translation and its practical-assignment translation independently: they are separate files and either may be missing.
+- The existing React and Web Accessibility lab files are English preview placeholders for draft courses, visible only in development. They are not completed translations. Keep them as placeholders and preserve their existing dev-only visibility.
+- URLs in this document are shown without the GitHub Pages base path. All links in the code must continue to account for the site's `base`.
 
----
+## Where translations will live
 
-## Target structure
-
-Ukrainian is the default language and keeps the current URLs, so no existing link changes and no new redirects are needed. English is added under `/en/`.
-
-| Page                                                   | Ukrainian (default)                                                               | English                |
-| ------------------------------------------------------ | --------------------------------------------------------------------------------- | ---------------------- |
-| Hub                                                    | `/`                                                                               | `/en/`                 |
-| Course page                                            | `/web-development/`                                                               | `/en/web-development/` |
-| Lab, task, deck                                        | `/web-development/labs/lab-4/`, `…/task/`, `/web-development/lectures/lecture-1/` | the same under `/en/`  |
-| Legacy `/labs/*`, `/lectures/*`, ЛР-7 check and report | unchanged                                                                         | not translated         |
-
-**Files**
-
-```
+```text
 src/
 ├─ i18n/
-│  ├─ ui.ts             every interface string: { uk: {…}, en: {…} }
-│  └─ index.ts          locales, defaultLocale, useTranslations(locale), localeHref(), switchLocaleHref()
-├─ data/
-│  ├─ courses.ts        title, description, courseName per language
-│  └─ lectures/<course>/<locale>/lecture-N.ts
+│  ├─ index.ts                 language settings and shared helpers
+│  └─ ui.ts                    interface text translations
 ├─ content/
-│  ├─ labs/<course>/<locale>/lab-N.md
-│  └─ tasks/<course>/<locale>/lab-N.md
+│  ├─ labs/<course>/uk/        Ukrainian labs
+│  ├─ labs/<course>/en/        English labs
+│  ├─ tasks/<course>/uk/       Ukrainian practical assignments
+│  └─ tasks/<course>/en/       English practical assignments
+├─ data/lectures/<course>/<locale>/  lecture data for each language
 └─ pages/
-   └─ [...locale]/      one set of pages serves both languages
-      ├─ index.astro
-      └─ [course]/…     course, lectures, labs, tasks
+   └─ [...locale]/             shared pages for both languages
 ```
 
-The optional `[...locale]` segment is empty for Ukrainian and `en` for English. I tested this layout in a copy of the project: `/` and `/web-development/…` build as Ukrainian, `/en/…` as English, `Astro.currentLocale` returns the right language, and the static `labs/` and `lectures/` redirect folders do not collide with it.
+The content's language is determined by its folder (`uk/` or `en/`), not by a `lang` field in frontmatter. The `lang` field should therefore be removed from the lab and assignment schemas. The check that a file is inside a registered course folder and has a language folder should be added to `assertInCourse` in `src/lib/labs.ts`.
 
-A collection id gains the language (`web-development/uk/lab-4`), and `splitId` returns course, locale and slug.
+## Work plan
 
----
+### Step 0. Record the current state
 
-## Steps
+- [ ] Build the site and save the list of generated URLs outside the repository.
+- [ ] Take before screenshots of the current interface: the same pages on desktop and at 390 px wide.
 
-Branch `feat/two-languages`, small Conventional Commits, `npm run check && npm run build` after every step. All steps ship in one PR. The core (Steps 0–4 and 7) takes about 4.5 working days. Steps 5–6 are optional and add about 1.25 days, so 5.5 days with them.
+**Done when:** the build passes, the URL list is saved, and the screenshots are taken.
 
-### Step 0 · Baseline (0.25 d)
+### Step 1. Add the language foundations
 
-- [ ] Create the branch from `main`
-- [ ] Build the site and save the list of every URL in `dist/` outside the repo. After the work, every URL in this list must be unchanged.
+- [ ] In `astro.config.mjs`, make `uk` the default language, add `en`, and keep Ukrainian URLs unprefixed.
+- [ ] Create `src/i18n/index.ts` for language detection, translations, and link helpers, and `src/i18n/ui.ts` for interface text.
+- [ ] Define in one place, `src/i18n/index.ts`, whether English is enabled: enable it in development and allow it to be enabled for a local build through an environment variable. Production must remain Ukrainian-only until English is intentionally published later.
+- [ ] In `BaseLayout`, set `<html lang>` from the page language. A canonical URL is already generated, so do not add a duplicate. Add `hreflang` only for page versions that are actually generated, and set `og:locale` to `uk_UA` or `en_US`.
+- [ ] Mark content with its actual language when it differs from the page language. This applies to frontmatter text shown in a page too: for example, a Ukrainian lab title and summary in an English lab list must be marked `lang="uk"`.
 
-**Done when:** the build is green and the URL list is saved.
+**Done when:** checks and the production build pass; the document language matches the route, and the content language matches its text.
 
-### Step 1 · i18n foundation (0.5 d)
+### Step 2. Add English URLs without changing Ukrainian ones
 
-- [ ] In `astro.config.mjs` set `defaultLocale: 'uk'`, `locales: ['uk', 'en']`, `prefixDefaultLocale: false`
-- [ ] Add `src/i18n/index.ts` (locales, default, `useTranslations`, `localeHref`, `switchLocaleHref`) and an empty `ui.ts`
-- [ ] `BaseLayout` takes `lang` from `Astro.currentLocale`, and emits `hreflang` alternates, a canonical URL and `og:locale`
+- [ ] Move the course pages and home page under a shared route with an optional language segment.
+- [ ] Generate English routes only when the switch from Step 1 is enabled. In production and CI, preserve the Ukrainian routes without `/uk/` and do not generate `/en/`.
+- [ ] Pass the page language to helpers that create links to labs, assignments, and lectures.
+- [ ] Keep legacy redirects and the ЛР-7 tools at their current URLs.
+- [ ] `localeHref()` and `switchLocaleHref()` must account for the base path. Before switching languages, the switcher must remove the base path from the current URL, then build the new URL.
 
-**Done when:** `npm run check && npm run build` passes and every page has the right `<html lang>`.
+**Done when:** a regular production build contains exactly the URLs from the Step 0 list, with no `/en/` pages.
 
-### Step 2 · Routes under `[...locale]` (1 d)
+### Step 3. Translate the interface text
 
-- [ ] `git mv` `src/pages/[course]` into `src/pages/[...locale]/[course]` and `src/pages/index.astro` into `src/pages/[...locale]/index.astro`
-- [ ] Every `getStaticPaths` produces locale × course (× lab or lecture), with `locale: undefined` for Ukrainian
-- [ ] Link helpers take the language: `labHref(locale, course, slug)`, `taskHref(…)`, and the lecture links
-- [ ] Legacy redirect pages and the ЛР-7 pages stay where they are; only their link helper calls change
+- [ ] Put the Ukrainian and English interface text in `ui.ts`. This includes the header and footer, home and course pages, navigation, and lab, assignment, and slide labels.
+- [ ] Include labels used by assistive technologies: `aria-label` in `ThemeToggle`, `skipLabel` in `DeckLayout`, and other component labels.
+- [ ] Move the copy-button text from `docs.ts` into the dictionary and pass it to the script through `data-*` attributes.
+- [ ] Make course names and descriptions language-specific.
+- [ ] Move the default `label: 'ТЗ'` and `eyebrow: 'Технічне завдання'` out of the assignment schema and into the dictionary. Explicit frontmatter values for Lab 7 — “Макет” and “Макет і дизайн-система” — must continue to override them.
+- [ ] Do not translate the lab, assignment, or lecture content itself in this PR.
 
-**Done when:** the build has every Ukrainian URL from Step 0 plus the English hub and course pages under `/en/`.
+**Done when:** shared interface elements use the correct language, while the content of untranslated materials remains Ukrainian and is identified as Ukrainian.
 
-### Step 3 · Interface strings (1.5 d)
+### Step 4. Add the language switcher
 
-- [ ] Fill `ui.ts` with Ukrainian and English strings for: `SiteHeader`, `SiteFooter`, hub, course, lecture and lab index pages, `LabHeader`, `OnThisPage`, `PrevNext`, `Breadcrumbs`, `DeckChrome`, `Slide`, `AcceptanceChecklist`, `MockupLightbox`, the `BaseLayout` skip link and the labels in `src/lib/labs.ts`
-- [ ] `docs.ts` already switches the copy-button text on `<html lang>`; I'll move those three strings into the dictionary and pass them through `data-*` attributes, so every string lives in one place
-- [ ] `site.ts` and `courses.ts` hold per-language text; `courseUk` becomes the localized course name
-- [ ] Remove the ad-hoc `lang="uk"` markers where the interface now follows the page language; keep them on Ukrainian content that appears inside an English page
+- [ ] Replace the disabled `EN` label in the header with a `UK | EN` switcher.
+- [ ] Show the switcher only when English is enabled. It is hidden in production.
+- [ ] Add the required accessibility attributes (`aria-current` and `lang`).
+- [ ] When switching languages, link to the same page if that language version exists. If it does not, link to the course page (or the hub when there is no course page). The lab list's “In Ukrainian” link is separate: it opens the Ukrainian lab directly.
 
-**Done when:** no hard-coded visible text is left in the shared templates, and each page reads in one language, except content that is not translated yet.
+**Done when:** in development, you can switch languages on the home page, course page, lab, and lecture; there is no switcher in production.
 
-### Step 4 · Language switcher (0.5 d)
+### Step 5. Move the content and add fallbacks
 
-- [ ] Replace the disabled `EN` placeholder in `SiteHeader` with a `UK | EN` switcher with `aria-current` and `lang` on each option
-- [ ] It links to the same page in the other language; when that page does not exist it links to the course page
+- [ ] Move the existing Ukrainian labs, assignments, and lectures into `uk/` folders.
+- [ ] Move the existing React and Web Accessibility preview placeholders into their courses' `en/` folders. Keep them as English-language placeholders, not translated course materials, and preserve the courses' existing dev-only visibility.
+- [ ] Update content lookup: language comes from the folder, and a content ID includes the course, language, and slug.
+- [ ] If an English lab file is missing, the English lab list links directly to the Ukrainian lab page and marks it as “In Ukrainian”. Do not generate a duplicate English page. Apply the same check independently to a practical assignment.
+- [ ] Store English content that has no Ukrainian version in `en/`; do not show it in the Ukrainian list or generate a Ukrainian route for it.
+- [ ] Update `plugins/base-links.mjs`: root-relative links in Markdown must receive the site's base path and, for files in an `en/` folder, the `/en/` prefix as well. Translators should not need to add `/en/` manually to every link.
+- [ ] Validate the course folder and language in `assertInCourse`, not in the Zod schema.
 
-**Done when:** the switcher moves between the two versions of the hub, a course page, a lab and a deck.
+**Done when:** existing Ukrainian URLs have not changed; the two existing English placeholders remain dev-only; and a future English translation of a Ukrainian lab can be added by adding files only, with no code changes.
 
-### Step 5 · Content layout and fallback (1 d) — only if English versions are needed
+### Step 6. Update PDF and assignment scripts
 
-- [ ] `git mv` the Ukrainian labs, tasks and lecture data into `<course>/uk/`
-- [ ] `splitId`, `getLabs(course, locale)`, `getTasks(…)` and `getLectures(course, locale)` use the language
-- [ ] The English index lists every lab and lecture; one without an English version links to the Ukrainian page with an "Ukrainian only" notice, and no duplicate page is built
-- [ ] The Zod schema checks that the `lang` field matches the folder
+- [ ] Update paths in scripts that read Markdown from lab or assignment folders.
+- [ ] By default, `python docs/build-handout.py lab-11` reads the Ukrainian file from `uk/` and creates `public/labs/lab-11.pdf`.
+- [ ] Do not generate English PDFs in this PR.
 
-**Done when:** the Ukrainian URLs are identical to Step 0, and a lab can gain an English version by adding one file.
+**Done when:** `python docs/build-handout.py lab-11` still creates `public/labs/lab-11.pdf`.
 
-### Step 6 · Handouts and scripts (0.25 d) — only if English versions are needed
+### Step 7. Update documentation and verify the result
 
-- [ ] `docs/build-handout.py` takes the language and reads `src/content/labs/web-development/<locale>/<lab>.md`; it writes `public/labs/<lab>.pdf` (Ukrainian) or `public/labs/<lab>.en.pdf`
-- [ ] `docs/lab-7/build-pack.py` reads the Ukrainian task from its new path
+- [ ] Update `README.md`, `AGENTS.md`, the route tables in `docs/agents/design-system.md`, and lab documentation that mentions the changed paths.
+- [ ] Add a short explanation of how to add an interface string and how to add a lab translation later.
+- [ ] Check the documentation and code for outdated content paths.
+- [ ] Run `npm run check && npm run build`; compare production URLs with the Step 0 list. The build must not contain new `/en/` pages.
+- [ ] Check Ukrainian pages with `npm run preview`. Check English pages with `npm run dev` or a local build with the environment variable enabled.
+- [ ] Retake the screenshots from Step 0 for the same pages and viewport sizes.
+- [ ] Update the PR description using the repository template and keep the PR in Draft until the implementation is ready.
 
-**Done when:** `python docs/build-handout.py lab-11` still produces `public/labs/lab-11.pdf`.
+**Done when:** checks pass, production URLs are unchanged, there are no broken links, and before/after screenshots are included in the PR.
 
-### Step 7 · README, AGENTS.md and final check (0.5 d)
+## Key decisions
 
-- [ ] Update `README.md`, `AGENTS.md` and the routes table in `docs/agents/design-system.md`; add a short "how to add an interface string / translate a lab" note
-- [ ] Update the route tables in `docs/lab-*/README.md`; if Steps 5–6 were done, also update the comments that name the old content paths. Grep for stale paths in `README.md`, `AGENTS.md`, `docs/agents/*.md` and comments (see `docs/agents/pr-review.md` §8)
-- [ ] Run `npm run check && npm run build`, and diff the URL list against Step 0
-- [ ] In dev and preview, click through the hub, a course, a lab, a task and a deck in both languages; screenshots of both languages at desktop and 390 px
-
-**Done when:** the URL diff shows only added `/en/…` pages, and the click-through finds no broken link.
-
----
-
-## Timing
-
-Steps 0–4 and 7 are the visible result: the whole interface in two languages with a working switcher. If Steps 5–6 are needed, they restructure the content folders (a `git mv` of every lab, task and lecture, like the previous course PR), so they conflict with any open lab branch. I'll land the PR when no lab branch is open, or after the authors have merged or rebased. If the teacher wants English versions, I translate them with AI (see the question at the end), either in this PR or in follow-up PRs.
-
-## Decisions
-
-- **Default language:** Ukrainian unprefixed, English under `/en/`. All current content is Ukrainian, so students' existing links keep working. The current `astro.config.mjs` declares English as the default instead; with that, every existing URL would become an English page that has Ukrainian content, or would need new redirects.
-- **Scope of this work:** the interface, plus the structure for translations only if the teacher confirms them. The translation of lab and lecture bodies happens only if the teacher asks for it, and is done with AI.
-- **Untranslated pages (Steps 5–6 only):** the English index shows them with a link to the Ukrainian page and an "Ukrainian only" notice, instead of hiding them.
-- **Content layout (Steps 5–6 only):** a locale folder inside each course. The alternative is a language suffix (`lab-4.en.md`), which needs no `git mv` but makes filtering by language less obvious.
-
-**Alternative considered:** prefix both languages (`/uk/…`, `/en/…`). The structure is symmetric, but every existing URL would change and need a redirect, so I chose the unprefixed default.
-
-## Question for the teacher
-
-**Do the lab and lecture materials need an English version? If yes, is an AI translation acceptable?**
-
-I would translate them with AI, which is much faster than by hand. Code blocks, commands, file names and links stay unchanged, and I keep one glossary of terms so the same word is translated the same way everywhere. I would check the result for broken Markdown and links, but I can't guarantee every sentence reads like a native speaker wrote it.
-
-- **Interface only:** labs, tasks and lectures stay in Ukrainian. I skip Steps 5–6 (about 1.25 days less), and the English pages show the Ukrainian materials under the English interface.
-- **English versions in this PR, translated with AI:** I keep Steps 5–6 and add the translation. The estimate is about 1–2 extra days for translating and checking (my estimate, to be confirmed on the first labs), so about 7 days in total. The PR becomes large to review, and it conflicts with any lab branch that is open.
-- **English versions later, in separate PRs:** I keep Steps 5–6 and translate lab by lab afterwards. Each translation is reviewed on its own, and the interface PR does not wait for them.
-
-Whichever of the last two is chosen, I need to know who reads the English text before it is published, and whether the PDF handouts need an English version too.
+- Ukrainian is the primary language and remains at the current URLs.
+- This PR builds the infrastructure; it does not include content translations.
+- English is available only locally until the translations are ready for publication.
+- New lab translations will be submitted in separate PRs; adding a translation should require new files only.
+- The English list may link to the Ukrainian version with a notice. English-only content does not appear in the Ukrainian list.
+- Who will proofread the English text and whether English PDFs are needed will be decided before the first translation PR.
+- The visual design, automatic browser-language switching, and ЛР-7 checking tools are unchanged.
