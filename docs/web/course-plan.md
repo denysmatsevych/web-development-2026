@@ -2,7 +2,9 @@
 
 A copy of the structure and grading tables from the official programme of the
 Web Development course (a `.docx` outside this repo). The `.docx` is
-authoritative: when the programme changes, update both in the same sitting. Part 2 was revised on 2026-10-04 and
+authoritative: when the programme changes, update both in the same sitting.
+The React course has its own plan in
+[../react/course-plan.md](../react/course-plan.md). Part 2 was revised on 2026-10-04 and
 2026-10-15 (see **Part 2 revision** below).
 
 ## How the site maps to the plan

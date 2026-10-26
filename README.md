@@ -111,13 +111,14 @@ exhaustive list here.
 ## Docs
 
 Each course has its own folder under `docs/`: `docs/web/` for the
-`web-development` course. A course folder holds
+`web-development` course and `docs/react/` for `react`. A course folder holds
 the course plan, the course's guides and build scripts, and one `lab-N/`
 folder per lab that needs instructor notes or tooling. Docs that serve every
 course (`docs/agents/`, the deck guide, site-wide plans) stay at the top of
 `docs/`.
 
 - [docs/web/course-plan.md](docs/web/course-plan.md) — Web Development: the programme's tables and how the site maps to them
+- [docs/react/course-plan.md](docs/react/course-plan.md) — React: the programme's tables, presentation topics and how the site maps to them
 - [docs/presentation-app-guide.md](docs/presentation-app-guide.md) — how the slide deck is built
 - [docs/web/lab-1-implementation-guide.md](docs/web/lab-1-implementation-guide.md) — lab implementation notes and project conventions
 - [docs/web/individual-assignment-implementation-guide.md](docs/web/individual-assignment-implementation-guide.md) — individual assignment (ІЗ) implementation notes
