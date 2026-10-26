@@ -21,29 +21,29 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 
-# Lab 7 — reference mockup source (instructor-only; see docs/lab-7/README.md)
-docs/lab-7/mockup/
+# Lab 7 — reference mockup source (instructor-only; see docs/web/lab-7/README.md)
+docs/web/lab-7/mockup/
 
 # Lab 10 — defect map + calibration harness (instructor-only: they name every seeded defect and fix)
-docs/lab-10/starter-defects.md
-docs/lab-10/calibration/
+docs/web/lab-10/starter-defects.md
+docs/web/lab-10/calibration/
 
 # Lab 8 — reference solution (instructor-only: it solves every challenge)
-docs/lab-8/solution/
+docs/web/lab-8/solution/
 
 # Lab 9 — reference solution + check calibration (instructor-only: they solve every challenge and list the wrong answers)
-docs/lab-9/solution/
+docs/web/lab-9/solution/
 
 # Lab 11 — reference solution + check calibration (instructor-only: they solve every challenge and list the wrong answers)
-docs/lab-11/solution/
+docs/web/lab-11/solution/
 
 # Lab 12-13 — reference solution + check calibration (instructor-only: they solve every task, list the seeded defects and the wrong answers)
-docs/lab-12/solution/
+docs/web/lab-12/solution/
 
-# Lab 14 — ПК2 task bank (instructor-only: every question with its answer key; see docs/lab-14/pk2/README.md)
+# Lab 14 — ПК2 task bank (instructor-only: every question with its answer key; see docs/web/lab-14/pk2/README.md)
 # Everything in pk2/ stays private unless listed here, so a new bank file can't slip in.
-docs/lab-14/pk2/*
-!docs/lab-14/pk2/README.md
-!docs/lab-14/pk2/build.mjs
-!docs/lab-14/pk2/apps-script/
-docs/lab-14/pk2/apps-script/Bank.gs
+docs/web/lab-14/pk2/*
+!docs/web/lab-14/pk2/README.md
+!docs/web/lab-14/pk2/build.mjs
+!docs/web/lab-14/pk2/apps-script/
+docs/web/lab-14/pk2/apps-script/Bank.gs

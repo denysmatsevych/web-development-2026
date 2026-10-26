@@ -53,7 +53,7 @@ const labs = defineCollection({
  *
  * A brief lives outside its lab because the two are read differently — the lab
  * once, top to bottom; the brief kept open beside the editor for two hours.
- * See docs/lab-2/README.md §3.
+ * See docs/web/lab-2/README.md §3.
  */
 const tasks = defineCollection({
   // ids look like "web-development/lab-2" — the owning lab's id, no extension.
