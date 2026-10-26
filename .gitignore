@@ -39,3 +39,11 @@ docs/lab-11/solution/
 
 # Lab 12-13 — reference solution + check calibration (instructor-only: they solve every task, list the seeded defects and the wrong answers)
 docs/lab-12/solution/
+
+# Lab 14 — ПК2 task bank (instructor-only: every question with its answer key; see docs/lab-14/pk2/README.md)
+# Everything in pk2/ stays private unless listed here, so a new bank file can't slip in.
+docs/lab-14/pk2/*
+!docs/lab-14/pk2/README.md
+!docs/lab-14/pk2/build.mjs
+!docs/lab-14/pk2/apps-script/
+docs/lab-14/pk2/apps-script/Bank.gs
