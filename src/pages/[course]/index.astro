@@ -38,8 +38,8 @@ const sections = getSections(course.slug);
     </a>
 
     <section class="hero" aria-labelledby="page-title">
-      <h1 id="page-title" class="hero__title">{course.title}</h1>
-      <p class="hero__lead">{course.description}</p>
+      <h1 id="page-title" class="hero__title" lang="en">{course.title}</h1>
+      <p class="hero__lead" lang="en">{course.description}</p>
     </section>
 
     <ul class="sections" aria-label={`${course.title} materials`}>
@@ -48,12 +48,12 @@ const sections = getSections(course.slug);
           <li>
             <a href={withBase(section.href)} class="section glass-panel">
               <div class="section__top-panel">
-                <span class="section__name">{section.label}</span>
+                <span class="section__name" lang="en">{section.label}</span>
                 <span class="section__arrow" aria-hidden="true">
                   →
                 </span>
               </div>
-              <span class="section__blurb">{section.blurb}</span>
+              <span class="section__blurb" lang="en">{section.blurb}</span>
             </a>
           </li>
         ))

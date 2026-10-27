@@ -86,7 +86,6 @@ const crumbs = [
   titleSuffix={course.title}
   courseSlug={course.slug}
   description={data.summary}
-  lang={data.lang}
   headings={headings}
 >
   <Breadcrumbs items={crumbs} />
@@ -95,20 +94,23 @@ const crumbs = [
     eyebrow={`${data.eyebrow} · ЛР-${labNumber(lab)}`}
     title={data.title}
     summary={data.summary}
+    contentLang={data.lang}
+    eyebrowLang={data.lang}
     handout={data.handout}
   />
 
   {
     data.goal && (
       <p class="task-goal">
-        <strong>Мета практичної частини.</strong> {data.goal}
+        <strong>Мета практичної частини.</strong>{' '}
+        <span lang={data.lang}>{data.goal}</span>
       </p>
     )
   }
 
   {
     data.acceptance.length > 0 && (
-      <AcceptanceChecklist items={data.acceptance} />
+      <AcceptanceChecklist items={data.acceptance} itemsLang={data.lang} />
     )
   }
 
@@ -130,7 +132,7 @@ const crumbs = [
     )
   }
 
-  <article class="doc-content">
+  <article class="doc-content" lang={data.lang}>
     <Content />
   </article>
 

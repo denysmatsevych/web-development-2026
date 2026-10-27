@@ -48,6 +48,7 @@ export interface LabMeta {
   number: number;
   title: string;
   summary: string;
+  lang: string;
   /** `withBase('/<course>/labs/<slug>/')` — drop straight into an `href`. */
   href: string;
 }
@@ -65,6 +66,7 @@ export function toLabMeta(entry: LabEntry): LabMeta {
     number: entry.data.number,
     title: entry.data.title,
     summary: entry.data.summary,
+    lang: entry.data.lang,
     href: labHref(course, slug),
   };
 }

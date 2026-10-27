@@ -31,7 +31,12 @@ const [labs, tasks] = await Promise.all([
 
 // Lab id -> its brief's badge text, for the pill on that lab's card. A Map
 // rather than a Set so the badge stays whatever the brief's frontmatter says.
-const taskLabels = new Map(tasks.map((task) => [task.id, task.data.label]));
+const taskLabels = new Map(
+  tasks.map((task) => [
+    task.id,
+    { label: task.data.label, lang: task.data.lang },
+  ]),
+);
 const hasIndividual = labs.some((lab) => lab.data.kind === "individual");
 ---
 
@@ -49,7 +54,7 @@ const hasIndividual = labs.some((lab) => lab.data.kind === "individual");
     </a>
 
     <section class="hero">
-      <p class="hero__eyebrow">{course.title}</p>
+      <p class="hero__eyebrow" lang="en">{course.title}</p>
       <h1 class="hero__title">Labs</h1>
       <p class="hero__lead">
         Hands-on assignments that build on each lecture. Each lab is a full
@@ -88,14 +93,19 @@ const hasIndividual = labs.some((lab) => lab.data.kind === "individual");
                 </span>
                 <span class="lab-card__body">
                   <span class="lab-card__title">
-                    {lab.data.title}
+                    <span lang={lab.data.lang}>{lab.data.title}</span>
                     {taskLabels.has(lab.id) && (
-                      <span class="lab-card__pill">
-                        {taskLabels.get(lab.id)}
+                      <span
+                        class="lab-card__pill"
+                        lang={taskLabels.get(lab.id)?.lang}
+                      >
+                        {taskLabels.get(lab.id)?.label}
                       </span>
                     )}
                   </span>
-                  <span class="lab-card__summary">{lab.data.summary}</span>
+                  <span class="lab-card__summary" lang={lab.data.lang}>
+                    {lab.data.summary}
+                  </span>
                 </span>
                 <span class="lab-card__arrow" aria-hidden="true">
                   →

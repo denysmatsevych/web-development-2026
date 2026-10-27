@@ -35,8 +35,6 @@ interface Props {
   titleSuffix?: string;
   /** Course context for the shared header and footer. */
   courseSlug?: string;
-  /** Body language — `'uk'` for the current handouts. */
-  lang?: string;
   /** h2/h3 headings from `render(entry)` — feed the "on this page" rail. */
   headings?: MarkdownHeading[];
   /** Keep an unlisted page (the ЛР-7 auto-check) out of search results. */
@@ -48,7 +46,6 @@ const {
   description,
   titleSuffix,
   courseSlug,
-  lang = 'uk',
   headings = [],
   noindex = false,
 } = Astro.props;
@@ -62,7 +59,6 @@ const fontHref =
   title={title}
   description={description}
   titleSuffix={titleSuffix}
-  lang={lang}
   ogType="article"
 >
   <Fragment slot="head">

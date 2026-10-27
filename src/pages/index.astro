@@ -19,8 +19,8 @@ const courses = getCourses();
   <main id="main-content" class="home" tabindex="-1">
     <section class="hero" aria-labelledby="page-title">
       <p class="hero__eyebrow" lang="uk">{site.hubEyebrow}</p>
-      <h1 id="page-title" class="hero__title">{site.name}</h1>
-      <p class="hero__lead">{site.description}</p>
+      <h1 id="page-title" class="hero__title" lang="en">{site.name}</h1>
+      <p class="hero__lead" lang="en">{site.description}</p>
     </section>
 
     <ul class="courses" aria-label="Available courses">
@@ -63,6 +63,7 @@ const courses = getCourses();
                 <span
                   class="course-card__description"
                   id={`course-${course.slug}-desc`}
+                  lang="en"
                 >
                   {course.description}
                 </span>

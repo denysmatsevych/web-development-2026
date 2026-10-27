@@ -41,21 +41,21 @@ The content's language is determined by its folder (`uk/` or `en/`), not by a `l
 
 ### Step 0. Record the current state
 
-- [ ] Build the site and save the list of generated URLs outside the repository.
-- [ ] Take before screenshots of the current interface: the same pages on desktop and at 390 px wide.
+- [X] Build the site and save the list of generated URLs outside the repository.
+- [X] Take before screenshots of the current interface: the same pages on desktop and at 390 px wide.
 
 **Done when:** the build passes, the URL list is saved, and the screenshots are taken.
 
 ### Step 1. Add the language foundations
 
-- [ ] In `astro.config.mjs`, make `uk` the default language, add `en`, and keep Ukrainian URLs unprefixed.
-- [ ] Create `src/i18n/index.ts` for language detection, translations, and link helpers, and `src/i18n/ui.ts` for interface text.
-- [ ] Define in one place, `src/i18n/index.ts`, whether English is enabled: enable it in development and allow it to be enabled for a local build through an environment variable. Production must remain Ukrainian-only until English is intentionally published later.
-- [ ] In `BaseLayout`, set `<html lang>` from the page language. A canonical URL is already generated, so do not add a duplicate. Add `hreflang` only for page versions that are actually generated, and set `og:locale` to `uk_UA` or `en_US`.
-- [ ] Mark content with its actual language when it differs from the page language. This applies to frontmatter text shown in a page too: for example, a Ukrainian lab title and summary in an English lab list must be marked `lang="uk"`.
-- [ ] Remove explicit content-language overrides from `LabLayout` and `DeckLayout`; they must not override the page language selected by the route.
+- [x] In `astro.config.mjs`, make `uk` the default language, add `en`, and keep Ukrainian URLs unprefixed.
+- [x] Create `src/i18n/index.ts` for language detection, translations, and link helpers, and `src/i18n/ui.ts` for interface text.
+- [x] Define in one place, `src/i18n/index.ts`, whether English is enabled: enable it in development and allow it to be enabled for a local build through an environment variable. Production must remain Ukrainian-only until English is intentionally published later.
+- [x] In `BaseLayout`, set `<html lang>` from the page language. A canonical URL is already generated, so do not add a duplicate. Add `hreflang` only for page versions that are actually generated, and set `og:locale` to `uk_UA` or `en_US`.
+- [x] Mark content with its actual language when it differs from the page language. This applies to frontmatter text shown in a page too: for example, a Ukrainian lab title and summary in an English lab list must be marked `lang="uk"`.
+- [x] Remove explicit content-language overrides from `LabLayout` and `DeckLayout`; they must not override the page language selected by the route.
 
-**Done when:** checks and the production build pass; the document language matches the route, and the content language matches its text.
+**Done when:** checks and the production build pass; the document language matches the route, and the content language matches its text. (Step 1 complete.)
 
 ### Step 2. Add English URLs without changing Ukrainian ones
 

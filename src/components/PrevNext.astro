@@ -9,6 +9,7 @@
 interface NavTarget {
   title: string;
   href: string;
+  lang?: string;
 }
 
 interface Props {
@@ -25,7 +26,7 @@ const { prev, next } = Astro.props;
       {prev ? (
         <a href={prev.href} rel="prev" class="prev-next__link">
           <span class="prev-next__dir">← Previous</span>
-          <span class="prev-next__title">{prev.title}</span>
+          <span class="prev-next__title" lang={prev.lang}>{prev.title}</span>
         </a>
       ) : (
         <span aria-hidden="true" />
@@ -33,7 +34,7 @@ const { prev, next } = Astro.props;
       {next ? (
         <a href={next.href} rel="next" class="prev-next__link prev-next__link--next">
           <span class="prev-next__dir">Next →</span>
-          <span class="prev-next__title">{next.title}</span>
+          <span class="prev-next__title" lang={next.lang}>{next.title}</span>
         </a>
       ) : (
         <span aria-hidden="true" />

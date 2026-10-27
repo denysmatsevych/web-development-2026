@@ -14,16 +14,20 @@ interface Props {
   eyebrow: string;
   title: string;
   summary?: string;
+  /** Language of the frontmatter text, when it differs from the page language. */
+  contentLang?: string;
+  /** Language of the eyebrow when it comes from frontmatter rather than page chrome. */
+  eyebrowLang?: string;
   /** Path without the base prefix, e.g. `/labs/lab-2.pdf`. */
   handout?: string;
 }
 
-const { eyebrow, title, summary, handout } = Astro.props;
+const { eyebrow, title, summary, contentLang, eyebrowLang, handout } = Astro.props;
 ---
 
 <header class="lab-header">
   <div class="lab-header__top">
-    <p class="lab-header__eyebrow">{eyebrow}</p>
+    <p class="lab-header__eyebrow" lang={eyebrowLang}>{eyebrow}</p>
     {
       handout && (
         <a class="lab-header__download" href={withBase(handout)} download>
@@ -42,8 +46,8 @@ const { eyebrow, title, summary, handout } = Astro.props;
       )
     }
   </div>
-  <h1 class="lab-header__title">{title}</h1>
-  {summary && <p class="lab-header__summary">{summary}</p>}
+  <h1 class="lab-header__title" lang={contentLang}>{title}</h1>
+  {summary && <p class="lab-header__summary" lang={contentLang}>{summary}</p>}
 </header>
 
 <style>

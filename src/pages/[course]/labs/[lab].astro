@@ -55,7 +55,6 @@ const crumbs = [
   titleSuffix={course.title}
   courseSlug={course.slug}
   description={data.summary}
-  lang={data.lang}
   headings={headings}
 >
   <Breadcrumbs items={crumbs} />
@@ -64,12 +63,13 @@ const crumbs = [
     eyebrow={eyebrow}
     title={data.title}
     summary={data.summary}
+    contentLang={data.lang}
     handout={data.handout}
   />
 
   {/* `data-copy-code` — copy buttons on the body's code blocks (the email
       subject and links in "Вимоги до звіту"); see src/scripts/docs.ts. */}
-  <article class="doc-content" data-copy-code>
+  <article class="doc-content" data-copy-code lang={data.lang}>
     <Content />
   </article>
 

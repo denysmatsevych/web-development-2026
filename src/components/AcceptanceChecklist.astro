@@ -10,9 +10,10 @@
  */
 interface Props {
   items: string[];
+  itemsLang?: string;
 }
 
-const { items } = Astro.props;
+const { items, itemsLang } = Astro.props;
 ---
 
 <div class="checklist">
@@ -28,7 +29,7 @@ const { items } = Astro.props;
           <li>
             <label>
               <input type="checkbox" data-checklist-item={String(i)} />
-              <span>{item}</span>
+              <span lang={itemsLang}>{item}</span>
             </label>
           </li>
         ))
