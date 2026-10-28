@@ -1,6 +1,6 @@
 ---
 import { site } from '@/data/site';
-import { withBase } from '@/lib/paths';
+import { getLocale, localeHref } from '@/i18n';
 
 /** An adjacent deck — rendered as a step link in the top-left cluster. */
 export interface LectureLink {
@@ -20,7 +20,8 @@ interface Props {
   nextLecture?: LectureLink;
 }
 const { total, lecturesHref, prevLecture, nextLecture } = Astro.props;
-const home = withBase('/');
+const locale = getLocale(Astro.currentLocale);
+const home = localeHref(locale, '/');
 
 const pill =
   'no-print inline-flex items-center gap-2 rounded-md border border-ink-800 bg-ink-950/80 px-3 py-2 ' +

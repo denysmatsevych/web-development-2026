@@ -8,21 +8,33 @@ import SiteFooter from '@/components/SiteFooter.astro';
 import SiteHeader from '@/components/SiteHeader.astro';
 import { getCourses, type Course } from '@/data/courses';
 import { getLectures } from '@/data/lectures';
-import { withBase } from '@/lib/paths';
+import {
+  defaultLocale,
+  getEnabledLocales,
+  localeAlternates,
+  localeHref,
+  type Locale,
+} from '@/i18n';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 
 export function getStaticPaths() {
-  return getCourses().map((course) => ({
-    params: { course: course.slug },
-    props: { course },
-  }));
+  return getCourses().flatMap((course) =>
+    getEnabledLocales().map((locale) => ({
+      params: {
+        locale: locale === defaultLocale ? undefined : locale,
+        course: course.slug,
+      },
+      props: { course, locale },
+    })),
+  );
 }
 
 interface Props {
   course: Course;
+  locale: Locale;
 }
 
-const { course } = Astro.props;
+const { course, locale } = Astro.props;
 const lectures = getLectures(course.slug);
 ---
 
@@ -30,11 +42,13 @@ const lectures = getLectures(course.slug);
   title="Lectures"
   titleSuffix={course.title}
   description={`Lecture slide decks for ${course.title}.`}
+  locale={locale}
+  alternates={localeAlternates(`/${course.slug}/lectures/`)}
 >
-  <SiteHeader courseSlug={course.slug} />
+  <SiteHeader courseSlug={course.slug} locale={locale} />
 
   <main id="main-content" class="page" tabindex="-1">
-    <a class="back-link" href={withBase(`/${course.slug}/`)} lang="uk">
+    <a class="back-link" href={localeHref(locale, `/${course.slug}/`)} lang="uk">
       <span aria-hidden="true">←</span>
       До курсу
     </a>
@@ -54,7 +68,7 @@ const lectures = getLectures(course.slug);
         lectures.map((lecture) => (
           <li>
             <a
-              href={withBase(`/${course.slug}/lectures/${lecture.slug}/`)}
+              href={localeHref(locale, `/${course.slug}/lectures/${lecture.slug}/`)}
               class="deck-card glass-panel"
             >
               <span class="deck-card__index">{String(lecture.number).padStart(2, '0')}</span>
@@ -70,7 +84,7 @@ const lectures = getLectures(course.slug);
     </ul>
   </main>
 
-  <SiteFooter courseSlug={course.slug} />
+  <SiteFooter courseSlug={course.slug} locale={locale} />
 </BaseLayout>
 
 <style>

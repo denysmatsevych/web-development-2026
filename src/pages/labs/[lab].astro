@@ -4,6 +4,7 @@
  */
 import { getLabs, labHref, splitId } from '@/lib/labs';
 import { LEGACY_COURSE } from '@/data/courses';
+import { defaultLocale } from '@/i18n';
 
 export async function getStaticPaths() {
   const labs = await getLabs(LEGACY_COURSE);
@@ -11,7 +12,7 @@ export async function getStaticPaths() {
     const { slug } = splitId(lab.id);
     return {
       params: { lab: slug },
-      props: { destination: labHref(LEGACY_COURSE, slug) },
+      props: { destination: labHref(defaultLocale, LEGACY_COURSE, slug) },
     };
   });
 }

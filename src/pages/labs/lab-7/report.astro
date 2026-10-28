@@ -22,6 +22,7 @@ import LabHeader from "@/components/LabHeader.astro";
 import LabLayout from "@/layouts/LabLayout.astro";
 import { labHref, taskHref } from "@/lib/labs";
 import { withBase } from "@/lib/paths";
+import { defaultLocale } from "@/i18n";
 import { LEGACY_COURSE } from '@/data/courses';
 
 const title = "Звіт перевірки";
@@ -31,7 +32,7 @@ const summary =
 const crumbs = [
   { label: "Web Development", href: withBase(`/${LEGACY_COURSE}/`) },
   { label: "Labs", href: withBase(`/${LEGACY_COURSE}/labs/`) },
-  { label: "ЛР-7", href: labHref(LEGACY_COURSE, "lab-7") },
+  { label: "ЛР-7", href: labHref(defaultLocale, LEGACY_COURSE, "lab-7") },
   { label: "Звіт перевірки", href: withBase("/labs/lab-7/report/") },
 ];
 ---
@@ -91,8 +92,8 @@ const crumbs = [
       <p class="cr-lead">
         Сторінка показана такою, якою вона є зараз, а не на момент перевірки.
         Позначки — вимоги з тексту{" "}
-        <a href={labHref(LEGACY_COURSE, "lab-7")}>лабораторної</a> і{" "}
-        <a href={taskHref(LEGACY_COURSE, "lab-7")}>макета</a>; оцінку вони не
+        <a href={labHref(defaultLocale, LEGACY_COURSE, "lab-7")}>лабораторної</a> і{" "}
+        <a href={taskHref(defaultLocale, LEGACY_COURSE, "lab-7")}>макета</a>; оцінку вони не
         змінюють.
       </p>
       <p class="cr-error" data-cr-compare-error role="alert" hidden></p>

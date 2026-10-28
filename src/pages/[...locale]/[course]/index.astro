@@ -6,21 +6,33 @@ import SiteFooter from "@/components/SiteFooter.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 import { getCourses, type Course } from "@/data/courses";
 import { getSections } from "@/data/site";
-import { withBase } from "@/lib/paths";
+import {
+  defaultLocale,
+  getEnabledLocales,
+  localeAlternates,
+  localeHref,
+  type Locale,
+} from "@/i18n";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 
 export function getStaticPaths() {
-  return getCourses().map((course) => ({
-    params: { course: course.slug },
-    props: { course },
-  }));
+  return getCourses().flatMap((course) =>
+    getEnabledLocales().map((locale) => ({
+      params: {
+        locale: locale === defaultLocale ? undefined : locale,
+        course: course.slug,
+      },
+      props: { course, locale },
+    })),
+  );
 }
 
 interface Props {
   course: Course;
+  locale: Locale;
 }
 
-const { course } = Astro.props;
+const { course, locale } = Astro.props;
 const sections = getSections(course.slug);
 ---
 
@@ -28,11 +40,12 @@ const sections = getSections(course.slug);
   title={course.title}
   titleSuffix={course.title}
   description={course.description}
+  alternates={localeAlternates(`/${course.slug}/`)}
 >
-  <SiteHeader courseSlug={course.slug} />
+  <SiteHeader courseSlug={course.slug} locale={locale} />
 
   <main id="main-content" class="page" tabindex="-1">
-    <a class="back-link" href={withBase("/")} lang="uk">
+    <a class="back-link" href={localeHref(locale, "/")} lang="uk">
       <span aria-hidden="true">←</span>
       Усі курси
     </a>
@@ -46,7 +59,7 @@ const sections = getSections(course.slug);
       {
         sections.map((section) => (
           <li>
-            <a href={withBase(section.href)} class="section glass-panel">
+            <a href={localeHref(locale, section.href)} class="section glass-panel">
               <div class="section__top-panel">
                 <span class="section__name" lang="en">{section.label}</span>
                 <span class="section__arrow" aria-hidden="true">
@@ -61,7 +74,7 @@ const sections = getSections(course.slug);
     </ul>
   </main>
 
-  <SiteFooter courseSlug={course.slug} />
+  <SiteFooter courseSlug={course.slug} locale={locale} />
 </BaseLayout>
 
 <style>

@@ -12,14 +12,16 @@
 import ThemeToggle from '@/components/ThemeToggle.astro';
 import { getCourses } from '@/data/courses';
 import { site } from '@/data/site';
-import { withBase } from '@/lib/paths';
+import { getLocale, localeHref, type Locale } from '@/i18n';
 
 interface Props {
   courseSlug?: string;
+  locale?: Locale;
 }
 
-const { courseSlug } = Astro.props;
-const home = withBase('/');
+const { courseSlug, locale: pageLocale } = Astro.props;
+const locale = pageLocale ?? getLocale(Astro.currentLocale);
+const home = localeHref(locale, '/');
 const courses = getCourses();
 ---
 
@@ -38,7 +40,7 @@ const courses = getCourses();
       {
         courses.map((course) => (
           <a
-            href={withBase(`/${course.slug}/`)}
+            href={localeHref(locale, `/${course.slug}/`)}
             class="inline-flex items-center rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
             aria-current={course.slug === courseSlug ? 'location' : undefined}
           >

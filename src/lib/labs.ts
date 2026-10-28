@@ -10,7 +10,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 
 import { isCourse } from '@/data/courses';
-import { withBase } from '@/lib/paths';
+import { localeHref, type Locale } from '@/i18n';
 
 export type LabEntry = CollectionEntry<'labs'>;
 
@@ -53,12 +53,12 @@ export interface LabMeta {
   href: string;
 }
 
-/** `withBase` applied to a lab's route. */
-export function labHref(course: string, slug: string): string {
-  return withBase(`/${course}/labs/${slug}/`);
+/** A base-aware, locale-aware lab route. */
+export function labHref(locale: Locale, course: string, slug: string): string {
+  return localeHref(locale, `/${course}/labs/${slug}/`);
 }
 
-export function toLabMeta(entry: LabEntry): LabMeta {
+export function toLabMeta(entry: LabEntry, locale: Locale): LabMeta {
   const { course, slug } = splitId(entry.id);
   return {
     course,
@@ -67,7 +67,7 @@ export function toLabMeta(entry: LabEntry): LabMeta {
     title: entry.data.title,
     summary: entry.data.summary,
     lang: entry.data.lang,
-    href: labHref(course, slug),
+    href: labHref(locale, course, slug),
   };
 }
 
@@ -112,6 +112,7 @@ export function labLabels(entry: LabEntry): { eyebrow: string; crumb: string } {
  * than between two of them, so it neither gets nor appears in a prev/next link.
  */
 export async function getAdjacentLab(
+  locale: Locale,
   course: string,
   slug: string,
 ): Promise<{ prev?: LabMeta; next?: LabMeta }> {
@@ -122,16 +123,16 @@ export async function getAdjacentLab(
   const prev = labs[i - 1];
   const next = labs[i + 1];
   return {
-    prev: prev && toLabMeta(prev),
-    next: next && toLabMeta(next),
+    prev: prev && toLabMeta(prev, locale),
+    next: next && toLabMeta(next, locale),
   };
 }
 
 export type TaskEntry = CollectionEntry<'tasks'>;
 
-/** `withBase` applied to a lab's practical brief. */
-export function taskHref(course: string, slug: string): string {
-  return withBase(`/${course}/labs/${slug}/task/`);
+/** A base-aware, locale-aware practical-brief route. */
+export function taskHref(locale: Locale, course: string, slug: string): string {
+  return localeHref(locale, `/${course}/labs/${slug}/task/`);
 }
 
 /**

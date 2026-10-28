@@ -32,30 +32,42 @@ import {
   type LabEntry,
   type TaskEntry,
 } from "@/lib/labs";
-import { withBase } from "@/lib/paths";
+import {
+  defaultLocale,
+  getEnabledLocales,
+  localeAlternates,
+  localeHref,
+  type Locale,
+} from "@/i18n";
 
 export async function getStaticPaths() {
   const paths = await Promise.all(
-    getCourses().map(async (course) => {
-      const [labs, tasks] = await Promise.all([
-        getLabs(course.slug),
-        getTasks(course.slug),
-      ]);
-      const byId = new Map(labs.map((lab) => [lab.id, lab]));
+    getCourses().flatMap((course) =>
+      getEnabledLocales().map(async (locale) => {
+        const [labs, tasks] = await Promise.all([
+          getLabs(course.slug),
+          getTasks(course.slug),
+        ]);
+        const byId = new Map(labs.map((lab) => [lab.id, lab]));
 
-      // A brief whose lab is a draft (or missing) gets no route.
-      return tasks.flatMap((task) => {
-        const lab = byId.get(task.id);
-        return lab
-          ? [
-              {
-                params: { course: course.slug, lab: splitId(task.id).slug },
-                props: { course, task, lab },
-              },
-            ]
-          : [];
-      });
-    }),
+        // A brief whose lab is a draft (or missing) gets no route.
+        return tasks.flatMap((task) => {
+          const lab = byId.get(task.id);
+          return lab
+            ? [
+                {
+                  params: {
+                    locale: locale === defaultLocale ? undefined : locale,
+                    course: course.slug,
+                    lab: splitId(task.id).slug,
+                  },
+                  props: { course, task, lab, locale },
+                },
+              ]
+            : [];
+        });
+      }),
+    ),
   );
   return paths.flat();
 }
@@ -64,19 +76,20 @@ interface Props {
   course: Course;
   task: TaskEntry;
   lab: LabEntry;
+  locale: Locale;
 }
 
-const { course, task, lab } = Astro.props;
+const { course, task, lab, locale } = Astro.props;
 const { data } = task;
 
 const { Content, headings } = await render(task);
 const { slug } = splitId(task.id);
 
 const crumbs = [
-  { label: course.title, href: withBase(`/${course.slug}/`) },
-  { label: "Labs", href: withBase(`/${course.slug}/labs/`) },
-  { label: `ЛР-${labNumber(lab)}`, href: labHref(course.slug, slug) },
-  { label: data.label, href: taskHref(course.slug, slug) },
+  { label: course.title, href: localeHref(locale, `/${course.slug}/`) },
+  { label: "Labs", href: localeHref(locale, `/${course.slug}/labs/`) },
+  { label: `ЛР-${labNumber(lab)}`, href: labHref(locale, course.slug, slug) },
+  { label: data.label, href: taskHref(locale, course.slug, slug) },
 ];
 
 ---
@@ -85,8 +98,10 @@ const crumbs = [
   title={data.title}
   titleSuffix={course.title}
   courseSlug={course.slug}
+  locale={locale}
   description={data.summary}
   headings={headings}
+  alternates={localeAlternates(`/${course.slug}/labs/${slug}/task/`)}
 >
   <Breadcrumbs items={crumbs} />
 
@@ -137,7 +152,7 @@ const crumbs = [
   </article>
 
   <nav class="task-back" aria-label="Lab">
-    <a href={labHref(course.slug, slug)} rel="up"
+    <a href={labHref(locale, course.slug, slug)} rel="up"
       >← До лабораторної роботи №{labNumber(lab)}</a
     >
   </nav>

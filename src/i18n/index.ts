@@ -9,6 +9,10 @@ export const defaultLocale: Locale = 'uk';
 export const isEnglishEnabled =
   import.meta.env.DEV || import.meta.env.VITE_ENABLE_ENGLISH === 'true';
 
+export function getEnabledLocales(): Locale[] {
+  return isEnglishEnabled ? [...locales] : [defaultLocale];
+}
+
 export function isLocale(value: string): value is Locale {
   return locales.some((locale) => locale === value);
 }
@@ -45,6 +49,15 @@ export function localeHref(locale: Locale, pathname: string): string {
   const normalizedPath = routePath.startsWith('/') ? routePath : `/${routePath}`;
   const localePrefix = locale === defaultLocale ? '' : `/${locale}`;
   return withBase(`${localePrefix}${normalizedPath}`);
+}
+
+/** Build alternate URLs only when both language versions are enabled. */
+export function localeAlternates(pathname: string): Partial<Record<Locale, string>> | undefined {
+  if (!isEnglishEnabled) return undefined;
+  return {
+    uk: localeHref('uk', pathname),
+    en: localeHref('en', pathname),
+  };
 }
 
 /** Switch the locale in a current Astro URL path while preserving its route. */

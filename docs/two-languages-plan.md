@@ -59,14 +59,14 @@ The content's language is determined by its folder (`uk/` or `en/`), not by a `l
 
 ### Step 2. Add English URLs without changing Ukrainian ones
 
-- [ ] Move the course pages and home page under a shared route with an optional language segment.
-- [ ] Generate English routes only when the switch from Step 1 is enabled. Production and the regular CI build preserve Ukrainian routes without `/uk/` and do not generate `/en/`; CI runs a separate English-enabled validation build.
-- [ ] Pass the page language to helpers that create links to labs, assignments, and lectures.
-- [ ] Keep legacy redirects and the ЛР-7 tools at their current URLs.
-- [ ] Make the language argument required in content lookup helpers, and update legacy lab and task redirects to request Ukrainian entries explicitly. This prevents an English entry with the same slug from creating a duplicate legacy route.
-- [ ] `localeHref()` and `switchLocaleHref()` must account for the base path. Before switching languages, the switcher must remove the base path from the current URL, then build the new URL.
+- [x] Move the course pages and home page under a shared route with an optional language segment.
+- [x] Generate English routes only when the switch from Step 1 is enabled. Production and the regular CI build preserve Ukrainian routes without `/uk/` and do not generate `/en/`; CI runs a separate English-enabled validation build.
+- [x] Pass the page language to helpers that create links to labs, assignments, and lectures.
+- [x] Keep legacy redirects and the ЛР-7 tools at their current URLs.
+- [x] Make the language argument required in content link helpers, and update legacy lab and task redirects to request Ukrainian links explicitly. The current content lookup remains unlocalized until Step 5.
+- [x] `localeHref()` and `switchLocaleHref()` account for the base path. Before switching languages, the switcher must remove the base path from the current URL, then build the new URL.
 
-**Done when:** a regular production build contains exactly the URLs from the Step 0 list, with no `/en/` pages.
+**Done when:** a regular production build contains exactly the URLs from the Step 0 list, with no `/en/` pages. (Step 2 complete.)
 
 ### Step 3. Translate the interface text
 

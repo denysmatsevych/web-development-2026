@@ -32,6 +32,7 @@ import LabHeader from "@/components/LabHeader.astro";
 import LabLayout from "@/layouts/LabLayout.astro";
 import { labHref, taskHref } from "@/lib/labs";
 import { withBase } from "@/lib/paths";
+import { defaultLocale } from "@/i18n";
 import { MOCKUP_POINTS } from "@/scripts/courtly-check";
 import { LEGACY_COURSE } from '@/data/courses';
 
@@ -42,7 +43,7 @@ const summary =
 const crumbs = [
   { label: "Web Development", href: withBase(`/${LEGACY_COURSE}/`) },
   { label: "Labs", href: withBase(`/${LEGACY_COURSE}/labs/`) },
-  { label: "ЛР-7", href: labHref(LEGACY_COURSE,"lab-7") },
+  { label: "ЛР-7", href: labHref(defaultLocale, LEGACY_COURSE,"lab-7") },
   { label: "Автоперевірка", href: withBase("/labs/lab-7/check/") },
 ];
 
@@ -234,8 +235,8 @@ const headings = [
   <article class="doc-content">
     <h2 id="scope">Що перевіряється</h2>
     <p>
-      Критерії — з тексту <a href={labHref(LEGACY_COURSE, "lab-7")}>лабораторної роботи</a> і <a
-        href={taskHref(LEGACY_COURSE, "lab-7")}
+      Критерії — з тексту <a href={labHref(defaultLocale, LEGACY_COURSE, "lab-7")}>лабораторної роботи</a> і <a
+        href={taskHref(defaultLocale, LEGACY_COURSE, "lab-7")}
       >
         макета
       </a>. Сторінка завантажується з опублікованої адреси, як у браузері відвідувача:

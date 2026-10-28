@@ -9,21 +9,33 @@ import SiteFooter from "@/components/SiteFooter.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 import { getCourses, type Course } from "@/data/courses";
 import { getLabs, getTasks, labHref, labNumber, splitId } from "@/lib/labs";
-import { withBase } from "@/lib/paths";
+import {
+  defaultLocale,
+  getEnabledLocales,
+  localeAlternates,
+  localeHref,
+  type Locale,
+} from "@/i18n";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 
 export function getStaticPaths() {
-  return getCourses().map((course) => ({
-    params: { course: course.slug },
-    props: { course },
-  }));
+  return getCourses().flatMap((course) =>
+    getEnabledLocales().map((locale) => ({
+      params: {
+        locale: locale === defaultLocale ? undefined : locale,
+        course: course.slug,
+      },
+      props: { course, locale },
+    })),
+  );
 }
 
 interface Props {
   course: Course;
+  locale: Locale;
 }
 
-const { course } = Astro.props;
+const { course, locale } = Astro.props;
 const [labs, tasks] = await Promise.all([
   getLabs(course.slug),
   getTasks(course.slug),
@@ -44,11 +56,13 @@ const hasIndividual = labs.some((lab) => lab.data.kind === "individual");
   title="Labs"
   titleSuffix={course.title}
   description={`Lab assignments for ${course.title}.`}
+  locale={locale}
+  alternates={localeAlternates(`/${course.slug}/labs/`)}
 >
-  <SiteHeader courseSlug={course.slug} />
+  <SiteHeader courseSlug={course.slug} locale={locale} />
 
   <main id="main-content" class="page" tabindex="-1">
-    <a class="back-link" href={withBase(`/${course.slug}/`)} lang="uk">
+    <a class="back-link" href={localeHref(locale, `/${course.slug}/`)} lang="uk">
       <span aria-hidden="true">←</span>
       До курсу
     </a>
@@ -75,7 +89,7 @@ const hasIndividual = labs.some((lab) => lab.data.kind === "individual");
           {labs.map((lab) => (
             <li>
               <a
-                href={labHref(course.slug, splitId(lab.id).slug)}
+                href={labHref(locale, course.slug, splitId(lab.id).slug)}
                 class:list={[
                   "lab-card glass-panel",
                   { "lab-card--individual": lab.data.kind === "individual" },
@@ -119,14 +133,14 @@ const hasIndividual = labs.some((lab) => lab.data.kind === "individual");
           <p class="panel__title">Coming soon</p>
           <p class="panel__text">
             Lab assignments are being prepared. In the meantime, work through
-            the <a href={withBase(`/${course.slug}/lectures/`)}>lectures</a>.
+            the <a href={localeHref(locale, `/${course.slug}/lectures/`)}>lectures</a>.
           </p>
         </div>
       )
     }
   </main>
 
-  <SiteFooter courseSlug={course.slug} />
+  <SiteFooter courseSlug={course.slug} locale={locale} />
 </BaseLayout>
 
 <style>

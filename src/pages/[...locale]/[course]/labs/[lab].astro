@@ -14,16 +14,28 @@ import PrevNext from '@/components/PrevNext.astro';
 import LabLayout from '@/layouts/LabLayout.astro';
 import { getCourses, type Course } from '@/data/courses';
 import { getAdjacentLab, getLabs, labHref, labLabels, splitId } from '@/lib/labs';
-import { withBase } from '@/lib/paths';
+import {
+  defaultLocale,
+  getEnabledLocales,
+  localeAlternates,
+  localeHref,
+  type Locale,
+} from '@/i18n';
 
 export async function getStaticPaths() {
   return (
     await Promise.all(
-      getCourses().map(async (course) =>
-        (await getLabs(course.slug)).map((entry) => ({
-          params: { course: course.slug, lab: splitId(entry.id).slug },
-          props: { course, entry },
-        })),
+      getCourses().flatMap((course) =>
+        getEnabledLocales().map(async (locale) =>
+          (await getLabs(course.slug)).map((entry) => ({
+            params: {
+              locale: locale === defaultLocale ? undefined : locale,
+              course: course.slug,
+              lab: splitId(entry.id).slug,
+            },
+            props: { course, entry, locale },
+          })),
+        ),
       ),
     )
   ).flat();
@@ -32,21 +44,22 @@ export async function getStaticPaths() {
 interface Props {
   course: Course;
   entry: Awaited<ReturnType<typeof getLabs>>[number];
+  locale: Locale;
 }
 
-const { course, entry } = Astro.props;
+const { course, entry, locale } = Astro.props;
 const { data } = entry;
 
 // Body + h2/h3 headings for the "on this page" rail (Astro stamps the ids).
 const { Content, headings } = await render(entry);
 const { slug } = splitId(entry.id);
-const adjacent = await getAdjacentLab(course.slug, slug);
+const adjacent = await getAdjacentLab(locale, course.slug, slug);
 const { eyebrow, crumb } = labLabels(entry);
 
 const crumbs = [
-  { label: course.title, href: withBase(`/${course.slug}/`) },
-  { label: 'Labs', href: withBase(`/${course.slug}/labs/`) },
-  { label: crumb, href: labHref(course.slug, slug) },
+  { label: course.title, href: localeHref(locale, `/${course.slug}/`) },
+  { label: 'Labs', href: localeHref(locale, `/${course.slug}/labs/`) },
+  { label: crumb, href: labHref(locale, course.slug, slug) },
 ];
 ---
 
@@ -54,8 +67,10 @@ const crumbs = [
   title={data.title}
   titleSuffix={course.title}
   courseSlug={course.slug}
+  locale={locale}
   description={data.summary}
   headings={headings}
+  alternates={localeAlternates(`/${course.slug}/labs/${slug}/`)}
 >
   <Breadcrumbs items={crumbs} />
 

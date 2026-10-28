@@ -7,14 +7,37 @@ import SiteFooter from "@/components/SiteFooter.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 import { getCourses } from "@/data/courses";
 import { site } from "@/data/site";
-import { withBase } from "@/lib/paths";
+import {
+  defaultLocale,
+  getEnabledLocales,
+  localeAlternates,
+  localeHref,
+  type Locale,
+} from "@/i18n";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 
 const courses = getCourses();
+
+export function getStaticPaths() {
+  return getEnabledLocales().map((locale) => ({
+    params: { locale: locale === defaultLocale ? undefined : locale },
+    props: { locale },
+  }));
+}
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
 ---
 
-<BaseLayout title="Courses" description={site.description}>
-  <SiteHeader />
+<BaseLayout
+  title="Courses"
+  description={site.description}
+  alternates={localeAlternates("/")}
+>
+  <SiteHeader locale={locale} />
 
   <main id="main-content" class="home" tabindex="-1">
     <section class="hero" aria-labelledby="page-title">
@@ -28,7 +51,7 @@ const courses = getCourses();
         courses.map((course) => (
           <li>
             <a
-              href={withBase(`/${course.slug}/`)}
+              href={localeHref(locale, `/${course.slug}/`)}
               class="course-card glass-panel"
               aria-labelledby={`course-${course.slug}-title`}
               aria-describedby={`course-${course.slug}-year course-${course.slug}-status course-${course.slug}-desc`}
@@ -85,7 +108,7 @@ const courses = getCourses();
     </ul>
   </main>
 
-  <SiteFooter />
+  <SiteFooter locale={locale} />
 </BaseLayout>
 
 <style>
