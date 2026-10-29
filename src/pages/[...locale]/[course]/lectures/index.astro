@@ -42,6 +42,7 @@ interface Props {
 
 const { course, locale } = Astro.props;
 const t = useTranslations(locale);
+const alternates = localeAlternates(`/${course.slug}/lectures/`);
 const courseTitleParts = getCourseTitleParts(course, locale);
 const courseTitle = courseTitleParts.map(p => p.text).join(' ');
 const lectures = getLectures(course.slug);
@@ -52,9 +53,9 @@ const lectures = getLectures(course.slug);
   titleSuffix={courseTitle}
   description={t.course.lectureDecks.replace('{course}', courseTitle)}
   locale={locale}
-  alternates={localeAlternates(`/${course.slug}/lectures/`)}
+  alternates={alternates}
 >
-  <SiteHeader courseSlug={course.slug} locale={locale} />
+  <SiteHeader courseSlug={course.slug} locale={locale} alternates={alternates} />
 
   <main id="main-content" class="page" tabindex="-1">
     <a class="back-link" href={localeHref(locale, `/${course.slug}/`)}>

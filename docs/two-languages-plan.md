@@ -81,10 +81,10 @@ The content's language is determined by its folder (`uk/` or `en/`), not by a `l
 
 ### Step 4. Add the language switcher
 
-- [ ] Add a `UK | EN` switcher to the header.
-- [ ] Show the switcher only when English is enabled. It is hidden in production.
-- [ ] Add the required accessibility attributes (`aria-current` and `lang`).
-- [ ] When switching languages, link to the same page if that language version exists. If it does not, link to the course page (or the hub when there is no course page). The lab list's “In Ukrainian” link is separate: it opens the Ukrainian lab directly.
+- [X] Add a `UK | EN` switcher to the header.
+- [X] Show the switcher only when English is enabled. It is hidden in production.
+- [X] Add the required accessibility attributes (`aria-current` and `lang`).
+- [X] When switching languages, link to the same page if that language version exists. If it does not, link to the course page (or the hub when there is no course page). The lab list's “In Ukrainian” link is separate: it opens the Ukrainian lab directly.
 
 **Done when:** in development, you can switch languages on the home page, course page, lab, and lecture; there is no switcher in production.
 

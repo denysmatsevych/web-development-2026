@@ -60,6 +60,33 @@ export function localeAlternates(pathname: string): Partial<Record<Locale, strin
   };
 }
 
+/** Language names written in their own language; they stay the same on every page. */
+export const languageNames: Record<Locale, string> = {
+  uk: 'Українська (UK)',
+  en: 'English (EN)',
+};
+
+export interface LanguageSwitchLink {
+  locale: Locale;
+  href: string;
+}
+
+/**
+ * Links for the language switcher. Returns `undefined` when there is nothing to
+ * switch. If a language version does not exist, the link goes to the
+ * course page, or to the home page when there is no course.
+ */
+export function getLanguageSwitchLinks(
+  alternates: Partial<Record<Locale, string>> | undefined,
+  courseSlug?: string,
+): LanguageSwitchLink[] | undefined {
+  if (!isEnglishEnabled || !alternates) return undefined;
+  return locales.map((locale) => ({
+    locale,
+    href: alternates[locale] ?? localeHref(locale, courseSlug ? `/${courseSlug}/` : '/'),
+  }));
+}
+
 /** Switch the locale in a current Astro URL path while preserving its route. */
 export function switchLocaleHref(
   pathname: string,

@@ -43,6 +43,7 @@ interface Props {
 
 const { course, locale } = Astro.props;
 const t = useTranslations(locale);
+const alternates = localeAlternates(`/${course.slug}/labs/`);
 const courseTitleParts = getCourseTitleParts(course, locale);
 const courseTitle = courseTitleParts.map(p => p.text).join(' ');
 const [labs, tasks] = await Promise.all([
@@ -69,9 +70,9 @@ const hasIndividual = labs.some((lab) => lab.data.kind === "individual");
   titleSuffix={courseTitle}
   description={t.course.labAssignments.replace('{course}', courseTitle)}
   locale={locale}
-  alternates={localeAlternates(`/${course.slug}/labs/`)}
+  alternates={alternates}
 >
-  <SiteHeader courseSlug={course.slug} locale={locale} />
+  <SiteHeader courseSlug={course.slug} locale={locale} alternates={alternates} />
 
   <main id="main-content" class="page" tabindex="-1">
     <a class="back-link" href={localeHref(locale, `/${course.slug}/`)}>

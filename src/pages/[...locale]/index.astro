@@ -36,15 +36,16 @@ interface Props {
 
 const { locale } = Astro.props;
 const t = useTranslations(locale);
+const alternates = localeAlternates("/");   
 ---
 
 <BaseLayout
   title={t.navigation.courses}
   description={t.site.description}
   locale={locale}
-  alternates={localeAlternates("/")}
+  alternates={alternates}
 >
-  <SiteHeader locale={locale} />
+  <SiteHeader locale={locale} alternates={alternates} />
 
   <main id="main-content" class="home" tabindex="-1">
     <section class="hero" aria-labelledby="page-title">

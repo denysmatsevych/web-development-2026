@@ -34,6 +34,7 @@ interface Props {
 const { course, lecture, position, locale } = Astro.props;
 const { slides } = lecture;
 const t = useTranslations(locale);
+const alternates = localeAlternates(`/${course.slug}/lectures/${lecture.slug}/`);
 const courseTitleParts = getCourseTitleParts(course, locale);
 const courseTitle = courseTitleParts.map(p => p.text).join(' ');
 const lectureLabel = `${t.deck.lecture} ${lecture.number}`;
@@ -69,7 +70,7 @@ const nextLecture = toLink(lectures[position + 1]);
   title={lecture.title}
   titleSuffix={courseTitle}
   locale={locale}
-  alternates={localeAlternates(`/${course.slug}/lectures/${lecture.slug}/`)}
+  alternates={alternates}
 >
   <main
     id="deck"
@@ -97,6 +98,8 @@ const nextLecture = toLink(lectures[position + 1]);
     lecturesHref={localeHref(locale, `/${course.slug}/lectures/`)}
     prevLecture={prevLecture}
     nextLecture={nextLecture}
+    alternates={alternates} 
+    courseSlug={course.slug}
   />
 
   <script>

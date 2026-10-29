@@ -4,12 +4,13 @@
  * `website_ao` Header, minus React / the site menu).
  *
  * Layout: wordmark → home · course links ·
- * disabled `EN` language-switcher placeholder · `ThemeToggle`.
+ * `LanguageSwitcher` · `ThemeToggle`.
  *
  * Height is a fixed 4rem to match `--header-h` in `LabLayout` (the sticky
  * offset for the ToC rail).
  */
 import ThemeToggle from '@/components/ThemeToggle.astro';
+import LanguageSwitcher from '@/components/LanguageSwitcher.astro';
 import {
   getCourseNavTitle,
   getCourseNavTitleLang,
@@ -20,9 +21,11 @@ import { getLocale, localeHref, useTranslations, type Locale } from '@/i18n';
 interface Props {
   courseSlug?: string;
   locale?: Locale;
+  /** Language versions of the current page, for the language switcher. */
+  alternates?: Partial<Record<Locale, string>>;
 }
 
-const { courseSlug, locale: pageLocale } = Astro.props;
+const { courseSlug, locale: pageLocale, alternates } = Astro.props;
 const locale = pageLocale ?? getLocale(Astro.currentLocale);
 const t = useTranslations(locale);
 const home = localeHref(locale, '/');
@@ -55,6 +58,7 @@ const courses = getCourses();
       }
     </nav>
 
+    <LanguageSwitcher locale={locale} alternates={alternates} courseSlug={courseSlug} />
     <ThemeToggle />
   </div>
 </header>
