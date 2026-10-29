@@ -71,13 +71,14 @@ const tasks = defineCollection({
     goal: z.string().optional(),
     /** BCP-47 language of the body — drives `<html lang>`. */
     lang: z.string().default('uk'),
-    /** Short badge: hand-off card, index pill, last breadcrumb. */
-    label: z.string().default('ТЗ'),
+    /** Optional custom badge; otherwise localized by the task page locale. */
+    label: z.string().optional(),
     /**
      * Header eyebrow before the `· ЛР-N` suffix. A brief that is a design
      * reference rather than a build spec (ЛР-7's mockup page) names itself.
+     * If absent, the task page uses its localized interface default.
      */
-    eyebrow: z.string().default('Технічне завдання'),
+    eyebrow: z.string().optional(),
     /** Constraint chips on the hand-off card — 2–4 short phrases. */
     highlights: z.array(z.string()).default([]),
     /**

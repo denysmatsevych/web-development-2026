@@ -6,13 +6,19 @@
  */
 import SiteFooter from '@/components/SiteFooter.astro';
 import SiteHeader from '@/components/SiteHeader.astro';
-import { getCourses, type Course } from '@/data/courses';
+import CourseTitle from '@/components/CourseTitle.astro';
+import {
+  getCourseTitleParts,
+  getCourses,
+  type Course,
+} from '@/data/courses';
 import { getLectures } from '@/data/lectures';
 import {
   defaultLocale,
   getEnabledLocales,
   localeAlternates,
   localeHref,
+  useTranslations,
   type Locale,
 } from '@/i18n';
 import BaseLayout from '@/layouts/BaseLayout.astro';
@@ -35,32 +41,33 @@ interface Props {
 }
 
 const { course, locale } = Astro.props;
+const t = useTranslations(locale);
+const courseTitleParts = getCourseTitleParts(course, locale);
+const courseTitle = courseTitleParts.map(p => p.text).join(' ');
 const lectures = getLectures(course.slug);
 ---
 
 <BaseLayout
-  title="Lectures"
-  titleSuffix={course.title}
-  description={`Lecture slide decks for ${course.title}.`}
+  title={t.navigation.lectures}
+  titleSuffix={courseTitle}
+  description={t.course.lectureDecks.replace('{course}', courseTitle)}
   locale={locale}
   alternates={localeAlternates(`/${course.slug}/lectures/`)}
 >
   <SiteHeader courseSlug={course.slug} locale={locale} />
 
   <main id="main-content" class="page" tabindex="-1">
-    <a class="back-link" href={localeHref(locale, `/${course.slug}/`)} lang="uk">
+    <a class="back-link" href={localeHref(locale, `/${course.slug}/`)}>
       <span aria-hidden="true">←</span>
-      До курсу
+      {t.navigation.backToCourse}
     </a>
 
     <section class="hero">
-      <p class="hero__eyebrow">{course.title}</p>
-      <h1 class="hero__title">Lectures</h1>
-      <p class="hero__lead">
-        Keyboard-driven slide decks — <kbd>→</kbd> / <kbd>←</kbd> to move,
-        <kbd>N</kbd> for speaker notes, <kbd>F</kbd> for fullscreen,
-        <kbd>Ctrl</kbd>+<kbd>P</kbd> to export a PDF.
+      <p class="hero__eyebrow">
+        <CourseTitle parts={getCourseTitleParts(course, locale)} locale={locale} />
       </p>
+      <h1 class="hero__title">{t.navigation.lectures}</h1>
+      <p class="hero__lead">{t.course.lecturesLead}</p>
     </section>
 
     <ul class="decks">
@@ -73,8 +80,18 @@ const lectures = getLectures(course.slug);
             >
               <span class="deck-card__index">{String(lecture.number).padStart(2, '0')}</span>
               <span class="deck-card__body">
-                <span class="deck-card__title">{lecture.title}</span>
-                <span class="deck-card__summary">{lecture.summary}</span>
+                <span
+                  class="deck-card__title"
+                  lang={lecture.lang === locale ? undefined : lecture.lang}
+                >
+                  {lecture.title}
+                </span>
+                <span
+                  class="deck-card__summary"
+                  lang={lecture.lang === locale ? undefined : lecture.lang}
+                >
+                  {lecture.summary}
+                </span>
               </span>
               <span class="deck-card__arrow" aria-hidden="true">→</span>
             </a>

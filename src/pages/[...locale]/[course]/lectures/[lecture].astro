@@ -7,13 +7,19 @@
 import DeckChrome from '@/components/DeckChrome.astro';
 import SlideView from '@/components/Slide.astro';
 import DeckLayout from '@/layouts/DeckLayout.astro';
-import { getCourses, type Course } from '@/data/courses';
+import {
+  getCourseDeckLabel,
+  getCourseTitleParts,
+  getCourses,
+  type Course,
+} from '@/data/courses';
 import { getLectures, type LectureMeta } from '@/data/lectures';
 import {
   defaultLocale,
   getEnabledLocales,
   localeAlternates,
   localeHref,
+  useTranslations,
   type Locale,
 } from '@/i18n';
 
@@ -27,7 +33,10 @@ interface Props {
 
 const { course, lecture, position, locale } = Astro.props;
 const { slides } = lecture;
-const lectureLabel = `Лекція ${lecture.number}`;
+const t = useTranslations(locale);
+const courseTitleParts = getCourseTitleParts(course, locale);
+const courseTitle = courseTitleParts.map(p => p.text).join(' ');
+const lectureLabel = `${t.deck.lecture} ${lecture.number}`;
 
 export async function getStaticPaths() {
   return getCourses().flatMap((course) =>
@@ -50,7 +59,7 @@ const toLink = (entry: LectureMeta | undefined) =>
   entry && {
     href: localeHref(locale, `/${course.slug}/lectures/${entry.slug}/`),
     title: entry.title,
-    label: `Лекція ${entry.number}`,
+    label: `${t.deck.lecture} ${entry.number}`,
   };
 const prevLecture = toLink(lectures[position - 1]);
 const nextLecture = toLink(lectures[position + 1]);
@@ -58,7 +67,7 @@ const nextLecture = toLink(lectures[position + 1]);
 
 <DeckLayout
   title={lecture.title}
-  titleSuffix={course.title}
+  titleSuffix={courseTitle}
   locale={locale}
   alternates={localeAlternates(`/${course.slug}/lectures/${lecture.slug}/`)}
 >
@@ -66,6 +75,7 @@ const nextLecture = toLink(lectures[position + 1]);
     id="deck"
     class="deck flex h-dvh w-screen snap-x snap-mandatory overflow-x-auto overflow-y-hidden"
     tabindex="-1"
+    lang={lecture.lang === locale ? undefined : lecture.lang}
   >
     {
       slides.map((slide, index) => (
@@ -74,7 +84,9 @@ const nextLecture = toLink(lectures[position + 1]);
           index={index}
           total={slides.length}
           lectureLabel={lectureLabel}
-          courseLabel={course.courseUk}
+          courseLabel={getCourseDeckLabel(course, locale)}
+          locale={locale}
+          contentLang={lecture.lang}
         />
       ))
     }

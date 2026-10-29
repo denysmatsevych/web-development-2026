@@ -17,12 +17,15 @@
  * nothing when there are no headings.
  */
 import type { MarkdownHeading } from 'astro';
+import { getLocale, useTranslations } from '@/i18n';
 
 interface Props {
   headings?: MarkdownHeading[];
+  headingsLang?: string;
 }
 
-const { headings = [] } = Astro.props;
+const { headings = [], headingsLang } = Astro.props;
+const t = useTranslations(getLocale(Astro.currentLocale));
 const items = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
 ---
 
@@ -30,15 +33,15 @@ const items = headings.filter((heading) => heading.depth === 2 || heading.depth 
   items.length > 0 && (
     <details class="on-this-page">
       <summary class="on-this-page__summary">
-        <span class="on-this-page__summary-label">On this page</span>
-        <span class="on-this-page__current" data-toc-current />
+        <span class="on-this-page__summary-label">{t.navigation.onThisPage}</span>
+        <span class="on-this-page__current" data-toc-current lang={headingsLang} />
       </summary>
 
       <div class="on-this-page__body">
         <p class="on-this-page__label" aria-hidden="true">
-          On this page
+          {t.navigation.onThisPage}
         </p>
-        <nav aria-label="On this page">
+        <nav aria-label={t.navigation.onThisPage}>
           <ul class="on-this-page__list">
             {items.map((heading) => (
               <li
@@ -47,7 +50,7 @@ const items = headings.filter((heading) => heading.depth === 2 || heading.depth 
                   { 'on-this-page__item--sub': heading.depth === 3 },
                 ]}
               >
-                <a href={`#${heading.slug}`} class="on-this-page__link" data-toc-link>
+                <a href={`#${heading.slug}`} class="on-this-page__link" data-toc-link lang={headingsLang}>
                   {heading.text}
                 </a>
               </li>

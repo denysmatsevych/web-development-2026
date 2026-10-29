@@ -22,16 +22,17 @@ import LabHeader from "@/components/LabHeader.astro";
 import LabLayout from "@/layouts/LabLayout.astro";
 import { labHref, taskHref } from "@/lib/labs";
 import { withBase } from "@/lib/paths";
-import { defaultLocale } from "@/i18n";
+import { defaultLocale, useTranslations } from "@/i18n";
 import { LEGACY_COURSE } from '@/data/courses';
 
 const title = "Звіт перевірки";
 const summary =
   "Результати перевірки сторінки Courtly з оцінкою за 12-бальною шкалою і порівняння сторінки з макетом на 1440, 768 і 375 px.";
+const t = useTranslations(defaultLocale);
 
 const crumbs = [
   { label: "Web Development", href: withBase(`/${LEGACY_COURSE}/`) },
-  { label: "Labs", href: withBase(`/${LEGACY_COURSE}/labs/`) },
+  { label: t.navigation.labs, href: withBase(`/${LEGACY_COURSE}/labs/`) },
   { label: "ЛР-7", href: labHref(defaultLocale, LEGACY_COURSE, "lab-7") },
   { label: "Звіт перевірки", href: withBase("/labs/lab-7/report/") },
 ];

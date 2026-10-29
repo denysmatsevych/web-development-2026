@@ -41,6 +41,8 @@ interface Props {
   alternates?: Partial<Record<Locale, string>>;
   /** h2/h3 headings from `render(entry)` — feed the "on this page" rail. */
   headings?: MarkdownHeading[];
+  /** Language of headings when different from page locale. */
+  headingsLang?: string;
   /** Keep an unlisted page (the ЛР-7 auto-check) out of search results. */
   noindex?: boolean;
 }
@@ -53,6 +55,7 @@ const {
   locale,
   alternates,
   headings = [],
+  headingsLang,
   noindex = false,
 } = Astro.props;
 
@@ -92,7 +95,7 @@ const fontHref =
       {
         headings.length > 0 && (
           <div class="area-toc">
-            <OnThisPage headings={headings} />
+            <OnThisPage headings={headings} headingsLang={headingsLang} />
           </div>
         )
       }

@@ -7,13 +7,19 @@
  */
 import SiteFooter from "@/components/SiteFooter.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
-import { getCourses, type Course } from "@/data/courses";
+import CourseTitle from "@/components/CourseTitle.astro";
+import {
+  getCourseTitleParts,
+  getCourses,
+  type Course,
+} from '@/data/courses';
 import { getLabs, getTasks, labHref, labNumber, splitId } from "@/lib/labs";
 import {
   defaultLocale,
   getEnabledLocales,
   localeAlternates,
   localeHref,
+  useTranslations,
   type Locale,
 } from "@/i18n";
 import BaseLayout from "@/layouts/BaseLayout.astro";
@@ -36,6 +42,9 @@ interface Props {
 }
 
 const { course, locale } = Astro.props;
+const t = useTranslations(locale);
+const courseTitleParts = getCourseTitleParts(course, locale);
+const courseTitle = courseTitleParts.map(p => p.text).join(' ');
 const [labs, tasks] = await Promise.all([
   getLabs(course.slug),
   getTasks(course.slug),
@@ -46,40 +55,37 @@ const [labs, tasks] = await Promise.all([
 const taskLabels = new Map(
   tasks.map((task) => [
     task.id,
-    { label: task.data.label, lang: task.data.lang },
+    {
+      label: task.data.label ?? t.labs.taskLabel,
+      lang: task.data.label !== undefined ? task.data.lang : locale,
+    },
   ]),
 );
 const hasIndividual = labs.some((lab) => lab.data.kind === "individual");
 ---
 
 <BaseLayout
-  title="Labs"
-  titleSuffix={course.title}
-  description={`Lab assignments for ${course.title}.`}
+  title={t.navigation.labs}
+  titleSuffix={courseTitle}
+  description={t.course.labAssignments.replace('{course}', courseTitle)}
   locale={locale}
   alternates={localeAlternates(`/${course.slug}/labs/`)}
 >
   <SiteHeader courseSlug={course.slug} locale={locale} />
 
   <main id="main-content" class="page" tabindex="-1">
-    <a class="back-link" href={localeHref(locale, `/${course.slug}/`)} lang="uk">
+    <a class="back-link" href={localeHref(locale, `/${course.slug}/`)}>
       <span aria-hidden="true">←</span>
-      До курсу
+      {t.navigation.backToCourse}
     </a>
 
     <section class="hero">
-      <p class="hero__eyebrow" lang="en">{course.title}</p>
-      <h1 class="hero__title">Labs</h1>
+      <p class="hero__eyebrow">
+        <CourseTitle parts={getCourseTitleParts(course, locale)} locale={locale} />
+      </p>
+      <h1 class="hero__title">{t.navigation.labs}</h1>
       <p class="hero__lead">
-        Hands-on assignments that build on each lecture. Each lab is a full
-        walkthrough with a downloadable handout{
-          hasIndividual && (
-            <>
-              ; the individual assignment, pinned at 00, runs alongside them all
-              semester
-            </>
-          )
-        }.
+        {hasIndividual ? t.course.labsLeadWithIndividual : t.course.labsLead}
       </p>
     </section>
 
@@ -107,17 +113,26 @@ const hasIndividual = labs.some((lab) => lab.data.kind === "individual");
                 </span>
                 <span class="lab-card__body">
                   <span class="lab-card__title">
-                    <span lang={lab.data.lang}>{lab.data.title}</span>
+                    <span lang={lab.data.lang === locale ? undefined : lab.data.lang}>
+                      {lab.data.title}
+                    </span>
                     {taskLabels.has(lab.id) && (
                       <span
                         class="lab-card__pill"
-                        lang={taskLabels.get(lab.id)?.lang}
+                        lang={
+                          taskLabels.get(lab.id)?.lang === locale
+                            ? undefined
+                            : taskLabels.get(lab.id)?.lang
+                        }
                       >
                         {taskLabels.get(lab.id)?.label}
                       </span>
                     )}
                   </span>
-                  <span class="lab-card__summary" lang={lab.data.lang}>
+                  <span
+                    class="lab-card__summary"
+                    lang={lab.data.lang === locale ? undefined : lab.data.lang}
+                  >
                     {lab.data.summary}
                   </span>
                 </span>
@@ -130,10 +145,10 @@ const hasIndividual = labs.some((lab) => lab.data.kind === "individual");
         </ul>
       ) : (
         <div class="panel glass-panel">
-          <p class="panel__title">Coming soon</p>
+          <p class="panel__title">{t.course.comingSoon}</p>
           <p class="panel__text">
-            Lab assignments are being prepared. In the meantime, work through
-            the <a href={localeHref(locale, `/${course.slug}/lectures/`)}>lectures</a>.
+            {t.course.labsPreparing}{' '}
+            <a href={localeHref(locale, `/${course.slug}/lectures/`)}>{t.navigation.lectures}</a>.
           </p>
         </div>
       )

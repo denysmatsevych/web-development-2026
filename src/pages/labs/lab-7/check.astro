@@ -32,17 +32,18 @@ import LabHeader from "@/components/LabHeader.astro";
 import LabLayout from "@/layouts/LabLayout.astro";
 import { labHref, taskHref } from "@/lib/labs";
 import { withBase } from "@/lib/paths";
-import { defaultLocale } from "@/i18n";
+import { defaultLocale, useTranslations } from "@/i18n";
 import { MOCKUP_POINTS } from "@/scripts/courtly-check";
 import { LEGACY_COURSE } from '@/data/courses';
 
 const title = "Автоматична перевірка Courtly";
 const summary =
   "Вставте адресу опублікованої сторінки студента. Перевірка відкриє її на 320, 375, 768 і 1440 px, прочитає HTML і CSS та складе звіт з оцінкою за 12-бальною шкалою.";
+const t = useTranslations(defaultLocale);
 
 const crumbs = [
   { label: "Web Development", href: withBase(`/${LEGACY_COURSE}/`) },
-  { label: "Labs", href: withBase(`/${LEGACY_COURSE}/labs/`) },
+  { label: t.navigation.labs, href: withBase(`/${LEGACY_COURSE}/labs/`) },
   { label: "ЛР-7", href: labHref(defaultLocale, LEGACY_COURSE,"lab-7") },
   { label: "Автоперевірка", href: withBase("/labs/lab-7/check/") },
 ];

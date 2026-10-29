@@ -12,13 +12,18 @@ import Breadcrumbs from '@/components/Breadcrumbs.astro';
 import LabHeader from '@/components/LabHeader.astro';
 import PrevNext from '@/components/PrevNext.astro';
 import LabLayout from '@/layouts/LabLayout.astro';
-import { getCourses, type Course } from '@/data/courses';
+import {
+  getCourseTitleParts,
+  getCourses,
+  type Course,
+} from '@/data/courses';
 import { getAdjacentLab, getLabs, labHref, labLabels, splitId } from '@/lib/labs';
 import {
   defaultLocale,
   getEnabledLocales,
   localeAlternates,
   localeHref,
+  useTranslations,
   type Locale,
 } from '@/i18n';
 
@@ -49,42 +54,59 @@ interface Props {
 
 const { course, entry, locale } = Astro.props;
 const { data } = entry;
+const t = useTranslations(locale);
+const courseTitleParts = getCourseTitleParts(course, locale);
+const courseTitle = courseTitleParts.map(p => p.text).join(' ');
 
 // Body + h2/h3 headings for the "on this page" rail (Astro stamps the ids).
 const { Content, headings } = await render(entry);
 const { slug } = splitId(entry.id);
 const adjacent = await getAdjacentLab(locale, course.slug, slug);
-const { eyebrow, crumb } = labLabels(entry);
+const { eyebrow, eyebrowSuffix, crumb } = labLabels(entry, locale);
 
 const crumbs = [
-  { label: course.title, href: localeHref(locale, `/${course.slug}/`) },
-  { label: 'Labs', href: localeHref(locale, `/${course.slug}/labs/`) },
+  {
+    label: courseTitle,
+    href: localeHref(locale, `/${course.slug}/`),
+    parts: getCourseTitleParts(course, locale),
+  },
+  { label: t.navigation.labs, href: localeHref(locale, `/${course.slug}/labs/`) },
   { label: crumb, href: labHref(locale, course.slug, slug) },
 ];
 ---
 
 <LabLayout
   title={data.title}
-  titleSuffix={course.title}
+  titleSuffix={courseTitle}
   courseSlug={course.slug}
   locale={locale}
   description={data.summary}
   headings={headings}
+  headingsLang={data.lang !== locale ? data.lang : undefined}
   alternates={localeAlternates(`/${course.slug}/labs/${slug}/`)}
 >
-  <Breadcrumbs items={crumbs} />
+  <Breadcrumbs items={crumbs} locale={locale} />
 
   <LabHeader
     eyebrow={eyebrow}
+    eyebrowSuffix={eyebrowSuffix}
+    eyebrowSuffixLang={eyebrowSuffix && data.lang !== locale ? data.lang : undefined}
     title={data.title}
     summary={data.summary}
-    contentLang={data.lang}
+    contentLang={data.lang !== locale ? data.lang : undefined}
     handout={data.handout}
   />
 
   {/* `data-copy-code` — copy buttons on the body's code blocks (the email
       subject and links in "Вимоги до звіту"); see src/scripts/docs.ts. */}
-  <article class="doc-content" data-copy-code lang={data.lang}>
+  <article
+    class="doc-content"
+    data-copy-code
+    data-copy-label={t.docs.copy}
+    data-copied-label={t.docs.copied}
+    data-copy-failed-label={t.docs.copyFailed}
+    lang={data.lang === locale ? undefined : data.lang}
+  >
     <Content />
   </article>
 

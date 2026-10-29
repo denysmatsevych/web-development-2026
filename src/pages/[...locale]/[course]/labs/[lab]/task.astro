@@ -21,7 +21,11 @@ import CourtlyMockup from "@/components/CourtlyMockup.astro";
 import LabHeader from "@/components/LabHeader.astro";
 import MockupLightbox from "@/components/MockupLightbox.astro";
 import LabLayout from "@/layouts/LabLayout.astro";
-import { getCourses, type Course } from "@/data/courses";
+import {
+  getCourseTitleParts,
+  getCourses,
+  type Course,
+} from "@/data/courses";
 import {
   getLabs,
   getTasks,
@@ -37,6 +41,7 @@ import {
   getEnabledLocales,
   localeAlternates,
   localeHref,
+  useTranslations,
   type Locale,
 } from "@/i18n";
 
@@ -81,44 +86,59 @@ interface Props {
 
 const { course, task, lab, locale } = Astro.props;
 const { data } = task;
+const t = useTranslations(locale);
+const courseTitleParts = getCourseTitleParts(course, locale);
+const courseTitle = courseTitleParts.map(p => p.text).join(' ');
+const taskLabel = data.label ?? t.labs.taskLabel;
+const taskLabelLang = data.label !== undefined ? data.lang : locale;
+const taskEyebrow = data.eyebrow ?? t.labs.taskEyebrow;
+const taskEyebrowLang = data.eyebrow !== undefined ? data.lang : locale;
+const labLabel = t.labs.labNumber.replace('{number}', labNumber(lab));
 
 const { Content, headings } = await render(task);
 const { slug } = splitId(task.id);
 
 const crumbs = [
-  { label: course.title, href: localeHref(locale, `/${course.slug}/`) },
-  { label: "Labs", href: localeHref(locale, `/${course.slug}/labs/`) },
-  { label: `ЛР-${labNumber(lab)}`, href: labHref(locale, course.slug, slug) },
-  { label: data.label, href: taskHref(locale, course.slug, slug) },
+  {
+    label: courseTitle,
+    href: localeHref(locale, `/${course.slug}/`),
+    parts: getCourseTitleParts(course, locale),
+  },
+  { label: t.navigation.labs, href: localeHref(locale, `/${course.slug}/labs/`) },
+  { label: labLabel, href: labHref(locale, course.slug, slug) },
+  { label: taskLabel, href: taskHref(locale, course.slug, slug), lang: taskLabelLang },
 ];
 
 ---
 
 <LabLayout
   title={data.title}
-  titleSuffix={course.title}
+  titleSuffix={courseTitle}
   courseSlug={course.slug}
   locale={locale}
   description={data.summary}
   headings={headings}
+  headingsLang={data.lang !== locale ? data.lang : undefined}
   alternates={localeAlternates(`/${course.slug}/labs/${slug}/task/`)}
 >
-  <Breadcrumbs items={crumbs} />
+  <Breadcrumbs items={crumbs} locale={locale} />
 
   <LabHeader
-    eyebrow={`${data.eyebrow} · ЛР-${labNumber(lab)}`}
+    eyebrow={taskEyebrow}
+    eyebrowLang={taskEyebrowLang === locale ? undefined : taskEyebrowLang}
+    eyebrowSuffix={labLabel}
+    eyebrowSuffixLang={undefined}
     title={data.title}
     summary={data.summary}
-    contentLang={data.lang}
-    eyebrowLang={data.lang}
+    contentLang={data.lang !== locale ? data.lang : undefined}
     handout={data.handout}
   />
 
   {
     data.goal && (
       <p class="task-goal">
-        <strong>Мета практичної частини.</strong>{' '}
-        <span lang={data.lang}>{data.goal}</span>
+        <strong>{t.labs.taskGoal}</strong>{' '}
+        <span lang={data.lang === locale ? undefined : data.lang}>{data.goal}</span>
       </p>
     )
   }
@@ -133,7 +153,7 @@ const crumbs = [
     data.mockup === "pricing" && (
       <figure class="task-preview">
         <MockupLightbox />
-        <figcaption>Орієнтовний вигляд готової секції</figcaption>
+        <figcaption>{t.labs.previewPricing}</figcaption>
       </figure>
     )
   }
@@ -142,18 +162,18 @@ const crumbs = [
     data.mockup === "courtly" && (
       <figure class="task-preview">
         <CourtlyMockup />
-        <figcaption>Макет сторінки Courtly на трьох ширинах viewport</figcaption>
+        <figcaption>{t.labs.previewCourtly}</figcaption>
       </figure>
     )
   }
 
-  <article class="doc-content" lang={data.lang}>
+  <article class="doc-content" lang={data.lang === locale ? undefined : data.lang}>
     <Content />
   </article>
 
-  <nav class="task-back" aria-label="Lab">
+  <nav class="task-back" aria-label={t.navigation.labs}>
     <a href={labHref(locale, course.slug, slug)} rel="up"
-      >← До лабораторної роботи №{labNumber(lab)}</a
+      >{t.labs.taskBack.replace('{number}', labNumber(lab))}</a
     >
   </nav>
 </LabLayout>

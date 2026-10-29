@@ -17,24 +17,28 @@ interface Props {
   next?: NavTarget;
 }
 
+import { getLocale, useTranslations } from '@/i18n';
+
 const { prev, next } = Astro.props;
+const t = useTranslations(getLocale(Astro.currentLocale));
+const locale = getLocale(Astro.currentLocale);
 ---
 
 {
   (prev || next) && (
-    <nav class="prev-next" aria-label="Article">
+    <nav class="prev-next" aria-label={t.navigation.article}>
       {prev ? (
         <a href={prev.href} rel="prev" class="prev-next__link">
-          <span class="prev-next__dir">← Previous</span>
-          <span class="prev-next__title" lang={prev.lang}>{prev.title}</span>
+          <span class="prev-next__dir">{t.navigation.previous}</span>
+          <span class="prev-next__title" lang={prev.lang === locale ? undefined : prev.lang}>{prev.title}</span>
         </a>
       ) : (
         <span aria-hidden="true" />
       )}
       {next ? (
         <a href={next.href} rel="next" class="prev-next__link prev-next__link--next">
-          <span class="prev-next__dir">Next →</span>
-          <span class="prev-next__title" lang={next.lang}>{next.title}</span>
+          <span class="prev-next__dir">{t.navigation.next}</span>
+          <span class="prev-next__title" lang={next.lang === locale ? undefined : next.lang}>{next.title}</span>
         </a>
       ) : (
         <span aria-hidden="true" />

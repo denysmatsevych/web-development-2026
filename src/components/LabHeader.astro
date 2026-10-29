@@ -8,6 +8,7 @@
  * panel of its own — it is the only action the header carries.
  */
 import { withBase } from '@/lib/paths';
+import { getLocale, useTranslations } from '@/i18n';
 
 interface Props {
   /** Small uppercase line above the title. */
@@ -18,16 +19,31 @@ interface Props {
   contentLang?: string;
   /** Language of the eyebrow when it comes from frontmatter rather than page chrome. */
   eyebrowLang?: string;
+  eyebrowSuffix?: string;
+  eyebrowSuffixLang?: string;
   /** Path without the base prefix, e.g. `/labs/lab-2.pdf`. */
   handout?: string;
 }
 
-const { eyebrow, title, summary, contentLang, eyebrowLang, handout } = Astro.props;
+const {
+  eyebrow,
+  title,
+  summary,
+  contentLang,
+  eyebrowLang,
+  eyebrowSuffix,
+  eyebrowSuffixLang,
+  handout,
+} = Astro.props;
+const t = useTranslations(getLocale(Astro.currentLocale));
 ---
 
 <header class="lab-header">
   <div class="lab-header__top">
-    <p class="lab-header__eyebrow" lang={eyebrowLang}>{eyebrow}</p>
+    <p class="lab-header__eyebrow">
+      <span lang={eyebrowLang}>{eyebrow}</span>
+      {eyebrowSuffix && <> · <span lang={eyebrowSuffixLang}>{eyebrowSuffix}</span></>}
+    </p>
     {
       handout && (
         <a class="lab-header__download" href={withBase(handout)} download>
@@ -41,7 +57,7 @@ const { eyebrow, title, summary, contentLang, eyebrowLang, handout } = Astro.pro
               stroke-linejoin="round"
             />
           </svg>
-          <span class="lab-header__download-verb">Завантажити</span> PDF
+          <span class="lab-header__download-verb">{t.labs.download}</span> PDF
         </a>
       )
     }
@@ -95,7 +111,7 @@ const { eyebrow, title, summary, contentLang, eyebrowLang, handout } = Astro.pro
   }
 
   /* On a phone the full label pushes the link onto a line of its own; drop
-     the verb visually (screen readers still get "Завантажити PDF") so it keeps
+     the verb before the file type so assistive technology announces it clearly.
      sharing the eyebrow row. */
   @media (max-width: 639px) {
     .lab-header__download-verb {

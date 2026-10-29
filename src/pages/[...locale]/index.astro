@@ -5,13 +5,18 @@
  */
 import SiteFooter from "@/components/SiteFooter.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
-import { getCourses } from "@/data/courses";
-import { site } from "@/data/site";
+import CourseTitle from "@/components/CourseTitle.astro";
+import {
+  getCourseDescription,
+  getCourseTitleParts,
+  getCourses,
+} from "@/data/courses";
 import {
   defaultLocale,
   getEnabledLocales,
   localeAlternates,
   localeHref,
+  useTranslations,
   type Locale,
 } from "@/i18n";
 import BaseLayout from "@/layouts/BaseLayout.astro";
@@ -30,23 +35,25 @@ interface Props {
 }
 
 const { locale } = Astro.props;
+const t = useTranslations(locale);
 ---
 
 <BaseLayout
-  title="Courses"
-  description={site.description}
+  title={t.navigation.courses}
+  description={t.site.description}
+  locale={locale}
   alternates={localeAlternates("/")}
 >
   <SiteHeader locale={locale} />
 
   <main id="main-content" class="home" tabindex="-1">
     <section class="hero" aria-labelledby="page-title">
-      <p class="hero__eyebrow" lang="uk">{site.hubEyebrow}</p>
-      <h1 id="page-title" class="hero__title" lang="en">{site.name}</h1>
-      <p class="hero__lead" lang="en">{site.description}</p>
+      <p class="hero__eyebrow">{t.site.hubEyebrow}</p>
+      <h1 id="page-title" class="hero__title">{t.site.name}</h1>
+      <p class="hero__lead">{t.site.description}</p>
     </section>
 
-    <ul class="courses" aria-label="Available courses">
+    <ul class="courses" aria-label={t.course.availableCourses}>
       {
         courses.map((course) => (
           <li>
@@ -70,32 +77,26 @@ const { locale } = Astro.props;
                     { "course-card__status--draft": course.status === "draft" },
                   ]}
                   id={`course-${course.slug}-status`}
-                  lang="uk"
                 >
-                  {course.status === "published" ? "Доступний" : "В розробці"}
+                  {course.status === "published" ? t.course.available : t.course.inDevelopment}
                 </span>
               </span>
               <span class="course-card__body">
-                <span
-                  class="course-card__title"
-                  id={`course-${course.slug}-title`}
-                  lang="uk"
-                >
-                  {course.courseUk}
+                <span class="course-card__title" id={`course-${course.slug}-title`}>
+                  <CourseTitle parts={getCourseTitleParts(course, locale)} locale={locale} />
                 </span>
                 <span
                   class="course-card__description"
                   id={`course-${course.slug}-desc`}
-                  lang="en"
                 >
-                  {course.description}
+                  {getCourseDescription(course, locale)}
                 </span>
               </span>
               <span class="course-card__bottom">
-                <span class="course-card__action" lang="uk">
+                <span class="course-card__action">
                   {course.status === "published"
-                    ? "Перейти до курсу"
-                    : "Переглянути курс"}
+                    ? t.course.goToCourse
+                    : t.course.viewCourse}
                 </span>
                 <span class="course-card__arrow" aria-hidden="true">
                   →

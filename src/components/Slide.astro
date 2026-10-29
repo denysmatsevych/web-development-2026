@@ -1,5 +1,6 @@
 ---
 import type { RoadmapStepKind, Slide } from '@/data/lectures/schema';
+import { getLocale, useTranslations, type Locale } from '@/i18n';
 import RichText from './RichText.astro';
 
 interface Props {
@@ -10,9 +11,25 @@ interface Props {
   lectureLabel?: string;
   /** Muted line above the eyebrow on the title slide — the course name. */
   courseLabel?: string;
+  locale?: Locale;
+  contentLang?: Locale;
 }
 
-const { slide, index, total, lectureLabel = 'Лекція 1', courseLabel } = Astro.props;
+const {
+  slide,
+  index,
+  total,
+  lectureLabel,
+  courseLabel,
+  locale: pageLocale,
+  contentLang: pageContentLang,
+} = Astro.props;
+const locale = pageLocale ?? getLocale(Astro.currentLocale);
+const contentLang = pageContentLang ?? locale;
+const chromeLang = locale === contentLang ? undefined : locale;
+const t = useTranslations(locale);
+const contentT = useTranslations(contentLang);
+const localizedLectureLabel = lectureLabel ?? `${t.deck.lecture} 1`;
 
 const frame =
   'slide relative flex h-dvh w-screen shrink-0 snap-center snap-always ' +
@@ -46,10 +63,10 @@ const stepBadge: Record<RoadmapStepKind, string> = {
   project: 'border border-accent-500 bg-ink-950 text-accent-300',
 };
 const stepName: Record<RoadmapStepKind, string> = {
-  lecture: 'Лекція',
-  lab: 'Лабораторна',
-  control: 'Модульний контроль',
-  project: 'Фінальний проєкт',
+  lecture: t.deck.lecture,
+  lab: t.deck.lab,
+  control: t.deck.control,
+  project: t.deck.project,
 };
 /** Сітка карток: чотири колонки, коли картки заповнюють їх рівно, інакше три. */
 const cardColumns =
@@ -74,17 +91,22 @@ const legend = (Object.keys(stepName) as RoadmapStepKind[]).filter((kind) =>
   id={slide.id}
   class={`${frame} ${tones[slide.kind]}`}
   tabindex="-1"
-  aria-roledescription="слайд"
-  aria-label={`Слайд ${index + 1} з ${total}: ${slide.title}`}
+  aria-roledescription={contentT.deck.slide}
+  aria-label={contentT.deck.slideOf
+    .replace('{current}', String(index + 1))
+    .replace('{total}', String(total))
+    .replace('{title}', slide.title)}
 >
   {/* Титульний слайд */}
   {slide.kind === 'title' && (
     <header>
       {courseLabel && (
-        <p class="mb-3 font-mono text-xs uppercase tracking-[0.25em] text-ink-400">{courseLabel}</p>
+        <p class="mb-3 font-mono text-xs uppercase tracking-[0.25em] text-ink-400" lang={chromeLang}>
+          {courseLabel}
+        </p>
       )}
-      <p class="mb-8 font-mono text-sm uppercase tracking-[0.3em] text-accent-500">
-        {lectureLabel}
+      <p class="mb-8 font-mono text-sm uppercase tracking-[0.3em] text-accent-500" lang={chromeLang}>
+        {localizedLectureLabel}
       </p>
       <h1 class="max-w-[24ch] text-slide-h1 font-bold leading-[1.05] text-balance">{slide.title}</h1>
       {slide.subtitle && (
@@ -304,7 +326,7 @@ const legend = (Object.keys(stepName) as RoadmapStepKind[]).filter((kind) =>
       </header>
       <pre
         role="img"
-        aria-label={`Схема: ${slide.title}`}
+        aria-label={contentT.deck.diagram.replace('{title}', slide.title)}
         class="overflow-x-auto font-mono text-[clamp(0.65rem,1.05vw,1rem)] leading-relaxed text-accent-300"
       >{slide.diagram}</pre>
     </>
@@ -318,7 +340,7 @@ const legend = (Object.keys(stepName) as RoadmapStepKind[]).filter((kind) =>
         {slide.subtitle && <p class="mt-2 text-ink-400">{slide.subtitle}</p>}
       </header>
       <ul
-        aria-label="Умовні позначення"
+        aria-label={contentT.deck.roadmapLegend}
         class="mb-4 flex flex-wrap gap-x-6 gap-y-1 font-mono text-xs text-ink-400"
       >
         {legend.map((kind) => (
@@ -327,7 +349,7 @@ const legend = (Object.keys(stepName) as RoadmapStepKind[]).filter((kind) =>
               aria-hidden="true"
               class={`h-3 w-3 rounded-sm [print-color-adjust:exact] ${stepBadge[kind]}`}
             />
-            {stepName[kind]}
+            <span lang={chromeLang}>{stepName[kind]}</span>
           </li>
         ))}
       </ul>
@@ -379,7 +401,7 @@ const legend = (Object.keys(stepName) as RoadmapStepKind[]).filter((kind) =>
           <table class="w-full border-collapse text-left text-[clamp(0.78rem,1.05vw,1.05rem)] leading-snug max-md:not-print:block">
             <thead class="max-md:not-print:hidden">
               <tr class="border-b border-ink-800 font-mono text-xs uppercase tracking-[0.15em] text-ink-400">
-                <th scope="col" class="w-[7ch] pb-2 pr-4 font-normal"><span class="sr-only">Номер</span></th>
+                <th scope="col" class="w-[7ch] pb-2 pr-4 font-normal"><span class="sr-only" lang={chromeLang}>{t.deck.topicNumber}</span></th>
                 <th scope="col" class="w-[36%] pb-2 pr-8 font-normal">{slide.topicHeaders?.title}</th>
                 <th scope="col" class="pb-2 font-normal">{slide.topicHeaders?.detail}</th>
               </tr>
@@ -453,7 +475,7 @@ const legend = (Object.keys(stepName) as RoadmapStepKind[]).filter((kind) =>
     <aside
       class="deck-note no-print absolute inset-x-0 bottom-14 mx-[7vw] rounded-lg border-l-4 border-warn-500 bg-ink-900/95 px-5 py-3 text-sm text-ink-200"
     >
-      <strong class="text-warn-500">Нотатка:</strong> {slide.note}
+      <strong class="text-warn-500" lang={chromeLang}>{t.deck.speakerNote}</strong> {slide.note}
     </aside>
   )}
 </section>

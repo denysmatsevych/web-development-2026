@@ -10,7 +10,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 
 import { isCourse } from '@/data/courses';
-import { localeHref, type Locale } from '@/i18n';
+import { localeHref, useTranslations, type Locale } from '@/i18n';
 
 export type LabEntry = CollectionEntry<'labs'>;
 
@@ -93,16 +93,24 @@ export function labNumber({ data }: LabEntry): string {
  * How a lab is named in page chrome — the header eyebrow and its breadcrumb.
  * The ІЗ has no lab number worth showing, so it is named by its kind.
  */
-export function labLabels(entry: LabEntry): { eyebrow: string; crumb: string } {
+export function labLabels(
+  entry: LabEntry,
+  locale: Locale,
+): { eyebrow: string; eyebrowSuffix?: string; crumb: string } {
   const { data } = entry;
+  const t = useTranslations(locale);
   if (data.kind === 'individual') {
     return {
-      eyebrow: ['Самостійна робота', data.duration].filter(Boolean).join(' · '),
-      crumb: 'Індивідуальне завдання',
+      eyebrow: t.labs.individualWork,
+      eyebrowSuffix: data.duration,
+      crumb: t.labs.individualAssignment,
     };
   }
   const n = labNumber(entry);
-  return { eyebrow: `Лабораторна робота №${n}`, crumb: `ЛР-${n}` };
+  return {
+    eyebrow: t.labs.labWork.replace('{number}', n),
+    crumb: t.labs.labNumber.replace('{number}', n),
+  };
 }
 
 /**

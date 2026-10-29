@@ -15,8 +15,7 @@
  */
 import "@/styles/global.css";
 
-import { site } from "@/data/site";
-import { getLocale, locales, type Locale } from "@/i18n";
+import { getLocale, locales, useTranslations, type Locale } from "@/i18n";
 import { withBase } from "@/lib/paths";
 
 interface Props {
@@ -40,24 +39,25 @@ interface Props {
   skipLabel?: string;
 }
 
+const locale = Astro.props.locale ?? getLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+
 const {
   title,
-  titleSuffix = site.name,
-  description = site.description,
-  locale: pageLocale,
+  titleSuffix = t.site.name,
+  description = t.site.description,
   alternates,
   ogType = "website",
   bodyClass,
   skipHref = "#main-content",
-  skipLabel = "Skip to content",
+  skipLabel = t.accessibility.skipToContent,
 } = Astro.props;
 
 const documentTitle =
-  title === titleSuffix || title === site.name ? title : `${title} · ${titleSuffix}`;
+  title === titleSuffix || title === t.site.name ? title : `${title} · ${titleSuffix}`;
 const canonicalURL = Astro.site
   ? new URL(Astro.url.pathname, Astro.site).href
   : undefined;
-const locale = pageLocale ?? getLocale(Astro.currentLocale);
 const ogLocale = locale === 'uk' ? 'uk_UA' : 'en_US';
 const alternateLinks = locales.flatMap((alternateLocale) => {
   const href = alternates?.[alternateLocale];
@@ -94,7 +94,7 @@ const fontHref =
     <meta property="og:type" content={ogType} />
     <meta property="og:title" content={documentTitle} />
     <meta property="og:description" content={description} />
-    <meta property="og:site_name" content={site.name} />
+    <meta property="og:site_name" content={t.site.name} />
     <meta property="og:locale" content={ogLocale} />
     {canonicalURL && <meta property="og:url" content={canonicalURL} />}
     {alternateLinks.map(({ locale: alternateLocale, href }) => (

@@ -11,15 +11,18 @@
  * focus.
  */
 import PricingMockup from '@/components/PricingMockup.astro';
+import { getLocale, useTranslations } from '@/i18n';
+
+const t = useTranslations(getLocale(Astro.currentLocale));
 ---
 
 <div class="lightbox">
   <PricingMockup />
 
-  <button type="button" class="lightbox__trigger" data-lightbox-open> Збільшити макет </button>
+  <button type="button" class="lightbox__trigger" data-lightbox-open>{t.labs.enlargeMockup}</button>
 
-  <dialog class="lightbox__dialog" data-lightbox aria-label="Макет секції тарифів">
-    <button type="button" class="lightbox__close" data-lightbox-close aria-label="Закрити">
+  <dialog class="lightbox__dialog" data-lightbox aria-label={t.labs.pricingMockup}>
+    <button type="button" class="lightbox__close" data-lightbox-close aria-label={t.labs.close}>
       ✕
     </button>
     <PricingMockup />

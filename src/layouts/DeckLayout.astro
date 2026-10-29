@@ -10,7 +10,7 @@
  * every rule in `src/styles/deck.css`.
  */
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import type { Locale } from "@/i18n";
+import { getLocale, useTranslations, type Locale } from "@/i18n";
 import "@/styles/deck.css";
 
 interface Props {
@@ -26,6 +26,7 @@ interface Props {
 }
 
 const { title, titleSuffix, description, locale, alternates } = Astro.props;
+const t = useTranslations(locale ?? getLocale(Astro.currentLocale));
 ---
 
 <BaseLayout
@@ -36,7 +37,7 @@ const { title, titleSuffix, description, locale, alternates } = Astro.props;
   alternates={alternates}
   bodyClass="deck-page"
   skipHref="#deck"
-  skipLabel="Перейти до слайдів"
+  skipLabel={t.accessibility.skipToSlides}
 >
   <script is:inline slot="head">
     try {

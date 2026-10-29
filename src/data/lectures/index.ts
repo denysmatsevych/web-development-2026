@@ -7,6 +7,7 @@
  * an entry to that course's list below.
  */
 import type { Slide } from './schema';
+import type { Locale } from '@/i18n';
 import { slides as wd1Slides, deckTitle as wd1Title } from './web-development/lecture-1';
 import { slides as wd2Slides, deckTitle as wd2Title } from './web-development/lecture-2';
 import { slides as react0Slides, deckTitle as react0Title } from './react/lecture-0';
@@ -24,6 +25,8 @@ export interface LectureMeta {
   title: string;
   /** One-line summary for the lectures index card. */
   summary: string;
+  /** Language of the deck content, which can differ from its route locale. */
+  lang: Locale;
   slides: Slide[];
 }
 
@@ -35,6 +38,7 @@ const lecturesByCourse: Record<string, LectureMeta[]> = {
       number: 1,
       title: wd1Title,
       summary: 'Вступ до вебтехнологій, HTTP, DOM та семантичний HTML5.',
+      lang: 'uk',
       slides: wd1Slides,
     },
     {
@@ -43,6 +47,7 @@ const lecturesByCourse: Record<string, LectureMeta[]> = {
       title: wd2Title,
       summary:
         'Семантичний HTML5 і Landmarks, метадані та Schema.org, On-Page SEO і вебдоступність за WCAG 2.2.',
+      lang: 'uk',
       slides: wd2Slides,
     },
   ],
@@ -52,6 +57,7 @@ const lecturesByCourse: Record<string, LectureMeta[]> = {
       number: 0,
       title: react0Title,
       summary: 'План курсу на одній схемі, оцінювання, правила й теми презентацій.',
+      lang: 'uk',
       slides: react0Slides,
     },
   ],
@@ -61,6 +67,7 @@ const lecturesByCourse: Record<string, LectureMeta[]> = {
       number: 1,
       title: accessibilityTitle,
       summary: 'A preview of the Web Accessibility course.',
+      lang: 'en',
       slides: accessibilitySlides,
     },
   ],

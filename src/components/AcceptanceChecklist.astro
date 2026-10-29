@@ -8,34 +8,38 @@
  * carries its own criteria; see docs/web/lab-2/content-map.md §2.6 for ЛР-2's
  * source table.
  */
+import { getLocale, useTranslations } from '@/i18n';
+
 interface Props {
   items: string[];
   itemsLang?: string;
 }
 
 const { items, itemsLang } = Astro.props;
+const locale = getLocale(Astro.currentLocale);
+const t = useTranslations(locale);
 ---
 
 <div class="checklist">
   <button type="button" class="checklist__trigger" data-checklist-open>
-    Самоперевірка перед здачею
+    {t.labs.acceptanceOpen}
   </button>
 
-  <dialog class="checklist__dialog" data-checklist aria-label="Критерії приймання">
-    <h2 class="checklist__title">Критерії приймання</h2>
+  <dialog class="checklist__dialog" data-checklist aria-label={t.labs.acceptanceTitle}>
+    <h2 class="checklist__title">{t.labs.acceptanceTitle}</h2>
     <ul class="checklist__list">
       {
         items.map((item, i) => (
           <li>
             <label>
               <input type="checkbox" data-checklist-item={String(i)} />
-              <span lang={itemsLang}>{item}</span>
+              <span lang={itemsLang === locale ? undefined : itemsLang}>{item}</span>
             </label>
           </li>
         ))
       }
     </ul>
-    <button type="button" class="checklist__close" data-checklist-close>Закрити</button>
+    <button type="button" class="checklist__close" data-checklist-close>{t.labs.close}</button>
   </dialog>
 </div>
 

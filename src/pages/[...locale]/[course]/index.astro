@@ -4,13 +4,21 @@
  */
 import SiteFooter from "@/components/SiteFooter.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
-import { getCourses, type Course } from "@/data/courses";
+import CourseTitle from "@/components/CourseTitle.astro";
+import {
+  getCourseDescription,
+  getCourseTitle,
+  getCourseTitleParts,
+  getCourses,
+  type Course,
+} from "@/data/courses";
 import { getSections } from "@/data/site";
 import {
   defaultLocale,
   getEnabledLocales,
   localeAlternates,
   localeHref,
+  useTranslations,
   type Locale,
 } from "@/i18n";
 import BaseLayout from "@/layouts/BaseLayout.astro";
@@ -33,40 +41,46 @@ interface Props {
 }
 
 const { course, locale } = Astro.props;
-const sections = getSections(course.slug);
+const t = useTranslations(locale);
+const courseTitle = getCourseTitle(course, locale);
+const courseDescription = getCourseDescription(course, locale);
+const sections = getSections(course.slug, locale);
 ---
 
 <BaseLayout
-  title={course.title}
-  titleSuffix={course.title}
-  description={course.description}
+  title={courseTitle}
+  titleSuffix={courseTitle}
+  description={courseDescription}
+  locale={locale}
   alternates={localeAlternates(`/${course.slug}/`)}
 >
   <SiteHeader courseSlug={course.slug} locale={locale} />
 
   <main id="main-content" class="page" tabindex="-1">
-    <a class="back-link" href={localeHref(locale, "/")} lang="uk">
+    <a class="back-link" href={localeHref(locale, "/")}>
       <span aria-hidden="true">←</span>
-      Усі курси
+      {t.navigation.allCourses}
     </a>
 
     <section class="hero" aria-labelledby="page-title">
-      <h1 id="page-title" class="hero__title" lang="en">{course.title}</h1>
-      <p class="hero__lead" lang="en">{course.description}</p>
+      <h1 id="page-title" class="hero__title">
+        <CourseTitle parts={getCourseTitleParts(course, locale)} locale={locale} />
+      </h1>
+      <p class="hero__lead">{courseDescription}</p>
     </section>
 
-    <ul class="sections" aria-label={`${course.title} materials`}>
+    <ul class="sections" aria-label={`${courseTitle}: ${t.course.materials}`}>
       {
         sections.map((section) => (
           <li>
             <a href={localeHref(locale, section.href)} class="section glass-panel">
               <div class="section__top-panel">
-                <span class="section__name" lang="en">{section.label}</span>
+                <span class="section__name">{section.label}</span>
                 <span class="section__arrow" aria-hidden="true">
                   →
                 </span>
               </div>
-              <span class="section__blurb" lang="en">{section.blurb}</span>
+              <span class="section__blurb">{section.blurb}</span>
             </a>
           </li>
         ))

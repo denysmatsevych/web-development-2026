@@ -3,9 +3,13 @@
  * SiteFooter — hierarchical course navigation, a contact link, and a
  * copyright line. Flat `--color-footer-bg`, no gooey / particle animation.
  */
-import { getCourses } from "@/data/courses";
+import {
+  getCourseNavTitle,
+  getCourseNavTitleLang,
+  getCourses,
+} from "@/data/courses";
 import { getSections, site } from "@/data/site";
-import { getLocale, localeHref, type Locale } from "@/i18n";
+import { getLocale, localeHref, useTranslations, type Locale } from "@/i18n";
 
 interface Props {
   courseSlug?: string;
@@ -14,6 +18,7 @@ interface Props {
 
 const { courseSlug, locale: pageLocale } = Astro.props;
 const locale = pageLocale ?? getLocale(Astro.currentLocale);
+const t = useTranslations(locale);
 const year = new Date().getFullYear();
 const courses = getCourses();
 ---
@@ -21,11 +26,11 @@ const courses = getCourses();
 <footer class="bg-footer-bg text-pure-white">
   <div class="mx-auto max-w-[100rem] px-4 py-8 sm:px-6">
     <div class="grid gap-10 md:grid-cols-2">
-      <nav aria-label="Courses">
+      <nav aria-label={t.navigation.courses}>
         <p
           class="text-xs font-semibold uppercase tracking-widest text-pure-white/50"
         >
-          Courses
+          {t.navigation.courses}
         </p>
         <ul class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
           {
@@ -35,11 +40,12 @@ const courses = getCourses();
                   href={localeHref(locale, `/${course.slug}/`)}
                   class="inline-flex items-center gap-1 text-base font-bold text-pure-white/80 transition-colors hover:text-brand-blue-light"
                   aria-current={course.slug === courseSlug ? 'location' : undefined}
+                  lang={getCourseNavTitleLang(course, locale)}
                 >
-                  {course.title}
+                  {getCourseNavTitle(course, locale)}
                 </a>
                 <ul class="mt-2 space-y-2">
-                  {getSections(course.slug).map((section) => (
+                  {getSections(course.slug, locale).map((section) => (
                     <li>
                       <a
                         href={localeHref(locale, section.href)}
@@ -60,7 +66,7 @@ const courses = getCourses();
         <p
           class="text-xs font-semibold uppercase tracking-widest text-pure-white/50"
         >
-          Contact
+          {t.navigation.contact}
         </p>
         <p class="mt-4">
           <a
@@ -79,7 +85,7 @@ const courses = getCourses();
     >
       © {year}
       {" "}
-      {site.name}
+      {t.site.name}
     </p>
   </div>
 </footer>

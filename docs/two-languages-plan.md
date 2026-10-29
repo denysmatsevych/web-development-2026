@@ -70,18 +70,18 @@ The content's language is determined by its folder (`uk/` or `en/`), not by a `l
 
 ### Step 3. Translate the interface text
 
-- [ ] Put the Ukrainian and English interface text in `ui.ts`. This includes the header and footer, home and course pages, navigation, and lab, assignment, and slide labels.
-- [ ] Include labels used by assistive technologies: `aria-label` in `ThemeToggle`, `skipLabel` in `DeckLayout`, and other component labels.
-- [ ] Move the copy-button text from `docs.ts` into the dictionary and pass it to the script through `data-*` attributes.
-- [ ] Make course names and descriptions language-specific.
-- [ ] Move the default `label: 'ТЗ'` and `eyebrow: 'Технічне завдання'` out of the assignment schema and into the dictionary. Explicit frontmatter values for Lab 7 — “Макет” and “Макет і дизайн-система” — must continue to override them.
-- [ ] Do not translate lab, assignment, or lecture content as part of this work. Add content translations separately after the infrastructure is in place.
+- [x] Put the Ukrainian and English interface text in `ui.ts`. This includes the header and footer, home and course pages, navigation, and lab, assignment, and slide labels.
+- [x] Include labels used by assistive technologies: `aria-label` in `ThemeToggle`, `skipLabel` in `DeckLayout`, and other component labels.
+- [x] Move the copy-button text from `docs.ts` into the dictionary and pass it to the script through `data-*` attributes.
+- [x] Make course names and descriptions language-specific.
+- [x] Move the default `label: 'ТЗ'` and `eyebrow: 'Технічне завдання'` out of the assignment schema and into the dictionary. Explicit frontmatter values for Lab 7 — “Макет” and “Макет і дизайн-система” — continue to override them.
+- [x] Do not translate lab, assignment, or lecture content as part of this work. Add content translations separately after the infrastructure is in place.
 
-**Done when:** shared interface elements use the correct language, while the content of untranslated materials remains Ukrainian and is identified as Ukrainian.
+**Done when:** shared interface elements use the route language, untranslated content keeps its original language markers, and the checks plus production and English-enabled builds pass. (Step 3 complete.)
 
 ### Step 4. Add the language switcher
 
-- [ ] Replace the disabled `EN` label in the header with a `UK | EN` switcher.
+- [ ] Add a `UK | EN` switcher to the header.
 - [ ] Show the switcher only when English is enabled. It is hidden in production.
 - [ ] Add the required accessibility attributes (`aria-current` and `lang`).
 - [ ] When switching languages, link to the same page if that language version exists. If it does not, link to the course page (or the hub when there is no course page). The lab list's “In Ukrainian” link is separate: it opens the Ukrainian lab directly.
