@@ -105,11 +105,11 @@ The content's language is determined by its folder (`uk/` or `en/`), not by a `l
 
 ### Step 6. Update PDF and assignment scripts
 
-- [ ] Update paths in scripts that read Markdown from lab or assignment folders.
-- [ ] By default, `python docs/build-handout.py lab-11` reads the Ukrainian file from `uk/` and creates `public/labs/lab-11.pdf`.
-- [ ] Do not generate English PDFs as part of this work. Revisit English handouts alongside future content translations.
+- [X] Update paths in scripts that read Markdown from lab or assignment folders.
+- [X] By default, `python docs/build-handout.py lab-11` reads the Ukrainian file from `uk/` and creates `public/labs/lab-11.pdf`.
+- [X] Do not generate English PDFs as part of this work. Revisit English handouts alongside future content translations.
 
-**Done when:** `python docs/build-handout.py lab-11` still creates `public/labs/lab-11.pdf`.
+**Done when:** `python docs/build-handout.py lab-11` still creates `public/labs/lab-11.pdf`. (Step 6 complete.)
 
 ### Step 7. Update documentation and verify the result
 
