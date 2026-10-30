@@ -1,7 +1,8 @@
-import type { Slide } from '../schema';
+import type { Slide } from '../../schema';
 import { presentationTopics } from './presentation-topics';
 
 export const deckTitle = 'Знайомство з курсом';
+export const summary = 'План курсу на одній схемі, оцінювання, правила й теми презентацій.';
 
 /** Тем на одному слайді: стільки рядків таблиці з поясненнями вміщує екран 1280×720. */
 const topicsPerSlide = 8;

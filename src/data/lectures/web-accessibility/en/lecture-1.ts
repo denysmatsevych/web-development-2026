@@ -1,13 +1,14 @@
-import type { Slide } from '../schema';
+import type { Slide } from '../../schema';
 
 export const deckTitle = 'Introduction to Web Accessibility';
+export const summary = 'A preview of the Web Accessibility course.';
 
 export const slides: Slide[] = [
   {
     id: 'intro',
     kind: 'title',
     title: deckTitle,
-    subtitle: 'A preview of the Web Accessibility course',
+    subtitle: summary,
   },
   {
     id: 'course-preview',

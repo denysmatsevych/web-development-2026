@@ -2,7 +2,6 @@
 number: 11
 title: "AI-агент для інтеграції REST API: Fetch API, Promise та async/await, аналіз API-документації, loading та error states, debugging через Network"
 summary: "TVmaze API в застосунку ShowFinder: AI-агент пише чернетку пошуку, сторінки серіалу й обробки помилок за коротким запитом, а ви перевіряєте її за ТЗ, самоперевіркою й панеллю Network і виправляєте власноруч. Fetch API, async/await, AbortController, статуси й заголовки HTTP, CORS, стани завантаження й помилок, правила для агента."
-lang: uk
 discipline: "«Сучасна веброзробка: HTML, CSS, JS/TS»"
 level: "3 курс, спеціальність «Комп'ютерні науки»"
 format: "Code challenges"

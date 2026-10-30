@@ -4,24 +4,24 @@
  * `/<course>/lectures/<slug>`. Fullscreen `DeckLayout`; `deck.ts` wires
  * keyboard navigation, the progress bar, speaker notes, fullscreen and theme.
  */
-import DeckChrome from '@/components/DeckChrome.astro';
-import SlideView from '@/components/Slide.astro';
-import DeckLayout from '@/layouts/DeckLayout.astro';
+import DeckChrome from "@/components/DeckChrome.astro";
+import SlideView from "@/components/Slide.astro";
+import DeckLayout from "@/layouts/DeckLayout.astro";
 import {
   getCourseDeckLabel,
   getCourseTitleParts,
   getCourses,
   type Course,
-} from '@/data/courses';
-import { getLectures, type LectureMeta } from '@/data/lectures';
+} from "@/data/courses";
+import { getLecture, getLectures, type LectureMeta } from "@/data/lectures";
 import {
   defaultLocale,
   getEnabledLocales,
-  localeAlternates,
+  localeAlternatesFor,
   localeHref,
   useTranslations,
   type Locale,
-} from '@/i18n';
+} from "@/i18n";
 
 interface Props {
   course: Course;
@@ -34,15 +34,19 @@ interface Props {
 const { course, lecture, position, locale } = Astro.props;
 const { slides } = lecture;
 const t = useTranslations(locale);
-const alternates = localeAlternates(`/${course.slug}/lectures/${lecture.slug}/`);
+const alternates = localeAlternatesFor(
+  `/${course.slug}/lectures/${lecture.slug}/`,
+  (alternateLocale) =>
+    Boolean(getLecture(course.slug, alternateLocale, lecture.slug)),
+);
 const courseTitleParts = getCourseTitleParts(course, locale);
-const courseTitle = courseTitleParts.map(p => p.text).join(' ');
+const courseTitle = courseTitleParts.map((p) => p.text).join(" ");
 const lectureLabel = `${t.deck.lecture} ${lecture.number}`;
 
 export async function getStaticPaths() {
   return getCourses().flatMap((course) =>
     getEnabledLocales().flatMap((locale) =>
-      getLectures(course.slug).map((lecture, position) => ({
+      getLectures(course.slug, locale).map((lecture, position) => ({
         params: {
           locale: locale === defaultLocale ? undefined : locale,
           course: course.slug,
@@ -55,7 +59,7 @@ export async function getStaticPaths() {
 }
 
 /** Adjacent decks for the top-left stepper (registry order = lecture order). */
-const lectures = getLectures(course.slug);
+const lectures = getLectures(course.slug, locale);
 const toLink = (entry: LectureMeta | undefined) =>
   entry && {
     href: localeHref(locale, `/${course.slug}/lectures/${entry.slug}/`),
@@ -98,12 +102,12 @@ const nextLecture = toLink(lectures[position + 1]);
     lecturesHref={localeHref(locale, `/${course.slug}/lectures/`)}
     prevLecture={prevLecture}
     nextLecture={nextLecture}
-    alternates={alternates} 
+    alternates={alternates}
     courseSlug={course.slug}
   />
 
   <script>
-    import { initDeck } from '@/scripts/deck';
+    import { initDeck } from "@/scripts/deck";
 
     initDeck();
   </script>

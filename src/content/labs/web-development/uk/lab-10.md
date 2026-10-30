@@ -2,7 +2,6 @@
 number: 10
 title: "AI-агент для JavaScript debugging: аналіз Console errors, Stack Trace, DOM та Event Loop"
 summary: "Debugging наданого starter-проєкту Courtly Booking: runtime-помилки та Stack Trace, розбіжності між кодом і фактичним DOM, порядок виконання в Event Loop. Цикл відтворення → докази → гіпотеза → виправлення → повторний тест із перевіркою рекомендацій AI."
-lang: uk
 discipline: "«Сучасна веброзробка: HTML, CSS, JS/TS»"
 level: "3 курс, спеціальність «Комп'ютерні науки»"
 format: "Індивідуально"

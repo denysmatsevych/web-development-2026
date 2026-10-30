@@ -60,6 +60,21 @@ export function localeAlternates(pathname: string): Partial<Record<Locale, strin
   };
 }
 
+/**
+ * Alternate URLs for the language versions of a page that actually exist.
+ * `undefined` when English is disabled, so production has no `hreflang` and no
+ * language switcher.
+ */
+export function localeAlternatesFor(
+  pathname: string,
+  exists: (locale: Locale) => boolean,
+): Partial<Record<Locale, string>> | undefined {
+  if (!isEnglishEnabled) return undefined;
+  return Object.fromEntries(
+    locales.filter(exists).map((locale) => [locale, localeHref(locale, pathname)]),
+  );
+}
+
 /** Language names written in their own language; they stay the same on every page. */
 export const languageNames: Record<Locale, string> = {
   uk: 'Українська (UK)',

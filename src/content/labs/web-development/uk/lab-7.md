@@ -2,7 +2,6 @@
 number: 7
 title: "Проміжний контроль №1: адаптивна landing page Courtly"
 summary: "Комплексне завдання з HTML, CSS, SEO, Accessibility та Responsive Design: landing page сервісу бронювання спортивних майданчиків за наданим макетом і дизайн-системою, з fluid typography та Lighthouse-аудитом."
-lang: uk
 discipline: "«Сучасна веброзробка: HTML, CSS, JS/TS»"
 level: "3 курс, спеціальність «Комп'ютерні науки»"
 format: "Проміжний контроль"

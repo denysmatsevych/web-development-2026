@@ -11,8 +11,8 @@
  * of order or outside their lecture's block, or when the table yields no
  * topics.
  */
-import plan from '../../../../docs/react/course-plan.md?raw';
-import type { NumberedItem } from '../schema';
+import plan from '../../../../../docs/react/course-plan.md?raw';
+import type { NumberedItem } from '../../schema';
 
 export interface LectureTopics {
   lecture: number;

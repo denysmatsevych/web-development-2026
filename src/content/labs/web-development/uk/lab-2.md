@@ -2,7 +2,6 @@
 number: 2
 title: "Основи CSS: Box Model, Cascade, Specificity та AI-assisted верстка"
 summary: "Дослідження базових механізмів CSS — Box Model, Cascade, Specificity, Inheritance та CSS Variables — і AI-assisted верстка адаптивної секції тарифних планів."
-lang: uk
 discipline: "«Сучасна веброзробка: HTML, CSS, JS/TS»"
 level: "3 курс, спеціальність «Комп'ютерні науки»"
 format: "Індивідуально"

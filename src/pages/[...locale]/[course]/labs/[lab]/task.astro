@@ -21,11 +21,7 @@ import CourtlyMockup from "@/components/CourtlyMockup.astro";
 import LabHeader from "@/components/LabHeader.astro";
 import MockupLightbox from "@/components/MockupLightbox.astro";
 import LabLayout from "@/layouts/LabLayout.astro";
-import {
-  getCourseTitleParts,
-  getCourses,
-  type Course,
-} from "@/data/courses";
+import { getCourseTitleParts, getCourses, type Course } from "@/data/courses";
 import {
   getLabs,
   getTasks,
@@ -33,13 +29,13 @@ import {
   labNumber,
   splitId,
   taskHref,
+  getLabAlternates,
   type LabEntry,
   type TaskEntry,
 } from "@/lib/labs";
 import {
   defaultLocale,
   getEnabledLocales,
-  localeAlternates,
   localeHref,
   useTranslations,
   type Locale,
@@ -49,15 +45,20 @@ export async function getStaticPaths() {
   const paths = await Promise.all(
     getCourses().flatMap((course) =>
       getEnabledLocales().map(async (locale) => {
-        const [labs, tasks] = await Promise.all([
-          getLabs(course.slug),
-          getTasks(course.slug),
+        const [labs, defaultLabs, tasks] = await Promise.all([
+          getLabs(course.slug, locale),
+          getLabs(course.slug, defaultLocale),
+          getTasks(course.slug, locale),
         ]);
-        const byId = new Map(labs.map((lab) => [lab.id, lab]));
+        const bySlug = new Map(
+          [...defaultLabs, ...labs].map((lab) => [splitId(lab.id).slug, lab]),
+        );
 
-        // A brief whose lab is a draft (or missing) gets no route.
+        // A brief whose lab is a draft (or missing in every language) gets no
+        // route. A lab with no version in this language is read from the
+        // default language, and the page links to that version.
         return tasks.flatMap((task) => {
-          const lab = byId.get(task.id);
+          const lab = bySlug.get(splitId(task.id).slug);
           return lab
             ? [
                 {
@@ -86,17 +87,19 @@ interface Props {
 
 const { course, task, lab, locale } = Astro.props;
 const { data } = task;
+const contentLang = splitId(task.id).locale;
 const t = useTranslations(locale);
 const courseTitleParts = getCourseTitleParts(course, locale);
-const courseTitle = courseTitleParts.map(p => p.text).join(' ');
+const courseTitle = courseTitleParts.map((p) => p.text).join(" ");
 const taskLabel = data.label ?? t.labs.taskLabel;
-const taskLabelLang = data.label !== undefined ? data.lang : locale;
+const taskLabelLang = data.label !== undefined ? contentLang : locale;
 const taskEyebrow = data.eyebrow ?? t.labs.taskEyebrow;
-const taskEyebrowLang = data.eyebrow !== undefined ? data.lang : locale;
-const labLabel = t.labs.labNumber.replace('{number}', labNumber(lab));
+const taskEyebrowLang = data.eyebrow !== undefined ? contentLang : locale;
+const labLabel = t.labs.labNumber.replace("{number}", labNumber(lab));
 
 const { Content, headings } = await render(task);
 const { slug } = splitId(task.id);
+const alternates = await getLabAlternates(course.slug, slug, 'task');
 
 const crumbs = [
   {
@@ -104,11 +107,17 @@ const crumbs = [
     href: localeHref(locale, `/${course.slug}/`),
     parts: getCourseTitleParts(course, locale),
   },
-  { label: t.navigation.labs, href: localeHref(locale, `/${course.slug}/labs/`) },
-  { label: labLabel, href: labHref(locale, course.slug, slug) },
-  { label: taskLabel, href: taskHref(locale, course.slug, slug), lang: taskLabelLang },
+  {
+    label: t.navigation.labs,
+    href: localeHref(locale, `/${course.slug}/labs/`),
+  },
+  { label: labLabel, href: labHref(splitId(lab.id).locale, course.slug, slug), lang: splitId(lab.id).locale },
+  {
+    label: taskLabel,
+    href: taskHref(locale, course.slug, slug),
+    lang: taskLabelLang,
+  },
 ];
-
 ---
 
 <LabLayout
@@ -118,8 +127,8 @@ const crumbs = [
   locale={locale}
   description={data.summary}
   headings={headings}
-  headingsLang={data.lang !== locale ? data.lang : undefined}
-  alternates={localeAlternates(`/${course.slug}/labs/${slug}/task/`)}
+  headingsLang={contentLang !== locale ? contentLang : undefined}
+  alternates={alternates}
 >
   <Breadcrumbs items={crumbs} locale={locale} />
 
@@ -130,22 +139,24 @@ const crumbs = [
     eyebrowSuffixLang={undefined}
     title={data.title}
     summary={data.summary}
-    contentLang={data.lang !== locale ? data.lang : undefined}
+    contentLang={contentLang !== locale ? contentLang : undefined}
     handout={data.handout}
   />
 
   {
     data.goal && (
       <p class="task-goal">
-        <strong>{t.labs.taskGoal}</strong>{' '}
-        <span lang={data.lang === locale ? undefined : data.lang}>{data.goal}</span>
+        <strong>{t.labs.taskGoal}</strong>{" "}
+        <span lang={contentLang === locale ? undefined : contentLang}>
+          {data.goal}
+        </span>
       </p>
     )
   }
 
   {
     data.acceptance.length > 0 && (
-      <AcceptanceChecklist items={data.acceptance} itemsLang={data.lang} />
+      <AcceptanceChecklist items={data.acceptance} itemsLang={contentLang} />
     )
   }
 
@@ -167,13 +178,16 @@ const crumbs = [
     )
   }
 
-  <article class="doc-content" lang={data.lang === locale ? undefined : data.lang}>
+  <article
+    class="doc-content"
+    lang={contentLang === locale ? undefined : contentLang}
+  >
     <Content />
   </article>
 
   <nav class="task-back" aria-label={t.navigation.labs}>
     <a href={labHref(locale, course.slug, slug)} rel="up"
-      >{t.labs.taskBack.replace('{number}', labNumber(lab))}</a
+      >{t.labs.taskBack.replace("{number}", labNumber(lab))}</a
     >
   </nav>
 </LabLayout>

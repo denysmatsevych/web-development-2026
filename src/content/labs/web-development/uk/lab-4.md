@@ -3,7 +3,6 @@ number: 4
 numberLabel: "4-5"
 title: "AI-агент для Web Quality Audit: accessibility, технічне SEO та Core Web Vitals"
 summary: "Комплексний аудит наданого starter-проєкту: accessibility за WCAG 2.2, технічне SEO, structured data та Core Web Vitals. Цикл audit → verification → fix → re-audit із перевіркою рекомендацій AI."
-lang: uk
 discipline: "«Сучасна веброзробка: HTML, CSS, JS/TS»"
 level: "3 курс, спеціальність «Комп'ютерні науки»"
 format: "Індивідуально"

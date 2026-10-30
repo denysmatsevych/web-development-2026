@@ -3,7 +3,6 @@ number: 12
 numberLabel: "12-13"
 title: "TypeScript на практиці й AI-assisted міграція: типізація API-відповідей, union types, narrowing і type guards, any, type assertions, strict mode і runtime-валідація"
 summary: "ShowFinder з JavaScript на TypeScript: власноруч описати типи відповідей TVmaze API, типізовані запити з type guards і стани інтерфейсу як discriminated union, а решту модулів перевести з AI-агентом і перевірити його міграцію компілятором у режимі strict, тестами й у браузері: any, твердження типу, змінений tsconfig і дані з мережі без перевірки."
-lang: uk
 discipline: "«Сучасна веброзробка: HTML, CSS, JS/TS»"
 level: "3 курс, спеціальність «Комп'ютерні науки»"
 format: "Code challenges"

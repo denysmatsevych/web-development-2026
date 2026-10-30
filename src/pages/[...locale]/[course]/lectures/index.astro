@@ -4,15 +4,11 @@
  * Each card links to `/<course>/lectures/<slug>`. Uses the shared `SiteHeader` /
  * `SiteFooter`; the decks themselves opt out of that chrome via `DeckLayout`.
  */
-import SiteFooter from '@/components/SiteFooter.astro';
-import SiteHeader from '@/components/SiteHeader.astro';
-import CourseTitle from '@/components/CourseTitle.astro';
-import {
-  getCourseTitleParts,
-  getCourses,
-  type Course,
-} from '@/data/courses';
-import { getLectures } from '@/data/lectures';
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import CourseTitle from "@/components/CourseTitle.astro";
+import { getCourseTitleParts, getCourses, type Course } from "@/data/courses";
+import { getLectureList } from "@/data/lectures";
 import {
   defaultLocale,
   getEnabledLocales,
@@ -20,8 +16,8 @@ import {
   localeHref,
   useTranslations,
   type Locale,
-} from '@/i18n';
-import BaseLayout from '@/layouts/BaseLayout.astro';
+} from "@/i18n";
+import BaseLayout from "@/layouts/BaseLayout.astro";
 
 export function getStaticPaths() {
   return getCourses().flatMap((course) =>
@@ -44,18 +40,22 @@ const { course, locale } = Astro.props;
 const t = useTranslations(locale);
 const alternates = localeAlternates(`/${course.slug}/lectures/`);
 const courseTitleParts = getCourseTitleParts(course, locale);
-const courseTitle = courseTitleParts.map(p => p.text).join(' ');
-const lectures = getLectures(course.slug);
+const courseTitle = courseTitleParts.map((p) => p.text).join(" ");
+const lectures = getLectureList(course.slug, locale);
 ---
 
 <BaseLayout
   title={t.navigation.lectures}
   titleSuffix={courseTitle}
-  description={t.course.lectureDecks.replace('{course}', courseTitle)}
+  description={t.course.lectureDecks.replace("{course}", courseTitle)}
   locale={locale}
   alternates={alternates}
 >
-  <SiteHeader courseSlug={course.slug} locale={locale} alternates={alternates} />
+  <SiteHeader
+    courseSlug={course.slug}
+    locale={locale}
+    alternates={alternates}
+  />
 
   <main id="main-content" class="page" tabindex="-1">
     <a class="back-link" href={localeHref(locale, `/${course.slug}/`)}>
@@ -65,7 +65,10 @@ const lectures = getLectures(course.slug);
 
     <section class="hero">
       <p class="hero__eyebrow">
-        <CourseTitle parts={getCourseTitleParts(course, locale)} locale={locale} />
+        <CourseTitle
+          parts={getCourseTitleParts(course, locale)}
+          locale={locale}
+        />
       </p>
       <h1 class="hero__title">{t.navigation.lectures}</h1>
       <p class="hero__lead">{t.course.lecturesLead}</p>
@@ -73,19 +76,28 @@ const lectures = getLectures(course.slug);
 
     <ul class="decks">
       {
-        lectures.map((lecture) => (
+        lectures.map(({lecture, fallback}) => (
           <li>
             <a
-              href={localeHref(locale, `/${course.slug}/lectures/${lecture.slug}/`)}
+              href={localeHref(
+                lecture.lang,
+                `/${course.slug}/lectures/${lecture.slug}/`,
+              )}
               class="deck-card glass-panel"
             >
-              <span class="deck-card__index">{String(lecture.number).padStart(2, '0')}</span>
+              <span class="deck-card__index">
+                {String(lecture.number).padStart(2, "0")}
+              </span>
               <span class="deck-card__body">
-                <span
-                  class="deck-card__title"
-                  lang={lecture.lang === locale ? undefined : lecture.lang}
-                >
-                  {lecture.title}
+                <span class="deck-card__title">
+                  <span
+                    lang={lecture.lang === locale ? undefined : lecture.lang}
+                  >
+                    {lecture.title}
+                  </span>
+                  {fallback && (
+                    <span class="deck-card__pill">{t.course.inUkrainian}</span>
+                  )}
                 </span>
                 <span
                   class="deck-card__summary"
@@ -94,7 +106,9 @@ const lectures = getLectures(course.slug);
                   {lecture.summary}
                 </span>
               </span>
-              <span class="deck-card__arrow" aria-hidden="true">→</span>
+              <span class="deck-card__arrow" aria-hidden="true">
+                →
+              </span>
             </a>
           </li>
         ))
@@ -211,6 +225,18 @@ const lectures = getLectures(course.slug);
     font-size: 1.05rem;
     font-weight: 600;
     color: var(--foreground);
+  }
+
+  .deck-card__pill {
+    margin-left: 0.5rem;
+    padding: 0.1rem 0.4rem;
+    border: 1px solid var(--color-brand-blue);
+    border-radius: var(--radius-sm);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    vertical-align: middle;
+    color: var(--brand-text);
   }
 
   .deck-card__summary {

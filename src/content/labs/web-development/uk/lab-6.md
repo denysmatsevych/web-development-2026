@@ -2,7 +2,6 @@
 number: 6
 title: "Responsive Layout, Container Queries, Fluid Typography та debugging CSS Layout"
 summary: "Серія code challenges: Flexbox і Grid, auto-fit + minmax(), subgrid, Container Queries, fluid typography з clamp() та пошук першопричин layout-проблем у Browser DevTools."
-lang: uk
 discipline: "«Сучасна веброзробка: HTML, CSS, JS/TS»"
 level: "3 курс, спеціальність «Комп'ютерні науки»"
 format: "Code challenges"

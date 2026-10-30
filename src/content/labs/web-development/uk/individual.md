@@ -3,7 +3,6 @@ number: 0
 kind: individual
 title: "Індивідуальне завдання"
 summary: "Власний адаптивний і доступний вебзастосунок на HTML, CSS, JavaScript/TypeScript та REST API — від вибору теми до публікації й усного захисту."
-lang: uk
 discipline: "«Сучасна веброзробка: HTML, CSS, JS/TS»"
 level: "3 курс, спеціальність F3 «Комп'ютерні науки»"
 format: "Індивідуально"

@@ -1,6 +1,7 @@
-import type { Slide } from '../schema';
+import type { Slide } from '../../schema';
 
 export const deckTitle = 'Вступ до вебтехнологій, HTTP, DOM та семантичний HTML5';
+export const summary = 'Вступ до вебтехнологій, HTTP, DOM та семантичний HTML5.';
 
 export const slides: Slide[] = [
   {

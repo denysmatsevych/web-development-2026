@@ -1,6 +1,7 @@
-import type { Slide } from "../schema";
+import type { Slide } from "../../schema";
 
 export const deckTitle = "Семантичний HTML5, SEO та a11y";
+export const summary = 'Семантичний HTML5 і Landmarks, метадані та Schema.org, On-Page SEO і вебдоступність за WCAG 2.2.';
 
 export const slides: Slide[] = [
   {

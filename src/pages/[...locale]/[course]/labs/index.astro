@@ -8,12 +8,14 @@
 import SiteFooter from "@/components/SiteFooter.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 import CourseTitle from "@/components/CourseTitle.astro";
+import { getCourseTitleParts, getCourses, type Course } from "@/data/courses";
 import {
-  getCourseTitleParts,
-  getCourses,
-  type Course,
-} from '@/data/courses';
-import { getLabs, getTasks, labHref, labNumber, splitId } from "@/lib/labs";
+  getLabList,
+  getTaskList,
+  labHref,
+  labNumber,
+  splitId,
+} from "@/lib/labs";
 import {
   defaultLocale,
   getEnabledLocales,
@@ -45,34 +47,40 @@ const { course, locale } = Astro.props;
 const t = useTranslations(locale);
 const alternates = localeAlternates(`/${course.slug}/labs/`);
 const courseTitleParts = getCourseTitleParts(course, locale);
-const courseTitle = courseTitleParts.map(p => p.text).join(' ');
+const courseTitle = courseTitleParts.map((p) => p.text).join(" ");
 const [labs, tasks] = await Promise.all([
-  getLabs(course.slug),
-  getTasks(course.slug),
+  getLabList(course.slug, locale),
+  getTaskList(course.slug, locale),
 ]);
 
-// Lab id -> its brief's badge text, for the pill on that lab's card. A Map
-// rather than a Set so the badge stays whatever the brief's frontmatter says.
+// The brief is checked on its own: a lab can have an English version while
+// its brief only exists in Ukrainian, or the other way round.
 const taskLabels = new Map(
-  tasks.map((task) => [
-    task.id,
+  tasks.map(({ entry: task }) => [
+    splitId(task.id).slug,
     {
       label: task.data.label ?? t.labs.taskLabel,
-      lang: task.data.label !== undefined ? task.data.lang : locale,
+      lang: task.data.label !== undefined ? splitId(task.id).locale : locale,
     },
   ]),
 );
-const hasIndividual = labs.some((lab) => lab.data.kind === "individual");
+const hasIndividual = labs.some(
+  ({ entry }) => entry.data.kind === "individual",
+);
 ---
 
 <BaseLayout
   title={t.navigation.labs}
   titleSuffix={courseTitle}
-  description={t.course.labAssignments.replace('{course}', courseTitle)}
+  description={t.course.labAssignments.replace("{course}", courseTitle)}
   locale={locale}
   alternates={alternates}
 >
-  <SiteHeader courseSlug={course.slug} locale={locale} alternates={alternates} />
+  <SiteHeader
+    courseSlug={course.slug}
+    locale={locale}
+    alternates={alternates}
+  />
 
   <main id="main-content" class="page" tabindex="-1">
     <a class="back-link" href={localeHref(locale, `/${course.slug}/`)}>
@@ -82,7 +90,10 @@ const hasIndividual = labs.some((lab) => lab.data.kind === "individual");
 
     <section class="hero">
       <p class="hero__eyebrow">
-        <CourseTitle parts={getCourseTitleParts(course, locale)} locale={locale} />
+        <CourseTitle
+          parts={getCourseTitleParts(course, locale)}
+          locale={locale}
+        />
       </p>
       <h1 class="hero__title">{t.navigation.labs}</h1>
       <p class="hero__lead">
@@ -93,63 +104,73 @@ const hasIndividual = labs.some((lab) => lab.data.kind === "individual");
     {
       labs.length > 0 ? (
         <ul class="labs">
-          {labs.map((lab) => (
-            <li>
-              <a
-                href={labHref(locale, course.slug, splitId(lab.id).slug)}
-                class:list={[
-                  "lab-card glass-panel",
-                  { "lab-card--individual": lab.data.kind === "individual" },
-                ]}
-              >
-                <span class="lab-card__index">
-                  {labNumber(lab)
-                    .split("-")
-                    .map((n, i) => (
-                      <>
-                        {i > 0 && <span class="sr-only">-</span>}
-                        <span>{n.padStart(2, "0")}</span>
-                      </>
-                    ))}
-                </span>
-                <span class="lab-card__body">
-                  <span class="lab-card__title">
-                    <span lang={lab.data.lang === locale ? undefined : lab.data.lang}>
-                      {lab.data.title}
-                    </span>
-                    {taskLabels.has(lab.id) && (
-                      <span
-                        class="lab-card__pill"
-                        lang={
-                          taskLabels.get(lab.id)?.lang === locale
-                            ? undefined
-                            : taskLabels.get(lab.id)?.lang
-                        }
-                      >
-                        {taskLabels.get(lab.id)?.label}
+          {labs.map(({ entry: lab, fallback }) => {
+            const { slug, locale: labLang } = splitId(lab.id);
+            const labTask = taskLabels.get(slug);
+            return (
+              <li>
+                <a
+                  href={labHref(labLang, course.slug, slug)}
+                  class:list={[
+                    "lab-card glass-panel",
+                    { "lab-card--individual": lab.data.kind === "individual" },
+                  ]}
+                >
+                  <span class="lab-card__index">
+                    {labNumber(lab)
+                      .split("-")
+                      .map((n, i) => (
+                        <>
+                          {i > 0 && <span class="sr-only">-</span>}
+                          <span>{n.padStart(2, "0")}</span>
+                        </>
+                      ))}
+                  </span>
+                  <span class="lab-card__body">
+                    <span class="lab-card__title">
+                      <span lang={labLang === locale ? undefined : labLang}>
+                        {lab.data.title}
                       </span>
-                    )}
+                      {labTask && (
+                        <span
+                          class="lab-card__pill"
+                          lang={
+                            labTask.lang === locale ? undefined : labTask.lang
+                          }
+                        >
+                          {labTask.label}
+                        </span>
+                      )}
+                      {fallback && (
+                        <span class="lab-card__pill">
+                          {t.course.inUkrainian}
+                        </span>
+                      )}
+                    </span>
+                    <span
+                      class="lab-card__summary"
+                      lang={labLang === locale ? undefined : labLang}
+                    >
+                      {lab.data.summary}
+                    </span>
                   </span>
-                  <span
-                    class="lab-card__summary"
-                    lang={lab.data.lang === locale ? undefined : lab.data.lang}
-                  >
-                    {lab.data.summary}
+                  <span class="lab-card__arrow" aria-hidden="true">
+                    →
                   </span>
-                </span>
-                <span class="lab-card__arrow" aria-hidden="true">
-                  →
-                </span>
-              </a>
-            </li>
-          ))}
+                </a>
+              </li>
+            );
+          })}
         </ul>
       ) : (
         <div class="panel glass-panel">
           <p class="panel__title">{t.course.comingSoon}</p>
           <p class="panel__text">
-            {t.course.labsPreparing}{' '}
-            <a href={localeHref(locale, `/${course.slug}/lectures/`)}>{t.navigation.lectures}</a>.
+            {t.course.labsPreparing}{" "}
+            <a href={localeHref(locale, `/${course.slug}/lectures/`)}>
+              {t.navigation.lectures}
+            </a>
+            .
           </p>
         </div>
       )
@@ -281,6 +302,7 @@ const hasIndividual = labs.some((lab) => lab.data.kind === "individual");
     letter-spacing: 0.06em;
     vertical-align: middle;
     color: var(--brand-text);
+    white-space: nowrap;
   }
 
   .lab-card__summary {

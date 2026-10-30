@@ -2,7 +2,6 @@
 number: 1
 title: "Налаштування середовища розробки для HTML, CSS, JavaScript/TypeScript"
 summary: "Робоче локальне середовище фронтенд-розробки: IDE, інструменти якості коду, локальний перегляд, Git/GitHub, GitHub Pages і Vercel, кероване використання AI-агента."
-lang: uk
 discipline: "«Сучасна веброзробка: HTML, CSS, JS/TS»"
 level: "3 курс, спеціальність «Комп'ютерні науки»"
 format: "Індивідуально"

@@ -90,16 +90,16 @@ The content's language is determined by its folder (`uk/` or `en/`), not by a `l
 
 ### Step 5. Move the content and add fallbacks
 
-- [ ] Move the existing Ukrainian labs, assignments, and lectures into `uk/` folders.
-- [ ] Move the existing React and Web Accessibility preview placeholders into their courses' `en/` folders. Keep them as English-language placeholders, not translated course materials, and preserve the courses' existing dev-only visibility.
-- [ ] Remove `lang:` from lab and task frontmatter when moving the files. Update the lab and task schemas so language comes from the folder, and content IDs include the course, language, and slug.
-- [ ] Find lecture decks from their course/language folders instead of maintaining a hand-written import list in `src/data/lectures/index.ts` (for example, with `import.meta.glob`). Each deck file must export its own `summary` alongside `deckTitle` and `slides`.
-- [ ] If an English lab file is missing, the English lab list links directly to the Ukrainian lab page and marks it as “In Ukrainian”. Do not generate a duplicate English page. Apply the same check independently to a practical assignment.
-- [ ] Store English content that has no Ukrainian version in `en/`; do not show it in the Ukrainian list or generate a Ukrainian route for it.
-- [ ] Update `plugins/base-links.mjs` so every eligible root-relative URL still receives the site's base path, but `/en/` is added only to links under a course path (`/<course>/…`) whose English target exists. Keep `/labs/` URLs—including downloads such as `/labs/watchlist-starter.zip` and legacy lab links—unlocalized. If a linked lab or task has no English file yet, keep its Ukrainian course URL as the fallback.
-- [ ] Before implementing the Markdown link rule, verify whether Sätteri's plugin context provides the source file through `ctx.fileURL` for collection entries. If it does not, use another explicit, reliable way to provide the source locale and the set of existing English targets; do not infer the locale from the URL being rewritten.
-- [ ] Validate the course folder and language in `assertInCourse`, not in the Zod schema.
-- [ ] On an English lab page, show prev/next links only to English lab versions that exist. If an adjacent lab has no English version, omit that link rather than linking to a Ukrainian page.
+- [X] Move the existing Ukrainian labs, assignments, and lectures into `uk/` folders.
+- [X] Move the existing React and Web Accessibility preview placeholders into their courses' `en/` folders. Keep them as English-language placeholders, not translated course materials, and preserve the courses' existing dev-only visibility.
+- [X] Remove `lang:` from lab and task frontmatter when moving the files. Update the lab and task schemas so language comes from the folder, and content IDs include the course, language, and slug.
+- [X] Find lecture decks from their course/language folders instead of maintaining a hand-written import list in `src/data/lectures/index.ts` (for example, with `import.meta.glob`). Each deck file must export its own `summary` alongside `deckTitle` and `slides`.
+- [X] If an English lab file is missing, the English lab list links directly to the Ukrainian lab page and marks it as “In Ukrainian”. Do not generate a duplicate English page. Apply the same check independently to a practical assignment.
+- [X] Store English content that has no Ukrainian version in `en/`; do not show it in the Ukrainian list or generate a Ukrainian route for it.
+- [X] Update `plugins/base-links.mjs` so every eligible root-relative URL still receives the site's base path, but `/en/` is added only to links under a course path (`/<course>/…`) whose English target exists. Keep `/labs/` URLs—including downloads such as `/labs/watchlist-starter.zip` and legacy lab links—unlocalized. If a linked lab or task has no English file yet, keep its Ukrainian course URL as the fallback.
+- [X] Before implementing the Markdown link rule, verify whether Sätteri's plugin context provides the source file through `ctx.fileURL` for collection entries. If it does not, use another explicit, reliable way to provide the source locale and the set of existing English targets; do not infer the locale from the URL being rewritten.
+- [X] Validate the course folder and language in `assertInCourse`, not in the Zod schema.
+- [X] On an English lab page, show prev/next links only to English lab versions that exist. If an adjacent lab has no English version, omit that link rather than linking to a Ukrainian page.
 
 **Done when:** existing Ukrainian URLs have not changed; the two existing English placeholders remain dev-only; a future English translation of a lab or lecture can be added by adding files only, with no code changes; and Markdown links select an existing localized page or the Ukrainian fallback without localizing downloads.
 
