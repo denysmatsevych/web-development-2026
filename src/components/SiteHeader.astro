@@ -35,10 +35,10 @@ const courses = getCourses();
 <header
   class="sticky top-0 z-30 h-16 border-b border-border bg-background/85 backdrop-blur-md"
 >
-  <div class="mx-auto flex h-full max-w-[100rem] items-center gap-3 px-4 sm:px-6">
+  <div class="mx-auto flex h-full max-w-[100rem] items-center justify-end min-[426px]:justify-between gap-3 px-4 sm:px-6">
     <a
       href={home}
-      class="mr-auto flex shrink-0 items-center gap-2 font-semibold tracking-tight text-foreground"
+      class="hidden min-[426px]:flex mr-auto shrink-0 items-center gap-2 font-semibold tracking-tight text-foreground"
     >
       <span class="inline-block size-2.5 rounded-full bg-brand-blue" aria-hidden="true"></span>
       {t.site.name}

@@ -31,9 +31,11 @@ const locale = pageLocale ?? getLocale(Astro.currentLocale);
 const t = useTranslations(locale);
 const links = getLanguageSwitchLinks(alternates, courseSlug);
 
+const targetLink = links?.find((link) => link.locale !== locale);
+
 const styles = {
   site: {
-    base: "inline-flex items-center rounded-md px-2.5 py-1.5 text-sm transition-colors",
+    base: "inline-flex items-center rounded-md px-2.5 py-1.5 -mx-0.5 text-sm transition-colors",
     current: "bg-accent text-foreground",
     other: "text-muted-foreground hover:bg-accent hover:text-foreground",
   },
@@ -48,34 +50,51 @@ const styles = {
 
 {
   links && (
-    <div
-      role="group"
-      aria-label={t.navigation.language}
-      class="flex items-center gap-1 border-l-2 border-r-2 border-accent rounded-md"
-    >
-      {links.map((link, index) => (
-        <>
+    <>
+      <div class="flex min-[426px]:hidden items-center">
+        {targetLink && (
           <a
-            href={link.href}
-            lang={link.locale === locale ? undefined : link.locale}
-            hreflang={link.locale}
-            aria-label={languageNames[link.locale]}
-            aria-current={link.locale === locale ? "true" : undefined}
-            class:list={[
-              styles.base,
-              link.locale === locale ? styles.current : styles.other,
-            ]}
+            href={targetLink.href}
+            lang={targetLink.locale}
+            hreflang={targetLink.locale}
+            aria-label={languageNames[targetLink.locale]}
+            class:list={[styles.base, styles.other]}
           >
-            {link.locale.toUpperCase()}
+            {targetLink.locale.toUpperCase()}
           </a>
+        )}
+      </div>
 
-          {index < links.length - 1 && (
-            <span aria-hidden="true" class="text-ink-800 select-none">
-              |
-            </span>
-          )}
-        </>
-      ))}
-    </div>
+      <div
+        role="group"
+        aria-label={t.navigation.language}
+        class="hidden min-[426px]:flex items-center gap-1 border-l-2 border-r-2 border-accent rounded-md"
+      >
+        {links.map((link, index) => (
+          <>
+            <a
+              href={link.href}
+              lang={link.locale === locale ? undefined : link.locale}
+              hreflang={link.locale}
+              aria-label={languageNames[link.locale]}
+              aria-current={link.locale === locale ? "true" : undefined}
+              class:list={[
+                styles.base,
+                link.locale === locale ? styles.current : styles.other,
+              ]}
+            >
+              {link.locale.toUpperCase()}
+            </a>
+
+            {index < links.length - 1 && (
+              <span
+                aria-hidden="true"
+                class="inline-block h-4 w-px bg-accent select-none"
+              />
+            )}
+          </>
+        ))}
+      </div>
+    </>
   )
 }
