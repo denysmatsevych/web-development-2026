@@ -38,12 +38,14 @@ const styles = {
     base: "inline-flex items-center rounded-md px-2.5 py-1.5 -mx-0.5 text-sm transition-colors",
     current: "bg-accent text-foreground",
     other: "text-muted-foreground hover:bg-accent hover:text-foreground",
+    wrapper: "border-l-2 border-r-2 border-accent rounded-md",
   },
   deck: {
     base: "no-print inline-flex items-center rounded-md border px-3 py-2 font-mono text-xs backdrop-blur-sm transition",
     current: "border-accent-500 bg-ink-950/80 text-accent-500",
     other:
       "border-ink-800 bg-ink-950/80 text-ink-400 hover:border-accent-500 hover:text-accent-500",
+    wrapper: "",
   },
 }[variant];
 ---
@@ -68,7 +70,10 @@ const styles = {
       <div
         role="group"
         aria-label={t.navigation.language}
-        class="hidden min-[426px]:flex items-center gap-1 border-l-2 border-r-2 border-accent rounded-md"
+        class:list={[
+          "hidden min-[426px]:flex items-center gap-1",
+          styles.wrapper,
+        ]}
       >
         {links.map((link, index) => (
           <>
