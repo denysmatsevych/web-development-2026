@@ -54,15 +54,20 @@ const [labs, tasks] = await Promise.all([
 ]);
 
 // The brief is checked on its own: a lab can have an English version while
-// its brief only exists in Ukrainian, or the other way round.
+// its brief only exists in Ukrainian, or the other way round. The badge is
+// written in the brief's own language, so a Ukrainian-only brief is not shown
+// with an English label.
 const taskLabels = new Map(
-  tasks.map(({ entry: task }) => [
-    splitId(task.id).slug,
-    {
-      label: task.data.label ?? t.labs.taskLabel,
-      lang: task.data.label !== undefined ? splitId(task.id).locale : locale,
-    },
-  ]),
+  tasks.map(({ entry: task }) => {
+    const taskLocale = splitId(task.id).locale;
+    return [
+      splitId(task.id).slug,
+      {
+        label: task.data.label ?? useTranslations(taskLocale).labs.taskLabel,
+        lang: taskLocale,
+      },
+    ];
+  }),
 );
 const hasIndividual = labs.some(
   ({ entry }) => entry.data.kind === "individual",

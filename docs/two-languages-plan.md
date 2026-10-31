@@ -15,7 +15,7 @@ This plan covers the language infrastructure only; it does not include translati
 - If an English translation is not available yet, the English list links directly to the Ukrainian page and marks it as “In Ukrainian”. That destination is a Ukrainian page, with Ukrainian interface and content; there will be no duplicate English page.
 - If content exists only in English, its files live in the `en/` folder. It will not appear in the Ukrainian list, and no Ukrainian page will be generated for it.
 - Check for a lab translation and its practical-assignment translation independently: they are separate files and either may be missing.
-- The existing React and Web Accessibility lab files are English preview placeholders for draft courses, visible only in development. They are not completed translations. Keep them as placeholders and preserve their existing dev-only visibility.
+- The existing Web Accessibility lab and lecture are English preview placeholders for a draft course, visible only in development. They are not completed translations. Keep them as placeholders and preserve their existing dev-only visibility. The React course has no lab placeholder; its lectures are Ukrainian.
 - URLs in this document are shown without the GitHub Pages base path. All links in the code must continue to account for the site's `base`.
 
 ## Where translations will live
@@ -91,7 +91,7 @@ The content's language is determined by its folder (`uk/` or `en/`), not by a `l
 ### Step 5. Move the content and add fallbacks
 
 - [X] Move the existing Ukrainian labs, assignments, and lectures into `uk/` folders.
-- [X] Move the existing React and Web Accessibility preview placeholders into their courses' `en/` folders. Keep them as English-language placeholders, not translated course materials, and preserve the courses' existing dev-only visibility.
+- [X] Move the existing Web Accessibility preview placeholders (lab and lecture) into the course's `en/` folders. Keep them as English-language placeholders, not translated course materials, and preserve the course's existing dev-only visibility.
 - [X] Remove `lang:` from lab and task frontmatter when moving the files. Update the lab and task schemas so language comes from the folder, and content IDs include the course, language, and slug.
 - [X] Find lecture decks from their course/language folders instead of maintaining a hand-written import list in `src/data/lectures/index.ts` (for example, with `import.meta.glob`). Each deck file must export its own `summary` alongside `deckTitle` and `slides`.
 - [X] If an English lab file is missing, the English lab list links directly to the Ukrainian lab page and marks it as “In Ukrainian”. Do not generate a duplicate English page. Apply the same check independently to a practical assignment.
@@ -106,15 +106,15 @@ The content's language is determined by its folder (`uk/` or `en/`), not by a `l
 ### Step 6. Update PDF and assignment scripts
 
 - [X] Update paths in scripts that read Markdown from lab or assignment folders.
-- [X] By default, `python docs/build-handout.py lab-11` reads the Ukrainian file from `uk/` and creates `public/labs/lab-11.pdf`.
+- [X] By default, `python docs/web/build-handout.py lab-11` reads the Ukrainian file from `uk/` and creates `public/labs/lab-11.pdf`.
 - [X] Do not generate English PDFs as part of this work. Revisit English handouts alongside future content translations.
 
-**Done when:** `python docs/build-handout.py lab-11` still creates `public/labs/lab-11.pdf`. (Step 6 complete.)
+**Done when:** `python docs/web/build-handout.py lab-11` still creates `public/labs/lab-11.pdf`. (Step 6 complete.)
 
 ### Step 7. Update documentation and verify the result
 
 - [X] Update `README.md`, `AGENTS.md`, the route tables in `docs/agents/design-system.md`, and lab documentation that mentions the changed paths.
-- [X] Remove the obsolete `lang:` field from authoring examples in `docs/lab-2/content-map.md`, `docs/lab-2/implementation.md`, `docs/lab-1-implementation-guide.md`, and `docs/individual-assignment-implementation-guide.md`.
+- [X] Remove the obsolete `lang:` field from authoring examples in `docs/web/lab-2/content-map.md`, `docs/web/lab-2/implementation.md`, `docs/web/lab-1-implementation-guide.md`, and `docs/web/individual-assignment-implementation-guide.md`.
 - [X] Add a short explanation of how to add an interface string and how to add a lab translation later.
 - [X] Check the documentation and code for outdated content paths.
 - [X] Run `npm run check && npm run build`; compare production URLs with the Step 0 list. The production build must not contain new `/en/` pages.

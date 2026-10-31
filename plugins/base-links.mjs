@@ -18,6 +18,10 @@
  * back onto the `unified` pipeline. The filter is applied in Rust, so only the
  * handful of link-bearing elements ever crosses into JS.
  *
+ * The English targets are read once, when the config loads: after adding the
+ * first English file for a page, restart the dev server so links to it pick up
+ * `/en/`.
+ *
  * Left alone: absolute URLs, protocol-relative `//host/…`, `#anchors`,
  * `mailto:`/`tel:`, and anything already prefixed (so the plugin is
  * idempotent). `srcset` is not rewritten — no Markdown body uses it yet.
@@ -82,6 +86,8 @@ export default function baseLinks({ base = '' } = {}) {
 
   /** Add `/en` when the link goes to a course page that has an English version. */
   const localize = (value) => {
+    // Already localized by the author: keep as is (it still gets the base below).
+    if (value.startsWith('/en/')) return value;
     const [path] = value.split(/[?#]/);
     const [, first] = path.split('/');
     if (!courses.has(first)) return value;
@@ -101,7 +107,6 @@ export default function baseLinks({ base = '' } = {}) {
           typeof value !== 'string' ||
           !value.startsWith('/') ||
           value.startsWith('//') ||
-          value.startsWith('/en/') ||
           (prefix && (value === prefix || value.startsWith(`${prefix}/`)))
         ) {
           return;

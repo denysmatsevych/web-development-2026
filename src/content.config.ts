@@ -4,11 +4,11 @@ import { z } from 'astro/zod';
 
 /**
  * The `labs` collection — one Markdown file per lab assignment under
- * `src/content/labs/<course>/`. Files are grouped by course, not locale;
- * `src/content/labs/<course>/<locale>/` defines the <lang> on the page
+ * `src/content/labs/<course>/<locale>/`. The language folder (`uk/` or `en/`)
+ * sets the page language; there is no `lang` field.
  */
 const labs = defineCollection({
-  // ids look like web-development/uk/lab-1" — course folder + lacale + slug, no extension.
+  // ids look like "web-development/uk/lab-1" — course, locale and slug, no extension.
   loader: glob({ pattern: '**/*.md', base: './src/content/labs' }),
   schema: z.object({
     /**
@@ -44,11 +44,12 @@ const labs = defineCollection({
 
 /**
  * The `tasks` collection — one practical brief (ТЗ) per lab, under
- * `src/content/tasks/<course>/`. The entry id **is** the owning lab's id
- * (`web-development/lab-2`), and that is the whole relation: no `lab:` field
- * to keep in sync, and the route `/<course>/labs/<slug>/task/` follows from it.
- *
- * A brief has the same course, language and slug as its lab.
+ * `src/content/tasks/<course>/<locale>/`. The entry id **is** the owning lab's
+ * id (`web-development/uk/lab-2`), and that is the whole relation: no `lab:`
+ * field to keep in sync, and the route `/<course>/labs/<slug>/task/` follows
+ * from it. A brief and its lab are matched by slug, and each language is
+ * checked on its own: a lab may have an English version while its brief only
+ * exists in Ukrainian.
  */
 const tasks = defineCollection({
   // ids look like "web-development/uk/lab-2" — the owning lab's id, no extension.

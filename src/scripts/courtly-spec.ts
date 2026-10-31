@@ -3,8 +3,8 @@
  * comparison, both in the check dialog's «Порівняти» and on the report page.
  *
  * Every criterion is a requirement written in the handout
- * (`src/content/labs/<course>/lab-7.md`) or the design spec
- * (`src/content/tasks/<course>/lab-7.md`), and cites its section. `evaluate()` checks
+ * (the lab-7 file of the `labs` collection) or the design spec (the lab-7 file
+ * of the `tasks` collection), and cites its section. `evaluate()` checks
  * them on a page rendered at one width and says, per criterion, what was
  * expected and what the page has. There is no pixel diff and no rule that is
  * not written down; the instructor's verdict on the mockup match stays the

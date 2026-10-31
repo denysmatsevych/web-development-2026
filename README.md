@@ -105,6 +105,8 @@ copy-button labels in a component.
 2. Do not add a `lang:` field — the folder is the language.
 3. A lecture deck exports `summary`, `deckTitle` and `slides`.
 4. Check with `npm run dev`, or `VITE_ENABLE_ENGLISH=true npm run build`.
+   Restart the dev server after adding the first English file for a page:
+   Markdown links to it are resolved once, at startup.
 
 A lab and its task are checked independently: while one is missing, the
 English list links to the Ukrainian page marked “In Ukrainian”. Content that

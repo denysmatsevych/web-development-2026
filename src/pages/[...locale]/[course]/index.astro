@@ -42,7 +42,7 @@ interface Props {
 
 const { course, locale } = Astro.props;
 const t = useTranslations(locale);
-const alternates = localeAlternates(`/${course.slug}/`);  
+const alternates = localeAlternates(`/${course.slug}/`);
 const courseTitle = getCourseTitle(course, locale);
 const courseDescription = getCourseDescription(course, locale);
 const sections = getSections(course.slug, locale);
