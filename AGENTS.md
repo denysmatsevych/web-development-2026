@@ -29,6 +29,13 @@ npm run check && npm run build
 
 `astro check` validates TypeScript and Astro content, but does not verify route generation (`getStaticPaths`), plugin behavior, or the full build — run both to catch all issues.
 
+## Languages
+
+Ukrainian is the primary language; English is dev/CI-validation only. The
+language of content comes from its `uk/`/`en/` folder, never from frontmatter.
+See `README.md` → **Languages and translations** for how to add interface
+strings and translations.
+
 ## Local development
 
 See `README.md` → **Quick start** for the local development URL, and
@@ -40,9 +47,10 @@ The current `src/` layout is documented in `README.md` — read it there
 rather than relying on a second copy here, so there's one place to keep
 correct. The essentials:
 
-- `src/pages/` — course hub, `src/pages/[course]/` course routes, and legacy
+- `src/pages/[...locale]/` — course hub and `[course]/` routes for both
+  languages; `src/pages/` also holds the legacy
   redirects / fixed ЛР-7 tools
-- `src/content/labs/<course>/` and `src/content/tasks/<course>/` — the two
+- `src/content/labs/<course>/<locale>/` and `src/content/tasks/<course>/<locale>/` — the two
   course-keyed content collections (lab assignments and practical-task briefs),
   schemas in `src/content.config.ts`
 - `src/data/courses.ts` — course registry; `src/data/lectures/` — shared slide

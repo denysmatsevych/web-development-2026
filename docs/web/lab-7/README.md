@@ -4,8 +4,8 @@ The midterm brief, turned into two pages on the course site:
 
 | Route | Source | What it is |
 | --- | --- | --- |
-| `/web-development/labs/lab-7/` | `src/content/labs/web-development/lab-7.md` | the handout: requirements, audit, report, checklist |
-| `/web-development/labs/lab-7/task/` | `src/content/tasks/web-development/lab-7.md` | the design reference: mockup, tokens, grid, components, images |
+| `/web-development/labs/lab-7/` | `src/content/labs/web-development/uk/lab-7.md` | the handout: requirements, audit, report, checklist |
+| `/web-development/labs/lab-7/task/` | `src/content/tasks/web-development/uk/lab-7.md` | the design reference: mockup, tokens, grid, components, images |
 
 The split follows Lab 2's decision (docs/web/lab-2/README.md §3): the handout is
 read once, the design reference stays open beside the editor.
@@ -50,7 +50,7 @@ Order matters: render the captures before building the pack, since the pack
 copies them. `src/data/courtly-mockup.json` records where each section starts
 in the full-page captures; the auto-check's viewer aligns on it, so it is
 written in the same run as the captures. `SPEC.md` in the zip is generated from §2–5 of
-`src/content/tasks/web-development/lab-7.md`, so edit the spec there, never in the zip.
+`src/content/tasks/web-development/uk/lab-7.md`, so edit the spec there, never in the zip.
 
 If a capture's height changes, update the `height` in
 `src/components/CourtlyMockup.astro` (it only reserves space).

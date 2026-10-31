@@ -1,4 +1,4 @@
-# Plan: Ukrainian and English Versions of the Site
+# Plan: Ukrainian and English Versions of the Site (implemented)
 
 ## In brief: what visitors will see
 
@@ -86,7 +86,7 @@ The content's language is determined by its folder (`uk/` or `en/`), not by a `l
 - [X] Add the required accessibility attributes (`aria-current` and `lang`).
 - [X] When switching languages, link to the same page if that language version exists. If it does not, link to the course page (or the hub when there is no course page). The lab list's “In Ukrainian” link is separate: it opens the Ukrainian lab directly.
 
-**Done when:** in development, you can switch languages on the home page, course page, lab, and lecture; there is no switcher in production.
+**Done when:** in development, you can switch languages on the home page, course page, lab, and lecture; there is no switcher in production. (Step 4 complete.)
 
 ### Step 5. Move the content and add fallbacks
 
@@ -101,7 +101,7 @@ The content's language is determined by its folder (`uk/` or `en/`), not by a `l
 - [X] Validate the course folder and language in `assertInCourse`, not in the Zod schema.
 - [X] On an English lab page, show prev/next links only to English lab versions that exist. If an adjacent lab has no English version, omit that link rather than linking to a Ukrainian page.
 
-**Done when:** existing Ukrainian URLs have not changed; the two existing English placeholders remain dev-only; a future English translation of a lab or lecture can be added by adding files only, with no code changes; and Markdown links select an existing localized page or the Ukrainian fallback without localizing downloads.
+**Done when:** existing Ukrainian URLs have not changed; the two existing English placeholders remain dev-only; a future English translation of a lab or lecture can be added by adding files only, with no code changes; and Markdown links select an existing localized page or the Ukrainian fallback without localizing downloads. (Step 5 complete.)
 
 ### Step 6. Update PDF and assignment scripts
 
@@ -113,16 +113,16 @@ The content's language is determined by its folder (`uk/` or `en/`), not by a `l
 
 ### Step 7. Update documentation and verify the result
 
-- [ ] Update `README.md`, `AGENTS.md`, the route tables in `docs/agents/design-system.md`, and lab documentation that mentions the changed paths.
-- [ ] Remove the obsolete `lang:` field from authoring examples in `docs/lab-2/content-map.md`, `docs/lab-2/implementation.md`, `docs/lab-1-implementation-guide.md`, and `docs/individual-assignment-implementation-guide.md`.
-- [ ] Add a short explanation of how to add an interface string and how to add a lab translation later.
-- [ ] Check the documentation and code for outdated content paths.
-- [ ] Run `npm run check && npm run build`; compare production URLs with the Step 0 list. The production build must not contain new `/en/` pages.
-- [ ] Update `.github/workflows/pr-check.yml` to run a second build with the English-pages environment variable enabled. This validation build must not deploy; its purpose is to catch broken English routes and translated content in future translation PRs.
-- [ ] Check Ukrainian pages with `npm run preview`. Check English pages with `npm run dev` or a local build with the environment variable enabled.
-- [ ] Retake the screenshots from Step 0 for the same pages and viewport sizes so the interface changes can be compared.
+- [X] Update `README.md`, `AGENTS.md`, the route tables in `docs/agents/design-system.md`, and lab documentation that mentions the changed paths.
+- [X] Remove the obsolete `lang:` field from authoring examples in `docs/lab-2/content-map.md`, `docs/lab-2/implementation.md`, `docs/lab-1-implementation-guide.md`, and `docs/individual-assignment-implementation-guide.md`.
+- [X] Add a short explanation of how to add an interface string and how to add a lab translation later.
+- [X] Check the documentation and code for outdated content paths.
+- [X] Run `npm run check && npm run build`; compare production URLs with the Step 0 list. The production build must not contain new `/en/` pages.
+- [X] Update `.github/workflows/pr-check.yml` to run a second build with the English-pages environment variable enabled. This validation build must not deploy; its purpose is to catch broken English routes and translated content in future translation PRs.
+- [X] Check Ukrainian pages with `npm run preview`. Check English pages with `npm run dev` or a local build with the environment variable enabled.
+- [X] Retake the screenshots from Step 0 for the same pages and viewport sizes so the interface changes can be compared.
 
-**Done when:** checks pass, production URLs are unchanged, and there are no broken links. Before/after screenshots are available for comparison.
+**Done when:** checks pass, production URLs are unchanged, and there are no broken links. Before/after screenshots are available for comparison. (Step 7 complete.)
 
 ## Key decisions
 

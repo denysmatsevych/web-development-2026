@@ -6,9 +6,9 @@ grading reference.
 
 | Source | Becomes |
 | --- | --- |
-| `src/content/labs/web-development/lab-4.md` | `/web-development/labs/lab-4/` |
-| `src/content/labs/web-development/lab-4.md` via `docs/web/build-handout.py lab-4` | `/labs/lab-4.pdf` (re-run after editing the handout) |
-| `src/content/tasks/web-development/lab-4.md` | `/web-development/labs/lab-4/task/` |
+| `src/content/labs/web-development/uk/lab-4.md` | `/web-development/labs/lab-4/` |
+| `src/content/labs/web-development/uk/lab-4.md` via `docs/web/build-handout.py lab-4` | `/labs/lab-4.pdf` (re-run after editing the handout) |
+| `src/content/tasks/web-development/uk/lab-4.md` | `/web-development/labs/lab-4/task/` |
 | `flowtask-starter/` (see §6) | the code students audit |
 
 ## 1. Why a seeded starter

@@ -31,3 +31,18 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      # The production build must stay Ukrainian-only: no /en/ pages.
+      - name: Production build has no English pages
+        run: test ! -d dist/en
+
+      # Validation only: never uploaded or deployed. Builds the English
+      # routes too, so broken /en/ pages or translated content in a
+      # translation PR fail here instead of after merge.
+      - name: Build with English pages (validation only)
+        run: npm run build
+        env:
+          VITE_ENABLE_ENGLISH: "true"
+
+      - name: English build contains English pages
+        run: test -d dist/en

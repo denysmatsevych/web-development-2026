@@ -1,5 +1,10 @@
 # Guide: Implementing Lab 1 in the `/labs/` route
 
+**Historical guide.** Written before the multi-course and two-language work.
+Paths and schemas below are the original flat ones. Today content lives in
+`src/content/<labs|tasks>/<course>/<locale>/` and the language comes from the
+`uk/`/`en/` folder, not from frontmatter. See `README.md` for the current layout.
+
 Step-by-step plan for turning the source handout
 `ЛР-1_Налаштування_середовища_розробки_HTML_CSS_JS_TS.docx` (+ its `.pdf` render)
 into a real page at `/labs/lab-1/`, replacing the "Coming soon" placeholder in
@@ -70,7 +75,7 @@ unzip -o "ЛР-1_....docx" -d extracted
 | Decision      | Choice                                                       | Why                                                                                   |
 | ------------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------------- |
 | Content model | New `labs` content collection, one `.md` per lab             | Mirrors `docs`; prose/tables/code are Markdown-shaped                                 |
-| File          | `src/content/labs/lab-1.md` (flat, no locale folder)         | Labs are Ukrainian-only for now; a `lang` frontmatter field carries the language      |
+| File          | `src/content/labs/lab-1.md` (flat, no locale folder)         | Historical: today the language comes from the `uk/` folder, not from frontmatter      |
 | URL           | `/labs/lab-1/`                                               | Matches `/lectures/<slug>`; readable                                                  |
 | Layout        | New `LabLayout.astro` (header + article + ToC rail + footer) | `DocsLayout` is hard-wired to `SubjectTabs` + curriculum `Sidebar`; labs have neither |
 | Prose styling | Reuse the global `.doc-content` class                        | Already styles h2–h4, lists, tables, `pre`, blockquotes, inline code                  |
@@ -118,9 +123,8 @@ collection untouched; append `labs` and extend the export.
 ```ts
 /**
  * The `labs` collection — one Markdown file per lab assignment under
- * `src/content/labs/`. Unlike `docs`, labs are flat (no locale folder): the
- * course's lab handouts are Ukrainian, and `lang` carries that to `<html lang>`
- * rather than the file path. Ordering is `number`, not folder position.
+ * `src/content/labs/`. Unlike `docs`, labs are flat (no locale folder).
+ * Ordering is `number`, not folder position.
  */
 const labs = defineCollection({
   // ids look like "lab-1" — ".md" stripped, no prefix.
@@ -132,8 +136,6 @@ const labs = defineCollection({
     title: z.string(),
     /** One-line description — index card blurb + meta description. */
     summary: z.string(),
-    /** BCP-47 language of the body — drives `<html lang>`. */
-    lang: z.string().default("uk"),
     /** Header meta panel — all optional so a terse lab can skip them. */
     discipline: z.string().optional(),
     level: z.string().optional(),
@@ -820,7 +822,6 @@ document; frontmatter carries the header block and handout link.
 number: 1
 title: "Налаштування середовища розробки для HTML, CSS, JavaScript/TypeScript"
 summary: "Робоче локальне середовище фронтенд-розробки: IDE, інструменти якості коду, локальний перегляд, Git/GitHub, GitHub Pages і Vercel, кероване використання AI-агента."
-lang: uk
 discipline: "«Сучасна веброзробка: HTML, CSS, JS/TS»"
 level: "3 курс, спеціальність «Комп'ютерні науки»"
 format: "Індивідуально"
