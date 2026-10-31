@@ -9,6 +9,8 @@
  * and the card titles are not headings. The route renders it above
  * `.doc-content` so it stays out of the article's typography and its ToC.
  */
+import { getLocale } from '@/i18n';
+
 interface Plan {
   name: string;
   price: string;
@@ -62,9 +64,11 @@ const {
   lead = 'Оберіть план, який найкраще підходить для ваших завдань',
   plans = PLANS,
 } = Astro.props;
+
+const locale = getLocale(Astro.currentLocale);
 ---
 
-<div class="mockup">
+<div class="mockup" lang={locale === 'uk' ? undefined : 'uk'}>
   <p class="mockup__heading">{heading}</p>
   <p class="mockup__lead">{lead}</p>
 

@@ -1,0 +1,17 @@
+---
+import type { CourseTitlePart } from '@/data/courses';
+import type { Locale } from '@/i18n';
+
+interface Props {
+  parts: CourseTitlePart[];
+  locale: Locale;
+  documentLocale?: Locale;
+}
+
+const { parts, locale, documentLocale = locale } = Astro.props;
+---
+
+{parts.map((part) => {
+  const lang = part.lang ?? locale;
+  return <span lang={lang === documentLocale ? undefined : lang}>{part.text}</span>;
+})}

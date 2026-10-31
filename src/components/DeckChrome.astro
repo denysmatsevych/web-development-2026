@@ -1,6 +1,6 @@
 ---
-import { site } from '@/data/site';
-import { withBase } from '@/lib/paths';
+import { getLocale, localeHref, useTranslations, type Locale } from "@/i18n";
+import LanguageSwitcher from "./LanguageSwitcher.astro";
 
 /** An adjacent deck — rendered as a step link in the top-left cluster. */
 export interface LectureLink {
@@ -18,49 +18,82 @@ interface Props {
   /** Previous / next deck, so you can step between lectures without the list. */
   prevLecture?: LectureLink;
   nextLecture?: LectureLink;
+  alternates?: Partial<Record<Locale, string>>;
+  courseSlug?: string;
 }
-const { total, lecturesHref, prevLecture, nextLecture } = Astro.props;
-const home = withBase('/');
+const {
+  total,
+  lecturesHref,
+  prevLecture,
+  nextLecture,
+  alternates,
+  courseSlug,
+} = Astro.props;
+const locale = getLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const home = localeHref(locale, "/");
 
 const pill =
-  'no-print inline-flex items-center gap-2 rounded-md border border-ink-800 bg-ink-950/80 px-3 py-2 ' +
-  'font-mono text-xs text-ink-400 backdrop-blur-sm transition hover:border-accent-500 hover:text-accent-500';
+  "grow sm:flex-none" +
+  "no-print inline-flex items-center gap-2 rounded-md border border-ink-800 bg-ink-950/80 px-3 py-2 " +
+  "font-mono text-xs text-ink-400 backdrop-blur-sm transition hover:border-accent-500 hover:text-accent-500";
 ---
 
-{
-  (lecturesHref || prevLecture || nextLecture) && (
-    <nav
-      aria-label="Навігація по лекціях"
-      class="no-print fixed left-4 top-4 z-40 flex flex-wrap items-center gap-2"
-    >
-      {lecturesHref && (
-        <a href={lecturesHref} title="Усі лекції" class={pill}>
-          <span aria-hidden="true">←</span> Лекції
-        </a>
-      )}
-      {prevLecture && (
-        <a href={prevLecture.href} title={`Попередня — ${prevLecture.title}`} class={pill}>
-          <span aria-hidden="true">←</span> {prevLecture.label}
-        </a>
-      )}
-      {nextLecture && (
-        <a href={nextLecture.href} title={`Наступна — ${nextLecture.title}`} class={pill}>
-          {nextLecture.label} <span aria-hidden="true">→</span>
-        </a>
-      )}
-    </nav>
-  )
-}
+<div class="w-full flex flex-col gap-2 px-4 sm:flex-row sm:justify-between top-4 z-40 fixed">
+  {
+    (lecturesHref || prevLecture || nextLecture) && (
+      <nav
+        aria-label={t.deck.navigation}
+        class="no-print flex flex-wrap items-center justify-center gap-2"
+      >
+        {lecturesHref && (
+          <a href={lecturesHref} title={t.deck.allLectures} class={`${pill} w-full min-[331px]:w-auto`}>
+            <span aria-hidden="true">←</span> {t.navigation.lectures}
+          </a>
+        )}
+        {prevLecture && (
+          <a
+            href={prevLecture.href}
+            title={t.deck.previousLecture.replace("{title}", prevLecture.title)}
+            class={pill}
+          >
+            <span aria-hidden="true">←</span> {prevLecture.label}
+          </a>
+        )}
+        {nextLecture && (
+          <a
+            href={nextLecture.href}
+            title={t.deck.nextLecture.replace("{title}", nextLecture.title)}
+            class={pill}
+          >
+            {nextLecture.label} <span aria-hidden="true">→</span>
+          </a>
+        )}
+      </nav>
+    )
+  }
 
-<a href={home} title="Back to the course hub" class={`${pill} fixed right-4 top-4 z-40`}>
-  <span aria-hidden="true">←</span> {site.name}
-</a>
+  <div class="flex items-center justify-center gap-2">
+    <LanguageSwitcher
+      locale={locale}
+      alternates={alternates}
+      courseSlug={courseSlug}
+      variant="deck"
+    />
+    <a href={home} title={t.deck.backToHub} class={pill}>
+      <span aria-hidden="true">←</span>
+      {t.site.name}
+    </a>
+  </div>
+</div>
 
-<div class="no-print fixed inset-x-0 bottom-0 z-40 bg-gradient-to-t from-ink-950/95 to-transparent">
+<div
+  class="no-print fixed inset-x-0 bottom-0 z-40 bg-gradient-to-t from-ink-950/95 to-transparent"
+>
   <div
     id="progress-track"
     role="progressbar"
-    aria-label="Прогрес презентації"
+    aria-label={t.deck.progress}
     aria-valuemin="1"
     aria-valuemax={total}
     aria-valuenow="1"
@@ -70,16 +103,24 @@ const pill =
       id="slide-progress"
       class="h-full bg-accent-500 transition-[width] duration-300 ease-out"
       style="width: 0%"
-    />
+    >
+    </div>
   </div>
 
-  <nav aria-label="Навігація по слайдах" class="flex items-center justify-between gap-6 px-6 py-3">
-    <p id="slide-counter" aria-live="polite" class="font-mono text-sm text-ink-400 tabular-nums">
+  <nav
+    aria-label={t.deck.slidesNavigation}
+    class="flex items-center justify-between gap-6 px-6 py-3"
+  >
+    <p
+      id="slide-counter"
+      aria-live="polite"
+      class="font-mono text-sm text-ink-400 tabular-nums"
+    >
       1 / {total}
     </p>
 
     <p class="hidden font-mono text-xs text-ink-400 md:block">
-      ← → перегортання · N нотатки · F повний екран · T тема · Ctrl+P у PDF
+      {t.deck.controls}
     </p>
 
     <div class="flex gap-2">
@@ -88,14 +129,16 @@ const pill =
         type="button"
         class="rounded-md border border-ink-800 px-4 py-2 text-sm text-paper transition hover:border-accent-500 hover:text-accent-500 disabled:cursor-not-allowed disabled:opacity-35"
       >
-        <span aria-hidden="true">←</span> Назад
+        <span aria-hidden="true">←</span>
+        {t.deck.back}
       </button>
       <button
         id="btn-next"
         type="button"
         class="rounded-md border border-ink-800 px-4 py-2 text-sm text-paper transition hover:border-accent-500 hover:text-accent-500 disabled:cursor-not-allowed disabled:opacity-35"
       >
-        Далі <span aria-hidden="true">→</span>
+        {t.deck.forward}
+        <span aria-hidden="true">→</span>
       </button>
     </div>
   </nav>

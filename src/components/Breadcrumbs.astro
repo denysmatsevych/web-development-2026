@@ -4,17 +4,23 @@
  * The final crumb stays as the active page label, while earlier crumbs link
  * back to their parent sections.
  */
-interface Crumb { label: string; href: string }
+import { getLocale, useTranslations, type Locale } from '@/i18n';
+
+interface CrumbPart { text: string; lang?: Locale }
+interface Crumb { label: string; href: string; lang?: string; parts?: CrumbPart[] }
 
 interface Props {
   /** Root first, current article last. */
   items: Crumb[];
+  locale?: Locale;
 }
 
-const { items } = Astro.props;
+const { items, locale: pageLocale } = Astro.props;
+const locale = pageLocale ?? getLocale(Astro.currentLocale);
+const t = useTranslations(locale);
 ---
 
-<nav class="breadcrumbs" aria-label="Breadcrumb">
+<nav class="breadcrumbs" aria-label={t.navigation.breadcrumb}>
   <ol>
     {
       items.map((crumb, i) => {
@@ -22,9 +28,21 @@ const { items } = Astro.props;
         return (
           <li>
             {isLast ? (
-              <span aria-current="page">{crumb.label}</span>
+              <span aria-current="page" lang={crumb.lang === locale ? undefined : crumb.lang}>
+                {crumb.parts
+                  ? crumb.parts.map((part) => (
+                      <span lang={part.lang === locale ? undefined : part.lang}>{part.text}</span>
+                    ))
+                  : crumb.label}
+              </span>
             ) : (
-              <a href={crumb.href}>{crumb.label}</a>
+              <a href={crumb.href} lang={crumb.lang === locale ? undefined : crumb.lang}>
+                {crumb.parts
+                  ? crumb.parts.map((part) => (
+                      <span lang={part.lang === locale ? undefined : part.lang}>{part.text}</span>
+                    ))
+                  : crumb.label}
+              </a>
             )}
             {!isLast && (
               <span class="breadcrumbs__sep" aria-hidden="true">

@@ -236,12 +236,13 @@ function setupCopyButtons(): void {
   const blocks = document.querySelectorAll<HTMLPreElement>('[data-copy-code] pre');
   if (blocks.length === 0 || !navigator.clipboard?.writeText) return;
 
-  const uk = document.documentElement.lang.startsWith('uk');
-  const label = uk ? 'Копіювати' : 'Copy';
-  const copiedLabel = uk ? 'Скопійовано' : 'Copied';
-  const failedLabel = uk ? 'Не вдалося скопіювати' : 'Copy failed';
-
   for (const pre of blocks) {
+    const container = pre.closest<HTMLElement>('[data-copy-code]');
+    const { copyLabel: label, copiedLabel, copyFailedLabel: failedLabel } = container?.dataset ?? {};
+    if (!label || !copiedLabel || !failedLabel) {
+      throw new Error('Code-copy labels are missing from the article container.');
+    }
+
     // The button sits in a wrapper, not the `<pre>`, so it stays put when a
     // long line scrolls the block sideways.
     const wrapper = document.createElement('div');

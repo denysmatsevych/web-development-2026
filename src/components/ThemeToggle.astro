@@ -10,6 +10,9 @@
  * Both icons sit in the DOM; CSS shows the one matching the current theme
  * (`.dark` → moon, light → sun), so the button paints correctly with no JS.
  */
+import { getLocale, useTranslations } from '@/i18n';
+
+const t = useTranslations(getLocale(Astro.currentLocale));
 ---
 
 <button
@@ -17,7 +20,7 @@
   type="button"
   class="inline-flex size-9 items-center justify-center rounded-xl border border-border text-foreground transition-colors hover:bg-accent hover:text-accent-foreground
   cursor-pointer"
-  aria-label="Toggle color theme"
+  aria-label={t.theme.toggle}
 >
   {/* Sun — light theme */}
   <svg

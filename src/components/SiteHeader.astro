@@ -4,60 +4,61 @@
  * `website_ao` Header, minus React / the site menu).
  *
  * Layout: wordmark → home · course links ·
- * disabled `EN` language-switcher placeholder · `ThemeToggle`.
+ * `LanguageSwitcher` · `ThemeToggle`.
  *
  * Height is a fixed 4rem to match `--header-h` in `LabLayout` (the sticky
  * offset for the ToC rail).
  */
 import ThemeToggle from '@/components/ThemeToggle.astro';
-import { getCourses } from '@/data/courses';
-import { site } from '@/data/site';
-import { withBase } from '@/lib/paths';
+import LanguageSwitcher from '@/components/LanguageSwitcher.astro';
+import {
+  getCourseNavTitle,
+  getCourseNavTitleLang,
+  getCourses,
+} from '@/data/courses';
+import { getLocale, localeHref, useTranslations, type Locale } from '@/i18n';
 
 interface Props {
   courseSlug?: string;
+  locale?: Locale;
+  /** Language versions of the current page, for the language switcher. */
+  alternates?: Partial<Record<Locale, string>>;
 }
 
-const { courseSlug } = Astro.props;
-const home = withBase('/');
+const { courseSlug, locale: pageLocale, alternates } = Astro.props;
+const locale = pageLocale ?? getLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const home = localeHref(locale, '/');
 const courses = getCourses();
 ---
 
 <header
   class="sticky top-0 z-30 h-16 border-b border-border bg-background/85 backdrop-blur-md"
 >
-  <div class="mx-auto flex h-full max-w-[100rem] items-center gap-3 px-4 sm:px-6">
+  <div class="mx-auto flex h-full max-w-[100rem] items-center justify-end min-[426px]:justify-between gap-3 px-4 sm:px-6">
     <a
       href={home}
-      class="mr-auto flex shrink-0 items-center gap-2 font-semibold tracking-tight text-foreground"
+      class="hidden min-[426px]:flex mr-auto shrink-0 items-center gap-2 font-semibold tracking-tight text-foreground"
     >
       <span class="inline-block size-2.5 rounded-full bg-brand-blue" aria-hidden="true"></span>
-      {site.name}
+      {t.site.name}
     </a>
-    <nav class="hidden items-center gap-1 md:flex" aria-label="Courses">
+    <nav class="hidden items-center gap-1 md:flex" aria-label={t.navigation.courses}>
       {
         courses.map((course) => (
           <a
-            href={withBase(`/${course.slug}/`)}
+            href={localeHref(locale, `/${course.slug}/`)}
             class="inline-flex items-center rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
             aria-current={course.slug === courseSlug ? 'location' : undefined}
+            lang={getCourseNavTitleLang(course, locale)}
           >
-            {course.title}
+            {getCourseNavTitle(course, locale)}
           </a>
         ))
       }
     </nav>
 
-    <span class="mx-1 hidden h-5 w-px bg-border md:block" aria-hidden="true"></span>
-
-    <span
-      class="hidden cursor-not-allowed select-none rounded-lg border border-border px-2 py-1 text-xs font-medium text-muted-foreground md:inline-block"
-      aria-disabled="true"
-      title="English only for now — a language switcher lands later"
-    >
-      EN
-    </span>
-
+    <LanguageSwitcher locale={locale} alternates={alternates} courseSlug={courseSlug} />
     <ThemeToggle />
   </div>
 </header>

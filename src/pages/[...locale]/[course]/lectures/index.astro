@@ -1,0 +1,257 @@
+---
+/**
+ * Lectures index — the list of slide decks from the course lecture registry.
+ * Each card links to `/<course>/lectures/<slug>`. Uses the shared `SiteHeader` /
+ * `SiteFooter`; the decks themselves opt out of that chrome via `DeckLayout`.
+ */
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import CourseTitle from "@/components/CourseTitle.astro";
+import { getCourseTitleParts, getCourses, type Course } from "@/data/courses";
+import { getLectureList } from "@/data/lectures";
+import {
+  defaultLocale,
+  getEnabledLocales,
+  localeAlternates,
+  localeHref,
+  useTranslations,
+  type Locale,
+} from "@/i18n";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+export function getStaticPaths() {
+  return getCourses().flatMap((course) =>
+    getEnabledLocales().map((locale) => ({
+      params: {
+        locale: locale === defaultLocale ? undefined : locale,
+        course: course.slug,
+      },
+      props: { course, locale },
+    })),
+  );
+}
+
+interface Props {
+  course: Course;
+  locale: Locale;
+}
+
+const { course, locale } = Astro.props;
+const t = useTranslations(locale);
+const alternates = localeAlternates(`/${course.slug}/lectures/`);
+const courseTitleParts = getCourseTitleParts(course, locale);
+const courseTitle = courseTitleParts.map((p) => p.text).join(" ");
+const lectures = getLectureList(course.slug, locale);
+---
+
+<BaseLayout
+  title={t.navigation.lectures}
+  titleSuffix={courseTitle}
+  description={t.course.lectureDecks.replace("{course}", courseTitle)}
+  locale={locale}
+  alternates={alternates}
+>
+  <SiteHeader
+    courseSlug={course.slug}
+    locale={locale}
+    alternates={alternates}
+  />
+
+  <main id="main-content" class="page" tabindex="-1">
+    <a class="back-link" href={localeHref(locale, `/${course.slug}/`)}>
+      <span aria-hidden="true">←</span>
+      {t.navigation.backToCourse}
+    </a>
+
+    <section class="hero">
+      <p class="hero__eyebrow">
+        <CourseTitle
+          parts={getCourseTitleParts(course, locale)}
+          locale={locale}
+        />
+      </p>
+      <h1 class="hero__title">{t.navigation.lectures}</h1>
+      <p class="hero__lead">{t.course.lecturesLead}</p>
+    </section>
+
+    <ul class="decks">
+      {
+        lectures.map(({lecture, fallback}) => (
+          <li>
+            <a
+              href={localeHref(
+                lecture.lang,
+                `/${course.slug}/lectures/${lecture.slug}/`,
+              )}
+              class="deck-card glass-panel"
+            >
+              <span class="deck-card__index">
+                {String(lecture.number).padStart(2, "0")}
+              </span>
+              <span class="deck-card__body">
+                <span class="deck-card__title">
+                  <span
+                    lang={lecture.lang === locale ? undefined : lecture.lang}
+                  >
+                    {lecture.title}
+                  </span>
+                  {fallback && (
+                    <span class="deck-card__pill">{t.course.inUkrainian}</span>
+                  )}
+                </span>
+                <span
+                  class="deck-card__summary"
+                  lang={lecture.lang === locale ? undefined : lecture.lang}
+                >
+                  {lecture.summary}
+                </span>
+              </span>
+              <span class="deck-card__arrow" aria-hidden="true">
+                →
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </main>
+
+  <SiteFooter courseSlug={course.slug} locale={locale} />
+</BaseLayout>
+
+<style>
+  .page {
+    max-width: 60rem;
+    width: 100%;
+    margin-inline: auto;
+    padding: 3.5rem 1rem 5rem;
+  }
+
+  @media (min-width: 640px) {
+    .page {
+      padding-inline: 1.5rem;
+    }
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin-bottom: 1.75rem;
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+    text-decoration: none;
+  }
+  .back-link:hover {
+    color: var(--foreground);
+  }
+
+  .hero {
+    margin-bottom: 3rem;
+  }
+
+  .hero__eyebrow {
+    margin: 0 0 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--brand-text);
+  }
+
+  .hero__title {
+    margin: 0 0 1rem;
+    font-size: clamp(2rem, 5vw, 2.75rem);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--foreground);
+  }
+
+  .hero__lead {
+    margin: 0;
+    max-width: 42rem;
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: var(--muted-foreground);
+  }
+
+  .hero__lead kbd {
+    padding: 0.05em 0.4em;
+    font-size: 0.85em;
+    font-family: var(--font-mono);
+    color: var(--foreground);
+    background: var(--muted);
+    border-radius: var(--radius-sm);
+  }
+
+  .decks {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .deck-card {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.25rem 1.4rem;
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    transition:
+      border-color 0.15s ease,
+      transform 0.15s ease;
+  }
+
+  .deck-card__index {
+    font-size: 1.1rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--brand-text);
+  }
+
+  .deck-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .deck-card__title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--foreground);
+  }
+
+  .deck-card__pill {
+    margin-left: 0.5rem;
+    padding: 0.1rem 0.4rem;
+    border: 1px solid var(--color-brand-blue);
+    border-radius: var(--radius-sm);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    vertical-align: middle;
+    color: var(--brand-text);
+    white-space: nowrap;
+  }
+
+  .deck-card__summary {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--muted-foreground);
+  }
+
+  .deck-card__arrow {
+    color: var(--brand-text);
+    transition: transform 0.15s ease;
+  }
+
+  .deck-card:hover .deck-card__arrow {
+    transform: translateX(0.2rem);
+  }
+</style>

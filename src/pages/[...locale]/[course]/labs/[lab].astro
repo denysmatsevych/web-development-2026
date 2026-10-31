@@ -1,0 +1,126 @@
+---
+/**
+ * Lab page — one static route per published lab at
+ * `/<course>/labs/<lab>`. Drafts are excluded by `getLabs()`.
+ *
+ * The body is authored from `##` down; the `<h1>`, summary and breadcrumb
+ * trail all come from frontmatter, composed here into `LabLayout`.
+ */
+import { render } from "astro:content";
+
+import Breadcrumbs from "@/components/Breadcrumbs.astro";
+import LabHeader from "@/components/LabHeader.astro";
+import PrevNext from "@/components/PrevNext.astro";
+import LabLayout from "@/layouts/LabLayout.astro";
+import { getCourseTitleParts, getCourses, type Course } from "@/data/courses";
+import {
+  getAdjacentLab,
+  getLabAlternates,
+  getLabs,
+  labHref,
+  labLabels,
+  splitId,
+} from "@/lib/labs";
+import {
+  defaultLocale,
+  getEnabledLocales,
+  localeHref,
+  useTranslations,
+  type Locale,
+} from "@/i18n";
+
+export async function getStaticPaths() {
+  return (
+    await Promise.all(
+      getCourses().flatMap((course) =>
+        getEnabledLocales().map(async (locale) =>
+          (await getLabs(course.slug, locale)).map((entry) => ({
+            params: {
+              locale: locale === defaultLocale ? undefined : locale,
+              course: course.slug,
+              lab: splitId(entry.id).slug,
+            },
+            props: { course, entry, locale },
+          })),
+        ),
+      ),
+    )
+  ).flat();
+}
+
+interface Props {
+  course: Course;
+  entry: Awaited<ReturnType<typeof getLabs>>[number];
+  locale: Locale;
+}
+
+const { course, entry, locale } = Astro.props;
+const { data } = entry;
+/** Language of the lab, from its folder. */
+const contentLang = splitId(entry.id).locale;
+const t = useTranslations(locale);
+const courseTitleParts = getCourseTitleParts(course, locale);
+const courseTitle = courseTitleParts.map((p) => p.text).join(" ");
+
+// Body + h2/h3 headings for the "on this page" rail (Astro stamps the ids).
+const { Content, headings } = await render(entry);
+const { slug } = splitId(entry.id);
+const alternates = await getLabAlternates(course.slug, slug);
+const adjacent = await getAdjacentLab(locale, course.slug, slug);
+const { eyebrow, eyebrowSuffix, crumb } = labLabels(entry, locale);
+
+const crumbs = [
+  {
+    label: courseTitle,
+    href: localeHref(locale, `/${course.slug}/`),
+    parts: getCourseTitleParts(course, locale),
+  },
+  {
+    label: t.navigation.labs,
+    href: localeHref(locale, `/${course.slug}/labs/`),
+  },
+  { label: crumb, href: labHref(locale, course.slug, slug) },
+];
+---
+
+<LabLayout
+  title={data.title}
+  titleSuffix={courseTitle}
+  courseSlug={course.slug}
+  locale={locale}
+  description={data.summary}
+  headings={headings}
+  headingsLang={contentLang !== locale ? contentLang : undefined}
+  alternates={alternates}
+>
+  <Breadcrumbs items={crumbs} locale={locale} />
+
+  <LabHeader
+    eyebrow={eyebrow}
+    eyebrowSuffix={eyebrowSuffix}
+    eyebrowSuffixLang={eyebrowSuffix && contentLang !== locale
+      ? contentLang
+      : undefined}
+    title={data.title}
+    summary={data.summary}
+    contentLang={contentLang !== locale ? contentLang : undefined}
+    handout={data.handout}
+  />
+
+  {
+    /* `data-copy-code` — copy buttons on the body's code blocks (the email
+      subject and links in "Вимоги до звіту"); see src/scripts/docs.ts. */
+  }
+  <article
+    class="doc-content"
+    data-copy-code
+    data-copy-label={t.docs.copy}
+    data-copied-label={t.docs.copied}
+    data-copy-failed-label={t.docs.copyFailed}
+    lang={contentLang === locale ? undefined : contentLang}
+  >
+    <Content />
+  </article>
+
+  <PrevNext prev={adjacent.prev} next={adjacent.next} />
+</LabLayout>

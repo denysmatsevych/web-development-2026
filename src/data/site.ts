@@ -1,17 +1,10 @@
 /**
- * Site metadata and the list of top-level sections.
- *
- * Course-independent site metadata and the section definitions used to build
+ * The contact destination and the section definitions used to build
  * course-specific navigation.
  */
+import { useTranslations, type Locale } from '@/i18n';
 
 export interface SiteConfig {
-  /** Wordmark in the header; base for page `<title>`s. */
-  name: string;
-  /** Default meta + og description (a page may override it). */
-  description: string;
-  /** Homepage hero copy. */
-  hubEyebrow: string;
   /** Footer contact — label shown, URL linked. */
   contactLabel: string;
   contactUrl: string;
@@ -22,40 +15,34 @@ export interface Section {
   id: 'lectures' | 'labs';
   /** Nav label / card heading. */
   label: string;
-  /** Course-relative path — `getSections(courseSlug)` adds the course prefix. */
+  /** Course-relative path — `getSections(courseSlug, locale)` adds the course prefix. */
   href: string;
   /** One-line description for the section card. */
   blurb: string;
 }
 
 export const site: SiteConfig = {
-  name: 'Modern Web Development',
-  description:
-    'A collection of courses with lecture slide decks and hands-on lab assignments.',
-  hubEyebrow: 'Навчальна платформа',
-
   contactLabel: 'denys.matsevych@oa.edu.ua',
   contactUrl: 'mailto:denys.matsevych@oa.edu.ua',
 };
 
-const sections: Section[] = [
+const sections: Pick<Section, 'id' | 'href'>[] = [
   {
     id: 'lectures',
-    label: 'Lectures',
     href: '/lectures/',
-    blurb: 'Keyboard-driven slide decks for each lecture — present in class or read as notes.',
   },
   {
     id: 'labs',
-    label: 'Labs',
     href: '/labs/',
-    blurb: 'Hands-on assignments that build on each lecture, with downloadable handouts.',
   },
 ];
 
-export function getSections(courseSlug: string): Section[] {
+export function getSections(courseSlug: string, locale: Locale): Section[] {
+  const t = useTranslations(locale);
   return sections.map((section) => ({
     ...section,
     href: `/${courseSlug}${section.href}`,
+    label: section.id === 'lectures' ? t.navigation.lectures : t.navigation.labs,
+    blurb: section.id === 'lectures' ? t.course.sectionLectures : t.course.sectionLabs,
   }));
 }

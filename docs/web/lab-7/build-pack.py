@@ -6,7 +6,7 @@ The zip is `courtly-assets/` plus two things kept out of that folder so they
 are not duplicated in git:
 
 - `mockup/`  — the 1:1 captures from public/labs/lab-7/ (render-mockup.mjs);
-- `SPEC.md`  — §2–5 of src/content/tasks/web-development/lab-7.md, so the pack works offline
+- `SPEC.md`  — §2–5 of src/content/tasks/web-development/uk/lab-7.md, so the pack works offline
                and can never disagree with the design page.
 
 Zips with Windows' bsdtar: Git Bash's GNU tar ignores `-a` and would write a
@@ -24,7 +24,7 @@ PAGE = f"{SITE}/web-development/labs/lab-7/task/"
 OUT = ROOT / "public/labs/courtly-assets.zip"
 TAR = r"C:\Windows\System32\tar.exe"
 
-brief = (ROOT / "src/content/tasks/web-development/lab-7.md").read_text(encoding="utf-8")
+brief = (ROOT / "src/content/tasks/web-development/uk/lab-7.md").read_text(encoding="utf-8")
 body = brief.split("---", 2)[2]
 spec = body[body.index("## 2. Design tokens"):].strip()
 # Root-relative site links do not resolve outside the site.

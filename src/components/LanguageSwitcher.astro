@@ -1,0 +1,105 @@
+---
+/**
+ * LanguageSwitcher — `UK | EN` links to the other language version of the
+ * current page.
+ */
+import {
+  getLanguageSwitchLinks,
+  getLocale,
+  languageNames,
+  useTranslations,
+  type Locale,
+} from "@/i18n";
+
+interface Props {
+  locale?: Locale;
+  /** Page URL for each language version that exists, from `localeAlternates()`. */
+  alternates?: Partial<Record<Locale, string>>;
+  /** Fallback target when a language version does not exist. */
+  courseSlug?: string;
+  /** `site` for the header, `deck` for the slide-deck buttons. */
+  variant?: "site" | "deck";
+}
+
+const {
+  locale: pageLocale,
+  alternates,
+  courseSlug,
+  variant = "site",
+} = Astro.props;
+const locale = pageLocale ?? getLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const links = getLanguageSwitchLinks(alternates, courseSlug);
+
+const targetLink = links?.find((link) => link.locale !== locale);
+
+const styles = {
+  site: {
+    base: "inline-flex items-center rounded-md px-2.5 py-1.5 -mx-0.5 text-sm transition-colors",
+    current: "bg-accent text-foreground",
+    other: "text-muted-foreground hover:bg-accent hover:text-foreground",
+    wrapper: "border-l-2 border-r-2 border-accent rounded-md",
+  },
+  deck: {
+    base: "no-print inline-flex items-center rounded-md border px-3 py-2 font-mono text-xs backdrop-blur-sm transition",
+    current: "border-accent-500 bg-ink-950/80 text-accent-500",
+    other:
+      "border-ink-800 bg-ink-950/80 text-ink-400 hover:border-accent-500 hover:text-accent-500",
+    wrapper: "",
+  },
+}[variant];
+---
+
+{
+  links && (
+    <>
+      <div class="flex min-[426px]:hidden items-center">
+        {targetLink && (
+          <a
+            href={targetLink.href}
+            lang={targetLink.locale}
+            hreflang={targetLink.locale}
+            aria-label={languageNames[targetLink.locale]}
+            class:list={[styles.base, styles.other]}
+          >
+            {targetLink.locale.toUpperCase()}
+          </a>
+        )}
+      </div>
+
+      <div
+        role="group"
+        aria-label={t.navigation.language}
+        class:list={[
+          "hidden min-[426px]:flex items-center gap-1",
+          styles.wrapper,
+        ]}
+      >
+        {links.map((link, index) => (
+          <>
+            <a
+              href={link.href}
+              lang={link.locale === locale ? undefined : link.locale}
+              hreflang={link.locale}
+              aria-label={languageNames[link.locale]}
+              aria-current={link.locale === locale ? "true" : undefined}
+              class:list={[
+                styles.base,
+                link.locale === locale ? styles.current : styles.other,
+              ]}
+            >
+              {link.locale.toUpperCase()}
+            </a>
+
+            {index < links.length - 1 && (
+              <span
+                aria-hidden="true"
+                class="inline-block h-4 w-px bg-accent select-none"
+              />
+            )}
+          </>
+        ))}
+      </div>
+    </>
+  )
+}
