@@ -22,15 +22,15 @@ export interface Course {
   slug: string;
   /** Short English name — switcher, breadcrumbs, `<title>` suffix. */
   title: string;
-  /** Ukrainian name for interface text and page metadata. */
-  titleUk: string;
+  /** Ukrainian course title, with language-marked fragments for mixed-script names. */
+  titlePartsUk: CourseTitlePart[];
   /** Compact localized name for course links in the header and footer. */
   navTitle: string;
   navTitleUk: string;
   navTitleLang?: Locale;
   navTitleUkLang?: Locale;
-  /** Ukrainian course name — muted top line on every lecture-deck title slide. */
-  courseUk: string;
+  /** Optional compact Ukrainian name for lecture-deck title slides. */
+  deckTitleUk?: string;
   /** Meta + og description, and the text on the hub card. */
   description: string;
   /** Ukrainian equivalent of `description`. */
@@ -43,26 +43,29 @@ const courses: Course[] = [
   {
     year: 2026,
     slug: 'web-development',
-    title: 'Web Development',
-    titleUk: 'Сучасна веброзробка · HTML, CSS, JS/TS',
-    navTitle: 'Web Dev',
-    navTitleUk: 'Веброзробка',
-    courseUk: 'Сучасна веброзробка · HTML, CSS, JS/TS',
+    title: 'HTML, CSS, JS/TS',
+    titlePartsUk: [
+      { text: 'HTML, CSS, JS/TS', lang: 'en' },
+    ],
+    navTitle: 'Core Web Stack',
+    navTitleUk: 'Базовий вебстек',
     description:
-      'Lecture slide decks and lab assignments for modern HTML, CSS and JavaScript/TypeScript.',
+      'Lecture slide decks and lab assignments covering frontend development fundamentals: HTML, CSS, and JavaScript/TypeScript.',
     descriptionUk:
-      'Лекції та лабораторні роботи із сучасних HTML, CSS і JavaScript/TypeScript.',
+      'Лекції та лабораторні роботи з основ фронтенд-розробки: HTML, CSS і JavaScript/TypeScript.',
     status: 'published',
   },
   {
     year: 2026,
     slug: 'react',
     title: 'React',
-    titleUk: 'Розробка вебзастосунків на React',
+    titlePartsUk: [
+      { text: 'Розробка вебзастосунків на ' },
+      { text: 'React', lang: 'en' },
+    ],
     navTitle: 'React',
     navTitleUk: 'React',
     navTitleUkLang: 'en',
-    courseUk: 'Розробка вебзастосунків на React',
     description: 'Lectures and labs on building web applications with React.',
     descriptionUk: 'Лекції та лабораторні роботи зі створення вебзастосунків на React.',
     status: 'published',
@@ -71,10 +74,10 @@ const courses: Course[] = [
     year: 2026,
     slug: 'web-accessibility',
     title: 'Web Accessibility',
-    titleUk: 'Розробка доступних вебінтерфейсів',
+    titlePartsUk: [{ text: 'Розробка доступних вебінтерфейсів' }],
     navTitle: 'A11y',
     navTitleUk: 'Вебдоступність',
-    courseUk: 'Вебдоступність',
+    deckTitleUk: 'Вебдоступність',
     description: 'Lectures and labs on building accessible web interfaces.',
     descriptionUk: 'Лекції та лабораторні роботи зі створення доступних вебінтерфейсів.',
     status: 'draft',
@@ -92,26 +95,11 @@ export function getCourses(): Course[] {
 }
 
 export function getCourseTitle(course: Course, locale: Locale): string {
-  return locale === 'uk' ? course.titleUk : course.title;
+  return locale === 'uk' ? course.titlePartsUk.map((part) => part.text).join('') : course.title;
 }
 
 export function getCourseTitleParts(course: Course, locale: Locale): CourseTitlePart[] {
-  if (locale === 'en') return [{ text: course.title }];
-
-  switch (course.slug) {
-    case 'web-development':
-      return [
-        { text: 'Сучасна веброзробка · ' },
-        { text: 'HTML, CSS, JS/TS', lang: 'en' },
-      ];
-    case 'react':
-      return [
-        { text: 'Розробка вебзастосунків на ' },
-        { text: 'React', lang: 'en' },
-      ];
-    default:
-      return [{ text: course.titleUk }];
-  }
+  return locale === 'en' ? [{ text: course.title }] : course.titlePartsUk;
 }
 
 export function getCourseNavTitle(course: Course, locale: Locale): string {
@@ -127,6 +115,7 @@ export function getCourseDescription(course: Course, locale: Locale): string {
   return locale === 'uk' ? course.descriptionUk : course.description;
 }
 
-export function getCourseDeckLabel(course: Course, locale: Locale): string {
-  return locale === 'uk' ? course.courseUk : course.title;
+export function getCourseDeckLabelParts(course: Course, locale: Locale): CourseTitlePart[] {
+  if (locale === 'en') return [{ text: course.title }];
+  return course.deckTitleUk ? [{ text: course.deckTitleUk }] : course.titlePartsUk;
 }

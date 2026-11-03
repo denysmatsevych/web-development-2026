@@ -7,7 +7,13 @@
 import { getLocale, useTranslations, type Locale } from '@/i18n';
 
 interface CrumbPart { text: string; lang?: Locale }
-interface Crumb { label: string; href: string; lang?: string; parts?: CrumbPart[] }
+interface Crumb {
+  label: string;
+  href: string;
+  lang?: string;
+  hreflang?: Locale;
+  parts?: CrumbPart[];
+}
 
 interface Props {
   /** Root first, current article last. */
@@ -36,7 +42,11 @@ const t = useTranslations(locale);
                   : crumb.label}
               </span>
             ) : (
-              <a href={crumb.href} lang={crumb.lang === locale ? undefined : crumb.lang}>
+              <a
+                href={crumb.href}
+                lang={crumb.lang === locale ? undefined : crumb.lang}
+                hreflang={crumb.hreflang}
+              >
                 {crumb.parts
                   ? crumb.parts.map((part) => (
                       <span lang={part.lang === locale ? undefined : part.lang}>{part.text}</span>

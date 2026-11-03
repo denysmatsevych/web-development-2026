@@ -40,8 +40,8 @@ Each course gets its own URL prefix, content folder and lecture folder. Everythi
 ```
 src/
 ├─ data/
-│  ├─ site.ts                 site name, general contact
-│  ├─ courses.ts              course registry: year, slug, titles, description, status, courseUk
+│  ├─ site.ts                 contact destination and section definitions
+│  ├─ courses.ts              course registry: year, slug, title parts, description, status, deck-title override
 │  └─ lectures/
 │     ├─ schema.ts            slide model (shared)
 │     ├─ index.ts             getLectures(course): the single home for lecture lookup
@@ -86,7 +86,7 @@ Branch `refactor/courses`, small Conventional Commits, `npm run check && npm run
 **Done when:** the build is green and the URL list is saved.
 
 ### Step 1 · Registry, content and routes (2 d)
-- [X] Add `src/data/courses.ts` (year, slug, titles, description, `status`, `courseUk` moved from `site.ts`) with one helper, `getCourses()`, that filters on `status` and `import.meta.env.DEV`; the hub, the course switcher, the footer and `getStaticPaths` all use it
+- [X] Add `src/data/courses.ts` (year, slug, localized title parts, descriptions, deck-title override, and `status`) with one helper, `getCourses()`, that filters on `status` and `import.meta.env.DEV`; the hub, the course switcher, the footer and `getStaticPaths` all use it
 - [X] `git mv` `src/content/labs/*` into `src/content/labs/web-development/` and `src/content/tasks/*` into `src/content/tasks/web-development/`
 - [X] `git mv` lecture data into `src/data/lectures/web-development/`; `src/data/lectures/index.ts` exposes `getLectures(course)` (no separate `src/lib/lectures.ts`)
 - [X] Update `src/lib/labs.ts` so the helpers split the entry id (`web-development/lab-4`) into course and slug
@@ -96,11 +96,11 @@ Branch `refactor/courses`, small Conventional Commits, `npm run check && npm run
 **Done when:** `npm run check && npm run build` passes and the build has `/web-development/labs/` for all 11 labs, 7 task pages and 2 decks.
 
 ### Step 2 · Header, titles, labels (0.5 d)
-- [X] Set the site name to "Modern Web Development" in `site.ts`
+- [X] Set the localized site name in `i18n/ui.ts`
 - [X] Course switcher in `SiteHeader`; footer links populated from the registry
 - [X] Breadcrumbs: add the course in front (`Web Development › Labs › ЛР-1`)
 - [X] `<title>`: lab, lecture and task titles keep their format and end with the course name from the registry instead of a hardcoded string
-- [X] Deck title slide takes `courseUk` from the registry
+- [X] Deck title slides use the localized course title from the registry, with an optional compact override
 
 **Done when:** every page names the right course.
 

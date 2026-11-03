@@ -284,7 +284,7 @@ Create `plugins/base-links.mjs`:
  * `base`, so a body can write `[ТЗ](/labs/lab-2/task/)` and still work under
  * the GitHub Pages project path.
  *
- * A Sätteri hast plugin, not a rehype one: Astro 7 runs Markdown through
+ * A Sätteri HAST plugin, not a rehype one: Astro 7 runs Markdown through
  * Sätteri by default, and `markdown.rehypePlugins` would drag the whole site
  * back onto the `unified` pipeline. The filter is applied in Rust, so only the
  * handful of link-bearing elements ever crosses into JS.

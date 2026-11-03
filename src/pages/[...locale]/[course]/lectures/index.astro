@@ -7,7 +7,12 @@
 import SiteFooter from "@/components/SiteFooter.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 import CourseTitle from "@/components/CourseTitle.astro";
-import { getCourseTitleParts, getCourses, type Course } from "@/data/courses";
+import {
+  getCourseTitle,
+  getCourseTitleParts,
+  getCourses,
+  type Course,
+} from "@/data/courses";
 import { getLectureList } from "@/data/lectures";
 import {
   defaultLocale,
@@ -39,8 +44,7 @@ interface Props {
 const { course, locale } = Astro.props;
 const t = useTranslations(locale);
 const alternates = localeAlternates(`/${course.slug}/lectures/`);
-const courseTitleParts = getCourseTitleParts(course, locale);
-const courseTitle = courseTitleParts.map((p) => p.text).join(" ");
+const courseTitle = getCourseTitle(course, locale);
 const lectures = getLectureList(course.slug, locale);
 ---
 

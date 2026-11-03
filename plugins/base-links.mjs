@@ -4,16 +4,16 @@
  *  1. Prefix them with the site's `base`, so a body can write
  *     `[ТЗ](/web-development/labs/lab-2/task/)` and still work under the
  *     GitHub Pages project path.
- *  2. In an English Markdown file, add `/en` to a link to a course page
- *     (`/<course>/…`) when that English page exists. A link whose English page
- *     does not exist keeps its default-language URL, which is the fallback.
+ *  2. In an English Markdown file, add `/en` to a link to the hub (`/`) or a
+ *     course page (`/<course>/…`) when that English page exists. A course link
+ *     whose English page does not exist keeps its default-language URL.
  *     Downloads and legacy URLs (`/labs/…`, `/lectures/…`) are never localized.
  *
  * The language of the *source file* decides, read from its path
  * (`…/src/content/{labs,tasks}/<course>/<locale>/…`) through `ctx.fileURL`; it
  * is never guessed from the URL being rewritten.
  *
- * A Sätteri hast plugin, not a rehype one: Astro 7 runs Markdown through
+ * A Sätteri HAST plugin, not a rehype one: Astro 7 runs Markdown through
  * Sätteri by default, and `markdown.rehypePlugins` would drag the whole site
  * back onto the `unified` pipeline. The filter is applied in Rust, so only the
  * handful of link-bearing elements ever crosses into JS.
@@ -72,7 +72,9 @@ function findEnglishTargets(courses) {
         targets.add(`/${course}/labs/${name.replace(/\.md$/, '')}/${suffix}`);
       }
     }
-    for (const name of files(`${SRC}data/lectures/${course}/en`, '.ts')) {
+    for (const name of files(`${SRC}data/lectures/${course}/en`, '.ts').filter((file) =>
+      /^lecture-.*\.ts$/.test(file),
+    )) {
       targets.add(`/${course}/lectures/${name.replace(/\.ts$/, '')}/`);
     }
   }
@@ -84,11 +86,12 @@ export default function baseLinks({ base = '' } = {}) {
   const courses = findCourses();
   const englishTargets = findEnglishTargets(courses);
 
-  /** Add `/en` when the link goes to a course page that has an English version. */
+  /** Add `/en` when the hub or course page has an English version. */
   const localize = (value) => {
     // Already localized by the author: keep as is (it still gets the base below).
     if (value.startsWith('/en/')) return value;
     const [path] = value.split(/[?#]/);
+    if (path === '/') return `/en${value}`;
     const [, first] = path.split('/');
     if (!courses.has(first)) return value;
     const route = path.endsWith('/') ? path : `${path}/`;

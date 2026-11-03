@@ -64,7 +64,7 @@ The content's language is determined by its folder (`uk/` or `en/`), not by a `l
 - [x] Pass the page language to helpers that create links to labs, assignments, and lectures.
 - [x] Keep legacy redirects and the ЛР-7 tools at their current URLs.
 - [x] Make the language argument required in content link helpers, and update legacy lab and task redirects to request Ukrainian links explicitly. The current content lookup remains unlocalized until Step 5.
-- [x] `localeHref()` and `switchLocaleHref()` account for the base path. Before switching languages, the switcher must remove the base path from the current URL, then build the new URL.
+- [x] `localeHref()` accounts for the base path. The switcher uses explicit alternate routes rather than rewriting the current URL.
 
 **Done when:** a regular production build contains exactly the URLs from the Step 0 list, with no `/en/` pages. (Step 2 complete.)
 

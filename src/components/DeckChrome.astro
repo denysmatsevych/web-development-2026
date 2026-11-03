@@ -34,17 +34,16 @@ const t = useTranslations(locale);
 const home = localeHref(locale, "/");
 
 const pill =
-  "grow sm:flex-none" +
-  "no-print inline-flex items-center gap-2 rounded-md border border-ink-800 bg-ink-950/80 px-3 py-2 " +
+  "no-print grow sm:flex-none inline-flex items-center gap-2 rounded-md border border-ink-800 bg-ink-950/80 px-3 py-2 " +
   "font-mono text-xs text-ink-400 backdrop-blur-sm transition hover:border-accent-500 hover:text-accent-500";
 ---
 
-<div class="w-full flex flex-col gap-2 px-4 sm:flex-row sm:justify-between top-4 z-40 fixed">
+<div class="no-print pointer-events-none w-full flex flex-col gap-2 px-4 sm:flex-row sm:justify-between top-4 z-40 fixed">
   {
     (lecturesHref || prevLecture || nextLecture) && (
       <nav
         aria-label={t.deck.navigation}
-        class="no-print flex flex-wrap items-center justify-center gap-2"
+        class="pointer-events-auto flex flex-wrap items-center justify-center gap-2"
       >
         {lecturesHref && (
           <a href={lecturesHref} title={t.deck.allLectures} class={`${pill} w-full min-[331px]:w-auto`}>
@@ -73,7 +72,7 @@ const pill =
     )
   }
 
-  <div class="flex items-center justify-center gap-2">
+  <div class="pointer-events-auto flex items-center justify-center gap-2">
     <LanguageSwitcher
       locale={locale}
       alternates={alternates}
@@ -129,16 +128,14 @@ const pill =
         type="button"
         class="rounded-md border border-ink-800 px-4 py-2 text-sm text-paper transition hover:border-accent-500 hover:text-accent-500 disabled:cursor-not-allowed disabled:opacity-35"
       >
-        <span aria-hidden="true">←</span>
-        {t.deck.back}
+        <span aria-hidden="true">←</span> {t.deck.back}
       </button>
       <button
         id="btn-next"
         type="button"
         class="rounded-md border border-ink-800 px-4 py-2 text-sm text-paper transition hover:border-accent-500 hover:text-accent-500 disabled:cursor-not-allowed disabled:opacity-35"
       >
-        {t.deck.forward}
-        <span aria-hidden="true">→</span>
+        {t.deck.forward} <span aria-hidden="true">→</span>
       </button>
     </div>
   </nav>

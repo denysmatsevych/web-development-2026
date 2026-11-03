@@ -36,13 +36,6 @@ function stripBase(pathname: string): string {
   return pathname.startsWith(`${base}/`) ? pathname.slice(base.length) : pathname;
 }
 
-function stripLocale(pathname: string, locale: Locale): string {
-  if (locale === defaultLocale) return pathname;
-  const prefix = `/${locale}`;
-  if (pathname === prefix) return '/';
-  return pathname.startsWith(`${prefix}/`) ? pathname.slice(prefix.length) : pathname;
-}
-
 /** Build a base-aware URL for a route path that does not include a locale prefix. */
 export function localeHref(locale: Locale, pathname: string): string {
   const routePath = stripBase(pathname);
@@ -100,14 +93,4 @@ export function getLanguageSwitchLinks(
     locale,
     href: alternates[locale] ?? localeHref(locale, courseSlug ? `/${courseSlug}/` : '/'),
   }));
-}
-
-/** Switch the locale in a current Astro URL path while preserving its route. */
-export function switchLocaleHref(
-  pathname: string,
-  currentLocale: Locale,
-  targetLocale: Locale,
-): string {
-  const routePath = stripLocale(stripBase(pathname), currentLocale);
-  return localeHref(targetLocale, routePath);
 }

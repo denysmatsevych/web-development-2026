@@ -110,9 +110,8 @@ const t = useTranslations(getLocale(Astro.currentLocale));
     background: color-mix(in oklab, var(--color-brand-blue) 15%, transparent);
   }
 
-  /* On a phone the full label pushes the link onto a line of its own; drop
-     the verb before the file type so assistive technology announces it clearly.
-     sharing the eyebrow row. */
+  /* On phones, visually hide the verb to keep the full download link in the
+     eyebrow row while retaining its complete label for assistive technology. */
   @media (max-width: 639px) {
     .lab-header__download-verb {
       position: absolute;

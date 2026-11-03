@@ -1,6 +1,8 @@
 ---
 import type { RoadmapStepKind, Slide } from '@/data/lectures/schema';
+import type { CourseTitlePart } from '@/data/courses';
 import { getLocale, useTranslations, type Locale } from '@/i18n';
+import CourseTitle from './CourseTitle.astro';
 import RichText from './RichText.astro';
 
 interface Props {
@@ -10,7 +12,7 @@ interface Props {
   /** Accent eyebrow on the title slide, e.g. `Лекція 2`. */
   lectureLabel?: string;
   /** Muted line above the eyebrow on the title slide — the course name. */
-  courseLabel?: string;
+  courseLabel?: CourseTitlePart[];
   locale?: Locale;
   contentLang?: Locale;
 }
@@ -102,7 +104,7 @@ const legend = (Object.keys(stepName) as RoadmapStepKind[]).filter((kind) =>
     <header>
       {courseLabel && (
         <p class="mb-3 font-mono text-xs uppercase tracking-[0.25em] text-ink-400" lang={chromeLang}>
-          {courseLabel}
+          <CourseTitle parts={courseLabel} locale={locale} />
         </p>
       )}
       <p class="mb-8 font-mono text-sm uppercase tracking-[0.3em] text-accent-500" lang={chromeLang}>

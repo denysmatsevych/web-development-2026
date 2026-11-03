@@ -56,7 +56,7 @@ src/
 │               lab (LabHeader, AcceptanceChecklist, PricingMockup, MockupLightbox,
 │                    CourtlyMockup, CourtlyCompare) · OnThisPage, PrevNext, Breadcrumbs
 ├─ data/
-│  ├─ site.ts                     site metadata + course-relative section definitions
+│  ├─ site.ts                     contact destination + course-relative section definitions
 │  ├─ courses.ts                  course registry
 │  ├─ courtly-mockup.json         lab-7 mockup captures' section offsets (generated)
 │  └─ lectures/<course>/<locale>/ shared schema + lecture decks, found by glob (no hand-written list)

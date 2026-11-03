@@ -47,7 +47,6 @@ export const ui = {
       skipToSlides: 'Перейти до слайдів',
     },
     labs: {
-      emptyBeforeLectures: 'Лабораторні роботи готуються. А поки опрацюйте',
       download: 'Завантажити',
       taskLabel: 'ТЗ',
       taskEyebrow: 'Технічне завдання',
@@ -81,7 +80,7 @@ export const ui = {
       allLectures: 'Усі лекції',
       previousLecture: 'Попередня лекція — {title}',
       nextLecture: 'Наступна лекція — {title}',
-      backToHub: 'На головну сторінку курсу',
+      backToHub: 'До всіх курсів',
       progress: 'Прогрес презентації',
       slidesNavigation: 'Навігація по слайдах',
       controls: '← → гортати · N нотатки · F повний екран · T тема · Ctrl+P PDF',
@@ -145,7 +144,6 @@ export const ui = {
       skipToSlides: 'Skip to slides',
     },
     labs: {
-      emptyBeforeLectures: 'Lab assignments are being prepared. In the meantime, work through the',
       download: 'Download',
       taskLabel: 'Assignment',
       taskEyebrow: 'Practical assignment',
@@ -179,7 +177,7 @@ export const ui = {
       allLectures: 'All lectures',
       previousLecture: 'Previous lecture — {title}',
       nextLecture: 'Next lecture — {title}',
-      backToHub: 'Back to course home',
+      backToHub: 'Back to all courses',
       progress: 'Presentation progress',
       slidesNavigation: 'Slide navigation',
       controls: '← → move · N notes · F fullscreen · T theme · Ctrl+P PDF',

@@ -21,7 +21,12 @@ import CourtlyMockup from "@/components/CourtlyMockup.astro";
 import LabHeader from "@/components/LabHeader.astro";
 import MockupLightbox from "@/components/MockupLightbox.astro";
 import LabLayout from "@/layouts/LabLayout.astro";
-import { getCourseTitleParts, getCourses, type Course } from "@/data/courses";
+import {
+  getCourseTitle,
+  getCourseTitleParts,
+  getCourses,
+  type Course,
+} from "@/data/courses";
 import {
   getLabs,
   getTasks,
@@ -89,8 +94,7 @@ const { course, task, lab, locale } = Astro.props;
 const { data } = task;
 const contentLang = splitId(task.id).locale;
 const t = useTranslations(locale);
-const courseTitleParts = getCourseTitleParts(course, locale);
-const courseTitle = courseTitleParts.map((p) => p.text).join(" ");
+const courseTitle = getCourseTitle(course, locale);
 const taskLabel = data.label ?? t.labs.taskLabel;
 const taskLabelLang = data.label !== undefined ? contentLang : locale;
 const taskEyebrow = data.eyebrow ?? t.labs.taskEyebrow;
@@ -111,7 +115,11 @@ const crumbs = [
     label: t.navigation.labs,
     href: localeHref(locale, `/${course.slug}/labs/`),
   },
-  { label: labLabel, href: labHref(splitId(lab.id).locale, course.slug, slug), lang: splitId(lab.id).locale },
+  {
+    label: labLabel,
+    href: labHref(splitId(lab.id).locale, course.slug, slug),
+    hreflang: splitId(lab.id).locale,
+  },
   {
     label: taskLabel,
     href: taskHref(locale, course.slug, slug),

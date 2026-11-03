@@ -8,7 +8,12 @@
 import SiteFooter from "@/components/SiteFooter.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 import CourseTitle from "@/components/CourseTitle.astro";
-import { getCourseTitleParts, getCourses, type Course } from "@/data/courses";
+import {
+  getCourseTitle,
+  getCourseTitleParts,
+  getCourses,
+  type Course,
+} from "@/data/courses";
 import {
   getLabList,
   getTaskList,
@@ -46,8 +51,7 @@ interface Props {
 const { course, locale } = Astro.props;
 const t = useTranslations(locale);
 const alternates = localeAlternates(`/${course.slug}/labs/`);
-const courseTitleParts = getCourseTitleParts(course, locale);
-const courseTitle = courseTitleParts.map((p) => p.text).join(" ");
+const courseTitle = getCourseTitle(course, locale);
 const [labs, tasks] = await Promise.all([
   getLabList(course.slug, locale),
   getTaskList(course.slug, locale),
