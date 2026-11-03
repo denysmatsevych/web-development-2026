@@ -43,7 +43,9 @@ There is no starter and no ТЗ: students scaffold their own project with
   (6.10.2), so `npm install` fails with ERESOLVE against the template's
   ESLint 10.
 - **The `.vscode/settings.json` line in `.gitignore`.** The template ignores
-  `.vscode/*` except `extensions.json`.
+  `.vscode/*` except `extensions.json`. The handout checks the line with
+  `git status -u`: plain `git status` shows the new folder as a single
+  `.vscode/` line whether or not the line is there.
 - **`npm audit fix --force` warning.** A fresh install reports 6 moderate
   advisories (`minimatch` under ESLint, no fix available). The forced fix
   downgrades `@eslint/js` 10 → 9.39.5 and `eslint-config-prettier` 10 → 6.15.0.
@@ -64,11 +66,13 @@ Prettier 3.9.10 and `eslint-config-prettier` 10.1.8:
 - the `AGENTS.md` template and both `.vscode/` files pass Prettier;
 - dev runs on port 5173 and preview on 4173.
 
-Node.js 26 became the Active LTS on 2026-10-28 (26.13.0). The agent table in
-§4.7 follows agents.md, the VS Code Copilot docs (`chat.useAgentsMdFile`, on
-by default), the Claude Code memory docs and the Gemini CLI `context.fileName`
-docs, as of the same date. Re-check the versions, the `create-vite` questions
-and the agent table before the next run of the course.
+Node.js 26 became the Active LTS on 2026-10-28 (26.13.0). On 26.13.0 with npm
+11.20, a fresh scaffold, §4.4 and П2 give the same results as above. The agent
+table in §4.7 follows agents.md, the VS Code Copilot docs
+(`chat.useAgentsMdFile`, on by default), the Claude Code memory docs and the
+Gemini CLI `context.fileName` docs, as of 2026-11-03. Re-check the versions,
+the `create-vite` questions and the agent table before the next run of the
+course.
 
 ## Build
 

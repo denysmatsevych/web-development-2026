@@ -292,7 +292,9 @@ Vercel.
 !.vscode/settings.json
 ```
 
-Перевірте `git status`: обидва файли `.vscode/` мають бути серед нових.
+Перевірте `git status -u`: серед нових мають бути обидва файли,
+`.vscode/extensions.json` і `.vscode/settings.json`. Без `-u` Git показує нову
+теку одним рядком `.vscode/`, і не видно, чи потрапив у неї `settings.json`.
 
 **WebStorm.** У **Settings → Languages & Frameworks → JavaScript → Code
 Quality Tools → ESLint** виберіть **Automatic ESLint configuration** і
@@ -508,8 +510,8 @@ AI-агента: команди перевірки, структура проє�
    ```
 
 3. Перевірте репозиторій у браузері: є `AGENTS.md`, `.gitattributes`,
-   `.prettierrc.json` і `.vscode/`, немає `node_modules/` і `dist/`. Історія
-   комітів:
+   `.prettierrc.json` і обидва файли `.vscode/` (`extensions.json` і
+   `settings.json`), немає `node_modules/` і `dist/`. Історія комітів:
 
    1. `chore: scaffold React app with Vite` — шаблон без змін і
       `.gitattributes`;
@@ -608,8 +610,7 @@ _ESLint і Prettier_
 - Чому `react-refresh/only-export-components` не дозволяє експортувати
   функцію поруч із компонентом?
 - Навіщо `eslint-config-prettier` і чому він стоїть останнім?
-- Чим Oxlint відрізняється від ESLint? Чому шаблон Vite пропонує його за
-  замовчуванням?
+- Чим Oxlint відрізняється від ESLint? Чому в курсі обрано ESLint?
 - Навіщо комітити `.prettierrc.json` і `.vscode/settings.json`, якщо кожен
   може налаштувати свій редактор?
 - Що робить `.gitattributes`? Що показав би `npm run format:check` у свіжому
@@ -631,25 +632,25 @@ _AI-агент і AGENTS.md_
 - Чому правило «запусти `npm run lint`» надійніше за правило «не порушуй
   правил хуків»?
 - Які застарілі підходи React агенти пропонують найчастіше і чому?
-- Яких правил `AGENTS.md` агент не дотримався в запиті 2? Як ви це помітили?
+- Чи дотримався агент усіх правил `AGENTS.md` у запиті 2? Як ви це перевірили?
 - Чому значення змінних `VITE_*` не можна вважати секретами?
 
 ## 7. Критерії готовності
 
 Роботу зараховано після захисту (§6); вона оцінюється в 1 бал.
 
-| Критерій       | Мінімальна вимога                                                                                                       |
-| -------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| Node.js        | Node.js 22.13 або новіший; `node`, `npm` і `git` працюють                                                               |
-| Проєкт         | шаблон Vite «React + JavaScript» з ESLint; `npm run dev`, `npm run build` і `npm run preview` працюють                  |
-| ESLint         | `npm run lint` без помилок; редактор підкреслює помилки                                                                 |
-| Prettier       | `.prettierrc.json`, скрипти `format` і `format:check`, `eslint-config-prettier`; `npm run format:check` без помилок       |
-| Редактор       | форматування під час збереження; `.vscode/` у репозиторії або знімки налаштувань WebStorm                               |
-| React DevTools | встановлено; видно дерево компонентів, props і стан                                                                     |
-| AGENTS.md      | у корені репозиторію; агент його читає; зміну за запитом 2 перевірено й закомічено                                      |
-| GitHub         | коміти §4.8; немає `node_modules/` і `dist/`; є `.gitattributes`                                                        |
-| Vercel         | `https://<project>.vercel.app/` відкриває картку «Про мене» з останнього коміту `main`                                  |
-| Звіт           | усі пункти §5                                                                                                           |
+| Критерій       | Мінімальна вимога                                                                                                                  |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| Node.js        | Node.js 22.13 або новіший; `node`, `npm` і `git` працюють                                                                          |
+| Проєкт         | шаблон Vite «React + JavaScript» з ESLint; `npm run dev`, `npm run build` і `npm run preview` працюють                             |
+| ESLint         | `npm run lint` без помилок; редактор підкреслює помилки                                                                            |
+| Prettier       | `.prettierrc.json`, скрипти `format` і `format:check`, `eslint-config-prettier`; `npm run format:check` без помилок                |
+| Редактор       | форматування під час збереження; `.vscode/extensions.json` і `.vscode/settings.json` у репозиторії або знімки налаштувань WebStorm |
+| React DevTools | встановлено; видно дерево компонентів, props і стан                                                                                |
+| AGENTS.md      | у корені репозиторію; агент його читає; зміну за запитом 2 перевірено й закомічено                                                 |
+| GitHub         | коміти §4.8; немає `node_modules/` і `dist/`; є `.gitattributes`                                                                   |
+| Vercel         | `https://<project>.vercel.app/` відкриває картку «Про мене» з останнього коміту `main`                                             |
+| Звіт           | усі пункти §5                                                                                                                      |
 
 ## 8. Список джерел
 
