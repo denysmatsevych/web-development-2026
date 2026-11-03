@@ -1,9 +1,15 @@
-"""Build public/labs/<lab>.pdf from src/content/labs/web-development/uk/<lab>.md.
+"""Build a lab's PDF handout from src/content/labs/<course>/uk/<lab>.md.
 
 Matches the look of lab-3.pdf (Noto Sans, navy headings, green deadline line,
-grey code blocks, US Letter). Run from the repo root with the lab's id:
+grey code blocks, US Letter). Run from the repo root with the lab's id, and
+the course slug for any course other than Web Development:
 
-    python docs/web/build-handout.py lab-6
+    python docs/web/build-handout.py lab-6          # public/labs/lab-6.pdf
+    python docs/web/build-handout.py lab-1 react    # public/react/labs/lab-1.pdf
+
+Web Development handouts keep the /labs/ URLs students already have; every
+other course's go under /<course>/labs/. The lab's `handout:` field must name
+the same path.
 
 Needs `markdown-it-py` (pip) and Microsoft Edge; fonts come from jsDelivr
 (Fontsource), so the run needs network access.
@@ -17,11 +23,13 @@ import tempfile
 from markdown_it import MarkdownIt
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-if len(sys.argv) != 2:
-    sys.exit("usage: python docs/web/build-handout.py <lab-id>   (e.g. lab-6)")
+if len(sys.argv) not in (2, 3):
+    sys.exit("usage: python docs/web/build-handout.py <lab-id> [course]   (e.g. lab-6, or lab-1 react)")
 LAB = sys.argv[1]
-SRC = ROOT / f"src/content/labs/web-development/uk/{LAB}.md"
-OUT = ROOT / f"public/labs/{LAB}.pdf"
+COURSE = sys.argv[2] if len(sys.argv) == 3 else "web-development"
+SRC = ROOT / f"src/content/labs/{COURSE}/uk/{LAB}.md"
+OUT_DIR = ROOT / ("public/labs" if COURSE == "web-development" else f"public/{COURSE}/labs")
+OUT = OUT_DIR / f"{LAB}.pdf"
 SITE = "https://denysmatsevych.github.io/web-development-2026"
 EDGE = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
 
@@ -100,6 +108,9 @@ html = f"""<!doctype html>
 {html_body}
 </body></html>"""
 
+# Only now, so a mistyped lab id or course slug leaves no empty folder behind.
+OUT_DIR.mkdir(parents=True, exist_ok=True)
+before = OUT.stat().st_mtime_ns if OUT.exists() else None
 with tempfile.TemporaryDirectory() as tmp:
     page = pathlib.Path(tmp) / "handout.html"
     page.write_text(html, encoding="utf-8")
@@ -109,4 +120,8 @@ with tempfile.TemporaryDirectory() as tmp:
          f"--print-to-pdf={OUT}", page.as_uri()],
         check=True, capture_output=True,
     )
+# Edge can exit 0 without printing (it does when started from some sandboxed
+# shells), which would leave the old PDF in place looking freshly built.
+if not OUT.exists() or OUT.stat().st_mtime_ns == before:
+    sys.exit(f"Edge wrote no PDF; {OUT.relative_to(ROOT)} is unchanged. Try another shell (PowerShell works).")
 print(f"wrote {OUT.relative_to(ROOT)} ({OUT.stat().st_size // 1024} KB)")
