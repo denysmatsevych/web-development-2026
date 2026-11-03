@@ -56,7 +56,7 @@ There is no one dark-mode rule for the whole site:
 
 Prefer design-system variables over hardcoded color values — **except** in
 `lab.css`'s light theme. Lab pages are built to match the handout PDFs
-(`public/labs/*.pdf`) that students download alongside them: Montserrat
+(each lab's `handout:` path) that students download alongside them: Montserrat
 headings over Inter text, and in the light theme specifically, the PDF's own
 color palette (verified AA-contrast on white: heading 13.9:1, subheading
 10.6:1, text 12.2:1, code 5.0:1, link 6.6:1). The dark theme keeps the normal
