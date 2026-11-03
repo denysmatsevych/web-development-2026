@@ -25,11 +25,9 @@ export default defineConfig({
     // (src/lib/paths.ts).
     processor: satteri({ hastPlugins: [baseLinks({ base: BASE })] }),
   },
-  // English is the default locale; Ukrainian is pre-declared for the course
-  // content and lecture decks. The default locale carries no URL prefix.
   i18n: {
-    defaultLocale: 'en',
-    locales: ['en', 'uk'],
+    defaultLocale: 'uk',
+    locales: ['uk', 'en'],
     routing: { prefixDefaultLocale: false },
   },
 });

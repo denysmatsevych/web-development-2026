@@ -14,6 +14,10 @@
  * panel renders in sequence and the tab strip stays hidden.
  */
 import { withBase } from '@/lib/paths';
+import { getLocale, useTranslations } from '@/i18n';
+
+const t = useTranslations(getLocale(Astro.currentLocale));
+const locale = getLocale(Astro.currentLocale);
 
 interface Capture {
   src: string;
@@ -31,7 +35,7 @@ interface View {
 const VIEWS: View[] = [
   {
     id: 'desktop',
-    label: 'Desktop · 1440',
+    label: `${t.labs.desktop} · 1440`,
     captures: [
       {
         src: '/labs/lab-7/mockup-desktop.webp',
@@ -43,7 +47,7 @@ const VIEWS: View[] = [
   },
   {
     id: 'tablet',
-    label: 'Tablet · 768',
+    label: `${t.labs.tablet} · 768`,
     captures: [
       {
         src: '/labs/lab-7/mockup-tablet.webp',
@@ -55,7 +59,7 @@ const VIEWS: View[] = [
   },
   {
     id: 'mobile',
-    label: 'Mobile · 375',
+    label: `${t.labs.mobile} · 375`,
     captures: [
       {
         src: '/labs/lab-7/mockup-mobile.webp',
@@ -74,8 +78,8 @@ const VIEWS: View[] = [
 ];
 ---
 
-<div class="courtly" data-courtly>
-  <div class="courtly__tabs" role="tablist" aria-label="Ширина viewport" hidden>
+<div class="courtly" data-courtly lang={locale === 'uk' ? undefined : 'uk'}>
+  <div class="courtly__tabs" role="tablist" aria-label={t.labs.viewportWidth} hidden>
     {
       VIEWS.map((view, i) => (
         <button
@@ -104,19 +108,25 @@ const VIEWS: View[] = [
         <div class:list={['courtly__captures', { 'courtly__captures--pair': view.captures.length > 1 }]}>
           {view.captures.map((capture) => (
             <div class="courtly__capture">
-              <div class="courtly__frame" role="region" tabindex="0" aria-label={`${view.label} px — прокручувана область`}>
+              <div
+                class="courtly__frame"
+                role="region"
+                tabindex="0"
+                aria-label={t.labs.scrollableArea.replace('{view}', view.label)}
+              >
                 <img
                   src={withBase(capture.src)}
                   width={capture.width}
                   height={capture.height}
                   alt={capture.alt}
+                  lang={locale === 'uk' ? undefined : 'uk'}
                   loading={i === 0 ? 'eager' : 'lazy'}
                   decoding="async"
                   style={`max-width: ${capture.width}px`}
                 />
               </div>
               <a class="courtly__open" href={withBase(capture.src)}>
-                Повний розмір · {capture.width} × {capture.height}
+                {t.labs.fullSize} · {capture.width} × {capture.height}
               </a>
             </div>
           ))}

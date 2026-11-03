@@ -5,9 +5,10 @@
 import { getLectures } from '@/data/lectures';
 import { withBase } from '@/lib/paths';
 import { LEGACY_COURSE } from '@/data/courses';
+import { defaultLocale } from '@/i18n';
 
 export function getStaticPaths() {
-  return getLectures(LEGACY_COURSE).map((lecture) => ({
+  return getLectures(LEGACY_COURSE, defaultLocale).map((lecture) => ({
     params: { lecture: lecture.slug },
     props: {
       destination: withBase(`/${LEGACY_COURSE}/lectures/${lecture.slug}/`),

@@ -73,8 +73,6 @@ const tasks = defineCollection({
      * above the body, so it is never scrolled past.
      */
     goal: z.string().optional(),
-    /** BCP-47 language of the body — drives `<html lang>`. */
-    lang: z.string().default('uk'),
     /** Short badge: hand-off card, index pill, last breadcrumb. */
     label: z.string().default('ТЗ'),
     /** Constraint chips on the hand-off card — 2–4 short phrases. */
@@ -169,7 +167,6 @@ from frontmatter, so both bodies start at `##` — the same convention as
 number: 2
 title: "Основи CSS: Box Model, Cascade, Specificity та AI-assisted верстка"
 summary: "Box model, каскад і специфічність на практиці: шість дослідницьких експериментів у DevTools і адаптивна секція тарифних планів, зверстана з AI-асистентом."
-lang: uk
 discipline: "«Сучасна веброзробка: HTML, CSS, JS/TS»"
 level: "3 курс, спеціальність «Комп'ютерні науки»"
 format: "Індивідуально"
@@ -223,7 +220,6 @@ exists for. Never hardcode `/web-development-2026`.
 title: "Секція тарифних планів"
 summary: "Адаптивна секція із заголовком, лідом і трьома картками тарифів. Лише HTML і CSS — JavaScript не потрібен."
 goal: "Створити просту адаптивну секцію тарифних планів за наданим макетом і свідомо застосувати Box Model, Cascade, Specificity, Inheritance, CSS Variables та повторне використання стилів."
-lang: uk
 label: "ТЗ"
 highlights:
   - "Без JavaScript"
@@ -288,7 +284,7 @@ Create `plugins/base-links.mjs`:
  * `base`, so a body can write `[ТЗ](/labs/lab-2/task/)` and still work under
  * the GitHub Pages project path.
  *
- * A Sätteri hast plugin, not a rehype one: Astro 7 runs Markdown through
+ * A Sätteri HAST plugin, not a rehype one: Astro 7 runs Markdown through
  * Sätteri by default, and `markdown.rehypePlugins` would drag the whole site
  * back onto the `unified` pipeline. The filter is applied in Rust, so only the
  * handful of link-bearing elements ever crosses into JS.

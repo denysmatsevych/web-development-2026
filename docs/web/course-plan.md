@@ -122,7 +122,7 @@ and the table doesn't count them.
 - **`lab-12` (ЛР 12-13):** 4 points for the two slots, split into the
   self-check (`npm run check`, 1), the process (commits and report, 1) and the
   defence (2), and +1 for on-time submission. The rubric is in its handout, §8
-  ([lab-12.md](../../src/content/labs/web-development/lab-12.md)).
+  ([lab-12.md](../../src/content/labs/web-development/uk/lab-12.md)).
 
 **Mismatches with the plan** (fix them in the `.docx`):
 

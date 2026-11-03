@@ -47,7 +47,6 @@ deeply-sectioned pages shipping, it is more valuable now than it was at Lab 1.
 number: 2
 title: "Основи CSS: Box Model, Cascade, Specificity та AI-assisted верстка"
 summary: "Дослідження базових механізмів CSS — Box Model, Cascade, Specificity, Inheritance та CSS Variables — і AI-assisted верстка адаптивної секції тарифних планів."
-lang: uk
 discipline: "«Сучасна веброзробка: HTML, CSS, JS/TS»"
 level: "3 курс, спеціальність «Комп'ютерні науки»"
 format: "Індивідуально"
@@ -194,7 +193,6 @@ Two items in the PDF; render the date so it cannot be missed:
 title: "Секція тарифних планів"
 summary: "Адаптивна секція із заголовком, лідом і трьома картками тарифів. Лише HTML і CSS — JavaScript не потрібен."
 goal: "Створити просту адаптивну секцію тарифних планів за наданим макетом і свідомо застосувати Box Model, Cascade, Specificity, Inheritance, CSS Variables та повторне використання стилів."
-lang: uk
 label: "ТЗ"
 highlights:
   - "Без JavaScript"

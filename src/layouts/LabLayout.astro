@@ -24,6 +24,7 @@ import OnThisPage from '@/components/OnThisPage.astro';
 import SiteFooter from '@/components/SiteFooter.astro';
 import SiteHeader from '@/components/SiteHeader.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import type { Locale } from '@/i18n';
 import '@/styles/lab.css';
 
 interface Props {
@@ -35,10 +36,13 @@ interface Props {
   titleSuffix?: string;
   /** Course context for the shared header and footer. */
   courseSlug?: string;
-  /** Body language — `'uk'` for the current handouts. */
-  lang?: string;
+  /** Route locale; omitted for Ukrainian legacy tools. */
+  locale?: Locale;
+  alternates?: Partial<Record<Locale, string>>;
   /** h2/h3 headings from `render(entry)` — feed the "on this page" rail. */
   headings?: MarkdownHeading[];
+  /** Language of headings when different from page locale. */
+  headingsLang?: string;
   /** Keep an unlisted page (the ЛР-7 auto-check) out of search results. */
   noindex?: boolean;
 }
@@ -48,8 +52,10 @@ const {
   description,
   titleSuffix,
   courseSlug,
-  lang = 'uk',
+  locale,
+  alternates,
   headings = [],
+  headingsLang,
   noindex = false,
 } = Astro.props;
 
@@ -62,7 +68,8 @@ const fontHref =
   title={title}
   description={description}
   titleSuffix={titleSuffix}
-  lang={lang}
+  locale={locale}
+  alternates={alternates}
   ogType="article"
 >
   <Fragment slot="head">
@@ -78,7 +85,7 @@ const fontHref =
   </Fragment>
 
   <div class="lab-page">
-    <SiteHeader courseSlug={courseSlug} />
+    <SiteHeader courseSlug={courseSlug} locale={locale} alternates={alternates} />
 
     <div class:list={["lab-shell", { "lab-shell--wide": !headings.length }]}>
       <main id="main-content" class="area-main" tabindex="-1">
@@ -88,13 +95,13 @@ const fontHref =
       {
         headings.length > 0 && (
           <div class="area-toc">
-            <OnThisPage headings={headings} />
+            <OnThisPage headings={headings} headingsLang={headingsLang} />
           </div>
         )
       }
     </div>
 
-    <SiteFooter courseSlug={courseSlug} />
+    <SiteFooter courseSlug={courseSlug} locale={locale} />
   </div>
 </BaseLayout>
 

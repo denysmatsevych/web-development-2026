@@ -32,17 +32,19 @@ import LabHeader from "@/components/LabHeader.astro";
 import LabLayout from "@/layouts/LabLayout.astro";
 import { labHref, taskHref } from "@/lib/labs";
 import { withBase } from "@/lib/paths";
+import { defaultLocale, useTranslations } from "@/i18n";
 import { MOCKUP_POINTS } from "@/scripts/courtly-check";
 import { LEGACY_COURSE } from '@/data/courses';
 
 const title = "Автоматична перевірка Courtly";
 const summary =
   "Вставте адресу опублікованої сторінки студента. Перевірка відкриє її на 320, 375, 768 і 1440 px, прочитає HTML і CSS та складе звіт з оцінкою за 12-бальною шкалою.";
+const t = useTranslations(defaultLocale);
 
 const crumbs = [
   { label: "Web Development", href: withBase(`/${LEGACY_COURSE}/`) },
-  { label: "Labs", href: withBase(`/${LEGACY_COURSE}/labs/`) },
-  { label: "ЛР-7", href: labHref(LEGACY_COURSE,"lab-7") },
+  { label: t.navigation.labs, href: withBase(`/${LEGACY_COURSE}/labs/`) },
+  { label: "ЛР-7", href: labHref(defaultLocale, LEGACY_COURSE,"lab-7") },
   { label: "Автоперевірка", href: withBase("/labs/lab-7/check/") },
 ];
 
@@ -57,7 +59,6 @@ const headings = [
 <LabLayout
   title={`${title} (бета) — ЛР-7`}
   description={summary}
-  lang="uk"
   headings={headings}
   noindex
   titleSuffix="Web Development"
@@ -235,8 +236,8 @@ const headings = [
   <article class="doc-content">
     <h2 id="scope">Що перевіряється</h2>
     <p>
-      Критерії — з тексту <a href={labHref(LEGACY_COURSE, "lab-7")}>лабораторної роботи</a> і <a
-        href={taskHref(LEGACY_COURSE, "lab-7")}
+      Критерії — з тексту <a href={labHref(defaultLocale, LEGACY_COURSE, "lab-7")}>лабораторної роботи</a> і <a
+        href={taskHref(defaultLocale, LEGACY_COURSE, "lab-7")}
       >
         макета
       </a>. Сторінка завантажується з опублікованої адреси, як у браузері відвідувача:

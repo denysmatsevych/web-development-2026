@@ -5,8 +5,8 @@ Read this before reviewing a pull request against this repo.
 ## 1. CI runs checks, but review the results
 
 PR checks run automatically on pull requests via `.github/workflows/pr-check.yml`,
-which runs `npm run check` and `npm run build`. Treat the CI status as a
-baseline — if it fails, the PR is not ready. If it passes, still scan the
+which runs `npm run check`, `npm run build` and a second build with `VITE_ENABLE_ENGLISH=true`
+that validates the English routes (never deployed). Treat the CI status as a baseline — if it fails, the PR is not ready. If it passes, still scan the
 output for warnings and confirm the change works as intended:
 
 ```bash
@@ -19,7 +19,7 @@ locally before pushing is faster for everyone.
 
 ## 2. Verify content paths and avoid stale references
 
-Content collections live in `src/content/` (such as `labs` and `tasks`), while other course materials like lecture data live in `src/data/lectures/`. 
+Content collections live in `src/content/` (such as `labs` and `tasks`), while other course materials like lecture data live in `src/data/lectures/`. Both are organised as `<course>/<locale>/` (`uk/` or `en/`); the folder sets the language, so a `lang:` frontmatter field is a stale reference. A new file outside a registered course/language folder should fail `assertInCourse` in `src/lib/labs.ts`.
 
 When reviewing content changes, ensure no PR tries to reintroduce the deleted `docs`/`handbook` collection or the obsolete `curriculum.ts` data file. Beyond that, new or distinct content structures are valid as long as they align with the current Astro and Zod schema setup.
 
@@ -41,6 +41,7 @@ handle this, for two different contexts:
   `embed src`, `object data`, or `url(...)` in styles.** If a reviewed Markdown
   body adds any of these with a root-relative path, that attribute will not
   get the base prefix and will 404 in production — check for these gaps.
+  Additionally, the plugin automatically injects `/en/` only for `/<course>/…` routes if an English file exists, leaving `/labs/…` (downloads, legacy links) untouched and falling back to the Ukrainian URL when no English version is available.
 
 ## 4. Decks keep their own theme — don't let `dark:` creep in
 

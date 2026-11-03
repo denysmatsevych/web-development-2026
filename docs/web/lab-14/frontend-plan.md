@@ -350,7 +350,7 @@ public sample tasks.
 
 ## Handout
 
-`src/content/labs/web-development/lab-14.md`: short, no PDF, no ТЗ, and no
+`src/content/labs/web-development/uk/lab-14.md`: short, no PDF, no ТЗ, and no
 `draft:` field.
 
 - **Frontmatter:** `number: 14`; `title` and `summary`, which the content
@@ -382,7 +382,7 @@ public sample tasks.
   - `teacher.ts`: the dashboard.
 
   No framework, like `deck.ts`.
-- `src/content/labs/web-development/lab-14.md`.
+- `src/content/labs/web-development/uk/lab-14.md`.
 
 **Change:**
 

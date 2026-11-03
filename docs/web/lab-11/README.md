@@ -2,8 +2,8 @@
 
 | Route | Source | What it is |
 | --- | --- | --- |
-| `/web-development/labs/lab-11/` | `src/content/labs/web-development/lab-11.md` | the handout: 13 experiments against the live TVmaze API, `API.md`, how to work (the AI draft → audit → fix loop, commits), report, defence |
-| `/web-development/labs/lab-11/task/` | `src/content/tasks/web-development/lab-11.md` | the brief: the DOM contract, the API, the states and their texts, then every task — three challenges with their prompts and numbered rules, the `AGENTS.md` step — and the Network checklist |
+| `/web-development/labs/lab-11/` | `src/content/labs/web-development/uk/lab-11.md` | the handout: 13 experiments against the live TVmaze API, `API.md`, how to work (the AI draft → audit → fix loop, commits), report, defence |
+| `/web-development/labs/lab-11/task/` | `src/content/tasks/web-development/uk/lab-11.md` | the brief: the DOM contract, the API, the states and their texts, then every task — three challenges with their prompts and numbered rules, the `AGENTS.md` step — and the Network checklist |
 | `/labs/showfinder-starter.zip` | `showfinder-starter/` | the static shell, the view module, stubs, `check.html` with recorded TVmaze responses, `offline.html` and `experiments.html` |
 
 ## Why it looks like this
