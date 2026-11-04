@@ -428,11 +428,12 @@ export function formatTotal(total) {
 звіту й запишіть, що означає кожне правило. Видаліть `src/LintDemo.jsx`.
 
 **П3. Prettier.** У `src/App.jsx` замініть `import './App.css'` на
-`import "./App.css";` і збережіть **без форматування**: у VS Code —
-**File: Save without Formatting** (`Ctrl+K S`), у WebStorm — тимчасово
-зніміть **Run on save**. Запустіть `npm run format:check`: Prettier назве
-`src/App.jsx`. Тепер збережіть файл звичайно (`Ctrl+S`): лапки й крапка з комою
-зміняться, а `npm run format:check` пройде.
+`import "./App.css";` і збережіть **без форматування**: у VS Code, Cursor і
+Windsurf — командою **File: Save without Formatting** з палітри команд
+(`Ctrl+Shift+P`), у WebStorm — тимчасово знявши **Run on save**. Запустіть
+`npm run format:check`: Prettier назве `src/App.jsx`. Тепер збережіть файл
+звичайно (`Ctrl+S`): лапки й крапка з комою зміняться, а
+`npm run format:check` пройде.
 
 **П4. Dev проти збірки.** Відкрийте DevTools → **Network**, фільтр **JS**, і
 перезавантажте сторінку спершу на `npm run dev` (http://localhost:5173), потім
