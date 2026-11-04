@@ -15,7 +15,11 @@ There is no starter and no ТЗ: students scaffold their own project with
   states the rule. The labs mostly have separate goals, so each `lab-N/` is
   its own Vite app rather than one app that grows. The rule came on
   2026-11-04, after the first group had built a standalone `react-lab-1`, so
-  §4.9 moves a finished project in place. That group does it by the start of
+  §4.9 moves an existing project in place. Its prompt and checks need
+  Prettier and `AGENTS.md` from §4.4–4.7, so a student who hadn't reached
+  §4.7 starts again from §4.2 instead. That also keeps the §4.8 commit list
+  exact. Steps 1 and 6 are skipped when the GitHub repository or the Vercel
+  project doesn't exist yet. That group does it by the start of
   ЛР-2, whose handout should open with a pointer to §4.9. Drop §4.9 before
   the next run of the course.
 - **An agent does the §4.9 move.** The student renames the repository on
@@ -24,7 +28,8 @@ There is no starter and no ТЗ: students scaffold their own project with
   commit nothing. The lab already teaches prompt, check and commit, and the
   long `git mv` line was the step most likely to go wrong by hand. Committing
   `AGENTS.md` first means `git diff --cached -C --stat` shows only the agent's
-  changes, and `git reset --hard` is a clean way back. `-C` matters: the root
+  changes, and `git reset --hard` to that commit's hash is a clean way back,
+  also when the agent commits against the prompt. `-C` matters: the root
   gets new `package.json` and `.gitignore` files, so without it the moved
   copies show as new files and their line counts prove nothing. The manual
   `git mv` commands stay as the fallback.
@@ -55,12 +60,18 @@ There is no starter and no ТЗ: students scaffold their own project with
 - **Root files sit outside `format:check`.** Each lab's Prettier checks its own
   folder. The handout has students check `AGENTS.md` and `.vscode/` with
   `npx prettier --check AGENTS.md .vscode` from the root. That runs the
-  hoisted Prettier with default options, and `semi` and `singleQuote` don't
-  affect Markdown or JSON. WebStorm users run
+  hoisted Prettier with default options. `semi` and `singleQuote` don't
+  change Markdown prose or JSON, but they do change JS code blocks inside
+  Markdown. The editor formats a root `AGENTS.md` with the same defaults,
+  since the root has no Prettier config. WebStorm users run
   `npx prettier --write AGENTS.md` instead: WebStorm's default Prettier
   pattern covers only JS, TS, JSX, TSX, HTML, Vue and Astro files, so saving
   doesn't format Markdown, and without a `.vscode/` folder the check exits
-  with code 2 on the unmatched pattern.
+  with code 2 on the unmatched pattern. §4.9 step 2 is the exception for
+  every editor: the old root `.prettierrc.json` is still in place, so
+  students format `AGENTS.md` with `npx prettier --write --no-config`.
+  Without it, a JS example in a student's own rules fails the root check
+  after the move.
 - **Modelled on Web Development ЛР-1, without its theory section.** The
   students set up an editor, Git and an agent there; this lab adds only what
   React needs.
@@ -150,13 +161,13 @@ On Node.js 24.20 and npm 11.19, with the same package versions as above, a
 - `git status -u` lists both `.vscode/` files;
 - a clone made with `core.autocrlf=true` keeps LF and passes all three
   checks;
-- §4.9 was run on a repository rebuilt in the 2026-11-03 layout. Git records
-  the move as renames, except `package.json` and `.gitignore`: the root gets
-  new files with those names, so they show as `modified` there and as
-  `new file` in `lab-1/`. `git log --follow` keeps the history of all of
-  them, and the checks pass. When a listed source is missing, `git mv` fails
-  with `bad source` and
-  moves nothing.
+- the manual `git mv` path of §4.9, now the fallback, was run on a repository
+  rebuilt in the 2026-11-03 layout. `git status` shows the move as renames,
+  except `package.json` and `.gitignore`: the root gets new files with those
+  names, so they show as `modified` there and as `new file` in `lab-1/`.
+  `git log --follow` keeps the history of all of them, and the checks pass.
+  When a listed source is missing, `git mv` fails with `bad source` and moves
+  nothing.
 
 The agent version of §4.9 was dry-run the same day on a repository rebuilt
 from the 2026-11-03 handout, with `node_modules/` and `dist/` present. The
@@ -175,6 +186,14 @@ repository's `AGENTS.md` first because it didn't load it on its own:
   left `lab-1/dist/` behind, because the old `.gitignore` ignores `dist`, so
   the fallback's `mkdir lab-1` failed until it was deleted. The handout now
   says to delete it. The manual fallback then passed the same checks.
+
+Two later handout changes were checked in scratch repositories the same day,
+not in a full dry run. When the agent commits, a plain `git reset --hard`
+keeps its commit, while `git reset --hard` to the step-2 hash removes it and
+leaves only the ignored `lab-1/dist/`. Under the old root `.prettierrc.json`,
+a JSX code block in `AGENTS.md` formatted on save fails the root check after
+the move; formatted with `npx prettier --write --no-config`, it passes
+(Prettier 3.9.6).
 
 Not run: Vercel (import with Root Directory, how a GitHub rename affects the
 connection, the **Skip deployment** toggle on an existing project), the
