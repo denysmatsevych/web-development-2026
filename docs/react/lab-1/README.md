@@ -15,9 +15,19 @@ There is no starter and no ТЗ: students scaffold their own project with
   states the rule. The labs mostly have separate goals, so each `lab-N/` is
   its own Vite app rather than one app that grows. The rule came on
   2026-11-04, after the first group had built a standalone `react-lab-1`, so
-  §4.9 moves a finished project in place: rename the repository on GitHub,
-  `git mv` the files into `lab-1/`, add the root files, then point Vercel at
-  `lab-1`. Drop §4.9 before the next run of the course.
+  §4.9 moves a finished project in place. That group does it by the start of
+  ЛР-2, whose handout should open with a pointer to §4.9. Drop §4.9 before
+  the next run of the course.
+- **An agent does the §4.9 move.** The student renames the repository on
+  GitHub, swaps in the new `AGENTS.md` and commits it, then sends one prompt:
+  move the app into `lab-1/` unchanged, add the root files, run the checks,
+  commit nothing. The lab already teaches prompt, check and commit, and the
+  long `git mv` line was the step most likely to go wrong by hand. Committing
+  `AGENTS.md` first means `git diff --cached -C --stat` shows only the agent's
+  changes, and `git reset --hard` is a clean way back. `-C` matters: the root
+  gets new `package.json` and `.gitignore` files, so without it the moved
+  copies show as new files and their line counts prove nothing. The manual
+  `git mv` commands stay as the fallback.
 - **npm workspaces in the root `package.json`.** Each lab is its own Vercel
   project with Root Directory `lab-N`. By default every push deploys every
   project connected to the repository, and Hobby allows 100 deployments a
@@ -148,9 +158,29 @@ On Node.js 24.20 and npm 11.19, with the same package versions as above, a
   with `bad source` and
   moves nothing.
 
+The agent version of §4.9 was dry-run the same day on a repository rebuilt
+from the 2026-11-03 handout, with `node_modules/` and `dist/` present. The
+agent was a fresh Claude Code subagent (Opus 5.5), told to read the
+repository's `AGENTS.md` first because it didn't load it on its own:
+
+- it followed the prompt with no retries and no extra edits. It moved the
+  files with plain `mv`, so nothing was staged until the student's
+  `git add .`, wrote `"workspaces": ["lab-*"]` on one line, and left
+  `npm audit`'s 7 moderate advisories alone, citing `AGENTS.md`;
+- `git diff --cached -C --stat` showed all 14 moved files as `=> lab-1/… | 0`,
+  and changes only to the root `.gitignore`, `package.json`,
+  `package-lock.json` and `.vscode/settings.json`. The checks passed, and
+  after the commit `git log --follow` reached back to the scaffold commit;
+- `git reset --hard` after `git add .` restored the `AGENTS.md` commit but
+  left `lab-1/dist/` behind, because the old `.gitignore` ignores `dist`, so
+  the fallback's `mkdir lab-1` failed until it was deleted. The handout now
+  says to delete it. The manual fallback then passed the same checks.
+
 Not run: Vercel (import with Root Directory, how a GitHub rename affects the
-connection, the **Skip deployment** toggle on an existing project), and the
-ESLint and Prettier editor extensions with the root opened.
+connection, the **Skip deployment** toggle on an existing project), the
+ESLint and Prettier editor extensions with the root opened, and the §4.9
+prompt in the students' own agents (Copilot, Cursor, Codex, Gemini CLI) or on
+smaller models.
 
 ## Build
 
