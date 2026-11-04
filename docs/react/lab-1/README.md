@@ -46,9 +46,11 @@ There is no starter and no ТЗ: students scaffold their own project with
   folder. The handout has students check `AGENTS.md` and `.vscode/` with
   `npx prettier --check AGENTS.md .vscode` from the root. That runs the
   hoisted Prettier with default options, and `semi` and `singleQuote` don't
-  affect Markdown or JSON. WebStorm users have no `.vscode/` and leave it out
-  of the command: Prettier exits with code 2 on a pattern that matches no
-  files.
+  affect Markdown or JSON. WebStorm users run
+  `npx prettier --write AGENTS.md` instead: WebStorm's default Prettier
+  pattern covers only JS, TS, JSX, TSX, HTML, Vue and Astro files, so saving
+  doesn't format Markdown, and without a `.vscode/` folder the check exits
+  with code 2 on the unmatched pattern.
 - **Modelled on Web Development ЛР-1, without its theory section.** The
   students set up an editor, Git and an agent there; this lab adds only what
   React needs.

@@ -570,9 +570,12 @@ AI-агента: команди перевірки, структура проє�
    npx prettier --check AGENTS.md .vscode
    ```
 
-   У WebStorm теки `.vscode/` немає, і з нею в команді Prettier завершиться
-   помилкою `No files matching the pattern were found`, тож перевіряйте лише
-   `npx prettier --check AGENTS.md`. Зробіть коміт `docs: add AGENTS.md`.
+   У WebStorm так не вийде: Prettier за замовчуванням не форматує там
+   Markdown під час збереження, а теки `.vscode/` немає, тож команда
+   завершилася б помилкою `No files matching the pattern were found`.
+   Відформатуйте файл командою `npx prettier --write AGENTS.md`.
+
+   Зробіть коміт `docs: add AGENTS.md`.
 3. **Запит 1 — чи прочитав агент файл.** Почніть нову сесію агента в режимі
    без редагування (Ask чи Plan) і надішліть:
 
@@ -701,15 +704,16 @@ AI-агента: команди перевірки, структура проє�
    `rm -rf node_modules dist`.
 
 3. **Кореневі файли.** Створіть у корені `package.json` і `.gitignore` з
-   §4.2, крок 3. Замініть вміст `.vscode/settings.json` файлом з §4.5:
-   від попереднього він відрізняється лише рядком
+   §4.2, крок 3. У VS Code, Cursor і Windsurf замініть вміст
+   `.vscode/settings.json` файлом з §4.5: від попереднього він відрізняється
+   лише рядком
    `"eslint.workingDirectories"`. Замініть `AGENTS.md` шаблоном з §4.7,
    перенісши в нього власні правила. Рядок `!.vscode/settings.json` у
    `lab-1/.gitignore` тепер нічого не робить, його можна видалити.
 
 4. **Перевірка.** У корені виконайте `npm install` і
-   `npx prettier --check AGENTS.md .vscode` (у WebStorm — без `.vscode`, як у
-   §4.7), потім у `lab-1/` —
+   `npx prettier --check AGENTS.md .vscode` (у WebStorm —
+   `npx prettier --write AGENTS.md`, як у §4.7), потім у `lab-1/` —
    `npm run lint`, `npm run format:check` і `npm run build`. Усі команди мають
    пройти без помилок.
 
