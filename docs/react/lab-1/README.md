@@ -199,6 +199,12 @@ a JSX code block in `AGENTS.md` formatted on save fails the root check after
 the move; formatted with `npx prettier --write --no-config`, it passes
 (Prettier 3.9.6).
 
+React DevTools 8.0.0 was checked the same day in Chrome 156, on the §4.3
+counter. Its tabs are «Components ⚛», «Profiler ⚛» and «Suspense ⚛», after
+the built-in tabs, so a DevTools docked in a narrow column hides them in the
+`»` menu. With `App` selected, **hooks** shows `State` and follows the clicks,
+and the panel has the element-picker button that §4.3 uses.
+
 Not run: Vercel (import with Root Directory, how a GitHub rename affects the
 connection, the **Skip deployment** toggle on an existing project), the
 ESLint and Prettier editor extensions with the root opened, and the §4.9
