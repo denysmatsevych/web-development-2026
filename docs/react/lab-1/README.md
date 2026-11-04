@@ -77,9 +77,13 @@ There is no starter and no ТЗ: students scaffold their own project with
   React needs.
 - **Vercel only, no GitHub Pages.** The report email carries a Vercel link,
   as in the Web Development labs. Vercel detects Vite and builds `lab-1/dist/`
-  once Root Directory is `lab-1`. A Vite app on a GitHub Pages project site
-  would need `base: '/<repository>/'` and an Actions workflow to build it.
-  Vercel CI/CD proper comes with Лекція 8.
+  once Root Directory is `lab-1`. The project name doesn't fix the address:
+  `*.vercel.app` names are first-come across all accounts, so only one
+  student gets `react-lab-1.vercel.app`. §4.8 has students copy theirs from
+  the project's **Overview** → **Domains**, and the handout's
+  `https://<project>.vercel.app/` stands for that address. A Vite app on a
+  GitHub Pages project site would need `base: '/<repository>/'` and an
+  Actions workflow to build it. Vercel CI/CD proper comes with Лекція 8.
 - **JavaScript template, no React Compiler.** TypeScript is ЛР 19 and the
   compiler is ЛР 15 in the programme.
 - **ESLint, not Oxlint.** `create-vite` 9 asks «Which linter to use?» for
