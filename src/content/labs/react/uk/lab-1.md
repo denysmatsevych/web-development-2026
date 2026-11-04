@@ -1,33 +1,37 @@
 ---
 number: 1
 title: "Налаштування локального середовища розробки: Node.js, Vite, ESLint, Prettier"
-summary: "Перший React-застосунок на Vite: Node.js LTS, шаблон create-vite з ESLint, Prettier і форматування під час збереження, React Developer Tools, AGENTS.md з правилами React-проєкту для AI-агента, репозиторій на GitHub і деплой на Vercel."
+summary: "Перший React-застосунок на Vite: Node.js LTS, шаблон create-vite з ESLint, Prettier і форматування під час збереження, React Developer Tools, AGENTS.md з правилами React-проєкту для AI-агента, один репозиторій на GitHub для всіх лабораторних і деплой на Vercel."
 discipline: "«Розробка вебзастосунків на React»"
 level: "3 курс, спеціальність «Комп'ютерні науки»"
 format: "Індивідуально"
 duration: "2 академічні години (самостійна робота — 2 години)"
-updated: 2026-11-03
+updated: 2026-11-04
 handout: /react/labs/lab-1.pdf
 ---
 
-> **Примітка щодо актуальності.** Документ підготовлено станом на 3 листопада
+> **Примітка щодо актуальності.** Документ підготовлено станом на 4 листопада
 > 2026 року: Node.js 26 LTS, Vite 8, React 19, ESLint 10, Prettier 3. Версії,
 > запитання `create-vite` і назви меню можуть змінитися; у разі відмінностей
 > орієнтуйтеся на офіційну документацію (§8).
 
+> **Якщо ви вже виконали ЛР-1 в окремому репозиторії `react-lab-1`,** не
+> починайте заново: перенесіть проєкт у репозиторій для всіх лабораторних за
+> §4.9.
+
 ## 1. Мета роботи
 
 Підготувати локальне середовище React-розробки для наступних лабораторних:
-Node.js, проєкт на Vite, ESLint і Prettier, налаштований редактор, React
-Developer Tools, AI-агент, який знає правила проєкту з `AGENTS.md`, і деплой
-на Vercel.
+Node.js, репозиторій для всіх лабораторних курсу, проєкт на Vite, ESLint і
+Prettier, налаштований редактор, React Developer Tools, AI-агент, який знає
+правила проєкту з `AGENTS.md`, і деплой на Vercel.
 
 **Очікуваний результат:** React-застосунок на Vite запускається командою
 `npm run dev`; `npm run lint`, `npm run format:check` і `npm run build`
 проходять без помилок; редактор форматує файл під час збереження й підкреслює
 помилки ESLint; AI-агент читає `AGENTS.md` і запускає перевірки, перш ніж
-звітувати; код — у репозиторії на GitHub, а застосунок відкривається на
-Vercel.
+звітувати; код — у теці `lab-1/` репозиторію `react-labs` на GitHub, а
+застосунок відкривається на Vercel.
 
 ## 2. Цілі роботи
 
@@ -44,13 +48,14 @@ Vercel.
 - встановити React Developer Tools і знайти в них компонент та його стан;
 - написати `AGENTS.md` для React-проєкту й перевірити, що агент його
   дотримується;
-- зберегти проєкт у Git і на GitHub, розгорнути його на Vercel.
+- створити репозиторій для всіх лабораторних курсу, опублікувати його на
+  GitHub і розгорнути проєкт на Vercel.
 
 ## 3. Завдання лабораторної роботи
 
 1. Встановити Node.js LTS, Git, редактор і React Developer Tools (§4.1).
-2. Створити проєкт шаблоном Vite «React + JavaScript» з ESLint і зробити
-   перший коміт (§4.2).
+2. Створити репозиторій `react-labs`, у ньому — проєкт `lab-1` шаблоном Vite
+   «React + JavaScript» з ESLint, і зробити перший коміт (§4.2).
 3. Запустити dev-сервер і production-збірку, розібрати структуру проєкту
    (§4.3).
 4. Додати Prettier і `eslint-config-prettier`, скрипти `format` і
@@ -95,9 +100,43 @@ Vercel.
    акаунта немає, створіть його на [vercel.com](https://vercel.com) через вхід
    з GitHub.
 
-### 4.2. Створення проєкту
+### 4.2. Репозиторій і проєкт
 
-1. У теці, де лежатимуть ваші проєкти, виконайте:
+Усі лабораторні курсу виконуються в одному репозиторії `react-labs`, кожна — в
+окремій теці: `lab-1/`, `lab-2/` і так далі. Тека лабораторної — окремий
+застосунок Vite зі своїм `package.json` і налаштуваннями ESLint і Prettier.
+Файли, спільні для всіх лабораторних, лежать у корені репозиторію. Окремі
+репозиторії матимуть лише ЛР 20 (Next.js) і фінальний проєкт.
+
+```text
+react-labs/
+├── .gitattributes
+├── .gitignore
+├── .vscode/              налаштування редактора (§4.5)
+├── AGENTS.md             правила для AI-агента (§4.7)
+├── package.json          npm workspaces: перелік тек lab-*
+├── package-lock.json     точні версії пакетів усіх лабораторних
+├── node_modules/         пакети всіх лабораторних; не комітять
+└── lab-1/
+    ├── .gitignore
+    ├── .prettierrc.json
+    ├── eslint.config.js
+    ├── index.html
+    ├── package.json
+    ├── vite.config.js
+    ├── public/
+    └── src/
+```
+
+1. У теці, де лежатимуть ваші проєкти, створіть репозиторій:
+
+   ```bash
+   mkdir react-labs
+   cd react-labs
+   git init -b main
+   ```
+
+2. У теці `react-labs` виконайте:
 
    ```bash
    npm create vite@latest
@@ -106,13 +145,13 @@ Vercel.
    Якщо npm запитає дозвіл установити `create-vite`, відповідайте `y`. Далі
    відповідайте так:
 
-   | Запитання                       | Відповідь     |
-   | ------------------------------- | ------------- |
-   | Project name                    | `react-lab-1` |
-   | Select a framework              | React         |
-   | Select a variant                | JavaScript    |
-   | Which linter to use?            | ESLint        |
-   | Install with npm and start now? | No            |
+   | Запитання                       | Відповідь  |
+   | ------------------------------- | ---------- |
+   | Project name                    | `lab-1`    |
+   | Select a framework              | React      |
+   | Select a variant                | JavaScript |
+   | Which linter to use?            | ESLint     |
+   | Install with npm and start now? | No         |
 
    **Чому так.** TypeScript з'явиться в ЛР 19, React Compiler — у ЛР 15, тож
    зараз — JavaScript без компілятора. За замовчуванням шаблон пропонує
@@ -120,21 +159,28 @@ Vercel.
    плагінів ESLint. Курс використовує ESLint: правила хуків
    (`eslint-plugin-react-hooks`) розробляє сама команда React.
 
-2. Встановіть залежності:
+3. Створіть у корені репозиторію (у `react-labs/`, не в `lab-1/`) три файли.
 
-   ```bash
-   cd react-lab-1
-   npm install
+   `package.json`:
+
+   ```json
+   {
+     "name": "react-labs",
+     "private": true,
+     "workspaces": [
+       "lab-*"
+     ]
+   }
    ```
 
-   npm може повідомити про вразливості рівня moderate в залежностях ESLint.
-   Вони стосуються лише інструментів розробки й не потрапляють у збірку.
-   **Не запускайте `npm audit fix --force`:** він «виправляє» вразливості,
-   понижуючи версії пакетів. У цьому проєкті він замінив би
-   `eslint-config-prettier` 10 на 6.15, а `@eslint/js` 10 — на 9, і жодної
-   вразливості не виправив би.
+   Поле `workspaces` оголошує теки `lab-*` робочими просторами npm (npm
+   workspaces). Команда `npm install` у корені встановлює пакети всіх
+   лабораторних в одну `node_modules/` і записує їхні версії в один
+   `package-lock.json` — без окремої копії на кожну лабораторну. Завдяки цьому
+   Vercel також не перезбирає лабораторні, яких коміт не торкнувся (§4.8).
+   `"private": true` не дає випадково опублікувати репозиторій у реєстрі npm.
 
-3. Створіть у корені проєкту файл `.gitattributes` з одним рядком:
+   `.gitattributes`:
 
    ```text
    * text=auto eol=lf
@@ -145,27 +191,57 @@ Vercel.
    викладача чи на іншому комп'ютері) `npm run format:check` позначив би кожен
    файл. Цей рядок змушує Git зберігати й видавати файли з LF.
 
-4. Зробіть перший коміт. Файл `.gitignore` шаблон уже містить:
+   `.gitignore`:
+
+   ```text
+   node_modules
+   .idea
+   ```
+
+   `.gitignore` шаблону в `lab-1/` діє лише на файли цієї теки, а спільна
+   `node_modules/` лежить у корені. `.idea/` — тека налаштувань WebStorm.
+
+4. Встановіть залежності — у корені репозиторію:
 
    ```bash
-   git init -b main
+   npm install
+   ```
+
+   npm може повідомити про вразливості рівня moderate в залежностях ESLint.
+   Вони стосуються лише інструментів розробки й не потрапляють у збірку.
+   **Не запускайте `npm audit fix --force`:** він «виправляє» вразливості,
+   понижуючи версії пакетів. У цьому проєкті він замінив би
+   `eslint-config-prettier` 10 на 6.15, а `@eslint/js` 10 — на 9, і жодної
+   вразливості не виправив би.
+
+5. Зробіть перший коміт:
+
+   ```bash
    git add .
    git commit -m "chore: scaffold React app with Vite"
    ```
 
+**Де що робити.** Відкривайте в редакторі теку `react-labs` — корінь
+репозиторію: там лежать налаштування редактора й `AGENTS.md`. Команди
+`npm run …` виконуйте в терміналі в теці `lab-1/` (`cd lab-1`). Далі шляхи до
+файлів проєкту (`src/App.jsx`, `package.json`) — відносно `lab-1/`, а про
+файли в корені сказано «у корені репозиторію».
+
 ### 4.3. Структура проєкту й скрипти
 
-| Файл чи тека                        | Що це                                                                                              |
-| ----------------------------------- | -------------------------------------------------------------------------------------------------- |
-| `index.html`                        | сторінка, з якої починає Vite: `<div id="root">` і `<script type="module" src="/src/main.jsx">`    |
-| `src/main.jsx`                      | точка входу: `createRoot(...).render(...)` малює `<App />` всередині `<StrictMode>`                |
-| `src/App.jsx`                       | кореневий компонент; у шаблоні — лічильник на `useState`                                           |
-| `src/App.css`, `src/index.css`      | стилі                                                                                              |
-| `src/assets/`                       | файли, які імпортують з коду; у збірку потрапляють з хешем у назві                                 |
-| `public/`                           | файли, які копіюються в збірку як є                                                                |
-| `vite.config.js`                    | налаштування Vite з плагіном `@vitejs/plugin-react`                                                |
-| `eslint.config.js`                  | налаштування ESLint у форматі flat config                                                          |
-| `package.json`, `package-lock.json` | залежності й скрипти; lock-файл фіксує точні версії всіх пакетів                                   |
+| Файл чи тека                   | Що це                                                                                           |
+| ------------------------------ | ----------------------------------------------------------------------------------------------- |
+| `index.html`                   | сторінка, з якої починає Vite: `<div id="root">` і `<script type="module" src="/src/main.jsx">` |
+| `src/main.jsx`                 | точка входу: `createRoot(...).render(...)` малює `<App />` всередині `<StrictMode>`             |
+| `src/App.jsx`                  | кореневий компонент; у шаблоні — лічильник на `useState`                                        |
+| `src/App.css`, `src/index.css` | стилі                                                                                           |
+| `src/assets/`                  | файли, які імпортують з коду; у збірку потрапляють з хешем у назві                              |
+| `public/`                      | файли, які копіюються в збірку як є                                                             |
+| `vite.config.js`               | налаштування Vite з плагіном `@vitejs/plugin-react`                                             |
+| `eslint.config.js`             | налаштування ESLint у форматі flat config                                                       |
+| `package.json`                 | залежності й скрипти лабораторної; точні версії фіксує кореневий `package-lock.json`            |
+
+Команди виконуйте в теці `lab-1/`:
 
 | Команда           | Що робить                                                      |
 | ----------------- | -------------------------------------------------------------- |
@@ -182,8 +258,8 @@ Vercel.
 2. Зупиніть сервер (`Ctrl+C`). Виконайте `npm run build`: Vite виведе список
    файлів `dist/` з розмірами. Запустіть `npm run preview` і відкрийте
    http://localhost:4173.
-3. Теки `node_modules/` і `dist/` є в `.gitignore`: їх не комітять, бо npm і
-   Vite відтворюють їх з `package-lock.json` і з коду.
+3. Теки `node_modules/` (у корені репозиторію) і `dist/` є в `.gitignore`: їх
+   не комітять, бо npm і Vite відтворюють їх з `package-lock.json` і з коду.
 
 ### 4.4. Prettier
 
@@ -196,7 +272,10 @@ Vercel.
    npm install --save-dev eslint-config-prettier
    ```
 
-2. Створіть у корені `.prettierrc.json`:
+   Команди виконуйте в теці `lab-1/`: npm додасть пакети в `lab-1/package.json`,
+   а їхні версії запише в кореневий `package-lock.json`.
+
+2. Створіть у `lab-1/` файл `.prettierrc.json`:
 
    ```json
    {
@@ -207,8 +286,8 @@ Vercel.
 
    Це стиль шаблону Vite: без крапок з комою, з одинарними лапками. Тож
    Prettier не змінить у файлах шаблону жодного рядка. Решта параметрів —
-   типові: ширина рядка 80, відступ 2 пробіли. Файли з `.gitignore`
-   (`node_modules/`, `dist/`) Prettier 3 пропускає сам, тож окремий
+   типові: ширина рядка 80, відступ 2 пробіли. `node_modules/` і файли з
+   `.gitignore` теки (`dist/`) Prettier 3 пропускає сам, тож окремий
    `.prettierignore` не потрібен.
 
 3. Додайте в `package.json` до `"scripts"` два рядки:
@@ -259,12 +338,14 @@ Vercel.
    ```
 
 5. Запустіть `npm run lint` і `npm run format:check`: обидві команди мають
-   пройти без помилок. Зробіть коміт `chore: add Prettier`.
+   пройти без помилок. Вони перевіряють лише файли `lab-1/`. Зробіть коміт
+   `chore: add Prettier`.
 
 ### 4.5. Редактор
 
-**VS Code, Cursor, Windsurf.** Створіть теку `.vscode/` з двома файлами.
-`extensions.json` пропонує розширення кожному, хто відкриє проєкт:
+**VS Code, Cursor, Windsurf.** Створіть у корені репозиторію (не в `lab-1/`)
+теку `.vscode/` з двома файлами: вони діятимуть для всіх лабораторних.
+`extensions.json` пропонує розширення кожному, хто відкриє репозиторій:
 
 ```json
 {
@@ -281,27 +362,26 @@ Vercel.
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
-  }
+  },
+  "eslint.workingDirectories": [{ "pattern": "./lab-*/" }]
 }
 ```
 
-`.gitignore` шаблону ігнорує всю `.vscode/`, крім `extensions.json`. Додайте
-під рядком `!.vscode/extensions.json` ще один:
+Останній рядок каже розширенню ESLint, що кожна тека `lab-*` — окремий проєкт
+зі своїм `eslint.config.js`.
 
-```text
-!.vscode/settings.json
-```
-
-Перевірте `git status -u`: серед нових мають бути обидва файли,
-`.vscode/extensions.json` і `.vscode/settings.json`. Без `-u` Git показує нову
-теку одним рядком `.vscode/`, і не видно, чи потрапив у неї `settings.json`.
+`.gitignore` шаблону ігнорує `.vscode/` всередині `lab-1/`, а на кореневу теку
+не діє, тож обидва файли потраплять у Git. Перевірте `git status -u`: серед
+нових мають бути `.vscode/extensions.json` і `.vscode/settings.json`. Без `-u`
+Git показує нову теку одним рядком `.vscode/`, і не видно, які файли в ній.
 
 **WebStorm.** У **Settings → Languages & Frameworks → JavaScript → Code
 Quality Tools → ESLint** виберіть **Automatic ESLint configuration** і
 позначте **Run eslint --fix on save**. У **Settings → Languages & Frameworks →
 JavaScript → Prettier** виберіть **Automatic Prettier configuration** і
 позначте **Run on save**. Налаштування WebStorm живуть у `.idea/`, яку
-шаблон ігнорує, тож у звіт додайте знімок екрана цих двох сторінок.
+ігнорує кореневий `.gitignore`, тож у звіт додайте знімок екрана цих двох
+сторінок.
 
 Зробіть коміт `chore: share editor settings`.
 
@@ -392,29 +472,51 @@ AI-агента: команди перевірки, структура проє�
   допишіть правило.
 - Жодних секретів: файл лежить у публічному репозиторії.
 
-1. Створіть у корені проєкту `AGENTS.md`. Почніть із шаблону й допишіть
-   власні правила, якщо вони у вас є. Шаблон англійською: так його однаково
-   розуміють усі агенти, а українська залишається для текстів інтерфейсу.
+1. Створіть у корені репозиторію `AGENTS.md` — один на всі лабораторні.
+   Почніть із шаблону й допишіть власні правила, якщо вони у вас є. Шаблон
+   англійською: так його однаково розуміють усі агенти, а українська
+   залишається для текстів інтерфейсу. Розділ **Scope** тримає агента в теці
+   лабораторної, про яку йдеться в запиті: коли лабораторних стане кілька, він
+   не правитиме сусідні.
 
    ```markdown
    # AGENTS.md
 
-   A single-page app on React 19 and Vite 8, in JavaScript with JSX. No
+   Labs for the React course, one folder per lab. Each `lab-N/` folder is a
+   separate single-page app on React 19 and Vite 8, in JavaScript with JSX. No
    TypeScript yet. User-facing text is in Ukrainian.
+
+   ## Repository layout
+
+   - `lab-N/`: one lab, with its own `package.json`, ESLint and Prettier
+     configuration
+   - `package.json` in the root: npm workspaces over the `lab-*` folders, so all
+     labs share one `package-lock.json` and one `node_modules/`
+   - `AGENTS.md`, `.gitattributes`, `.gitignore`, `.vscode/`: shared by all labs
 
    ## Commands
 
-   - `npm install`: install dependencies
+   Run `npm install` in the repository root. Run every other command inside the
+   lab's folder, for example `lab-1/`:
+
    - `npm run dev`: dev server at http://localhost:5173
    - `npm run lint`: ESLint
-   - `npm run format`: format all files with Prettier
+   - `npm run format`: format the lab's files with Prettier
    - `npm run format:check`: check formatting without changing files
-   - `npm run build`: production build into `dist/`
+   - `npm run build`: production build into the lab's `dist/`
 
    A task is done only when `npm run lint`, `npm run format:check` and
-   `npm run build` pass. Run all three and report their results.
+   `npm run build` pass in the lab's folder. Run all three and report their
+   results.
 
-   ## Project structure
+   ## Scope
+
+   - Work only in the folder of the lab the task names. If the task doesn't name
+     a lab, ask.
+   - Don't change other labs' folders, and don't import code from one lab into
+     another.
+
+   ## Lab structure
 
    - `index.html`: the page Vite serves; the app mounts into `<div id="root">`
    - `src/main.jsx`: entry point; renders `<App />` inside `<StrictMode>`
@@ -441,10 +543,12 @@ AI-агента: команди перевірки, структура проє�
    ## Dependencies and configuration
 
    - Don't add, remove or upgrade npm packages without asking first, and say why
-     a package is needed.
+     a package is needed. Install a package from inside the folder of the lab
+     that needs it, never in the repository root.
    - Don't run `npm audit fix --force`.
-   - Don't change `eslint.config.js`, `.prettierrc.json`, `vite.config.js` or
-     the scripts in `package.json` unless the task is about them.
+   - Don't change the root `package.json`, or a lab's `eslint.config.js`,
+     `.prettierrc.json`, `vite.config.js` or `package.json` scripts, unless the
+     task is about them.
    - Never turn off ESLint rules or add `eslint-disable` comments. Fix the cause.
 
    ## How to work
@@ -456,15 +560,22 @@ AI-агента: команди перевірки, структура проє�
      `VITE_*` variable ends up in the public bundle.
    ```
 
-2. Запустіть `npm run format:check`: Prettier перевіряє й Markdown. Якщо він
-   назве `AGENTS.md`, виконайте `npm run format`. Зробіть коміт
-   `docs: add AGENTS.md`.
+2. `npm run format:check` у `lab-1/` кореневих файлів не перевіряє. Збережіть
+   `AGENTS.md` у редакторі — Prettier відформатує його під час збереження — і
+   перевірте кореневі файли з кореня репозиторію:
+
+   ```bash
+   npx prettier --check AGENTS.md .vscode
+   ```
+
+   Зробіть коміт `docs: add AGENTS.md`.
 3. **Запит 1 — чи прочитав агент файл.** Почніть нову сесію агента в режимі
    без редагування (Ask чи Plan) і надішліть:
 
-   > Не змінюй жодного файлу. Коротко перекажи правила цього проєкту: якими
-   > командами ти перевірятимеш свою роботу, яких правил React маєш
-   > дотримуватися і що тобі заборонено робити без мого дозволу.
+   > Не змінюй жодного файлу. Коротко перекажи правила цього репозиторію: як
+   > у ньому розкладено лабораторні, якими командами й у якій теці ти
+   > перевірятимеш свою роботу, яких правил React маєш дотримуватися і що тобі
+   > заборонено робити без мого дозволу.
 
    Агент має назвати команди й правила саме з вашого `AGENTS.md`. Якщо
    відповідь загальна, без ваших команд, — агент файлу не бачить: перевірте
@@ -473,24 +584,25 @@ AI-агента: команди перевірки, структура проє�
 4. **Запит 2 — зміна за правилами.** Перемкніть агента в режим Agent і
    надішліть, підставивши свої дані:
 
-   > Заміни демонстраційний вміст `src/App.jsx` на картку «Про мене». Ім'я:
-   > <ваше ім'я>. Група: <ваша група>. Технології, які я хочу опанувати в цьому
-   > курсі: <три технології>. На картці — ім'я, група, список технологій і
-   > кнопка «Подобається» з лічильником натискань. Картка — окремий компонент
-   > `ProfileCard`, дані він отримує через props. Видали стилі й зображення
-   > шаблону, які стануть непотрібними. Спочатку покажи план і список файлів,
-   > які зміниш.
+   > У лабораторній `lab-1` заміни демонстраційний вміст `src/App.jsx` на
+   > картку «Про мене». Ім'я: <ваше ім'я>. Група: <ваша група>. Технології,
+   > які я хочу опанувати в цьому курсі: <три технології>. На картці — ім'я,
+   > група, список технологій і кнопка «Подобається» з лічильником натискань.
+   > Картка — окремий компонент `ProfileCard`, дані він отримує через props.
+   > Видали стилі й зображення шаблону, які стануть непотрібними. Спочатку
+   > покажи план і список файлів, які зміниш.
 
 5. **Перевірте роботу агента** — за `git diff`, у терміналі й у браузері:
 
-   | Що перевірити       | Правило `AGENTS.md`                                                                  |
-   | ------------------- | ------------------------------------------------------------------------------------ |
-   | план до змін        | агент перелічив файли, перш ніж редагувати                                           |
-   | розташування        | компонент лежить у `src/components/ProfileCard.jsx`                                  |
-   | React               | функційний компонент, стан лічильника — `useState`, `key` у списку не з індексу      |
-   | семантика           | лічильник — `<button>`, а не `<div onClick>`                                         |
-   | залежності й конфіг | `package.json`, `eslint.config.js`, `.prettierrc.json`, `vite.config.js` не змінено  |
-   | перевірки           | агент запустив `npm run lint`, `npm run format:check` і `npm run build` і показав результат |
+   | Що перевірити       | Правило `AGENTS.md`                                                                                                          |
+   | ------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+   | план до змін        | агент перелічив файли, перш ніж редагувати                                                                                   |
+   | межі                | змінено лише файли в `lab-1/`                                                                                                |
+   | розташування        | компонент лежить у `lab-1/src/components/ProfileCard.jsx`                                                                    |
+   | React               | функційний компонент, стан лічильника — `useState`, `key` у списку не з індексу                                              |
+   | семантика           | лічильник — `<button>`, а не `<div onClick>`                                                                                 |
+   | залежності й конфіг | кореневий `package.json` не змінено, а в `lab-1/` — `package.json`, `eslint.config.js`, `.prettierrc.json`, `vite.config.js` |
+   | перевірки           | агент запустив у `lab-1/` `npm run lint`, `npm run format:check` і `npm run build` і показав результат                       |
 
    Відкрийте сторінку й у **⚛ Components** знайдіть `ProfileCard`: його props
    і стан лічильника. Закомітьте зміну агента без виправлень:
@@ -500,21 +612,23 @@ AI-агента: команди перевірки, структура проє�
 
 ### 4.8. GitHub і Vercel
 
-1. Створіть на GitHub порожній репозиторій `react-lab-1` — без README,
+1. Створіть на GitHub порожній репозиторій `react-labs` — без README,
    `.gitignore` і ліцензії: вони вже є в проєкті або не потрібні.
 2. Підключіть його й відправте код:
 
    ```bash
-   git remote add origin https://github.com/<username>/react-lab-1.git
+   git remote add origin https://github.com/<username>/react-labs.git
    git push -u origin main
    ```
 
-3. Перевірте репозиторій у браузері: є `AGENTS.md`, `.gitattributes`,
-   `.prettierrc.json` і обидва файли `.vscode/` (`extensions.json` і
-   `settings.json`), немає `node_modules/` і `dist/`. Історія комітів:
+3. Перевірте репозиторій у браузері. У корені — `AGENTS.md`, `.gitattributes`,
+   `.gitignore`, `package.json`, `package-lock.json` і обидва файли `.vscode/`
+   (`extensions.json` і `settings.json`); у `lab-1/` — проєкт з
+   `.prettierrc.json`. Тек `node_modules/` і `dist/` немає. Історія комітів:
 
-   1. `chore: scaffold React app with Vite` — шаблон без змін і
-      `.gitattributes`;
+   1. `chore: scaffold React app with Vite` — шаблон без змін у `lab-1/` і
+      кореневі `package.json`, `package-lock.json`, `.gitattributes` і
+      `.gitignore`;
    2. `chore: add Prettier`;
    3. `chore: share editor settings`;
    4. `docs: add AGENTS.md`;
@@ -522,14 +636,100 @@ AI-агента: команди перевірки, структура проє�
    6. виправлення, якщо агент порушив правила `AGENTS.md`.
 
 4. Увійдіть на [vercel.com](https://vercel.com) → **Add New → Project** і
-   імпортуйте репозиторій `react-lab-1`. Vercel сам розпізнає Vite: перед
-   **Deploy** перевірте, що **Framework Preset** — **Vite**, а **Output
-   Directory** — `dist`. Vercel встановить залежності з `package-lock.json`,
-   виконає `npm run build` і опублікує теку `dist/`. Тому `dist/` і не
-   комітять.
+   імпортуйте репозиторій `react-labs`. Перед **Deploy** налаштуйте:
+
+   | Поле             | Значення                                     |
+   | ---------------- | -------------------------------------------- |
+   | Project Name     | `react-lab-1`                                |
+   | Root Directory   | **Edit** → `lab-1`                           |
+   | Framework Preset | Vite (Vercel розпізнає його сам)             |
+   | Output Directory | `dist`                                       |
+
+   Кожна лабораторна — окремий проєкт Vercel з того самого репозиторію:
+   `react-lab-2` з Root Directory `lab-2` і так далі. Тому назва проєкту —
+   за лабораторною, а не за репозиторієм. Vercel встановить залежності з
+   кореневого `package-lock.json`, виконає `npm run build` у `lab-1/` і
+   опублікує `lab-1/dist/`. Тому `dist/` і не комітять.
+
 5. Відкрийте адресу `https://<project>.vercel.app/`: має відкритися картка
    «Про мене». Кожен наступний `git push` у `main` створює новий деплой —
-   перевірте це на будь-якій наступній зміні.
+   перевірте це на будь-якій наступній зміні. Коли лабораторних стане кілька,
+   Vercel деплоїтиме лише ті, чиї теки змінив коміт: у репозиторії з npm
+   workspaces нові проєкти пропускають незмінені лабораторні за замовчуванням
+   (перемикач **Skip deployment** у блоці **Root Directory**, **Settings →
+   Build and Deployment**).
+
+### 4.9. Якщо ЛР-1 уже виконано в репозиторії `react-lab-1`
+
+Проєкт не треба створювати заново: його переносять у теку `lab-1/`, а
+репозиторій перейменовують на `react-labs`. Історія комітів зберігається.
+Перед початком зупиніть dev-сервер і закомітьте всі зміни (`git status` має
+бути чистим).
+
+1. **GitHub.** У репозиторії відкрийте **Settings → General**, у полі
+   **Repository name** введіть `react-labs` і натисніть **Rename**. Старі
+   посилання, зокрема у вже надісланому звіті, GitHub перенаправляє на нову
+   адресу. Оновіть адресу й у локальному репозиторії:
+
+   ```bash
+   git remote set-url origin https://github.com/<username>/react-labs.git
+   ```
+
+2. **Перенесення.** У корені проєкту виконайте:
+
+   ```bash
+   git rm package-lock.json
+   mkdir lab-1
+   git mv .gitignore .prettierrc.json README.md eslint.config.js index.html package.json vite.config.js public src lab-1
+   ```
+
+   `package-lock.json` видаляють, бо спільний lock-файл npm створить у корені.
+   `.gitattributes`, `.vscode/` і `AGENTS.md` залишаються в корені. Якщо
+   якогось файлу з переліку у вас немає, `git mv` зупиниться з помилкою
+   `bad source` і нічого не перенесе: приберіть цей файл з команди й
+   повторіть її.
+
+   Видаліть з кореня теки `node_modules/` і `dist/` — у Git їх немає, npm і
+   Vite відтворять їх: у провіднику редактора, у PowerShell командою
+   `Remove-Item -Recurse -Force node_modules, dist` або в bash —
+   `rm -rf node_modules dist`.
+
+3. **Кореневі файли.** Створіть у корені `package.json` і `.gitignore` з
+   §4.2, крок 3. У `.vscode/settings.json` додайте рядок
+   `"eslint.workingDirectories"` з §4.5. Замініть `AGENTS.md` шаблоном з §4.7,
+   перенісши в нього власні правила. Рядок `!.vscode/settings.json` у
+   `lab-1/.gitignore` тепер нічого не робить, його можна видалити.
+
+4. **Перевірка.** У корені виконайте `npm install` і
+   `npx prettier --check AGENTS.md .vscode`, потім у `lab-1/` —
+   `npm run lint`, `npm run format:check` і `npm run build`. Усі команди мають
+   пройти без помилок.
+
+5. **Коміт.** У корені:
+
+   ```bash
+   git add .
+   git status
+   git commit -m "chore: move lab 1 into lab-1/"
+   ```
+
+   `git status` має показати перенесені файли як перейменовані (`renamed`):
+   так Git зберігає їхню історію, її видно в `git log --follow lab-1/src/App.jsx`.
+
+6. **Vercel.** Відкрийте проєкт `react-lab-1` → **Settings**:
+   - **Git**: підключеним має бути `react-labs`. Якщо Vercel показує помилку
+     або стару назву, натисніть **Disconnect** і підключіть `react-labs`
+     знову;
+   - **Build and Deployment → Root Directory**: введіть `lab-1`, увімкніть
+     **Skip deployment** і натисніть **Save**.
+
+   Потім виконайте `git push` і перевірте, що новий деплой зібрано й адреса
+   `https://<project>.vercel.app/` показує картку «Про мене». Якщо деплой
+   завершився помилкою, перевірте Root Directory і натисніть **Redeploy** на
+   останньому деплої.
+
+У звіті (§5) вкажіть нову адресу репозиторію. До історії комітів з §4.8
+додається сьомий: `chore: move lab 1 into lab-1/`.
 
 ## 5. Вимоги до звіту
 
@@ -542,7 +742,7 @@ AI-агента: команди перевірки, структура проє�
 У листі вкажіть репозиторій і адресу застосунку на Vercel:
 
 ```
-GitHub repository: https://github.com/<username>/react-lab-1
+GitHub repository: https://github.com/<username>/react-labs
 Vercel: https://<project>.vercel.app/
 ```
 
@@ -580,6 +780,8 @@ _Node.js і npm_
 - Що означають версії `^19.3.1` і `3.9.10` без `^`? Навіщо Prettier
   встановлюють з `--save-exact`?
 - Що показує `npm audit`? Чому `npm audit fix --force` небезпечний?
+- Що таке npm workspaces? Чому в репозиторії один `package-lock.json` і одна
+  `node_modules/` на всі лабораторні, а `package.json` — у кожній?
 
 _Vite_
 
@@ -623,6 +825,8 @@ _Деплой на Vercel_
 - Чому для деплою не потрібно комітити `dist/`?
 - Чим застосунок на Vercel відрізняється від `npm run preview`, а чим — від
   `npm run dev`?
+- Як розгорнути кілька лабораторних з одного репозиторію? Що задає Root
+  Directory і чому коміт у `lab-2/` не перезбирає `react-lab-1`?
 
 _AI-агент і AGENTS.md_
 
@@ -639,18 +843,19 @@ _AI-агент і AGENTS.md_
 
 Роботу зараховано після захисту (§6); вона оцінюється в 1 бал.
 
-| Критерій       | Мінімальна вимога                                                                                                                  |
-| -------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| Node.js        | Node.js 22.13 або новіший; `node`, `npm` і `git` працюють                                                                          |
-| Проєкт         | шаблон Vite «React + JavaScript» з ESLint; `npm run dev`, `npm run build` і `npm run preview` працюють                             |
-| ESLint         | `npm run lint` без помилок; редактор підкреслює помилки                                                                            |
-| Prettier       | `.prettierrc.json`, скрипти `format` і `format:check`, `eslint-config-prettier`; `npm run format:check` без помилок                |
-| Редактор       | форматування під час збереження; `.vscode/extensions.json` і `.vscode/settings.json` у репозиторії або знімки налаштувань WebStorm |
-| React DevTools | встановлено; видно дерево компонентів, props і стан                                                                                |
-| AGENTS.md      | у корені репозиторію; агент його читає; зміну за запитом 2 перевірено й закомічено                                                 |
-| GitHub         | коміти §4.8; немає `node_modules/` і `dist/`; є `.gitattributes`                                                                   |
-| Vercel         | `https://<project>.vercel.app/` відкриває картку «Про мене» з останнього коміту `main`                                             |
-| Звіт           | усі пункти §5                                                                                                                      |
+| Критерій       | Мінімальна вимога                                                                                                                         |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| Node.js        | Node.js 22.13 або новіший; `node`, `npm` і `git` працюють                                                                                 |
+| Репозиторій    | `react-labs` з npm workspaces у кореневому `package.json`; ЛР-1 — у теці `lab-1/`                                                         |
+| Проєкт         | шаблон Vite «React + JavaScript» з ESLint; `npm run dev`, `npm run build` і `npm run preview` працюють                                    |
+| ESLint         | `npm run lint` без помилок; редактор підкреслює помилки                                                                                   |
+| Prettier       | `.prettierrc.json`, скрипти `format` і `format:check`, `eslint-config-prettier`; `npm run format:check` без помилок                       |
+| Редактор       | форматування під час збереження; `.vscode/extensions.json` і `.vscode/settings.json` у корені репозиторію або знімки налаштувань WebStorm |
+| React DevTools | встановлено; видно дерево компонентів, props і стан                                                                                       |
+| AGENTS.md      | у корені репозиторію; агент його читає; зміну за запитом 2 перевірено й закомічено                                                        |
+| GitHub         | коміти §4.8 (і коміт перенесення з §4.9, якщо був); немає `node_modules/` і `dist/`; є `.gitattributes`                                   |
+| Vercel         | проєкт з Root Directory `lab-1`; `https://<project>.vercel.app/` відкриває картку «Про мене» з останнього коміту `main`                   |
+| Звіт           | усі пункти §5                                                                                                                             |
 
 ## 8. Список джерел
 
@@ -671,23 +876,26 @@ _AI-агент і AGENTS.md_
 15. npm. [package.json](https://docs.npmjs.com/cli/configuring-npm/package-json)
 16. npm. [package-lock.json](https://docs.npmjs.com/cli/configuring-npm/package-lock-json)
 17. npm. [npm audit](https://docs.npmjs.com/cli/commands/npm-audit)
-18. ESLint. [Configuration Files](https://eslint.org/docs/latest/use/configure/configuration-files)
-19. Oxc. [Oxlint](https://oxc.rs/docs/guide/usage/linter.html)
-20. Prettier. [Install](https://prettier.io/docs/install)
-21. Prettier. [Options](https://prettier.io/docs/options)
-22. Prettier. [Integrating with Linters](https://prettier.io/docs/integrating-with-linters)
-23. Prettier. [Ignoring Code](https://prettier.io/docs/ignore)
-24. Prettier. [eslint-config-prettier](https://github.com/prettier/eslint-config-prettier)
-25. Visual Studio Marketplace. [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
-26. Visual Studio Marketplace. [Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
-27. JetBrains. [ESLint in WebStorm](https://www.jetbrains.com/help/webstorm/eslint.html)
-28. JetBrains. [Prettier in WebStorm](https://www.jetbrains.com/help/webstorm/prettier.html)
-29. Git. [gitattributes](https://git-scm.com/docs/gitattributes)
-30. GitHub. [Configuring Git to handle line endings](https://docs.github.com/en/get-started/git-basics/configuring-git-to-handle-line-endings)
-31. Vercel. [Vite on Vercel](https://vercel.com/docs/frameworks/frontend/vite)
-32. Vercel. [Deploying Git Repositories with Vercel](https://vercel.com/docs/git)
-33. AGENTS.md. [A simple, open format for guiding coding agents](https://agents.md/)
-34. Visual Studio Code. [Custom instructions in VS Code](https://code.visualstudio.com/docs/copilot/customization/custom-instructions)
-35. Cursor. [Rules](https://cursor.com/docs/context/rules)
-36. Claude Code. [How Claude remembers your project](https://code.claude.com/docs/en/memory)
-37. Gemini CLI. [Provide context with GEMINI.md files](https://geminicli.com/docs/cli/gemini-md/)
+18. npm. [Workspaces](https://docs.npmjs.com/cli/using-npm/workspaces)
+19. ESLint. [Configuration Files](https://eslint.org/docs/latest/use/configure/configuration-files)
+20. Oxc. [Oxlint](https://oxc.rs/docs/guide/usage/linter.html)
+21. Prettier. [Install](https://prettier.io/docs/install)
+22. Prettier. [Options](https://prettier.io/docs/options)
+23. Prettier. [Integrating with Linters](https://prettier.io/docs/integrating-with-linters)
+24. Prettier. [Ignoring Code](https://prettier.io/docs/ignore)
+25. Prettier. [eslint-config-prettier](https://github.com/prettier/eslint-config-prettier)
+26. Visual Studio Marketplace. [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+27. Visual Studio Marketplace. [Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+28. JetBrains. [ESLint in WebStorm](https://www.jetbrains.com/help/webstorm/eslint.html)
+29. JetBrains. [Prettier in WebStorm](https://www.jetbrains.com/help/webstorm/prettier.html)
+30. Git. [gitattributes](https://git-scm.com/docs/gitattributes)
+31. GitHub. [Configuring Git to handle line endings](https://docs.github.com/en/get-started/git-basics/configuring-git-to-handle-line-endings)
+32. GitHub. [Renaming a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/renaming-a-repository)
+33. Vercel. [Vite on Vercel](https://vercel.com/docs/frameworks/frontend/vite)
+34. Vercel. [Deploying Git Repositories with Vercel](https://vercel.com/docs/git)
+35. Vercel. [Using Monorepos](https://vercel.com/docs/monorepos)
+36. AGENTS.md. [A simple, open format for guiding coding agents](https://agents.md/)
+37. Visual Studio Code. [Custom instructions in VS Code](https://code.visualstudio.com/docs/copilot/customization/custom-instructions)
+38. Cursor. [Rules](https://cursor.com/docs/context/rules)
+39. Claude Code. [How Claude remembers your project](https://code.claude.com/docs/en/memory)
+40. Gemini CLI. [Provide context with GEMINI.md files](https://geminicli.com/docs/cli/gemini-md/)
