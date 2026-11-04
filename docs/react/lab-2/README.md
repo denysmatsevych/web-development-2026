@@ -15,11 +15,13 @@ from is [components-props-plan.md](components-props-plan.md).
 ## Why it looks like this
 
 - **20–30 minutes, all in class.** Every task (§4.1–4.7) is done during the
-  lab session; §7 checks it by the commit dates. The starter carries the
-  configuration, styles and data, so students write only components and a few
-  lines of `App`. Each step ends with «Що має вийти» in the browser. If a run
-  takes longer, shorten steps rather than move them home: drop the trial
-  avatars in §4.3 first, then give `Profile` in full.
+  lab session. §7 checks it by the push times on the repository's GitHub
+  **Activity** page, not by commit dates, which students set on their own
+  machines. The starter carries the configuration, styles and data, so
+  students write only components and a few lines of `App`. Each step ends
+  with «Що має вийти» in the browser. If a run takes longer, shorten steps
+  rather than move them home: drop the trial avatars in §4.3 first, then give
+  `Profile` in full.
 - **Useful links, no theory section.** §2 lists seven uk.react.dev pages, and
   each task links the one section it needs.
 - **Written by hand.** AI completions may stay on; an agent doing the tasks
