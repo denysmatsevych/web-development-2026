@@ -69,13 +69,20 @@ Vite 8.3.5, ESLint 10):
 - the uk.react.dev titles and section anchors in §2 and the «Довідка» links
   exist;
 - the site passes `npm run check` and `npm run build`, and the zip, the image
-  and the ЛР-1 link get the base path.
+  and the ЛР-1 link get the base path;
+- the §4.6 DevTools steps, in Chrome 156 with React DevTools 8.0.0, driven
+  with real mouse and keyboard events: each `Profile` shows its `key`, only
+  the lead's `Avatar` has `size` in its props, and **rendered by** shows
+  `App`. A double-click selects `120`, so typing `200` resizes the avatar,
+  and a reload restores 120; a single click only places the caret and gives
+  `120200`, which is why §4.6 asks for a double-click. Version 8 names the
+  tab «Components ⚛» and puts the React tabs after the built-in ones, so a
+  narrow DevTools moves them into the `»` menu.
 
 Not verified:
 
 - a timed dry run of the whole lab by someone following the handout;
-- the React DevTools steps of §4.6 (editing `size`, **rendered by**, `key`
-  next to each `Profile`) in a real browser with the extension;
+- the §4.6 steps in Edge, which loads the same React panels;
 - the default folder names from Windows **Extract All** and macOS Archive
   Utility;
 - the second Vercel project from the same repository, and whether the root
