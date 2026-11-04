@@ -46,10 +46,17 @@ deadline = m.group(1).rstrip(".") if m else None
 if m:
     body = body[m.end():]
 
+# Site-relative images load from public/, which the site serves at its root,
+# so the PDF shows them before they are deployed.
+PUBLIC = (ROOT / "public").as_uri()
+body = re.sub(r"(!\[[^\]]*\]\()/", rf"\g<1>{PUBLIC}/", body)
 # Site-relative links would be dead in a downloaded file.
 body = re.sub(r"\]\(/", f"]({SITE}/", body)
 
 md = MarkdownIt("commonmark").enable("table")
+# markdown-it refuses file: URLs; let through only the public/ images above.
+default_validate = md.validateLink
+md.validateLink = lambda url: url.startswith(PUBLIC) or default_validate(url)
 html_body = md.render(body)
 
 # Static (non-variable) files: Edge embeds a variable font as Type3 glyphs,
@@ -96,6 +103,9 @@ tr { break-inside: avoid; }
 thead { display: table-header-group; }
 th, td { border: 1px solid var(--code-line); padding: 4px 7px; text-align: left; vertical-align: top; }
 th { background: var(--code-bg); color: var(--head); }
+/* Capped so a screenshot fits under a page's opening text instead of leaving a gap. */
+img { display: block; max-width: 100%; max-height: 3.8in; width: auto; height: auto;
+      margin: 0.4em 0 0.9em; border: 1px solid var(--code-line); break-inside: avoid; }
 """
 
 html = f"""<!doctype html>
