@@ -31,11 +31,19 @@ When a lab is built, add a row here, as the Web Development plan does, and put
 its instructor docs in `docs/react/lab-N/` (the README's **Docs** section has
 the folder layout).
 
+**Students keep the labs in one repository.** `react-labs` has one `lab-N/`
+folder per lab, each its own Vite app, under npm workspaces. Each lab is its
+own Vercel project with Root Directory `lab-N`. ЛР 1 sets this up, and
+[lab-1/README.md](lab-1/README.md) gives the reasons. So a later lab's handout
+has students add `lab-N/` and import a new Vercel project rather than create
+a repository. ЛР 20 (Next.js) and the final project (ЛР 21–27) get their own
+repositories.
+
 | Plan | Site | Note |
 | --- | --- | --- |
 | — | `/react/lectures/lecture-0` | Лекція 0: the course on one diagram, grading, course rules and every presentation topic |
 | Лекції 1–8 | not built | |
-| ЛР 1 | `/react/labs/lab-1` | local setup: Node.js, Vite, ESLint, Prettier, React DevTools, `AGENTS.md`, deploy to Vercel; [lab-1/README.md](lab-1/README.md) |
+| ЛР 1 | `/react/labs/lab-1` | local setup: the `react-labs` repository, Node.js, Vite, ESLint, Prettier, React DevTools, `AGENTS.md`, deploy to Vercel; [lab-1/README.md](lab-1/README.md) |
 | ЛР 2–27 | not built | |
 
 Лекція 0 reads its topic slides from the **Теми презентацій** table below
