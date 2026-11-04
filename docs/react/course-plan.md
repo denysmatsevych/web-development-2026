@@ -23,9 +23,9 @@ both in the same sitting. The Web Development course has its own plan in
 ## How the site maps to the plan
 
 The course is registered under the slug `react` with `status: 'published'`
-(see `src/data/courses.ts`), so it is on the public site. As of 2026-11-03,
+(see `src/data/courses.ts`), so it is on the public site. As of 2026-11-04,
 the built parts are Лекція 0, an introductory deck that isn't in the
-programme, and ЛР 1.
+programme, ЛР 1 and ЛР 2.
 
 When a lab is built, add a row here, as the Web Development plan does, and put
 its instructor docs in `docs/react/lab-N/` (the README's **Docs** section has
@@ -44,7 +44,8 @@ repositories.
 | — | `/react/lectures/lecture-0` | Лекція 0: the course on one diagram, grading, course rules and every presentation topic |
 | Лекції 1–8 | not built | |
 | ЛР 1 | `/react/labs/lab-1` | local setup: the `react-labs` repository, Node.js, Vite, ESLint, Prettier, React DevTools, `AGENTS.md`, deploy to Vercel; [lab-1/README.md](lab-1/README.md) |
-| ЛР 2–27 | not built | |
+| ЛР 2 | `/react/labs/lab-2` | components and props, written by hand in class: a starter for `lab-2/`, `Header`, `Avatar`, `Profile`, `Card`, the render and module trees, deploy to Vercel; [lab-2/README.md](lab-2/README.md) |
+| ЛР 3–27 | not built | |
 
 Лекція 0 reads its topic slides from the **Теми презентацій** table below
 when the site is built. Keep that table's rows in their current shape: the

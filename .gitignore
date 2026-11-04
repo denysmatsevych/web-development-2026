@@ -47,3 +47,6 @@ docs/web/lab-14/pk2/*
 !docs/web/lab-14/pk2/build.mjs
 !docs/web/lab-14/pk2/apps-script/
 docs/web/lab-14/pk2/apps-script/Bank.gs
+
+# React Lab 2 — reference solution (instructor-only: it solves every task)
+docs/react/lab-2/solution/
