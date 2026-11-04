@@ -77,6 +77,7 @@ courtly-booking-starter/  starter project: a catalogue app with seeded JS defect
 flowtask-starter/   starter project: a landing page to audit and fix
 js-basics-starter/  starter project: pure data functions with provided node --test tests
 layout-lab-starter/ starter project: responsive-layout code challenges
+react-lab-2-starter/ starter project: React ЛР-2's lab-2/ folder (configuration, styles, data) for writing components by hand
 showfinder-starter/ starter project: a TVmaze API app to build from AI drafts, with a stubbed-fetch self-check
 showfinder-ts-starter/ starter project: a TVmaze app to migrate from JavaScript to TypeScript, with type checks and node --test tests
 watchlist-starter/  starter project: a DOM app to build from AI drafts, with an in-browser self-check

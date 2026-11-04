@@ -1,8 +1,15 @@
-"""Build public/labs/<starter>.zip from a top-level starter folder.
+"""Build a starter zip under public/ from a top-level starter folder.
 
-Run from the repo root with the folder's name:
+Run from the repo root with the folder's name, and with the course slug for
+any course other than Web Development:
 
     python docs/web/build-pack.py js-basics-starter
+    python docs/web/build-pack.py react-lab-2-starter react
+
+A course's zip goes to public/<course>/labs/ and is named after the lab: the
+folder name without the `<course>-` prefix and the `-starter` suffix, so
+react-lab-2-starter becomes lab-2.zip. File managers unpack a zip into a
+folder named after it, which is then the lab-N/ folder the lab needs.
 
 Files sit at the zip root, with no top-level folder, so the archive unpacks
 straight into a repository or a lab-N/ folder. Python's zipfile rather than
@@ -25,7 +32,7 @@ import subprocess
 import sys
 import zipfile
 
-TEXT = {".css", ".html", ".js", ".json", ".md", ".mjs", ".svg", ".ts", ".txt", ".gitignore", ".nojekyll"}
+TEXT = {".css", ".html", ".js", ".json", ".jsx", ".md", ".mjs", ".svg", ".ts", ".tsx", ".txt", ".gitignore", ".nojekyll"}
 
 
 def committed(path):
@@ -43,12 +50,19 @@ def tracked(folder):
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-if len(sys.argv) != 2:
-    sys.exit("usage: python docs/web/build-pack.py <starter-folder>   (e.g. js-basics-starter)")
+if len(sys.argv) not in (2, 3):
+    sys.exit("usage: python docs/web/build-pack.py <starter-folder> [course]"
+             "   (e.g. js-basics-starter, or react-lab-2-starter react)")
 SRC = ROOT / sys.argv[1]
 if not SRC.is_dir():
     sys.exit(f"no folder {sys.argv[1]}/ at the repo root")
-OUT = ROOT / f"public/labs/{SRC.name}.zip"
+if len(sys.argv) == 3:
+    COURSE = sys.argv[2]
+    NAME = SRC.name.removeprefix(f"{COURSE}-").removesuffix("-starter")
+    OUT = ROOT / f"public/{COURSE}/labs/{NAME}.zip"
+else:
+    OUT = ROOT / f"public/labs/{SRC.name}.zip"
+OUT.parent.mkdir(parents=True, exist_ok=True)
 
 files = tracked(SRC)
 with zipfile.ZipFile(OUT, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as z:
