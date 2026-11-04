@@ -1,4 +1,4 @@
-"""Build public/labs/<starter>.zip from a top-level starter folder.
+"""Build a starter zip under public/ from a top-level starter folder.
 
 Run from the repo root with the folder's name, and with the course slug for
 any course other than Web Development:
