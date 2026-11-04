@@ -20,7 +20,7 @@ https://denysmatsevych.github.io/web-development-2026/react/labs/lab-2/
 
 ## Дерево рендерингу
 
-Заповніть за вкладкою **⚛ Components** у React DevTools (§4.6).
+Заповніть за вкладкою **Components ⚛** у React DevTools (§4.6).
 
 ```text
 App

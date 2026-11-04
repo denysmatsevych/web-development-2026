@@ -93,7 +93,9 @@ Prettier, налаштований редактор, React Developer Tools, AI-�
    розширень.
 3. **Браузер.** Chrome або Edge з розширенням **React Developer Tools** (є
    також для Firefox). Після встановлення в DevTools з'являються вкладки
-   **⚛ Components** і **⚛ Profiler** — на сторінках, зроблених на React.
+   **Components ⚛**, **Profiler ⚛** і **Suspense ⚛** — на сторінках,
+   зроблених на React. Вони стоять після вбудованих, тож у вузькій панелі
+   DevTools можуть сховатися в меню `»`.
 4. **AI-агент.** Той самий, що в курсі «HTML, CSS, JS/TS», з режимом, у якому
    агент сам змінює файли (зазвичай Agent). Чи читає він `AGENTS.md`, — у
    таблиці §4.7.
@@ -254,7 +256,7 @@ react-labs/
 | `npm run lint`    | ESLint для всього проєкту                                      |
 
 1. Запустіть `npm run dev` і відкрийте http://localhost:5173. Відкрийте
-   DevTools → **⚛ Components**: виберіть `App` і знайдіть його стан у розділі
+   DevTools → **Components ⚛**: виберіть `App` і знайдіть його стан у розділі
    **hooks**. Натисніть кнопку лічильника кілька разів і подивіться, як
    змінюється стан. Кнопкою вибору елемента у вкладці Components знайдіть
    компонент за елементом сторінки.
@@ -613,7 +615,7 @@ AI-агента: команди перевірки, структура проє�
    | залежності й конфіг | кореневий `package.json` не змінено, а в `lab-1/` — `package.json`, `eslint.config.js`, `.prettierrc.json`, `vite.config.js` |
    | перевірки           | агент запустив у `lab-1/` `npm run lint`, `npm run format:check` і `npm run build` і показав результат                       |
 
-   Відкрийте сторінку й у **⚛ Components** знайдіть `ProfileCard`: його props
+   Відкрийте сторінку й у **Components ⚛** знайдіть `ProfileCard`: його props
    і стан лічильника. Закомітьте зміну агента без виправлень:
    `feat: add profile card`. Якщо агент порушив правило, виправте це власноруч
    окремим комітом, наприклад `fix: use button for the like counter`, і
@@ -841,7 +843,7 @@ Vercel: https://<project>.vercel.app/
 
 1. результат `node --version`, `npm --version` і `git --version`; редактор і
    встановлені розширення (для WebStorm — знімки екрана налаштувань з §4.5);
-2. знімок екрана застосунку з відкритою вкладкою **⚛ Components**;
+2. знімок екрана застосунку з відкритою вкладкою **Components ⚛**;
 3. знімок екрана `npm run lint` з помилками П2 і коротко — що означає кожне з
    4 правил;
 4. знімок екрана `npm run lint`, `npm run format:check` і `npm run build` без
