@@ -196,10 +196,12 @@ react-labs/
    ```text
    node_modules
    .idea
+   .DS_Store
    ```
 
    `.gitignore` шаблону в `lab-1/` діє лише на файли цієї теки, а спільна
-   `node_modules/` лежить у корені. `.idea/` — тека налаштувань WebStorm.
+   `node_modules/` лежить у корені. `.idea/` — тека налаштувань WebStorm,
+   `.DS_Store` — службові файли Finder у macOS.
 
 4. Встановіть залежності — у корені репозиторію:
 
@@ -568,7 +570,9 @@ AI-агента: команди перевірки, структура проє�
    npx prettier --check AGENTS.md .vscode
    ```
 
-   Зробіть коміт `docs: add AGENTS.md`.
+   У WebStorm теки `.vscode/` немає, і з нею в команді Prettier завершиться
+   помилкою `No files matching the pattern were found`, тож перевіряйте лише
+   `npx prettier --check AGENTS.md`. Зробіть коміт `docs: add AGENTS.md`.
 3. **Запит 1 — чи прочитав агент файл.** Почніть нову сесію агента в режимі
    без редагування (Ask чи Plan) і надішліть:
 
@@ -657,7 +661,9 @@ AI-агента: команди перевірки, структура проє�
    Vercel деплоїтиме лише ті, чиї теки змінив коміт: у репозиторії з npm
    workspaces нові проєкти пропускають незмінені лабораторні за замовчуванням
    (перемикач **Skip deployment** у блоці **Root Directory**, **Settings →
-   Build and Deployment**).
+   Build and Deployment**). Винятком є файли в корені репозиторію (`AGENTS.md`,
+   `.vscode/`, кореневий `package.json`): вони не належать жодній лабораторній,
+   тож після їхньої зміни Vercel перезбирає всі лабораторні.
 
 ### 4.9. Якщо ЛР-1 уже виконано в репозиторії `react-lab-1`
 
@@ -695,13 +701,15 @@ AI-агента: команди перевірки, структура проє�
    `rm -rf node_modules dist`.
 
 3. **Кореневі файли.** Створіть у корені `package.json` і `.gitignore` з
-   §4.2, крок 3. У `.vscode/settings.json` додайте рядок
-   `"eslint.workingDirectories"` з §4.5. Замініть `AGENTS.md` шаблоном з §4.7,
+   §4.2, крок 3. Замініть вміст `.vscode/settings.json` файлом з §4.5:
+   від попереднього він відрізняється лише рядком
+   `"eslint.workingDirectories"`. Замініть `AGENTS.md` шаблоном з §4.7,
    перенісши в нього власні правила. Рядок `!.vscode/settings.json` у
    `lab-1/.gitignore` тепер нічого не робить, його можна видалити.
 
 4. **Перевірка.** У корені виконайте `npm install` і
-   `npx prettier --check AGENTS.md .vscode`, потім у `lab-1/` —
+   `npx prettier --check AGENTS.md .vscode` (у WebStorm — без `.vscode`, як у
+   §4.7), потім у `lab-1/` —
    `npm run lint`, `npm run format:check` і `npm run build`. Усі команди мають
    пройти без помилок.
 
@@ -715,6 +723,9 @@ AI-агента: команди перевірки, структура проє�
 
    `git status` має показати перенесені файли як перейменовані (`renamed`):
    так Git зберігає їхню історію, її видно в `git log --follow lab-1/src/App.jsx`.
+   Виняток — `package.json` і `.gitignore`: у корені їх замінили нові файли,
+   тож Git покаже їх як змінені (`modified`) у корені й нові (`new file`) у
+   `lab-1/`. `git log --follow` знаходить історію й для них.
 
 6. **Vercel.** Відкрийте проєкт `react-lab-1` → **Settings**:
    - **Git**: підключеним має бути `react-labs`. Якщо Vercel показує помилку
@@ -728,8 +739,8 @@ AI-агента: команди перевірки, структура проє�
    завершився помилкою, перевірте Root Directory і натисніть **Redeploy** на
    останньому деплої.
 
-У звіті (§5) вкажіть нову адресу репозиторію. До історії комітів з §4.8
-додається сьомий: `chore: move lab 1 into lab-1/`.
+Якщо звіт (§5) ще не надіслано, вкажіть у ньому нову адресу репозиторію. До
+історії комітів з §4.8 додається ще один коміт: `chore: move lab 1 into lab-1/`.
 
 ## 5. Вимоги до звіту
 
@@ -826,7 +837,8 @@ _Деплой на Vercel_
 - Чим застосунок на Vercel відрізняється від `npm run preview`, а чим — від
   `npm run dev`?
 - Як розгорнути кілька лабораторних з одного репозиторію? Що задає Root
-  Directory і чому коміт у `lab-2/` не перезбирає `react-lab-1`?
+  Directory і чому коміт у `lab-2/` не перезбирає `react-lab-1`, а зміна
+  `AGENTS.md` перезбирає?
 
 _AI-агент і AGENTS.md_
 

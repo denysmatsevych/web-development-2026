@@ -11,9 +11,9 @@ There is no starter and no ТЗ: students scaffold their own project with
 
 ## Why it looks like this
 
-- **One repository, a folder per lab.** The labs mostly have separate goals,
-  so each `lab-N/` is its own Vite app rather than one app that grows. ЛР 20
-  (Next.js) and the final project get their own repositories. The rule came on
+- **One repository, a folder per lab.** [course-plan.md](../course-plan.md)
+  states the rule. The labs mostly have separate goals, so each `lab-N/` is
+  its own Vite app rather than one app that grows. The rule came on
   2026-11-04, after the first group had built a standalone `react-lab-1`, so
   §4.9 moves a finished project in place: rename the repository on GitHub,
   `git mv` the files into `lab-1/`, add the root files, then point Vercel at
@@ -25,10 +25,15 @@ There is no starter and no ТЗ: students scaffold their own project with
   unaffected projects only in a workspaces monorepo with the lockfile at the
   root and a unique `name` in each package. Those skips don't count against
   the limits, and the skip is on by default for new projects. Builds the
-  Ignored Build Step cancels still count. Workspaces also keep one
-  `node_modules/` for all labs instead of one per lab. `npm install <pkg>` run
-  inside a lab folder writes to that lab's `package.json` and the root
-  lockfile, so the handout's install commands didn't change.
+  Ignored Build Step cancels still count. A change outside the `lab-*`
+  folders (`AGENTS.md`, `.vscode/`, the root `package.json`) is a global
+  change and deploys every project: with ЛР 1–19 in the repository, one
+  `AGENTS.md` commit is 19 builds, queued one at a time, about a fifth of the
+  day's 100. The handout says so in §4.8 and asks about it in §6.
+  Workspaces also keep one `node_modules/` for all labs instead of one per
+  lab. `npm install <pkg>` run inside a lab folder writes to that lab's
+  `package.json` and the root lockfile, so the handout's install commands
+  didn't change.
 - **The editor opens the repository root.** `.vscode/` and `AGENTS.md` live
   there and serve every lab. The ESLint extension loads ESLint from the opened
   folder; `"eslint.workingDirectories": [{ "pattern": "./lab-*/" }]` makes
@@ -41,7 +46,9 @@ There is no starter and no ТЗ: students scaffold their own project with
   folder. The handout has students check `AGENTS.md` and `.vscode/` with
   `npx prettier --check AGENTS.md .vscode` from the root. That runs the
   hoisted Prettier with default options, and `semi` and `singleQuote` don't
-  affect Markdown or JSON.
+  affect Markdown or JSON. WebStorm users have no `.vscode/` and leave it out
+  of the command: Prettier exits with code 2 on a pattern that matches no
+  files.
 - **Modelled on Web Development ЛР-1, without its theory section.** The
   students set up an editor, Git and an agent there; this lab adds only what
   React needs.
@@ -82,7 +89,8 @@ There is no starter and no ТЗ: students scaffold their own project with
   `!.vscode/settings.json` line in `lab-1/.gitignore` that does nothing.
 - **A root `.gitignore`.** With workspaces, `node_modules/` sits in the root,
   where the template's `.gitignore` doesn't reach. It also ignores `.idea/`,
-  which WebStorm now creates in the root.
+  which WebStorm now creates in the root, and macOS's `.DS_Store`, which the
+  template's `.gitignore` used to cover there.
 - **`npm audit fix --force` warning.** A fresh install reports 6 moderate
   advisories (`minimatch` under ESLint, no fix available). The forced fix
   downgrades `@eslint/js` 10 → 9.39.5 and `eslint-config-prettier` 10 → 6.15.0.
@@ -131,8 +139,11 @@ On Node.js 24.20 and npm 11.19, with the same package versions as above, a
 - a clone made with `core.autocrlf=true` keeps LF and passes all three
   checks;
 - §4.9 was run on a repository rebuilt in the 2026-11-03 layout. Git records
-  the move as renames, `git log --follow` keeps the history, and the checks
-  pass. When a listed source is missing, `git mv` fails with `bad source` and
+  the move as renames, except `package.json` and `.gitignore`: the root gets
+  new files with those names, so they show as `modified` there and as
+  `new file` in `lab-1/`. `git log --follow` keeps the history of all of
+  them, and the checks pass. When a listed source is missing, `git mv` fails
+  with `bad source` and
   moves nothing.
 
 Not run: Vercel (import with Root Directory, how a GitHub rename affects the
