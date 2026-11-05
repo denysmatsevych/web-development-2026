@@ -100,6 +100,11 @@ built as ЛР-1 describes, with `lab-1/` and `lab-2/` (React 19.3.1, Vite
 - Mermaid 11.4.1 in Edge renders the starter's one-node diagram, §4.2's
   blog example and both answer-key diagrams without errors; Prettier leaves
   a `mermaid` block unchanged, odd indentation included;
+- GitHub renders the branch's `mermaid` blocks: the starter README's
+  one-node diagram and, in the handout's file view, §4.2's blog example
+  (four nodes, three edges, `PostCard × 5`), with no error. The answer uses
+  the same syntax (`-->`, `Node["Name × N"]`). Checked in headless Edge
+  inside GitHub's diagram frame, since screenshots of it come out blank;
 - uk.react.dev serves Thinking in React untranslated; uk.legacy.reactjs.org
   has «Філософія React» in Ukrainian, with class components in its examples.
   The section anchors in the «Довідка» links exist on both sites and on the
@@ -112,7 +117,6 @@ Not verified:
 
 - a timed dry run of the whole lab by someone following the handout;
 - `<search>` in Firefox;
-- the diagram on GitHub itself, which may run a different Mermaid version;
 - the default folder names from Windows **Extract All** and macOS Archive
   Utility;
 - the third Vercel project from the same repository.

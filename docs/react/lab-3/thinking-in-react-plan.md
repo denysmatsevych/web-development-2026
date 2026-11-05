@@ -1,8 +1,8 @@
 # Plan: React ЛР-3 «Рефакторинг застосунку за деревом компонентів (Thinking in React)»
 
 Status: written and approved on 2026-11-05; the lab was built the same day
-on branch `feat/react-lab-3`, without the PDF, which waits for the
-instructor's review. What was verified and what wasn't is in this folder's
+on branch `feat/react-lab-3`, and the PDF was added after the instructor's
+review of the handout. What was verified and what wasn't is in this folder's
 [README.md](README.md), which holds the facts that last. Delete this file
 once the lab is published.
 
@@ -11,8 +11,8 @@ Deviations from the plan:
 - **§4.9 commits `inStockOnly={false}`,** not `true`. `true` would change
   the page, and §7 requires it to look as at the start. `false` matches the
   unchecked checkbox, and students switch the prop to `true` in DevTools.
-- **No `handout:` field and no PDF** until the review (the instructor's
-  request); the README's **Build** says what to do then.
+- **The PDF and the `handout:` field came last,** after the instructor's
+  review of the handout (the instructor's request).
 - **The category headings' CSS.** The price column's `:last-child` rule
   also right-aligned the one-cell category row; the rule now targets the
   price cells and the price header only.
@@ -27,6 +27,11 @@ Deviations from the plan:
   another app, §4.8 checks that GitHub renders it, and §2 links the Mermaid
   flowchart docs. The syntax adds about a minute to §4.2, which makes the
   total 28.
+- **Review fixes.** React DevTools 8 shows **rendered by** as the whole
+  owner chain, so §4.7 says to read the first component named. The
+  module-tree defence question asks how the two trees are alike and how
+  they differ, since the module tree also holds `data.js`, `main.jsx` and
+  `index.css`.
 
 ## Context
 
