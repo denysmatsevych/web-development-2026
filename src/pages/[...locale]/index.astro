@@ -13,7 +13,7 @@ import {
 } from "@/data/courses";
 import {
   defaultLocale,
-  getEnabledLocales,
+  locales,
   localeAlternates,
   localeHref,
   useTranslations,
@@ -24,7 +24,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 const courses = getCourses();
 
 export function getStaticPaths() {
-  return getEnabledLocales().map((locale) => ({
+  return locales.map((locale) => ({
     params: { locale: locale === defaultLocale ? undefined : locale },
     props: { locale },
   }));

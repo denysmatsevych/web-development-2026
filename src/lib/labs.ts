@@ -216,13 +216,12 @@ export async function getTaskList(course: string, locale: Locale): Promise<TaskL
 /**
  * Language versions of one lab page (`kind: 'lab'`) or its brief page
  * (`kind: 'task'`) that exist — for `hreflang` and the language switcher.
- * `undefined` when English is disabled.
  */
 export async function getLabAlternates(
   course: string,
   slug: string,
   kind: 'lab' | 'task' = 'lab',
-): Promise<Partial<Record<Locale, string>> | undefined> {
+): Promise<Partial<Record<Locale, string>>> {
   const exists = new Set<Locale>();
   for (const locale of locales) {
     const entries = kind === 'lab' ? await getLabs(course, locale) : await getTasks(course, locale);
