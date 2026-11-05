@@ -45,7 +45,8 @@ repositories.
 | Лекції 1–8 | not built | |
 | ЛР 1 | `/react/labs/lab-1` | local setup: the `react-labs` repository, Node.js, Vite, ESLint, Prettier, React DevTools, `AGENTS.md`, deploy to Vercel; [lab-1/README.md](lab-1/README.md) |
 | ЛР 2 | `/react/labs/lab-2` | components and props, written by hand in class: a starter for `lab-2/`, `Header`, `Avatar`, `Profile`, `Card`, the render and module trees, deploy to Vercel; [lab-2/README.md](lab-2/README.md) |
-| ЛР 3–27 | not built | |
+| ЛР 3 | `/react/labs/lab-3` | Thinking in React, done by hand in class: a starter for `lab-3/` with the whole app in `App`, the component hierarchy from a framed mockup, `MenuItemRow`, `MenuCategory`, `MenuTable` and `SearchBar` extracted without changing the page, the state table, deploy to Vercel; [lab-3/README.md](lab-3/README.md) |
+| ЛР 4–27 | not built | |
 
 Лекція 0 reads its topic slides from the **Теми презентацій** table below
 when the site is built. Keep that table's rows in their current shape: the
