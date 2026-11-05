@@ -35,7 +35,8 @@ cli = argparse.ArgumentParser(description="Build a lab's PDF handout from its Ma
 cli.add_argument("lab", help="lab id, e.g. lab-6")
 cli.add_argument("course", nargs="?", default="web-development", help="course slug (default: web-development)")
 cli.add_argument("--lang", choices=("uk", "en"), default="uk", help="content language (default: uk)")
-args = cli.parse_args()
+# Intermixed, so `--lang` may also come between the lab id and the course.
+args = cli.parse_intermixed_args()
 LAB, COURSE, LANG = args.lab, args.course, args.lang
 SRC = ROOT / f"src/content/labs/{COURSE}/{LANG}/{LAB}.md"
 LABS_PATH = "labs" if COURSE == "web-development" else f"{COURSE}/labs"
