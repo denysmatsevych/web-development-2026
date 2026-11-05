@@ -87,6 +87,15 @@ built as ЛР-1 describes, with `lab-1/` and `lab-2/` (React 19.3.1, Vite
   `MenuCategory`; `Enter` in the search field doesn't reload the page; with
   `key` only on the `<tr>` inside `MenuItemRow`, React logs «Each child in a
   list should have a unique "key" prop»;
+- in Chrome 156 headless with the React DevTools 8.0.0 extension, on the
+  solution with the §4.9 extra: the page logs no React warnings, so
+  `<search>` works in Chrome too; **Components ⚛** shows the tree above
+  with the same keys; a `MenuItemRow`'s **rendered by** lists the whole
+  owner chain, `MenuCategory` first, then `MenuTable`, `App` and
+  `createRoot()`, with `Array.map` lines and file links in between, which
+  is why §4.7 says the first component named is the answer; ticking
+  `inStockOnly`'s checkbox in `MenuTable`'s **props** leaves 7 rows and
+  the headings «Кава (3)», «Чай (2)», «Десерти (2)»;
 - Mermaid 11.4.1 in Edge renders the starter's one-node diagram, §4.2's
   blog example and both answer-key diagrams without errors; Prettier leaves
   a `mermaid` block unchanged, odd indentation included;
@@ -101,10 +110,7 @@ built as ЛР-1 describes, with `lab-1/` and `lab-2/` (React 19.3.1, Vite
 Not verified:
 
 - a timed dry run of the whole lab by someone following the handout;
-- the React DevTools extension itself: the tree, **rendered by** and
-  switching a boolean prop (§4.9) were checked through React's fiber debug
-  fields, not in the DevTools panel;
-- `<search>` in Chrome and Firefox;
+- `<search>` in Firefox;
 - the diagram on GitHub itself, which may run a different Mermaid version;
 - the default folder names from Windows **Extract All** and macOS Archive
   Utility;
