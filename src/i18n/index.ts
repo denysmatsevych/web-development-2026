@@ -6,13 +6,6 @@ export const locales = ['uk', 'en'] as const;
 export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = 'uk';
 
-export const isEnglishEnabled =
-  import.meta.env.DEV || import.meta.env.VITE_ENABLE_ENGLISH === 'true';
-
-export function getEnabledLocales(): Locale[] {
-  return isEnglishEnabled ? [...locales] : [defaultLocale];
-}
-
 export function isLocale(value: string): value is Locale {
   return locales.some((locale) => locale === value);
 }
@@ -44,25 +37,19 @@ export function localeHref(locale: Locale, pathname: string): string {
   return withBase(`${localePrefix}${normalizedPath}`);
 }
 
-/** Build alternate URLs only when both language versions are enabled. */
-export function localeAlternates(pathname: string): Partial<Record<Locale, string>> | undefined {
-  if (!isEnglishEnabled) return undefined;
+/** Alternate URLs for a page that exists in every language. */
+export function localeAlternates(pathname: string): Record<Locale, string> {
   return {
     uk: localeHref('uk', pathname),
     en: localeHref('en', pathname),
   };
 }
 
-/**
- * Alternate URLs for the language versions of a page that actually exist.
- * `undefined` when English is disabled, so production has no `hreflang` and no
- * language switcher.
- */
+/** Alternate URLs for the language versions of a page that actually exist. */
 export function localeAlternatesFor(
   pathname: string,
   exists: (locale: Locale) => boolean,
-): Partial<Record<Locale, string>> | undefined {
-  if (!isEnglishEnabled) return undefined;
+): Partial<Record<Locale, string>> {
   return Object.fromEntries(
     locales.filter(exists).map((locale) => [locale, localeHref(locale, pathname)]),
   );
@@ -88,7 +75,7 @@ export function getLanguageSwitchLinks(
   alternates: Partial<Record<Locale, string>> | undefined,
   courseSlug?: string,
 ): LanguageSwitchLink[] | undefined {
-  if (!isEnglishEnabled || !alternates) return undefined;
+  if (!alternates) return undefined;
   return locales.map((locale) => ({
     locale,
     href: alternates[locale] ?? localeHref(locale, courseSlug ? `/${courseSlug}/` : '/'),

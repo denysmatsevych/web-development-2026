@@ -40,7 +40,7 @@ import {
 } from "@/lib/labs";
 import {
   defaultLocale,
-  getEnabledLocales,
+  locales,
   localeHref,
   useTranslations,
   type Locale,
@@ -49,7 +49,7 @@ import {
 export async function getStaticPaths() {
   const paths = await Promise.all(
     getCourses().flatMap((course) =>
-      getEnabledLocales().map(async (locale) => {
+      locales.map(async (locale) => {
         const [labs, defaultLabs, tasks] = await Promise.all([
           getLabs(course.slug, locale),
           getLabs(course.slug, defaultLocale),

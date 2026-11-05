@@ -1,5 +1,7 @@
 # Plan: Ukrainian and English Versions of the Site (implemented)
 
+> **Superseded in part (2026-11-05):** English is now deployed with the site; the dev-only switch and the separate CI build described below were removed. See `README.md` → **Languages and translations** for how it works now.
+
 ## In brief: what visitors will see
 
 **Ukrainian is the site's primary language.** In production, the site remains Ukrainian at its current URLs. Existing links do not change.

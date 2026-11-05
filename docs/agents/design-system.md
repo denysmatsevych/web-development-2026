@@ -12,7 +12,7 @@ which surface you're in before applying any of the rules below.
 | Labs | `/[en/]<course>/labs/<id>`, `/[en/]<course>/labs/<id>/task` | `global.css` + `lab.css` | `LabLayout` |
 | Legacy routes | `/lectures/*`, `/labs/*` | Redirects, except fixed ЛР-7 tools | — |
 
-Note: the optional `en/` prefix exists only in dev and the English CI validation build; production is Ukrainian-only. The same layouts and stylesheets serve both languages.
+Note: English pages use the same routes under an `en/` prefix. The same layouts and stylesheets serve both languages.
 
 Note: the course, lecture, and lab index pages use `BaseLayout` (no deck.css or lab.css). Individual lecture pages use `DeckLayout`, and individual lab pages use `LabLayout`. The ЛР-7 check and report remain under `/labs/lab-7/`.
 
