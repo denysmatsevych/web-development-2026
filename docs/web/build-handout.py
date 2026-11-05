@@ -12,7 +12,11 @@ the English translation:
 Web Development handouts keep the /labs/ URLs students already have; every
 other course's go under /<course>/labs/. An English handout takes the same
 path under /en/, as the site's English pages do. The lab's `handout:` field
-must name the same path.
+is that path without `public/`, e.g. `handout: /en/labs/lab-1.pdf`.
+
+The green deadline line comes from a blockquote that opens the lab's body:
+`> **Термін здачі:** 19.10.2026.` in Ukrainian, `> **Deadline:** 19.10.2026.`
+in English. Any other wording stays an ordinary blockquote.
 
 Needs `markdown-it-py` (pip) and Microsoft Edge; fonts come from jsDelivr
 (Fontsource), so the run needs network access.
@@ -64,8 +68,9 @@ if m:
 # so the PDF shows them before they are deployed.
 PUBLIC = (ROOT / "public").as_uri()
 body = re.sub(r"(!\[[^\]]*\]\()/", rf"\g<1>{PUBLIC}/", body)
-# Site-relative links would be dead in a downloaded file. They stay on the
-# Ukrainian pages, the only ones deployed.
+# Site-relative links would be dead in a downloaded file. An English
+# handout's links still open the Ukrainian pages: unlike the site, this script
+# does not add /en/ to a link whose English page exists.
 body = re.sub(r"\]\(/", f"]({SITE}/", body)
 
 md = MarkdownIt("commonmark").enable("table")

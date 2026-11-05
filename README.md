@@ -106,8 +106,9 @@ copy-button labels in a component.
 4. Check with `npm run dev` or `npm run build`.
    Restart the dev server after adding the first English file for a page:
    Markdown links to it are resolved once, at startup.
-5. For a lab's PDF handout, run `docs/web/build-handout.py` with `--lang en`
-   (usage in the script) and set `handout:` to the path it writes.
+5. For a lab's PDF handout, run `docs/web/build-handout.py` with `--lang en`.
+   The usage at the top of the script says what to put in `handout:` and how
+   to mark the deadline.
 
 A lab and its task are checked independently: while one is missing, the
 English list links to the Ukrainian page marked “In Ukrainian”. Content that
