@@ -16,7 +16,7 @@ import {
 import { getLecture, getLectures, type LectureMeta } from "@/data/lectures";
 import {
   defaultLocale,
-  getEnabledLocales,
+  locales,
   localeAlternatesFor,
   localeHref,
   useTranslations,
@@ -44,7 +44,7 @@ const lectureLabel = `${t.deck.lecture} ${lecture.number}`;
 
 export async function getStaticPaths() {
   return getCourses().flatMap((course) =>
-    getEnabledLocales().flatMap((locale) =>
+    locales.flatMap((locale) =>
       getLectures(course.slug, locale).map((lecture, position) => ({
         params: {
           locale: locale === defaultLocale ? undefined : locale,

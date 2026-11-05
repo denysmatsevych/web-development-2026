@@ -5,8 +5,8 @@ Read this before reviewing a pull request against this repo.
 ## 1. CI runs checks, but review the results
 
 PR checks run automatically on pull requests via `.github/workflows/pr-check.yml`,
-which runs `npm run check`, `npm run build` and a second build with `VITE_ENABLE_ENGLISH=true`
-that validates the English routes (never deployed). Treat the CI status as a baseline — if it fails, the PR is not ready. If it passes, still scan the
+which runs `npm run check` and `npm run build`; the build includes the English
+routes. Treat the CI status as a baseline — if it fails, the PR is not ready. If it passes, still scan the
 output for warnings and confirm the change works as intended:
 
 ```bash

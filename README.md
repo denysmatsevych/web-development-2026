@@ -5,7 +5,7 @@ One Astro + Tailwind CSS v4 project for the whole course:
 | Path | What |
 | --- | --- |
 | `/` | Course hub |
-| `/en/…` | English versions of the same routes — **dev and the CI validation build only**; production is Ukrainian-only (see [Languages](#languages-and-translations)) |
+| `/en/…` | English versions of the same routes; untranslated pages fall back to Ukrainian (see [Languages](#languages-and-translations)) |
 | `/<course>/` | Course landing page |
 | `/<course>/lectures/`, `/<course>/lectures/<lecture>` | Lecture index and slide decks (keyboard-driven, print to PDF) |
 | `/<course>/labs/`, `/<course>/labs/<lab>` | Lab index and assignments |
@@ -48,7 +48,7 @@ src/
 ├─ content/
 │  ├─ labs/<course>/<locale>/     one .md per lab assignment (`uk/` or `en/`; the `labs` collection)
 │  └─ tasks/<course>/<locale>/    one .md per practical-task brief, id-linked 1:1 to its lab
-├─ i18n/       index.ts (locales, `isEnglishEnabled`, link helpers) · ui.ts (interface strings)
+├─ i18n/       index.ts (locales, link helpers) · ui.ts (interface strings)
 ├─ content.config.ts              schemas for `labs` and `tasks`
 ├─ layouts/   BaseLayout (shared <html>/<head>) · DeckLayout (fullscreen deck) ·
 │             LabLayout (lab reading shell: article + "on this page" rail)
@@ -88,10 +88,8 @@ theming differs between the hub, decks, and labs.
 
 ## Languages and translations
 
-Ukrainian is the primary language and keeps its unprefixed URLs. English
-(`/en/…`) is generated only in `npm run dev` and in builds with
-`VITE_ENABLE_ENGLISH=true`; the production build stays Ukrainian-only. The
-switch lives in one place, `src/i18n/index.ts` (`isEnglishEnabled`).
+Ukrainian is the primary language and keeps its unprefixed URLs. English lives
+under `/en/…`, in development and on the deployed site alike.
 
 **Add an interface string.** Add the key to both the `uk` and `en` objects in
 `src/i18n/ui.ts`, then read it in a component through
@@ -105,7 +103,7 @@ copy-button labels in a component.
    `src/content/tasks/<course>/en/` and `src/data/lectures/<course>/en/`.
 2. Do not add a `lang:` field — the folder is the language.
 3. A lecture deck exports `summary`, `deckTitle` and `slides`.
-4. Check with `npm run dev`, or `VITE_ENABLE_ENGLISH=true npm run build`.
+4. Check with `npm run dev` or `npm run build`.
    Restart the dev server after adding the first English file for a page:
    Markdown links to it are resolved once, at startup.
 5. For a lab's PDF handout, run `docs/web/build-handout.py` with `--lang en`
@@ -133,9 +131,8 @@ installs, builds, and uploads the site; a second job deploys it). `base` in
 
 This workflow only runs on push to `main`, after merge — it does not gate
 pull requests. PR checks run separately via `.github/workflows/pr-check.yml`
-and run `astro check` and a build on every pull request, plus a second,
-non-deploying build with `VITE_ENABLE_ENGLISH=true` that catches broken
-English routes in translation PRs.
+and run `astro check` and a build on every pull request; the build includes
+the English routes, so a broken translation fails there.
 
 A lab's client-side tooling may need a build-time environment variable to
 work fully (e.g. an API key for a feature that degrades gracefully without

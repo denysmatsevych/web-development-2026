@@ -31,7 +31,7 @@ npm run check && npm run build
 
 ## Languages
 
-Ukrainian is the primary language; English is dev/CI-validation only. The
+Ukrainian is the primary language; English is the second, under `/en/`. The
 language of content comes from its `uk/`/`en/` folder, never from frontmatter.
 See `README.md` → **Languages and translations** for how to add interface
 strings and translations.
