@@ -1,6 +1,6 @@
 ---
 number: 1
-title: "Setting Up a Development Environment for HTML, CSS, and JavaScript/TypeScript"
+title: "Setting up a development environment for HTML, CSS, and JavaScript/TypeScript"
 summary: "A working local frontend development environment: an IDE, code quality tools, local preview, Git/GitHub, GitHub Pages and Vercel, and controlled use of an AI agent."
 discipline: "Modern Web Development: HTML, CSS, JS/TS"
 level: "Year 3, Computer Science"
@@ -9,7 +9,7 @@ duration: "2–4 academic hours + time to set up accounts"
 updated: 2026-09-10
 ---
 
-> **Currency note.** This document was prepared as of September 10, 2026. Menu
+> **Note.** This document was prepared as of September 10, 2026. Menu
 > names, IDE versions, plugins, and AI features may change; if anything differs,
 > refer to the product's current official documentation.
 
@@ -41,19 +41,19 @@ been published to GitHub Pages and Vercel.
 
 ## 3. Background
 
-### 3.1. HTML, CSS, JavaScript, and TypeScript: What Are We Setting Up?
+### 3.1. HTML, CSS, JavaScript, and TypeScript: what are we setting up?
 
 HTML describes document structure and content semantics; CSS handles
 presentation and layout; JavaScript adds behavior and program logic in the
 browser; TypeScript extends JavaScript with static typing and compiles to
 JavaScript. It is important to distinguish language standards from the tools
-that help us write, check, and run code.
+that help you write, check, and run code.
 
 The official HTML Living Standard is a living WHATWG specification with a
 separate "Edition for Web Developers." The W3C describes the CSS ecosystem,
 including CSS Snapshot 2026, which summarizes the current state of CSS modules.
-JavaScript is formally standardized by Ecma International in ECMA-262; MDN is a
-convenient reference for practical work with the language. TypeScript has its
+JavaScript is formally standardized by Ecma International in ECMA-262; MDN is the
+most convenient reference for practical work with the language. TypeScript has its
 own Handbook and Reference, with the Handbook intended as the primary
 day-to-day learning resource.
 
@@ -64,7 +64,7 @@ day-to-day learning resource.
 | JavaScript | ECMAScript + MDN | Language constructs, APIs, and practical examples | MDN has a separate Environment Setup module, but it does not document a specific IDE. |
 | TypeScript | TypeScript Handbook / Reference | Typing, compiler options, everyday types, and modules | Covers tooling, but IDE setup is detailed in the IDE's documentation. |
 
-### 3.2. Where Official Documentation Covers IDEs and Environment Setup
+### 3.2. Where official documentation covers IDEs and environment setup
 
 The documentation can usefully be divided into three levels. First are
 standards: they define a language or platform, not a particular editor. Second
@@ -84,7 +84,7 @@ linting, debugging, previews, workspace configuration, and AI.
   documentation adds Agent/Cascade, rules, skills, context, and other AI
   components on top of the familiar IDE model.
 
-### 3.3. Comparing IDEs and Editors
+### 3.3. Comparing IDEs and editors
 
 | Criterion | VS Code | WebStorm | Cursor | Windsurf |
 | --- | --- | --- | --- | --- |
@@ -96,7 +96,7 @@ linting, debugging, previews, workspace configuration, and AI.
 | AI | GitHub Copilot / other plugins | Junie / AI Assistant and other plugins | Agent, rules, skills, MCP, etc. | Cascade, rules/memories/workflows/skills, as described in current documentation |
 | Course recommendation | Primary baseline | Strong alternative | AI-first alternative | AI-first alternative |
 
-### 3.6. Formatting, Linting, and Local Preview
+### 3.4. Formatting, linting, and local preview
 
 Prettier and ESLint solve different problems. Prettier normalizes code
 formatting; ESLint analyzes code against quality and style rules and checks for
@@ -109,7 +109,7 @@ behavior in conditions close to a real web environment. Microsoft Live Preview
 provides a local server and live reload; WebStorm has its own preview and web
 tooling.
 
-### 3.7. Git, GitHub, GitHub Pages, and Vercel
+### 3.5. Git, GitHub, GitHub Pages, and Vercel
 
 Git stores local change history; GitHub provides a remote repository and a
 shared space for code. GitHub Pages publishes a static site without separate
@@ -123,11 +123,11 @@ lab: edit → verify → commit → push → deployment.
   connected Git repository starts a new deployment, and a PR can have a preview
   deployment.
 
-### 3.8. AI Agents: Chat, Agents, Rules, and Skills
+### 3.6. AI agents: chat, agents, rules, and skills
 
 In modern IDEs, AI features are more than autocomplete. An AI agent can search
 for files, analyze a repository, edit multiple files, and run commands and
-tests. Students therefore need to learn not only how to write a prompt, but
+tests. You therefore need to learn not only how to write a prompt, but
 also how to set an agent's autonomy boundaries, review its diff, and distinguish
 "project context" from "instructions for a specific step."
 
@@ -147,7 +147,7 @@ in `.github/copilot-instructions.md` and `AGENTS.md` for agent instructions;
 Junie also uses `AGENTS.md`. Current Windsurf documentation describes agent
 rules, memory, and repeatable workflows/skills; specific menu names may change.
 
-### 3.9. Writing Prompts
+### 3.7. Writing prompts
 
 An effective coding agent prompt should provide more than "please make it look
 nice": it should include context, the desired outcome, constraints, and
@@ -164,16 +164,16 @@ error, stack trace, screenshots, browser requirements, and so on.
 - After a change, review the diff and run local checks before committing and
   pushing.
 
-### 3.10. Academic Integrity and Safe Use of AI
+### 3.8. Academic integrity and safe use of AI
 
 An AI agent is a developer support tool, not a source of truth. Its suggestions
 may be incomplete, outdated, or unsuitable for a particular project. Do not
 send secrets, tokens, passwords, private keys, or personal data to an AI tool
-unless the tool's policy and settings explicitly permit it. Students must be
-able to explain the changes they accepted into their code and demonstrate that
-they tested them.
+unless the tool's policy and settings explicitly permit it. You must be able
+to explain the changes you accepted into your code and demonstrate that you
+tested them.
 
-## 4. Lab Assignment
+## 4. Lab assignment
 
 1. Review the HTML/CSS/JavaScript/TypeScript documentation about development
    environments and identify which recommendations concern standards and which
@@ -197,7 +197,7 @@ they tested them.
 
 ## 5. Procedure
 
-### 5.1. Preparing the Development Environment
+### 5.1. Preparing the development environment
 
 1. Install Git and Node.js LTS. At the time this document was prepared, the
    current Node.js LTS line is 24.x; get the specific patch release from the
@@ -215,7 +215,7 @@ they tested them.
    able to access the repository using the link you provide.
 4. Create a Vercel account and, if possible, link it to GitHub.
 
-### 5.2. Configuring VS Code (Recommended Baseline)
+### 5.2. Configuring VS Code (recommended baseline)
 
 1. Install Visual Studio Code from the official website.
 2. Open the root folder of your future project using **File → Open Folder**.
@@ -284,8 +284,8 @@ they tested them.
 ### 5.4. Configuring Cursor
 
 1. Install Cursor, sign in, and open the project.
-2. If you are switching from VS Code, check whether to import its
-   settings/extensions.
+2. If you are switching from VS Code, check that your VS Code settings and
+   extensions were imported.
 3. Confirm that the AI Agent can see the repository root and find
    HTML/CSS/JS/TS files.
 4. Create `AGENTS.md` in the project root for general rules.
@@ -296,16 +296,17 @@ they tested them.
 ### 5.5. Configuring Windsurf
 
 1. Install Windsurf, complete onboarding, and open the project root.
-2. If appropriate, check whether to import configuration from VS Code or Cursor.
+2. If appropriate, check that your configuration from VS Code or Cursor was
+   imported.
 3. Review Extensions/Plugins and install only the frontend tools missing from
-   your build.
+   your Windsurf installation.
 4. Configure Cascade: rules/instructions, repeatable workflows/skills, and
    restrictions on file changes.
 5. Confirm that the AI agent can use the terminal, but review its commands
    before accepting changes, especially commands that delete files or change
    dependencies.
 
-### 5.6. Creating a Practice Web Project
+### 5.6. Creating a practice web project
 
 1. Create this structure:
 
@@ -334,7 +335,7 @@ they tested them.
 5. Add a `README.md` with the project name, a short description, instructions
    for running it locally, and GitHub Pages/Vercel links after deployment.
 
-### 5.7. Configuring an AI Agent
+### 5.7. Configuring an AI agent
 
 1. Create `AGENTS.md`.
 
@@ -437,7 +438,7 @@ they tested them.
 5. After your next `git push`, check that Vercel created a new deployment. If
    possible, record the deployment URL in the README.
 
-### 5.11. Test Change and Final Verification
+### 5.11. Test change and final verification
 
 1. Change one UI element, such as a button label, color, theme toggle, or a new
    section.
@@ -454,13 +455,13 @@ they tested them.
 
 6. After the update, check the GitHub repository, GitHub Pages, and Vercel.
 
-## 6. Report Requirements
+## 6. Report requirements
 
 The report should be concise, evidence-based, and reproducible. It should show
 not merely that "the IDE is installed," but that the environment actually
 works and that you can complete the full change-and-publishing cycle.
 
-### 6.3. Sample Email
+### 6.1. Sample email
 
 **Subject:** `[Web] Lab 1: Development Environment Setup`
 
@@ -476,7 +477,7 @@ Include:
   rules are stored.
 - A brief conclusion about the lab.
 
-### 6.4. Sample Report Structure
+### 6.2. Sample report structure
 
 | Section | Contents |
 | --- | --- |
@@ -488,7 +489,7 @@ Include:
 | 6. Test change | What changed, how it was checked, and how deployments were updated |
 | 7. Conclusion | What was configured and checked, and what was challenging |
 
-## 7. Review Questions
+## 7. Review questions
 
 1. How do the HTML Living Standard, CSS specifications, the ECMAScript
    specification, and the TypeScript Handbook differ?
@@ -505,7 +506,7 @@ Include:
 9. What triggers a new Vercel deployment when a Git repository is connected?
 10. Why is an `index.html` file important for a basic GitHub Pages deployment?
 
-## 8. Lab Completion Criteria
+## 8. Lab completion criteria
 
 | Criterion | Minimum requirement |
 | --- | --- |
