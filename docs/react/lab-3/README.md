@@ -6,6 +6,7 @@
 | `/react/labs/lab-3.zip` | `react-lab-3-starter/` | the starter, unpacked by students into `react-labs/lab-3/` |
 | `/react/labs/lab-3/result.webp` | the reference solution | the page, in the handout's §1 |
 | `/react/labs/lab-3/frames.webp` | the reference solution and a debug overlay | the mockup with numbered component frames, in §4.2 |
+| `/react/labs/lab-3.pdf` | built from the handout | the downloadable handout |
 
 `solution/` holds the reference solution (gitignored): `src/` overlays the
 starter's `src/`, `extra/` overlays it again for the optional §4.9 task, its
@@ -60,8 +61,8 @@ The plan the lab was built from is
   positioned boxes from each component root's `getBoundingClientRect()`;
   CSS outlines aren't reliable on `<tbody>`, `MenuCategory`'s root. Each
   frame has a number as well as a colour.
-- **No PDF yet.** The handout has no `handout:` field until the PDF is
-  built, so the page shows no download link.
+- **The PDF waited for the handout's review,** so it was built last. It
+  has 13 pages and embeds both images from the local `public/` folder.
 
 ## Verified on 2026-11-05
 
@@ -126,5 +127,5 @@ python docs/web/build-handout.py lab-3 react                 # public/react/labs
 
 Rebuild the zip after the starter is committed: each entry is dated by the
 file's last commit, and a file with no commit yet keeps its modification
-time. After building the PDF, add `handout: /react/labs/lab-3.pdf` to the
-handout's frontmatter.
+time. Rebuild the PDF after every handout edit; the handout's `handout:`
+field points to it.
