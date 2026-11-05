@@ -96,7 +96,8 @@ under `/en/…`, in development and on the deployed site alike.
 `useTranslations(locale)`. Never hard-code visible text, `aria-label`s or
 copy-button labels in a component.
 
-**Add a lab (or task, or lecture) translation.** Only new files, no code:
+**Add a lab (or task, or lecture) translation.** Only new files, no code. One
+PR translates one lab, together with its task and its English PDF:
 
 1. Copy the Ukrainian file into the sibling `en/` folder with the same file
    name: `src/content/labs/<course>/en/<lab>.md`, likewise
@@ -109,6 +110,21 @@ copy-button labels in a component.
 5. For a lab's PDF handout, run `docs/web/build-handout.py` with `--lang en`.
    The usage at the top of the script says what to put in `handout:` and how
    to mark the deadline.
+
+**Write the English text** to the same rules in every translation:
+
+- Sentence case for the title and headings, as in the English interface:
+  “Setting up a development environment”, not “Setting Up a Development
+  Environment”. Names keep their capitals.
+- Address the reader as “you” throughout: “you must be able to explain…”,
+  not “students must…”.
+- Translate everything a student reads or sends, the email subject included:
+  `[Web] Lab 1: …`, not `[Веб] ЛР-1`.
+- Name things as the English interface does in `src/i18n/ui.ts`: «ЛР-2» is
+  “Lab 2”, «ТЗ» is “assignment”, «ІЗ» is “individual assignment”.
+- Keep the Ukrainian file's sections and their numbers, so a section number
+  means the same in both languages. If the Ukrainian file skips a number, fix
+  both files in the same PR.
 
 A lab and its task are checked independently: while one is missing, the
 English list links to the Ukrainian page marked “In Ukrainian”. Content that
