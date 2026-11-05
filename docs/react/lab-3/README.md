@@ -62,7 +62,7 @@ The plan the lab was built from is
   CSS outlines aren't reliable on `<tbody>`, `MenuCategory`'s root. Each
   frame has a number as well as a colour.
 - **The PDF waited for the handout's review,** so it was built last. It
-  has 13 pages and embeds both images from the local `public/` folder.
+  has 12 pages and embeds both images from the local `public/` folder.
 
 ## Verified on 2026-11-05
 
