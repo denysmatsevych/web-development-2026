@@ -1,19 +1,27 @@
-"""Build a lab's PDF handout from src/content/labs/<course>/uk/<lab>.md.
+"""Build a lab's PDF handout from src/content/labs/<course>/<lang>/<lab>.md.
 
 Matches the look of lab-3.pdf (Noto Sans, navy headings, green deadline line,
-grey code blocks, US Letter). Run from the repo root with the lab's id, and
-the course slug for any course other than Web Development:
+grey code blocks, US Letter). Run from the repo root with the lab's id, the
+course slug for any course other than Web Development, and `--lang en` for
+the English translation:
 
-    python docs/web/build-handout.py lab-6          # public/labs/lab-6.pdf
-    python docs/web/build-handout.py lab-1 react    # public/react/labs/lab-1.pdf
+    python docs/web/build-handout.py lab-6              # public/labs/lab-6.pdf
+    python docs/web/build-handout.py lab-1 react        # public/react/labs/lab-1.pdf
+    python docs/web/build-handout.py lab-1 --lang en    # public/en/labs/lab-1.pdf
 
 Web Development handouts keep the /labs/ URLs students already have; every
-other course's go under /<course>/labs/. The lab's `handout:` field must name
-the same path.
+other course's go under /<course>/labs/. An English handout takes the same
+path under /en/, as the site's English pages do. The lab's `handout:` field
+is that path without `public/`, e.g. `handout: /en/labs/lab-1.pdf`.
+
+The green deadline line comes from a blockquote that opens the lab's body:
+`> **Термін здачі:** 19.10.2026.` in Ukrainian, `> **Deadline:** 19.10.2026.`
+in English. Any other wording stays an ordinary blockquote.
 
 Needs `markdown-it-py` (pip) and Microsoft Edge; fonts come from jsDelivr
 (Fontsource), so the run needs network access.
 """
+import argparse
 import pathlib
 import re
 import subprocess
@@ -23,13 +31,24 @@ import tempfile
 from markdown_it import MarkdownIt
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-if len(sys.argv) not in (2, 3):
-    sys.exit("usage: python docs/web/build-handout.py <lab-id> [course]   (e.g. lab-6, or lab-1 react)")
-LAB = sys.argv[1]
-COURSE = sys.argv[2] if len(sys.argv) == 3 else "web-development"
-SRC = ROOT / f"src/content/labs/{COURSE}/uk/{LAB}.md"
-OUT_DIR = ROOT / ("public/labs" if COURSE == "web-development" else f"public/{COURSE}/labs")
+cli = argparse.ArgumentParser(description="Build a lab's PDF handout from its Markdown.")
+cli.add_argument("lab", help="lab id, e.g. lab-6")
+cli.add_argument("course", nargs="?", default="web-development", help="course slug (default: web-development)")
+cli.add_argument("--lang", choices=("uk", "en"), default="uk", help="content language (default: uk)")
+# Intermixed, so `--lang` may also come between the lab id and the course.
+args = cli.parse_intermixed_args()
+LAB, COURSE, LANG = args.lab, args.course, args.lang
+SRC = ROOT / f"src/content/labs/{COURSE}/{LANG}/{LAB}.md"
+LABS_PATH = "labs" if COURSE == "web-development" else f"{COURSE}/labs"
+OUT_DIR = ROOT / "public" / (f"en/{LABS_PATH}" if LANG == "en" else LABS_PATH)
 OUT = OUT_DIR / f"{LAB}.pdf"
+# The handout's own wording around the Markdown: the line before the title
+# (named as the site's interface names a lab) and the label of the leading
+# deadline blockquote.
+WORDS = {
+    "uk": {"lab": "Лабораторна робота №{}.", "deadline": "Термін здачі"},
+    "en": {"lab": "Lab {}.", "deadline": "Deadline"},
+}[LANG]
 SITE = "https://denysmatsevych.github.io/web-development-2026"
 EDGE = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
 
@@ -41,7 +60,7 @@ label = re.search(r'^numberLabel:\s*"?([^"\n]+?)"?\s*$', front, re.M)
 number = label.group(1) if label else re.search(r"^number:\s*(\d+)", front, re.M).group(1)
 
 # The leading deadline blockquote becomes the green line under the title.
-m = re.match(r"\s*>\s*\*\*Термін здачі:\*\*\s*(.+?)\s*\n", body)
+m = re.match(rf"\s*>\s*\*\*{re.escape(WORDS['deadline'])}:\*\*\s*(.+?)\s*\n", body)
 deadline = m.group(1).rstrip(".") if m else None
 if m:
     body = body[m.end():]
@@ -50,7 +69,9 @@ if m:
 # so the PDF shows them before they are deployed.
 PUBLIC = (ROOT / "public").as_uri()
 body = re.sub(r"(!\[[^\]]*\]\()/", rf"\g<1>{PUBLIC}/", body)
-# Site-relative links would be dead in a downloaded file.
+# Site-relative links would be dead in a downloaded file. An English
+# handout's links still open the Ukrainian pages: unlike the site, this script
+# does not add /en/ to a link whose English page exists.
 body = re.sub(r"\]\(/", f"]({SITE}/", body)
 
 md = MarkdownIt("commonmark").enable("table")
@@ -109,12 +130,12 @@ img { display: block; max-width: 100%; max-height: 3.8in; width: auto; height: a
 """
 
 html = f"""<!doctype html>
-<html lang="uk"><head><meta charset="utf-8">
-<title>Лабораторна робота №{number}. {title}</title>
+<html lang="{LANG}"><head><meta charset="utf-8">
+<title>{WORDS["lab"].format(number)} {title}</title>
 {FONTS}
 <style>{CSS}</style></head><body>
-<h1>Лабораторна робота №{number}.<br>{title}</h1>
-{f'<p class="deadline">Термін здачі: {deadline}</p>' if deadline else ''}
+<h1>{WORDS["lab"].format(number)}<br>{title}</h1>
+{f'<p class="deadline">{WORDS["deadline"]}: {deadline}</p>' if deadline else ''}
 {html_body}
 </body></html>"""
 
