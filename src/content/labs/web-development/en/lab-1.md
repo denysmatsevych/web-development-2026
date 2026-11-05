@@ -7,6 +7,7 @@ level: "Year 3, Computer Science"
 format: "Individual"
 duration: "2–4 academic hours + time to set up accounts"
 updated: 2026-09-10
+handout: /en/labs/lab-1.pdf
 ---
 
 > **Note.** This document was prepared as of September 10, 2026. Menu
