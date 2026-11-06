@@ -70,9 +70,17 @@ EDGE = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
 text = SRC.read_text(encoding="utf-8")
 _, front, body = text.split("---", 2)
 title = re.search(r'^title:\s*"(.+)"\s*$', front, re.M).group(1)
+kind_m = re.search(r'^kind:\s*(\w+)', front, re.M)
+kind = kind_m.group(1) if kind_m else "lab"
 # `numberLabel` ("4-5") wins over the ordering `number` when the lab spans slots.
 label = re.search(r'^numberLabel:\s*"?([^"\n]+?)"?\s*$', front, re.M)
-number = label.group(1) if label else re.search(r"^number:\s*(\d+)", front, re.M).group(1)
+number_m = re.search(r"^number:\s*(\d+)", front, re.M)
+number = label.group(1) if label else (number_m.group(1) if number_m else None)
+
+# Individual assignments have no lab number in the title/eyebrow.
+is_individual = kind == "individual" or LAB == "individual"
+eyebrow_line = "" if is_individual else f'{WORDS["lab"].format(number)}<br>'
+page_title = title if is_individual else f'{WORDS["lab"].format(number)} {title}'
 
 # The leading deadline blockquote becomes the green line under the title.
 m = re.match(rf"\s*>\s*\*\*{re.escape(WORDS['deadline'])}:\*\*\s*(.+?)\s*\n", body)
@@ -164,11 +172,11 @@ img {{ display: block; max-width: 100%; max-height: 3.8in; width: auto; height: 
 
 html = f"""<!doctype html>
 <html lang="{LANG}"><head><meta charset="utf-8">
-<title>{WORDS["lab"].format(number)} {title}</title>
+<title>{page_title}</title>
 {FONTS}
 <style>{CSS}</style></head><body>
 <p class="university">{WORDS["university"]}</p>
-<h1>{WORDS["lab"].format(number)}<br>{title}</h1>
+<h1>{eyebrow_line}{title}</h1>
 {f'<p class="deadline">{WORDS["deadline"]}: {deadline}</p>' if deadline else ''}
 {html_body}
 </body></html>"""
