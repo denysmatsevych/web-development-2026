@@ -140,28 +140,18 @@ and the starter README spell this out.
 Nothing broken is served from the course origin — which B9 and B10 would
 otherwise put a `noindex` page and a CSS-blocking `robots.txt` on.
 
-Regenerate after editing the starter. Do **not** use `tar -a -cf out.zip`:
-`-a` picks a compression filter by suffix, `.zip` is not one, and bsdtar
-silently writes a plain tar under a `.zip` name — Windows Explorer then refuses
-to open it. Use Python's `zipfile`, which also guarantees forward slashes:
+Regenerate after editing the starter, with the pack script the other starters
+use:
 
 ```bash
-python - <<'EOF'
-import os, zipfile
-src, out = 'starters/web/flowtask-starter', 'public/uk/web/starters/flowtask-starter.zip'
-top = ['index.html', 'about.html', 'README.md', 'robots.txt', '.nojekyll']
-with zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as z:
-    for n in top:
-        z.write(os.path.join(src, n), n)
-    for d in ['css', 'js', 'img', 'fonts']:
-        for root, _, files in os.walk(os.path.join(src, d)):
-            for f in sorted(files):
-                full = os.path.join(root, f)
-                z.write(full, os.path.relpath(full, src).replace(os.sep, '/'))
-EOF
+python docs/web/build-pack.py starters/web/flowtask-starter
 ```
 
-Check the result starts with `PK`: `head -c 4 public/uk/web/starters/flowtask-starter.zip`.
+Do **not** use `tar -a -cf out.zip` instead: `-a` picks a compression filter by
+suffix, `.zip` is not one, and bsdtar silently writes a plain tar under a
+`.zip` name — Windows Explorer then refuses to open it. The script uses
+Python's `zipfile`, which also guarantees forward slashes. Check the result
+starts with `PK`: `head -c 4 public/uk/web/starters/flowtask-starter.zip`.
 
 Still open: whether the starter also becomes a GitHub template repo, which
 would give students "Use this template" instead of unpack-and-push. The zip
