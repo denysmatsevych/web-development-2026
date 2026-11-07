@@ -18,8 +18,8 @@ The green deadline line comes from a blockquote that opens the lab's body:
 `> **Термін здачі:** 19.10.2026.` in Ukrainian, `> **Deadline:** 19.10.2026.`
 in English. Any other wording stays an ordinary blockquote.
 
-Includes university attribution above the title and running pagination with
-university labels in the footer for both Ukrainian and English.
+Above the title the handout names the university and the department in full;
+every page's footer carries their short form and the page number.
 
 Needs `markdown-it-py` (pip) and Microsoft Edge; fonts come from jsDelivr
 (Fontsource), so the run needs network access.
@@ -45,21 +45,25 @@ SRC = ROOT / f"src/content/labs/{COURSE}/{LANG}/{LAB}.md"
 LABS_PATH = "labs" if COURSE == "web-development" else f"{COURSE}/labs"
 OUT_DIR = ROOT / "public" / (f"en/{LABS_PATH}" if LANG == "en" else LABS_PATH)
 OUT = OUT_DIR / f"{LAB}.pdf"
-# The handout's own wording around the Markdown: the line before the title
-# (named as the site's interface names a lab), the university attribution,
-# and the label of the leading deadline blockquote.
+# The handout's own wording around the Markdown: the university and department
+# above the title, the line before the title (named as the site's interface
+# names a lab), the label of the leading deadline blockquote, and the footer.
 WORDS = {
     "uk": {
+        "university": "Національний університет «Острозька академія»",
+        "department": "Кафедра інформаційних технологій та аналітики даних",
         "lab": "Лабораторна робота №{}.",
         "deadline": "Термін здачі",
-        "university": "НаУОА • ННІ ІТ та бізнесу • Кафедра ІТАД",
+        "footer": "НаУОА • ННІ ІТ та бізнесу • Кафедра ІТАД",
         "page": "Сторінка",
         "of": "з",
     },
     "en": {
+        "university": "National University of Ostroh Academy",
+        "department": "Department of Information Technologies and Data Analytics",
         "lab": "Lab {}.",
         "deadline": "Deadline",
-        "university": "NaUOA • Institute of IT & Business • Department of IT & Data Analytics",
+        "footer": "NaUOA • Institute of IT & Business • Department of IT & Data Analytics",
         "page": "Page",
         "of": "of",
     },
@@ -116,7 +120,7 @@ CSS = f"""
   size: Letter;
   margin: 0.78in 0.86in 0.85in;
   @bottom-left {{
-    content: "{WORDS['university']}";
+    content: "{WORDS['footer']}";
     font-family: "Noto Sans", sans-serif;
     font-size: 8pt;
     color: #718096;
@@ -133,9 +137,10 @@ CSS = f"""
 html {{ -webkit-print-color-adjust: exact; print-color-adjust: exact; }}
 body {{ font-family: "Noto Sans", sans-serif; font-size: 11.2pt; line-height: 1.55;
        color: var(--ink); margin: 0; }}
-.university {{ color: var(--head); font-size: 8.8pt; font-weight: 700;
-              letter-spacing: 0.04em; text-transform: uppercase;
-              margin: 0 0 0.5em; opacity: 0.85; }}
+.university, .department {{ color: var(--head); font-size: 8.8pt; opacity: 0.85; }}
+.university {{ font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+              margin: 0 0 0.1em; }}
+.department {{ margin: 0 0 0.6em; }}
 h1, h2, h3, h4 {{ color: var(--head); font-weight: 700; line-height: 1.2;
                  break-after: avoid; page-break-after: avoid; }}
 h1 {{ font-size: 27pt; margin: 0 0 0.55em; }}
@@ -176,6 +181,7 @@ html = f"""<!doctype html>
 {FONTS}
 <style>{CSS}</style></head><body>
 <p class="university">{WORDS["university"]}</p>
+<p class="department">{WORDS["department"]}</p>
 <h1>{eyebrow_line}{title}</h1>
 {f'<p class="deadline">{WORDS["deadline"]}: {deadline}</p>' if deadline else ''}
 {html_body}
