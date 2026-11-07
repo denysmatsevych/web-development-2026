@@ -161,7 +161,7 @@ things keep that acceptable —
   the code does what it does. Copied CSS does not survive that.
 
 If this still feels wrong, the swap is small: export the PDF's mockup to
-`public/labs/lab-2-mockup.png` and replace the component with an `<img>`.
+`public/uk/web/labs/lab-2/mockup.png` and replace the component with an `<img>`.
 Implementation step 5 is the only step affected.
 
 ### 3.4. What this means for the lab page

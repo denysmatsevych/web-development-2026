@@ -41,7 +41,7 @@ handle this, for two different contexts:
   `embed src`, `object data`, or `url(...)` in styles.** If a reviewed Markdown
   body adds any of these with a root-relative path, that attribute will not
   get the base prefix and will 404 in production — check for these gaps.
-  Additionally, the plugin automatically injects `/en/` only for `/<course>/…` routes if an English file exists, leaving `/labs/…` (downloads, legacy links) untouched and falling back to the Ukrainian URL when no English version is available.
+  Additionally, the plugin automatically injects `/en/` only for `/<course>/…` routes if an English file exists, leaving downloads (`/uk/…`, `/en/…`) and legacy links (`/labs/…`, `/lectures/…`) untouched and falling back to the Ukrainian URL when no English version is available.
 
 ## 4. Decks keep their own theme — don't let `dark:` creep in
 

@@ -7,7 +7,8 @@
  *  2. In an English Markdown file, add `/en` to a link to the hub (`/`) or a
  *     course page (`/<course>/…`) when that English page exists. A course link
  *     whose English page does not exist keeps its default-language URL.
- *     Downloads and legacy URLs (`/labs/…`, `/lectures/…`) are never localized.
+ *     Downloads (`/uk/…`, `/en/…`) and legacy URLs (`/labs/…`, `/lectures/…`)
+ *     are never localized.
  *
  * The language of the *source file* decides, read from its path
  * (`…/src/content/{labs,tasks}/<course>/<locale>/…`) through `ctx.fileURL`; it
