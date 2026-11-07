@@ -7,7 +7,7 @@ discipline: "Modern Web Development: HTML, CSS, JS/TS"
 level: "Year 3, specialty F3: Computer Science"
 format: "Individual"
 duration: "62 hours"
-handout: /en/labs/individual.pdf
+handout: /en/web/labs/individual.pdf
 ---
 
 ## 1. Individual assignment topic

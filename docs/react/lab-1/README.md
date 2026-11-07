@@ -3,7 +3,7 @@
 | Route | Source | What it is |
 | --- | --- | --- |
 | `/react/labs/lab-1/` | `src/content/labs/react/uk/lab-1.md` | the handout: the `react-labs` repository, setup steps, tool checks П1–П4, `AGENTS.md` template and two agent prompts, GitHub and Vercel, the §4.9 move for an existing `react-lab-1`, report, defence |
-| `/react/labs/lab-1.pdf` | built from the handout | the downloadable handout |
+| `/uk/react/labs/lab-1.pdf` | built from the handout | the downloadable handout |
 
 There is no starter and no ТЗ: students scaffold their own project with
 `create-vite`, as in the Web Development course's ЛР-1, into `lab-1/` of a
@@ -215,7 +215,7 @@ smaller models.
 ## Build
 
 ```bash
-python docs/web/build-handout.py lab-1 react    # public/react/labs/lab-1.pdf
+python docs/web/build-handout.py lab-1 react    # public/uk/react/labs/lab-1.pdf
 ```
 
 The script lives in `docs/web/` and takes the course slug as an optional

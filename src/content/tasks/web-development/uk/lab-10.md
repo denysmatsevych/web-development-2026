@@ -39,7 +39,7 @@ runtime-помилки, розбіжності між кодом і DOM та п�
 
 ## 2. Структура проєкту
 
-**Завантажити:** [courtly-booking-starter.zip](/labs/courtly-booking-starter.zip)
+**Завантажити:** [courtly-booking-starter.zip](/uk/web/starters/courtly-booking-starter.zip)
 (≈ 230 КБ). Розпакуйте архів в окремий репозиторій або в теку `lab-10/`
 спільного репозиторію з лабораторними.
 

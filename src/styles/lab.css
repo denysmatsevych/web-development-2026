@@ -2,7 +2,7 @@
  * Lab-page styles — imported only by src/layouts/LabLayout.astro, so every
  * rule is scoped to `.lab-page` (LabLayout's wrapper).
  *
- * The lab pages follow the handout PDFs (public/labs/*.pdf), which students
+ * The lab pages follow the handout PDFs, which students
  * also download: Montserrat headings over Inter text in both themes, and in
  * the light theme the PDF's own palette. The dark theme keeps the site tokens.
  * SiteHeader / SiteFooter sit outside `.lab-shell` and stay on Roboto.

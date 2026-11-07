@@ -4,7 +4,7 @@
 | --- | --- | --- |
 | `/web-development/labs/lab-12/` | `src/content/labs/web-development/uk/lab-12.md` | the handout: six experiments (Е1 in the browser, Е2–Е6 in the project), how to work (T1–T3 by hand, the T4 migration → audit → fix loop, commits), report, defence, grading |
 | `/web-development/labs/lab-12/task/` | `src/content/tasks/web-development/uk/lab-12.md` | the brief: the API, the fields, the JavaScript modules, the states and texts, then T1–T4 with numbered rules and the T4 prompt, the §5 constraints and the browser checklist |
-| `/labs/showfinder-ts-starter.zip` | `showfinder-ts-starter/` | TypeScript stubs for T1–T3, the JavaScript modules T4 migrates, and `check/` |
+| `/uk/web/starters/showfinder-ts-starter.zip` | `showfinder-ts-starter/` | TypeScript stubs for T1–T3, the JavaScript modules T4 migrates, and `check/` |
 
 ## Why it looks like this
 
@@ -103,8 +103,8 @@ Back the folder up outside the repo.
 
 ```sh
 node docs/web/lab-12/record-fixtures.mjs              # check/fixtures/ from the live API
-python docs/web/build-pack.py showfinder-ts-starter   # public/labs/showfinder-ts-starter.zip
-python docs/web/build-handout.py lab-12               # public/labs/lab-12.pdf
+python docs/web/build-pack.py showfinder-ts-starter   # public/uk/web/starters/showfinder-ts-starter.zip
+python docs/web/build-handout.py lab-12               # public/uk/web/labs/lab-12.pdf
 node docs/web/lab-12/solution/verify.mjs              # local only
 ```
 

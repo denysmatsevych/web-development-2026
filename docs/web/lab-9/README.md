@@ -4,7 +4,7 @@
 | --- | --- | --- |
 | `/web-development/labs/lab-9/` | `src/content/labs/web-development/uk/lab-9.md` | the handout: 15 experiments (analyse, run, explain a miss), four challenges built as AI draft → audit → fix by hand, report, defence |
 | `/web-development/labs/lab-9/task/` | `src/content/tasks/web-development/uk/lab-9.md` | the brief: the DOM contract, numbered rules and the manual checklist |
-| `/labs/watchlist-starter.zip` | `watchlist-starter/` | the static shell, data, state module, stubs, `check.html` and `experiments.html` |
+| `/uk/web/starters/watchlist-starter.zip` | `watchlist-starter/` | the static shell, data, state module, stubs, `check.html` and `experiments.html` |
 
 ## Why it looks like this
 
@@ -132,8 +132,8 @@ Back the folder up outside the repo.
 ## Regenerating
 
 ```sh
-python docs/web/build-pack.py watchlist-starter       # public/labs/watchlist-starter.zip
-python docs/web/build-handout.py lab-9                # public/labs/lab-9.pdf
+python docs/web/build-pack.py watchlist-starter       # public/uk/web/starters/watchlist-starter.zip
+python docs/web/build-handout.py lab-9                # public/uk/web/labs/lab-9.pdf
 node docs/web/lab-9/solution/verify.mjs all           # local only
 node docs/web/lab-9/solution/experiments.mjs          # local only: §4 answer key
 ```

@@ -37,7 +37,7 @@ HTML, CSS, дані й модуль стану вже готові. Ваша ч�
 
 ## 2. Структура проєкту
 
-**Завантажити:** [watchlist-starter.zip](/labs/watchlist-starter.zip)
+**Завантажити:** [watchlist-starter.zip](/uk/web/starters/watchlist-starter.zip)
 (≈ 40 КБ). Розпакуйте архів в окремий репозиторій або в теку `lab-9/`
 спільного репозиторію з лабораторними.
 

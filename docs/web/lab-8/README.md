@@ -4,7 +4,7 @@
 | --- | --- | --- |
 | `/web-development/labs/lab-8/` | `src/content/labs/web-development/uk/lab-8.md` | the handout: experiments under the predict → ask the AI → run protocol, five code challenges, report, defence |
 | `/web-development/labs/lab-8/task/` | `src/content/tasks/web-development/uk/lab-8.md` | the brief: the spec of every function; each test checks one rule from it |
-| `/labs/js-basics-starter.zip` | `js-basics-starter/` | the stubs, the tests, the TVmaze snapshot and the report page |
+| `/uk/web/starters/js-basics-starter.zip` | `js-basics-starter/` | the stubs, the tests, the TVmaze snapshot and the report page |
 
 ## Why it looks like this
 
@@ -57,8 +57,8 @@ Back the folder up outside the repo.
 ## Regenerating
 
 ```sh
-python docs/web/build-pack.py js-basics-starter  # public/labs/js-basics-starter.zip
-python docs/web/build-handout.py lab-8           # public/labs/lab-8.pdf
+python docs/web/build-pack.py js-basics-starter  # public/uk/web/starters/js-basics-starter.zip
+python docs/web/build-handout.py lab-8           # public/uk/web/labs/lab-8.pdf
 node docs/web/lab-8/solution/verify.mjs          # local only
 ```
 

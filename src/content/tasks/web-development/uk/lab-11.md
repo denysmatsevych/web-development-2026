@@ -38,7 +38,7 @@ HTML, CSS, шаблони станів і модуль показу даних �
 
 ## 2. Структура проєкту
 
-**Завантажити:** [showfinder-starter.zip](/labs/showfinder-starter.zip)
+**Завантажити:** [showfinder-starter.zip](/uk/web/starters/showfinder-starter.zip)
 (≈ 60 КБ). Розпакуйте архів в окремий репозиторій або в теку `lab-11/`
 спільного репозиторію з лабораторними.
 

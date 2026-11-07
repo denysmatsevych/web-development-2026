@@ -3,10 +3,12 @@
 Run from the repo root with the folder's name, and with the course slug for
 any course other than Web Development:
 
-    python docs/web/build-pack.py js-basics-starter
-    python docs/web/build-pack.py react-lab-2-starter react
+    python docs/web/build-pack.py js-basics-starter         # public/uk/web/starters/js-basics-starter.zip
+    python docs/web/build-pack.py react-lab-2-starter react # public/uk/react/starters/lab-2.zip
 
-A course's zip goes to public/<course>/labs/ and is named after the lab: the
+The zip goes to the course's starters/ folder under public/uk/ (the layout is
+in README.md). A Web Development zip keeps the folder's name; any other
+course's is named after the lab: the
 folder name without the `<course>-` prefix and the `-starter` suffix, so
 react-lab-2-starter becomes lab-2.zip. File managers unpack a zip into a
 folder named after it, which is then the lab-N/ folder the lab needs.
@@ -59,9 +61,9 @@ if not SRC.is_dir():
 if len(sys.argv) == 3:
     COURSE = sys.argv[2]
     NAME = SRC.name.removeprefix(f"{COURSE}-").removesuffix("-starter")
-    OUT = ROOT / f"public/{COURSE}/labs/{NAME}.zip"
+    OUT = ROOT / f"public/uk/{COURSE}/starters/{NAME}.zip"
 else:
-    OUT = ROOT / f"public/labs/{SRC.name}.zip"
+    OUT = ROOT / f"public/uk/web/starters/{SRC.name}.zip"
 OUT.parent.mkdir(parents=True, exist_ok=True)
 
 files = tracked(SRC)

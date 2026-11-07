@@ -8,7 +8,7 @@ level: "3 курс, спеціальність «Комп'ютерні наук�
 format: "Code challenges"
 duration: "4 академічні години (самостійна робота — 6 годин)"
 updated: 2026-10-18
-handout: /labs/lab-12.pdf
+handout: /uk/web/labs/lab-12.pdf
 ---
 
 > **Термін здачі:** 22.10.2026.
@@ -217,7 +217,7 @@ N з M». Назва кожного тесту й коментар біля ко
 
 1. Перевірте `node -v`: потрібен Node.js 22.18 або новіший. На старішому тести
    пишуть `Unknown file extension ".ts"`.
-2. Завантажте [showfinder-ts-starter.zip](/labs/showfinder-ts-starter.zip) і
+2. Завантажте [showfinder-ts-starter.zip](/uk/web/starters/showfinder-ts-starter.zip) і
    розпакуйте в **окремий репозиторій** або в теку `lab-12/` спільного
    репозиторію з лабораторними. Зробіть перший коміт **без змін**: `Starter`.
 3. Виконайте `npm install`, потім `npm run watch` — і лишіть його працювати в

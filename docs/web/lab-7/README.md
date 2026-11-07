@@ -17,7 +17,7 @@ with `...`), so students would each have invented a design and supplied their
 own images. The revision adds both and fixes the gaps found in review:
 
 - **Mockup + design system + asset pack** — the task page, `tokens.css`,
-  `public/labs/courtly-assets.zip`.
+  `public/uk/web/starters/courtly-assets.zip`.
 - **Card grid** — "3 × 2 on desktop" contradicted "the featured card is
   larger": a 2-column featured card leaves an orphan (2 + 5 = 7 cells). Now
   featured is 2 columns × 2 rows (4 + 5 = 9 = 3 × 3), and 1 column on tablet.
@@ -41,9 +41,9 @@ handout.
 
 ```sh
 node docs/web/lab-7/generate-assets.mjs   # courtly-assets/img/*.webp (deterministic)
-node docs/web/lab-7/render-mockup.mjs     # public/labs/lab-7/*.webp + og-image.jpg + src/data/courtly-mockup.json (Edge, network)
-python docs/web/lab-7/build-pack.py        # public/labs/courtly-assets.zip (+ SPEC.md, mockup/)
-python docs/web/build-handout.py lab-7    # public/labs/lab-7.pdf
+node docs/web/lab-7/render-mockup.mjs     # public/uk/web/labs/lab-7/*.webp + og-image.jpg + src/data/courtly-mockup.json (Edge, network)
+python docs/web/lab-7/build-pack.py        # public/uk/web/starters/courtly-assets.zip (+ SPEC.md, mockup/)
+python docs/web/build-handout.py lab-7    # public/uk/web/labs/lab-7.pdf
 ```
 
 Order matters: render the captures before building the pack, since the pack

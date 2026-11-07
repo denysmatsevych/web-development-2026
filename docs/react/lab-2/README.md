@@ -3,9 +3,9 @@
 | Route | Source | What it is |
 | --- | --- | --- |
 | `/react/labs/lab-2/` | `src/content/labs/react/uk/lab-2.md` | the handout: useful links instead of theory, the starter, four components, the two trees, checks and Vercel, report, defence |
-| `/react/labs/lab-2.zip` | `react-lab-2-starter/` | the starter, unpacked by students into `react-labs/lab-2/` |
-| `/react/labs/lab-2/result.webp` | the reference solution | the screenshot in the handout's §1 |
-| `/react/labs/lab-2.pdf` | built from the handout | the downloadable handout |
+| `/uk/react/starters/lab-2.zip` | `react-lab-2-starter/` | the starter, unpacked by students into `react-labs/lab-2/` |
+| `/uk/react/labs/lab-2/result.webp` | the reference solution | the screenshot in the handout's §1 |
+| `/uk/react/labs/lab-2.pdf` | built from the handout | the downloadable handout |
 
 `solution/` holds the reference solution (gitignored): `src/` overlays the
 starter's `src/`, `extra/` is the optional §4.8 task, and its `README.md`
@@ -93,6 +93,6 @@ Not verified:
 
 ```bash
 git add react-lab-2-starter                                  # the script packs tracked files only
-python docs/web/build-pack.py react-lab-2-starter react      # public/react/labs/lab-2.zip
-python docs/web/build-handout.py lab-2 react                 # public/react/labs/lab-2.pdf
+python docs/web/build-pack.py react-lab-2-starter react      # public/uk/react/starters/lab-2.zip
+python docs/web/build-handout.py lab-2 react                 # public/uk/react/labs/lab-2.pdf
 ```

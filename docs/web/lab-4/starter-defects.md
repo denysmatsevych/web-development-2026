@@ -7,7 +7,7 @@ grading reference.
 | Source | Becomes |
 | --- | --- |
 | `src/content/labs/web-development/uk/lab-4.md` | `/web-development/labs/lab-4/` |
-| `src/content/labs/web-development/uk/lab-4.md` via `docs/web/build-handout.py lab-4` | `/labs/lab-4.pdf` (re-run after editing the handout) |
+| `src/content/labs/web-development/uk/lab-4.md` via `docs/web/build-handout.py lab-4` | `/uk/web/labs/lab-4.pdf` (re-run after editing the handout) |
 | `src/content/tasks/web-development/uk/lab-4.md` | `/web-development/labs/lab-4/task/` |
 | `flowtask-starter/` (see §6) | the code students audit |
 
@@ -126,7 +126,7 @@ product screenshot, the grain keeps it genuinely heavy. Flat vector art at the
 same dimensions compresses to ~200 KB and A9 stops being a finding, so do not
 "optimise" this file.
 
-**Delivery.** `public/labs/flowtask-starter.zip` (~2.85 MB), linked from §2 of
+**Delivery.** `public/uk/web/starters/flowtask-starter.zip` (~2.85 MB), linked from §2 of
 the brief. Students unpack it either into a repository of its own or into a
 `lab-4/` folder of their multi-lab repository — most of them already keep
 `lab-1/`, `lab-2/`, … side by side, and nothing in the starter needs repo root.
@@ -148,7 +148,7 @@ to open it. Use Python's `zipfile`, which also guarantees forward slashes:
 ```bash
 python - <<'EOF'
 import os, zipfile
-src, out = 'flowtask-starter', 'public/labs/flowtask-starter.zip'
+src, out = 'flowtask-starter', 'public/uk/web/starters/flowtask-starter.zip'
 top = ['index.html', 'about.html', 'README.md', 'robots.txt', '.nojekyll']
 with zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as z:
     for n in top:
@@ -161,7 +161,7 @@ with zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as z:
 EOF
 ```
 
-Check the result starts with `PK`: `head -c 4 public/labs/flowtask-starter.zip`.
+Check the result starts with `PK`: `head -c 4 public/uk/web/starters/flowtask-starter.zip`.
 
 Still open: whether the starter also becomes a GitHub template repo, which
 would give students "Use this template" instead of unpack-and-push. The zip

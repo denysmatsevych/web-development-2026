@@ -1,11 +1,11 @@
-"""Build public/labs/courtly-assets.zip — the Lab 7 asset pack.
+"""Build public/uk/web/starters/courtly-assets.zip — the Lab 7 asset pack.
 
     python docs/web/lab-7/build-pack.py        (run from the repo root)
 
 The zip is `courtly-assets/` plus two things kept out of that folder so they
 are not duplicated in git:
 
-- `mockup/`  — the 1:1 captures from public/labs/lab-7/ (render-mockup.mjs);
+- `mockup/`  — the 1:1 captures from public/uk/web/labs/lab-7/ (render-mockup.mjs);
 - `SPEC.md`  — §2–5 of src/content/tasks/web-development/uk/lab-7.md, so the pack works offline
                and can never disagree with the design page.
 
@@ -21,7 +21,7 @@ import tempfile
 ROOT = pathlib.Path(__file__).resolve().parents[3]
 SITE = "https://denysmatsevych.github.io/web-development-2026"
 PAGE = f"{SITE}/web-development/labs/lab-7/task/"
-OUT = ROOT / "public/labs/courtly-assets.zip"
+OUT = ROOT / "public/uk/web/starters/courtly-assets.zip"
 TAR = r"C:\Windows\System32\tar.exe"
 
 brief = (ROOT / "src/content/tasks/web-development/uk/lab-7.md").read_text(encoding="utf-8")
@@ -43,7 +43,7 @@ with tempfile.TemporaryDirectory() as tmp:
     stage = pathlib.Path(tmp) / "courtly-assets"
     shutil.copytree(ROOT / "courtly-assets", stage)
     (stage / "SPEC.md").write_text(header + spec + "\n", encoding="utf-8")
-    shutil.copytree(ROOT / "public/labs/lab-7", stage / "mockup")
+    shutil.copytree(ROOT / "public/uk/web/labs/lab-7", stage / "mockup")
 
     OUT.unlink(missing_ok=True)
     subprocess.run([TAR, "-a", "-c", "-f", str(OUT), "courtly-assets"], cwd=tmp, check=True)

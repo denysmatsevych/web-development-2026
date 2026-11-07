@@ -72,6 +72,12 @@ src/
 plugins/
 └─ base-links.mjs   rewrites root-relative URLs in Markdown bodies for the GitHub Pages base path
 
+public/             served at the site root, so a file's URL is its path below public/
+├─ uk/<course>/     downloads for the Ukrainian pages; <course> is `web` (Web Development) or `react`
+│  ├─ labs/         handout PDFs, plus a lab-N/ folder for the images a lab page shows
+│  └─ starters/     starter zips and asset packs, built from the top-level folders below
+└─ en/<course>/     the same for the English pages
+
 courtly-assets/     design asset pack (tokens, images, spec)
 courtly-booking-starter/  starter project: a catalogue app with seeded JS defects to debug
 flowtask-starter/   starter project: a landing page to audit and fix

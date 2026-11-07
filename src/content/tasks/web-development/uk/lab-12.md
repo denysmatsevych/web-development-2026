@@ -41,7 +41,7 @@ updated: 2026-10-15
 
 ## 2. Структура проєкту
 
-**Завантажити:** [showfinder-ts-starter.zip](/labs/showfinder-ts-starter.zip).
+**Завантажити:** [showfinder-ts-starter.zip](/uk/web/starters/showfinder-ts-starter.zip).
 Розпакуйте архів в окремий репозиторій або в теку `lab-12/` спільного
 репозиторію з лабораторними.
 
