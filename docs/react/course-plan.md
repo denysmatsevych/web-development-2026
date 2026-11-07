@@ -327,9 +327,8 @@ Rules stated under the table:
 **Students on an individual plan** take another route, agreed with the
 teacher and not in the programme's table: instead of the labs and module
 tests they do the individual assignment (ІЗ), and the tier they reach and
-defend at the exam sets the course grade. The handout
-(`src/content/labs/react/uk/individual.md`) holds the tiers, rules and
-dates. The final project (ЛР 21–27) belongs to the regular route and gets its
+defend at the exam sets the course grade. The handout at
+`/react/labs/individual` holds the tiers, rules and dates. The final project (ЛР 21–27) belongs to the regular route and gets its
 own task.
 
 ### Шкала оцінювання: національна та ECTS

@@ -3,7 +3,7 @@
 | Route | Source | What it is |
 | --- | --- | --- |
 | `/react/labs/individual/` | `src/content/labs/react/uk/individual.md` | the handout: who it's for, the E–A ladder and its rules, topics, requirements by tier, steps and dates, deliverables, submission, links |
-| `/uk/react/labs/individual.pdf` | built from the handout | the downloadable handout, 8 A4 pages |
+| `/uk/react/labs/individual.pdf` | built from the handout | the downloadable handout, 9 A4 pages |
 
 The handout is the single source for the tiers, rules and dates; this file
 doesn't restate them. The grading section of
@@ -33,7 +33,15 @@ python docs/web/build-handout.py individual react
 - **A JSON file as the database** for read-only APIs: json-server on
   `db.json` (Vite), a Route Handler or Server Action (Next.js). It writes
   only on localhost, because a Vercel deployment's filesystem is read-only,
-  so students run and show the write flow on localhost.
+  so students run and show the write flow on localhost. On Vercel that part
+  may show its error state, and §3.3 tells students that's expected.
+  localStorage was considered and rejected: it sends no request, so the C
+  form would have no server error to handle and A's mutation and
+  invalidation would show little (the PR #53 review, 2026-11-08).
+- **A higher tier replaces tools, not behaviour.** B moves the shared state
+  into a library and A replaces the request code, so §2 says the new tool
+  meets the lower tier's requirement. Without it, "cumulative" would make an
+  A app fail D's `useEffect` cancellation (the PR #53 review).
 - **RTK Query counts as TanStack Query at A** for students who chose Redux
   Toolkit at B. It ships in the same package and does the same job (cached
   queries, mutations, invalidation through tags). Adding TanStack Query on
@@ -95,6 +103,9 @@ python docs/web/build-handout.py individual react
 - Whether GitHub renders the two Mermaid examples. Both use only basic
   `flowchart` syntax.
 - The `vercel.json` rewrite on a real deployment.
+- Whether a Next.js Route Handler on Vercel can read `db.json` at all: that
+  depends on the file being traced into the function bundle. Writes fail
+  there either way.
 - A dry run: an app built from the handout alone, to find unclear
   requirements and gauge the work per tier.
 - The labs index lead («індивідуальне завдання під номером 00 виконується
