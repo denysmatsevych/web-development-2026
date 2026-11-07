@@ -3,6 +3,7 @@
 | Route | Source | What it is |
 | --- | --- | --- |
 | `/react/labs/individual/` | `src/content/labs/react/uk/individual.md` | the handout: who it's for, the E–A ladder and its rules, topics, requirements by tier, steps and dates, deliverables, submission, links |
+| `/uk/react/labs/individual.pdf` | built from the handout | the downloadable handout, 8 A4 pages |
 
 The handout is the single source for the tiers, rules and dates; this file
 doesn't restate them. The grading section of
