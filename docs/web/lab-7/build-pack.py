@@ -42,7 +42,8 @@ header = f"""# Courtly — специфікація
 with tempfile.TemporaryDirectory() as tmp:
     stage = pathlib.Path(tmp) / "courtly-assets"
     shutil.copytree(ROOT / "starters/web/courtly-assets", stage)
-    (stage / "SPEC.md").write_text(header + spec + "\n", encoding="utf-8")
+    # newline="\n": text mode would otherwise write CRLF on Windows.
+    (stage / "SPEC.md").write_text(header + spec + "\n", encoding="utf-8", newline="\n")
     shutil.copytree(ROOT / "public/uk/web/labs/lab-7", stage / "mockup")
 
     OUT.unlink(missing_ok=True)
