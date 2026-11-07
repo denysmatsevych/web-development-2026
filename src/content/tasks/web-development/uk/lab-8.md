@@ -38,7 +38,7 @@ updated: 2026-10-18
 
 ## 2. Структура проєкту
 
-**Завантажити:** [js-basics-starter.zip](/labs/js-basics-starter.zip)
+**Завантажити:** [js-basics-starter.zip](/uk/web/starters/js-basics-starter.zip)
 (≈ 16 КБ). Розпакуйте архів в окремий репозиторій або в теку `lab-8/` спільного
 репозиторію з лабораторними.
 

@@ -7,7 +7,7 @@ level: "3 курс, спеціальність «Комп'ютерні наук�
 format: "Code challenges"
 duration: "2 академічні години (самостійна робота — 3 години)"
 updated: 2026-09-27
-handout: /labs/lab-6.pdf
+handout: /uk/web/labs/lab-6.pdf
 ---
 
 ## 1. Мета роботи
@@ -69,7 +69,7 @@ responsive layout за допомогою Browser DevTools.
 
 > **Starter-проєкт.** Розмітка для всіх challenges і сторінка з навмисно
 > закладеними помилками для Challenge 8 —
-> [layout-lab-starter.zip](/labs/layout-lab-starter.zip). Опис вмісту — у
+> [layout-lab-starter.zip](/uk/web/starters/layout-lab-starter.zip). Опис вмісту — у
 > `README.md` всередині архіву.
 
 ## 4. Дослідницькі завдання
@@ -273,7 +273,7 @@ Grid?
 ## 5. Практична частина: Code Challenges
 
 Розмітка до кожного challenge є у
-[starter-проєкті](/labs/layout-lab-starter.zip).
+[starter-проєкті](/uk/web/starters/layout-lab-starter.zip).
 
 ### Challenge 1. Flexbox: responsive header
 

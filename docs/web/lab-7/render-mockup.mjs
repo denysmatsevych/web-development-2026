@@ -8,11 +8,11 @@
  *   docs/web/lab-7/og-image.html       the 1200×630 social card
  *
  * Outputs:
- *   public/labs/lab-7/mockup-{desktop,tablet,mobile}.webp   full-page captures
- *   public/labs/lab-7/mockup-mobile-menu.webp               first screen, menu open
- *   src/data/courtly-mockup.json                            where each section starts in the
- *                                                           full-page captures (auto-check viewer)
- *   courtly-assets/img/og-image.jpg
+ *   public/uk/web/labs/lab-7/mockup-{desktop,tablet,mobile}.webp   full-page captures
+ *   public/uk/web/labs/lab-7/mockup-mobile-menu.webp               first screen, menu open
+ *   src/data/courtly-mockup.json                                   where each section starts in the
+ *                                                                  full-page captures (auto-check viewer)
+ *   starters/web/courtly-assets/img/og-image.jpg
  *
  * Edge over CDP rather than `msedge --screenshot`, which returns a blank frame
  * here; `mobile: false` at phone width, because mobile emulation desyncs the
@@ -32,7 +32,9 @@ const EDGE = 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe'
 const ROOT = process.cwd();
 const MOCKUP = path.join(ROOT, 'docs/web/lab-7/mockup/index.html');
 const OG = path.join(ROOT, 'docs/web/lab-7/og-image.html');
-const OUT = path.join(ROOT, 'public/labs/lab-7');
+// The captures' site URL; the files go to the same path under public/.
+const SRC_DIR = '/uk/web/labs/lab-7';
+const OUT = path.join(ROOT, 'public', SRC_DIR);
 const ANCHORS = path.join(ROOT, 'src/data/courtly-mockup.json');
 
 if (!existsSync(MOCKUP)) {
@@ -136,7 +138,7 @@ async function fullPage(name, width) {
   const anchors = await evaluate(`(${sectionAnchors})(document)`);
   const png = await capture(width, height);
   const info = await sharp(png).webp({ quality: 86, effort: 6 }).toFile(path.join(OUT, name));
-  views[width] = { src: `/labs/lab-7/${name}`, height, anchors };
+  views[width] = { src: `${SRC_DIR}/${name}`, height, anchors };
   console.log(`${name.padEnd(26)} ${info.width}×${info.height}  ${(info.size / 1024).toFixed(0)} KB  overflow-x: ${overflow}px`);
 }
 
@@ -162,7 +164,7 @@ await open(pathToFileURL(OG).href, 1200, 630);
 await imagesReady();
 {
   const png = await capture(1200, 630);
-  const info = await sharp(png).jpeg({ quality: 85, mozjpeg: true }).toFile(path.join(ROOT, 'courtly-assets/img/og-image.jpg'));
+  const info = await sharp(png).jpeg({ quality: 85, mozjpeg: true }).toFile(path.join(ROOT, 'starters/web/courtly-assets/img/og-image.jpg'));
   console.log(`${'og-image.jpg'.padEnd(26)} ${info.width}×${info.height}  ${(info.size / 1024).toFixed(0)} KB`);
 }
 

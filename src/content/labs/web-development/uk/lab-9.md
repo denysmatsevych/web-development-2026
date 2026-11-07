@@ -7,7 +7,7 @@ level: "3 курс, спеціальність «Комп'ютерні наук�
 format: "Code challenges"
 duration: "2 академічні години (самостійна робота — 3 години)"
 updated: 2026-10-18
-handout: /labs/lab-9.pdf
+handout: /uk/web/labs/lab-9.pdf
 ---
 
 > **Термін здачі:** 19.10.2026.
@@ -74,7 +74,7 @@ _Перед практичною частиною опрацюйте джере�
 врахувати.
 
 **Сторінка для експериментів.** У starter-проєкті
-([watchlist-starter.zip](/labs/watchlist-starter.zip), той самий, що в §5) є
+([watchlist-starter.zip](/uk/web/starters/watchlist-starter.zip), той самий, що в §5) є
 сторінка `experiments.html`. На ній 15 пронумерованих блоків — по одному на
 експеримент. Номер і назва блоку збігаються з номером і назвою експерименту
 нижче. Кожен блок — елемент `<section id="exp-N">`, і фрагмент коду знаходить
@@ -690,7 +690,7 @@ Starter-проєкт **«Мій список»** — каталог 30 сері�
 
 ### 5.1. Підготовка
 
-1. Завантажте [watchlist-starter.zip](/labs/watchlist-starter.zip) і розпакуйте
+1. Завантажте [watchlist-starter.zip](/uk/web/starters/watchlist-starter.zip) і розпакуйте
    в **окремий репозиторій** або в теку `lab-9/` спільного репозиторію з
    лабораторними. Зробіть перший коміт **без змін**.
 2. Відкрийте `index.html` через Live Preview у Chrome або Edge, як у §4: форма

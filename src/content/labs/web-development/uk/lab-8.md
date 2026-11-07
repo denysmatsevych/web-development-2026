@@ -7,7 +7,7 @@ level: "3 курс, спеціальність «Комп'ютерні наук�
 format: "Code challenges"
 duration: "2 академічні години (самостійна робота — 3 години)"
 updated: 2026-10-18
-handout: /labs/lab-8.pdf
+handout: /uk/web/labs/lab-8.pdf
 ---
 
 > **Термін здачі:** 09.10.2026.
@@ -288,7 +288,7 @@ Starter-проєкт **JS Basics** — п'ять модулів у `src/` із �
 
 ### 5.1. Підготовка
 
-1. Завантажте [js-basics-starter.zip](/labs/js-basics-starter.zip) і розпакуйте
+1. Завантажте [js-basics-starter.zip](/uk/web/starters/js-basics-starter.zip) і розпакуйте
    в **окремий репозиторій** або в теку `lab-8/` спільного репозиторію з
    лабораторними. Зробіть перший коміт **без змін** — від нього рахуються всі
    diff на захисті.

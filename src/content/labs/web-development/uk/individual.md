@@ -7,7 +7,7 @@ discipline: "«Сучасна веброзробка: HTML, CSS, JS/TS»"
 level: "3 курс, спеціальність F3 «Комп'ютерні науки»"
 format: "Індивідуально"
 duration: "62 години"
-handout: /labs/individual.pdf
+handout: /uk/web/labs/individual.pdf
 ---
 
 ## 1. Тема індивідуального завдання

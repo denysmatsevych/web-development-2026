@@ -6,7 +6,7 @@ discipline: "«Сучасна веброзробка: HTML, CSS, JS/TS»"
 level: "3 курс, спеціальність «Комп'ютерні науки»"
 format: "Проміжний контроль"
 updated: 2026-10-18
-handout: /labs/lab-7.pdf
+handout: /uk/web/labs/lab-7.pdf
 ---
 
 ## Завдання
@@ -18,7 +18,7 @@ handout: /labs/lab-7.pdf
 - **Макет, design tokens і вимоги до компонентів:**
   [Courtly — макет і дизайн-система](/web-development/labs/lab-7/task/).
 - **Зображення, `tokens.css`, специфікація, знімки макета, favicon, OG image:**
-  [courtly-assets.zip](/labs/courtly-assets.zip) (≈ 900 КБ).
+  [courtly-assets.zip](/uk/web/starters/courtly-assets.zip) (≈ 900 КБ).
 - **Власний CSS**, без CSS framework і UI-бібліотек. JavaScript — лише для
   mobile menu.
 - **Не потрібні:** backend, API, база даних, авторизація, реальні пошук і

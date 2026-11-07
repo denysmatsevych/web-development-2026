@@ -21,7 +21,7 @@ acceptance:
   - "AI-assisted — код перевірений і відрефакторений студентом"
 mockup: pricing
 updated: 2026-09-18
-handout: /labs/lab-2-task.pdf
+handout: /uk/web/labs/lab-2-task.pdf
 ---
 
 ## 1. Загальна ідея

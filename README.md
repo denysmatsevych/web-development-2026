@@ -72,16 +72,25 @@ src/
 plugins/
 └─ base-links.mjs   rewrites root-relative URLs in Markdown bodies for the GitHub Pages base path
 
-courtly-assets/     design asset pack (tokens, images, spec)
-courtly-booking-starter/  starter project: a catalogue app with seeded JS defects to debug
-flowtask-starter/   starter project: a landing page to audit and fix
-js-basics-starter/  starter project: pure data functions with provided node --test tests
-layout-lab-starter/ starter project: responsive-layout code challenges
-react-lab-2-starter/ starter project: React ЛР-2's lab-2/ folder (configuration, styles, data) for writing components by hand
-react-lab-3-starter/ starter project: React ЛР-3's lab-3/ folder, a working app in one component to split by its component tree
-showfinder-starter/ starter project: a TVmaze API app to build from AI drafts, with a stubbed-fetch self-check
-showfinder-ts-starter/ starter project: a TVmaze app to migrate from JavaScript to TypeScript, with type checks and node --test tests
-watchlist-starter/  starter project: a DOM app to build from AI drafts, with an in-browser self-check
+public/             served at the site root, so a file's URL is its path below public/
+├─ uk/<course>/     downloads for the Ukrainian pages; <course> is `web` (Web Development) or `react`
+│  ├─ labs/         handout PDFs, plus a lab-N/ folder for the images a lab page shows
+│  └─ starters/     starter zips and asset packs, built from starters/ below
+└─ en/<course>/     the same for the English pages
+
+starters/           the source of each zip: <course>/<name>/ becomes public/uk/<course>/starters/<name>.zip
+├─ web/
+│  ├─ courtly-assets/           design asset pack (tokens, images, spec)
+│  ├─ courtly-booking-starter/  a catalogue app with seeded JS defects to debug
+│  ├─ flowtask-starter/         a landing page to audit and fix
+│  ├─ js-basics-starter/        pure data functions with provided node --test tests
+│  ├─ layout-lab-starter/       responsive-layout code challenges
+│  ├─ showfinder-starter/       a TVmaze API app to build from AI drafts, with a stubbed-fetch self-check
+│  ├─ showfinder-ts-starter/    a TVmaze app to migrate from JavaScript to TypeScript, with type checks and node --test tests
+│  └─ watchlist-starter/        a DOM app to build from AI drafts, with an in-browser self-check
+└─ react/                       named after the lab, since the zip unpacks into the student's lab-N/ folder
+   ├─ lab-2/                    configuration, styles and data for writing ЛР-2's components by hand
+   └─ lab-3/                    a working app in one component, for ЛР-3 to split by its component tree
 ```
 
 See `docs/agents/design-system.md` for which stylesheet owns what and how
@@ -135,10 +144,11 @@ exists only in `en/` is not shown in the Ukrainian list.
 
 Some labs need a standalone starter project or a downloadable asset pack —
 e.g. a deliberately imperfect landing page to audit, or a design spec with
-images. These live as top-level directories outside `src/` (listed in the
-tree above), each with its own `README.md` explaining what it's for and
-which lab it belongs to. A new one follows the same pattern: its own
-directory, its own README, and a line in the tree.
+images. These live in `starters/<course>/` (listed in the tree above), each
+with its own `README.md` explaining what it's for and which lab it belongs
+to. A new one follows the same pattern: its own directory, named like the zip
+it becomes, its own README, and a line in the tree. `docs/web/build-pack.py`
+packs it.
 
 ## Deploy
 

@@ -1,15 +1,14 @@
-"""Build a starter zip under public/ from a top-level starter folder.
+"""Build a starter zip under public/ from a folder in starters/.
 
-Run from the repo root with the folder's name, and with the course slug for
-any course other than Web Development:
+Run from the repo root with the folder's path:
 
-    python docs/web/build-pack.py js-basics-starter
-    python docs/web/build-pack.py react-lab-2-starter react
+    python docs/web/build-pack.py starters/web/js-basics-starter  # public/uk/web/starters/js-basics-starter.zip
+    python docs/web/build-pack.py starters/react/lab-2            # public/uk/react/starters/lab-2.zip
 
-A course's zip goes to public/<course>/labs/ and is named after the lab: the
-folder name without the `<course>-` prefix and the `-starter` suffix, so
-react-lab-2-starter becomes lab-2.zip. File managers unpack a zip into a
-folder named after it, which is then the lab-N/ folder the lab needs.
+starters/<course>/<name>/ becomes public/uk/<course>/starters/<name>.zip (the
+layout is in README.md). File managers unpack a zip into a folder named after
+it, which is why a React starter's folder is named after its lab: lab-2.zip
+unpacks into the lab-2/ folder the lab needs.
 
 Files sit at the zip root, with no top-level folder, so the archive unpacks
 straight into a repository or a lab-N/ folder. Python's zipfile rather than
@@ -17,9 +16,10 @@ straight into a repository or a lab-N/ folder. Python's zipfile rather than
 
 A rebuild without edits gives the same zip. Text files go in with LF line
 endings whatever the checkout has (with `core.autocrlf` on, Git writes CRLF
-into the working tree), and each entry is dated by the file's last commit,
-not by its modification time, which every checkout resets. A file that has
-no commit yet keeps its modification time.
+into the working tree), and each entry is dated by the last commit that
+changed the file, not by its modification time, which every checkout resets.
+A commit that only moved the file doesn't count. A file that has no commit
+yet keeps its modification time.
 
 A pack that adds files from outside its folder (Lab 7's asset pack) has its
 own script beside the lab's docs. Only files Git tracks go in, so whatever a
@@ -36,8 +36,13 @@ TEXT = {".css", ".html", ".js", ".json", ".jsx", ".md", ".mjs", ".svg", ".ts", "
 
 
 def committed(path):
-    """Local date and time of the last commit that touched `path`, or None."""
-    out = subprocess.run(["git", "log", "-1", "--format=%ct", "--", str(path)],
+    """Local date and time of the last commit that changed `path`, or None.
+
+    --follow carries the history across a move, and --diff-filter=r skips the
+    move itself, so moving a starter doesn't re-date every file in its zip.
+    """
+    out = subprocess.run(["git", "log", "-1", "--follow", "--diff-filter=r",
+                          "--format=%ct", "--", str(path)],
                          cwd=ROOT, capture_output=True, text=True).stdout.strip()
     return datetime.datetime.fromtimestamp(int(out)).timetuple()[:6] if out else None
 
@@ -50,18 +55,14 @@ def tracked(folder):
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-if len(sys.argv) not in (2, 3):
-    sys.exit("usage: python docs/web/build-pack.py <starter-folder> [course]"
-             "   (e.g. js-basics-starter, or react-lab-2-starter react)")
-SRC = ROOT / sys.argv[1]
-if not SRC.is_dir():
-    sys.exit(f"no folder {sys.argv[1]}/ at the repo root")
-if len(sys.argv) == 3:
-    COURSE = sys.argv[2]
-    NAME = SRC.name.removeprefix(f"{COURSE}-").removesuffix("-starter")
-    OUT = ROOT / f"public/{COURSE}/labs/{NAME}.zip"
-else:
-    OUT = ROOT / f"public/labs/{SRC.name}.zip"
+USAGE = ("usage: python docs/web/build-pack.py starters/<course>/<name>"
+         "   (e.g. starters/web/js-basics-starter, or starters/react/lab-2)")
+if len(sys.argv) != 2:
+    sys.exit(USAGE)
+SRC = (ROOT / sys.argv[1]).resolve()
+if not SRC.is_dir() or SRC.parent.parent != ROOT / "starters":
+    sys.exit(f"no starter folder {sys.argv[1]}/\n{USAGE}")
+OUT = ROOT / "public/uk" / SRC.parent.name / "starters" / f"{SRC.name}.zip"
 OUT.parent.mkdir(parents=True, exist_ok=True)
 
 files = tracked(SRC)

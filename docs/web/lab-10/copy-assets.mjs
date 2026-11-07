@@ -3,7 +3,7 @@
  *
  *   node docs/web/lab-10/copy-assets.mjs        (run from the repo root)
  *
- * The starter reuses Lab 7's public asset pack (courtly-assets/): tokens,
+ * The starter reuses Lab 7's public asset pack (starters/web/courtly-assets/): tokens,
  * favicon, logo mark and the six venue illustrations. The catalogue has
  * twelve venues, so each of the other six is a mirrored copy of an
  * illustration of the same sport. Every card image is 800×600 — the pack's
@@ -14,8 +14,8 @@
 import sharp from 'sharp';
 import { copyFileSync, mkdirSync } from 'node:fs';
 
-const SRC = 'courtly-assets';
-const OUT = 'courtly-booking-starter';
+const SRC = 'starters/web/courtly-assets';
+const OUT = 'starters/web/courtly-booking-starter';
 mkdirSync(`${OUT}/css`, { recursive: true });
 mkdirSync(`${OUT}/img/venues`, { recursive: true });
 

@@ -4,7 +4,7 @@
 | --- | --- | --- |
 | `/web-development/labs/lab-10/` | `src/content/labs/web-development/uk/lab-10.md` | the handout: research, scenarios A / B / C, report, defence |
 | `/web-development/labs/lab-10/task/` | `src/content/tasks/web-development/uk/lab-10.md` | the brief: how the starter **should** behave; a defect is any deviation from it |
-| `/labs/courtly-booking-starter.zip` | `courtly-booking-starter/` | the seeded starter students debug |
+| `/uk/web/starters/courtly-booking-starter.zip` | `starters/web/courtly-booking-starter/` | the seeded starter students debug |
 
 ## Why a separate starter
 
@@ -27,11 +27,11 @@ outside the repo.
 ## Regenerating
 
 ```sh
-node docs/web/lab-10/copy-assets.mjs                   # tokens, logo, favicon, venue images from courtly-assets/
-python docs/web/build-pack.py courtly-booking-starter  # public/labs/courtly-booking-starter.zip
-python docs/web/build-handout.py lab-10                # public/labs/lab-10.pdf
+node docs/web/lab-10/copy-assets.mjs                                # tokens, logo, favicon, venue images from starters/web/courtly-assets/
+python docs/web/build-pack.py starters/web/courtly-booking-starter  # public/uk/web/starters/courtly-booking-starter.zip
+python docs/web/build-handout.py lab-10                             # public/uk/web/labs/lab-10.pdf
 ```
 
-Edit the starter in `courtly-booking-starter/`, then rebuild the zip. After
+Edit the starter in `starters/web/courtly-booking-starter/`, then rebuild the zip. After
 any change to its JavaScript or data, re-run the calibration — a single
 changed line can move or remove a seeded defect.

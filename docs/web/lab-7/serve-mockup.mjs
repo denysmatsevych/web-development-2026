@@ -16,7 +16,10 @@ import { fileURLToPath } from "node:url";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const MOCKUP = path.join(here, "mockup");
-const ASSETS = path.resolve(here, "../../../courtly-assets");
+const ASSETS = path.resolve(here, "../../../starters/web/courtly-assets");
+// index.html links assets as ../../../../starters/web/courtly-assets/…, which a
+// browser resolves to this URL path when the page is served at /.
+const ASSETS_URL = "/starters/web/courtly-assets/";
 const PORT = Number(process.argv[2] ?? process.env.PORT ?? 4400);
 const ORIGIN = `http://localhost:${PORT}`;
 
@@ -43,7 +46,7 @@ const SEO = `
   <meta property="og:title" content="Courtly — онлайн-бронювання спортивних майданчиків">
   <meta property="og:description" content="Обирайте майданчик, дату та час і бронюйте онлайн.">
   <meta property="og:url" content="${ORIGIN}/">
-  <meta property="og:image" content="${ORIGIN}/courtly-assets/img/og-image.jpg">`;
+  <meta property="og:image" content="${ORIGIN}${ASSETS_URL}img/og-image.jpg">`;
 
 const ROBOTS = `User-agent: *\nAllow: /\nSitemap: ${ORIGIN}/sitemap.xml\n`;
 const SITEMAP = `<?xml version="1.0" encoding="UTF-8"?>
@@ -54,10 +57,8 @@ const SITEMAP = `<?xml version="1.0" encoding="UTF-8"?>
 
 /** Map a URL path onto one of the two roots; null when it escapes them. */
 function resolve(urlPath) {
-  // index.html links assets as ../../../../courtly-assets/…, which a browser
-  // resolves to /courtly-assets/… when the page is served at /.
-  const [root, rel] = urlPath.startsWith("/courtly-assets/")
-    ? [ASSETS, urlPath.slice("/courtly-assets/".length)]
+  const [root, rel] = urlPath.startsWith(ASSETS_URL)
+    ? [ASSETS, urlPath.slice(ASSETS_URL.length)]
     : [MOCKUP, urlPath === "/" ? "index.html" : urlPath.slice(1)];
   const file = path.resolve(root, rel);
   return file.startsWith(root + path.sep) ? file : null;

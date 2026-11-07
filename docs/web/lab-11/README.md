@@ -4,7 +4,7 @@
 | --- | --- | --- |
 | `/web-development/labs/lab-11/` | `src/content/labs/web-development/uk/lab-11.md` | the handout: 13 experiments against the live TVmaze API, `API.md`, how to work (the AI draft → audit → fix loop, commits), report, defence |
 | `/web-development/labs/lab-11/task/` | `src/content/tasks/web-development/uk/lab-11.md` | the brief: the DOM contract, the API, the states and their texts, then every task — three challenges with their prompts and numbered rules, the `AGENTS.md` step — and the Network checklist |
-| `/labs/showfinder-starter.zip` | `showfinder-starter/` | the static shell, the view module, stubs, `check.html` with recorded TVmaze responses, `offline.html` and `experiments.html` |
+| `/uk/web/starters/showfinder-starter.zip` | `starters/web/showfinder-starter/` | the static shell, the view module, stubs, `check.html` with recorded TVmaze responses, `offline.html` and `experiments.html` |
 
 ## Why it looks like this
 
@@ -88,7 +88,8 @@ edge-cached.
 
 ## The fixtures
 
-`showfinder-starter/check/fixtures/` comes from `docs/web/lab-11/record-fixtures.mjs`
+`starters/web/showfinder-starter/check/fixtures/` comes from
+`docs/web/lab-11/record-fixtures.mjs`
 (public: it holds no answers), recorded from the live API on 2026-10-13:
 
 - `search.json` — `/search/shows` for `girls`, `gir`, `law & order`, `doctor`,
@@ -128,16 +129,16 @@ Back the folder up outside the repo.
 ## Regenerating
 
 ```sh
-node docs/web/lab-11/record-fixtures.mjs               # check/fixtures/ from the live API
-python docs/web/build-pack.py showfinder-starter       # public/labs/showfinder-starter.zip
-python docs/web/build-handout.py lab-11                # public/labs/lab-11.pdf
-node docs/web/lab-11/solution/verify.mjs all           # local only
-node docs/web/lab-11/solution/experiments.mjs          # local only: §4 answer key
+node docs/web/lab-11/record-fixtures.mjs                       # check/fixtures/ from the live API
+python docs/web/build-pack.py starters/web/showfinder-starter  # public/uk/web/starters/showfinder-starter.zip
+python docs/web/build-handout.py lab-11                        # public/uk/web/labs/lab-11.pdf
+node docs/web/lab-11/solution/verify.mjs all                   # local only
+node docs/web/lab-11/solution/experiments.mjs                  # local only: §4 answer key
 ```
 
 The two `node` scripts in `solution/` drive headless Edge; on the course
 machine Edge starts only from PowerShell, outside the agent sandbox. Edit the
-starter in `showfinder-starter/`, then rebuild the zip. Re-run `verify.mjs`
+starter in `starters/web/showfinder-starter/`, then rebuild the zip. Re-run `verify.mjs`
 after any change to `check/`, the fixtures, the shell's ids or `view.js`, and
 `experiments.mjs` after changing a §4 snippet: it also confirms that each
 snippet appears in the handout word for word.

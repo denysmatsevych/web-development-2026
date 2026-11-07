@@ -5,14 +5,13 @@ grey code blocks), on A4. Run from the repo root with the lab's id, the
 course slug for any course other than Web Development, and `--lang en` for
 the English translation:
 
-    python docs/web/build-handout.py lab-6              # public/labs/lab-6.pdf
-    python docs/web/build-handout.py lab-1 react        # public/react/labs/lab-1.pdf
-    python docs/web/build-handout.py lab-1 --lang en    # public/en/labs/lab-1.pdf
+    python docs/web/build-handout.py lab-6              # public/uk/web/labs/lab-6.pdf
+    python docs/web/build-handout.py lab-1 react        # public/uk/react/labs/lab-1.pdf
+    python docs/web/build-handout.py lab-1 --lang en    # public/en/web/labs/lab-1.pdf
 
-Web Development handouts keep the /labs/ URLs students already have; every
-other course's go under /<course>/labs/. An English handout takes the same
-path under /en/, as the site's English pages do. The lab's `handout:` field
-is that path without `public/`, e.g. `handout: /en/labs/lab-1.pdf`.
+The PDF goes to the course's labs/ folder for its language under public/ (the
+layout is in README.md). The lab's `handout:` field is that path without
+`public/`, e.g. `handout: /en/web/labs/lab-1.pdf`.
 
 The green deadline line comes from a blockquote that opens the lab's body:
 `> **Термін здачі:** 19.10.2026.` in Ukrainian, `> **Deadline:** 19.10.2026.`
@@ -43,8 +42,7 @@ cli.add_argument("--lang", choices=("uk", "en"), default="uk", help="content lan
 args = cli.parse_intermixed_args()
 LAB, COURSE, LANG = args.lab, args.course, args.lang
 SRC = ROOT / f"src/content/labs/{COURSE}/{LANG}/{LAB}.md"
-LABS_PATH = "labs" if COURSE == "web-development" else f"{COURSE}/labs"
-OUT_DIR = ROOT / "public" / (f"en/{LABS_PATH}" if LANG == "en" else LABS_PATH)
+OUT_DIR = ROOT / "public" / LANG / ("web" if COURSE == "web-development" else COURSE) / "labs"
 OUT = OUT_DIR / f"{LAB}.pdf"
 # The handout's own wording around the Markdown: the university and department
 # above the title, the line before the title (named as the site's interface

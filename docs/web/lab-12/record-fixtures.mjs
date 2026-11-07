@@ -19,7 +19,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 const API = 'https://api.tvmaze.com';
-const OUT = 'showfinder-ts-starter/check/fixtures';
+const OUT = 'starters/web/showfinder-ts-starter/check/fixtures';
 
 /** `girls` and `law & order` are the tests' own; `kitchen` and `pilot` bring the nulls. */
 const QUERIES = ['girls', 'law & order', 'kitchen', 'pilot'];

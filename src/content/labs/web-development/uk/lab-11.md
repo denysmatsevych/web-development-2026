@@ -7,7 +7,7 @@ level: "3 курс, спеціальність «Комп'ютерні наук�
 format: "Code challenges"
 duration: "2 академічні години (самостійна робота — 3 години)"
 updated: 2026-10-18
-handout: /labs/lab-11.pdf
+handout: /uk/web/labs/lab-11.pdf
 ---
 
 > **Термін здачі:** 22.10.2026.
@@ -74,7 +74,7 @@ API, з яким ви працюєте, описано в [документац�
 якщо її не врахувати.
 
 **Сторінка для експериментів.** У starter-проєкті
-([showfinder-starter.zip](/labs/showfinder-starter.zip), той самий, що в §5) є
+([showfinder-starter.zip](/uk/web/starters/showfinder-starter.zip), той самий, що в §5) є
 порожня сторінка `experiments.html`. Вона потрібна лише для того, щоб запити
 мали справжнє походження (origin), з яким браузер перевіряє CORS. Розпакуйте
 архів, запустіть Live Preview для `experiments.html` і відкрийте її в Chrome
@@ -519,7 +519,7 @@ Network — перевіряє чек-лист Network у ТЗ, §6.
 
 ### 5.1. Підготовка
 
-1. Завантажте [showfinder-starter.zip](/labs/showfinder-starter.zip) і
+1. Завантажте [showfinder-starter.zip](/uk/web/starters/showfinder-starter.zip) і
    розпакуйте в **окремий репозиторій** або в теку `lab-11/` спільного
    репозиторію з лабораторними. Зробіть перший коміт **без змін**.
 2. Додайте `API.md` з §4.5 окремим комітом: `API notes`.

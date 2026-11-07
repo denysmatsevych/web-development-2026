@@ -1,6 +1,6 @@
 {
   "375": {
-    "src": "/labs/lab-7/mockup-mobile.webp",
+    "src": "/uk/web/labs/lab-7/mockup-mobile.webp",
     "height": 8036,
     "anchors": {
       "hero": 73,
@@ -14,7 +14,7 @@
     }
   },
   "768": {
-    "src": "/labs/lab-7/mockup-tablet.webp",
+    "src": "/uk/web/labs/lab-7/mockup-tablet.webp",
     "height": 5523,
     "anchors": {
       "hero": 73,
@@ -28,7 +28,7 @@
     }
   },
   "1440": {
-    "src": "/labs/lab-7/mockup-desktop.webp",
+    "src": "/uk/web/labs/lab-7/mockup-desktop.webp",
     "height": 4925,
     "anchors": {
       "hero": 73,
