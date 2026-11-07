@@ -1,7 +1,7 @@
 """Build a lab's PDF handout from src/content/labs/<course>/<lang>/<lab>.md.
 
 Matches the look of lab-3.pdf (Noto Sans, navy headings, green deadline line,
-grey code blocks, US Letter). Run from the repo root with the lab's id, the
+grey code blocks), on A4. Run from the repo root with the lab's id, the
 course slug for any course other than Web Development, and `--lang en` for
 the English translation:
 
@@ -17,6 +17,10 @@ is that path without `public/`, e.g. `handout: /en/labs/lab-1.pdf`.
 The green deadline line comes from a blockquote that opens the lab's body:
 `> **Термін здачі:** 19.10.2026.` in Ukrainian, `> **Deadline:** 19.10.2026.`
 in English. Any other wording stays an ordinary blockquote.
+
+A centred title block opens the handout: the university and the department,
+a rule, the title, and the course from the lab's `discipline:` field. Every
+page's footer carries the short attribution and the page number.
 
 Needs `markdown-it-py` (pip) and Microsoft Edge; fonts come from jsDelivr
 (Fontsource), so the run needs network access.
@@ -42,12 +46,32 @@ SRC = ROOT / f"src/content/labs/{COURSE}/{LANG}/{LAB}.md"
 LABS_PATH = "labs" if COURSE == "web-development" else f"{COURSE}/labs"
 OUT_DIR = ROOT / "public" / (f"en/{LABS_PATH}" if LANG == "en" else LABS_PATH)
 OUT = OUT_DIR / f"{LAB}.pdf"
-# The handout's own wording around the Markdown: the line before the title
-# (named as the site's interface names a lab) and the label of the leading
-# deadline blockquote.
+# The handout's own wording around the Markdown: the university and department
+# above the title, the line before the title (named as the site's interface
+# names a lab), the course line under it, the label of the leading deadline
+# blockquote, and the footer. The Ukrainian `discipline:` value carries its
+# own «», the English one has none.
 WORDS = {
-    "uk": {"lab": "Лабораторна робота №{}.", "deadline": "Термін здачі"},
-    "en": {"lab": "Lab {}.", "deadline": "Deadline"},
+    "uk": {
+        "university": "Національний університет «Острозька академія»",
+        "department": "Кафедра інформаційних технологій та аналітики даних",
+        "lab": "Лабораторна робота №{}.",
+        "discipline": "з дисципліни {}",
+        "deadline": "Термін здачі",
+        "footer": "НаУОА • ННІ ІТ та бізнесу • Кафедра ІТАД",
+        "page": "Сторінка",
+        "of": "з",
+    },
+    "en": {
+        "university": "National University of Ostroh Academy",
+        "department": "Department of Information Technologies and Data Analytics",
+        "lab": "Lab {}.",
+        "discipline": "{}",
+        "deadline": "Deadline",
+        "footer": "NaUOA • Institute of IT & Business • Department of IT & Data Analytics",
+        "page": "Page",
+        "of": "of",
+    },
 }[LANG]
 SITE = "https://denysmatsevych.github.io/web-development-2026"
 EDGE = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
@@ -55,9 +79,19 @@ EDGE = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
 text = SRC.read_text(encoding="utf-8")
 _, front, body = text.split("---", 2)
 title = re.search(r'^title:\s*"(.+)"\s*$', front, re.M).group(1)
+discipline_m = re.search(r'^discipline:\s*"(.+)"\s*$', front, re.M)
+discipline = discipline_m.group(1) if discipline_m else None
+kind_m = re.search(r'^kind:\s*(\w+)', front, re.M)
+kind = kind_m.group(1) if kind_m else "lab"
 # `numberLabel` ("4-5") wins over the ordering `number` when the lab spans slots.
 label = re.search(r'^numberLabel:\s*"?([^"\n]+?)"?\s*$', front, re.M)
-number = label.group(1) if label else re.search(r"^number:\s*(\d+)", front, re.M).group(1)
+number_m = re.search(r"^number:\s*(\d+)", front, re.M)
+number = label.group(1) if label else (number_m.group(1) if number_m else None)
+
+# Individual assignments have no lab number in the title/eyebrow.
+is_individual = kind == "individual" or LAB == "individual"
+eyebrow_line = "" if is_individual else f'{WORDS["lab"].format(number)}<br>'
+page_title = title if is_individual else f'{WORDS["lab"].format(number)} {title}'
 
 # The leading deadline blockquote becomes the green line under the title.
 m = re.match(rf"\s*>\s*\*\*{re.escape(WORDS['deadline'])}:\*\*\s*(.+?)\s*\n", body)
@@ -88,53 +122,82 @@ FONTS = "\n".join(
                        ("noto-sans", "400-italic"), ("noto-sans-mono", "400")]
 )
 
-CSS = """
-@page { size: Letter; margin: 0.78in 0.86in 0.8in; }
-:root { --ink: #303845; --head: #1e3264; --link: #184fa3; --ok: #0a8a3b;
-        --code-bg: #f4f6f8; --code-line: #dce1e7; }
-html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-body { font-family: "Noto Sans", sans-serif; font-size: 11.2pt; line-height: 1.55;
-       color: var(--ink); margin: 0; }
-h1, h2, h3, h4 { color: var(--head); font-weight: 700; line-height: 1.2;
-                 break-after: avoid; page-break-after: avoid; }
-h1 { font-size: 27pt; margin: 0 0 0.55em; }
-h2 { font-size: 20.8pt; margin: 1.05em 0 0.35em; }
-h3 { font-size: 16.2pt; margin: 1em 0 0.3em; }
-h4 { font-size: 12.6pt; margin: 0.9em 0 0.25em; }
-p { margin: 0 0 0.5em; }
+CSS = f"""
+@page {{
+  size: A4;
+  margin: 0.78in 0.86in 0.85in;
+  @bottom-left {{
+    content: "{WORDS['footer']}";
+    font-family: "Noto Sans", sans-serif;
+    font-size: 8pt;
+    color: #718096;
+  }}
+  @bottom-right {{
+    content: "{WORDS['page']} " counter(page) " {WORDS['of']} " counter(pages);
+    font-family: "Noto Sans", sans-serif;
+    font-size: 8pt;
+    color: #718096;
+  }}
+}}
+:root {{ --ink: #303845; --head: #1e3264; --link: #184fa3; --ok: #0a8a3b;
+        --code-bg: #f4f6f8; --code-line: #dce1e7; }}
+html {{ -webkit-print-color-adjust: exact; print-color-adjust: exact; }}
+body {{ font-family: "Noto Sans", sans-serif; font-size: 11.2pt; line-height: 1.55;
+       color: var(--ink); margin: 0; }}
+.masthead {{ text-align: center; margin: 0 0 1.3em; padding-bottom: 0.9em;
+            border-bottom: 1px solid var(--code-line); }}
+.university, .department {{ color: var(--head); margin: 0; }}
+.university {{ font-size: 9.6pt; font-weight: 700; letter-spacing: 0.04em;
+              text-transform: uppercase; }}
+.department {{ font-size: 9pt; opacity: 0.8; margin-top: 0.15em; padding-bottom: 0.75em;
+              border-bottom: 2px solid var(--head); margin-bottom: 0.7em; }}
+.masthead h1 {{ margin: 0 0 0.25em; }}
+.discipline {{ margin: 0; }}
+h1, h2, h3, h4 {{ color: var(--head); font-weight: 700; line-height: 1.2;
+                 break-after: avoid; page-break-after: avoid; }}
+h1 {{ font-size: 27pt; margin: 0 0 0.55em; }}
+h2 {{ font-size: 20.8pt; margin: 1.05em 0 0.35em; }}
+h3 {{ font-size: 16.2pt; margin: 1em 0 0.3em; }}
+h4 {{ font-size: 12.6pt; margin: 0.9em 0 0.25em; }}
+p {{ margin: 0 0 0.5em; }}
 /* A bold-only label ("Тема листа:") or a line introducing code belongs to what follows it. */
-p:has(> strong:only-child), p:has(+ pre) { break-after: avoid; page-break-after: avoid; }
-li:first-child { break-before: avoid; }
-a { color: var(--link); }
-.deadline { color: var(--ok); font-weight: 700; font-size: 12.2pt; margin: 0 0 1.3em; }
-ul, ol { margin: 0.2em 0 0.6em; padding-left: 1.6em; }
-li { margin: 0.12em 0; }
-li > p { margin: 0; }
-code { font-family: "Noto Sans Mono", monospace; font-size: 0.92em; }
-pre { background: var(--code-bg); border: 1px solid var(--code-line); padding: 8px 10px;
+p:has(> strong:only-child), p:has(+ pre) {{ break-after: avoid; page-break-after: avoid; }}
+li:first-child {{ break-before: avoid; }}
+a {{ color: var(--link); }}
+.deadline {{ color: var(--ok); font-weight: 700; font-size: 12.2pt; margin: 0 0 1.3em; }}
+ul, ol {{ margin: 0.2em 0 0.6em; padding-left: 1.6em; }}
+li {{ margin: 0.12em 0; }}
+li > p {{ margin: 0; }}
+code {{ font-family: "Noto Sans Mono", monospace; font-size: 0.92em; }}
+pre {{ background: var(--code-bg); border: 1px solid var(--code-line); padding: 8px 10px;
       margin: 0.35em 0 0.7em; white-space: pre-wrap; break-inside: avoid;
-      font-size: 9.4pt; line-height: 1.5; }
-pre code { font-size: inherit; }
-blockquote { margin: 0.5em 0 0.8em; padding: 0.45em 0.9em; border-left: 3px solid var(--head);
-             background: #f5f7fb; break-inside: avoid; }
-blockquote p:last-child { margin-bottom: 0; }
-table { border-collapse: collapse; width: 100%; margin: 0.4em 0 0.9em; font-size: 9.6pt;
-        line-height: 1.4; }
-tr { break-inside: avoid; }
-thead { display: table-header-group; }
-th, td { border: 1px solid var(--code-line); padding: 4px 7px; text-align: left; vertical-align: top; }
-th { background: var(--code-bg); color: var(--head); }
+      font-size: 9.4pt; line-height: 1.5; }}
+pre code {{ font-size: inherit; }}
+blockquote {{ margin: 0.5em 0 0.8em; padding: 0.45em 0.9em; border-left: 3px solid var(--head);
+             background: #f5f7fb; break-inside: avoid; }}
+blockquote p:last-child {{ margin-bottom: 0; }}
+table {{ border-collapse: collapse; width: 100%; margin: 0.4em 0 0.9em; font-size: 9.6pt;
+        line-height: 1.4; }}
+tr {{ break-inside: avoid; }}
+thead {{ display: table-header-group; }}
+th, td {{ border: 1px solid var(--code-line); padding: 4px 7px; text-align: left; vertical-align: top; }}
+th {{ background: var(--code-bg); color: var(--head); }}
 /* Capped so a screenshot fits under a page's opening text instead of leaving a gap. */
-img { display: block; max-width: 100%; max-height: 3.8in; width: auto; height: auto;
-      margin: 0.4em 0 0.9em; border: 1px solid var(--code-line); break-inside: avoid; }
+img {{ display: block; max-width: 100%; max-height: 3.8in; width: auto; height: auto;
+      margin: 0.4em 0 0.9em; border: 1px solid var(--code-line); break-inside: avoid; }}
 """
 
 html = f"""<!doctype html>
 <html lang="{LANG}"><head><meta charset="utf-8">
-<title>{WORDS["lab"].format(number)} {title}</title>
+<title>{page_title}</title>
 {FONTS}
 <style>{CSS}</style></head><body>
-<h1>{WORDS["lab"].format(number)}<br>{title}</h1>
+<header class="masthead">
+<p class="university">{WORDS["university"]}</p>
+<p class="department">{WORDS["department"]}</p>
+<h1>{eyebrow_line}{title}</h1>
+{f'<p class="discipline">{WORDS["discipline"].format(discipline)}</p>' if discipline else ''}
+</header>
 {f'<p class="deadline">{WORDS["deadline"]}: {deadline}</p>' if deadline else ''}
 {html_body}
 </body></html>"""
@@ -142,7 +205,7 @@ html = f"""<!doctype html>
 # Only now, so a mistyped lab id or course slug leaves no empty folder behind.
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 before = OUT.stat().st_mtime_ns if OUT.exists() else None
-with tempfile.TemporaryDirectory() as tmp:
+with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
     page = pathlib.Path(tmp) / "handout.html"
     page.write_text(html, encoding="utf-8")
     subprocess.run(
