@@ -2,7 +2,7 @@
 
     python docs/web/lab-7/build-pack.py        (run from the repo root)
 
-The zip is `courtly-assets/` plus two things kept out of that folder so they
+The zip is `starters/web/courtly-assets/` plus two things kept out of that folder so they
 are not duplicated in git:
 
 - `mockup/`  — the 1:1 captures from public/uk/web/labs/lab-7/ (render-mockup.mjs);
@@ -41,7 +41,7 @@ header = f"""# Courtly — специфікація
 
 with tempfile.TemporaryDirectory() as tmp:
     stage = pathlib.Path(tmp) / "courtly-assets"
-    shutil.copytree(ROOT / "courtly-assets", stage)
+    shutil.copytree(ROOT / "starters/web/courtly-assets", stage)
     (stage / "SPEC.md").write_text(header + spec + "\n", encoding="utf-8")
     shutil.copytree(ROOT / "public/uk/web/labs/lab-7", stage / "mockup")
 

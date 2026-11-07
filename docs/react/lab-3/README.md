@@ -3,7 +3,7 @@
 | Route | Source | What it is |
 | --- | --- | --- |
 | `/react/labs/lab-3/` | `src/content/labs/react/uk/lab-3.md` | the handout: useful links instead of theory, the starter, the hierarchy from a framed mockup, four extractions by one recipe, the state table, checks and Vercel, report, defence |
-| `/uk/react/starters/lab-3.zip` | `react-lab-3-starter/` | the starter, unpacked by students into `react-labs/lab-3/` |
+| `/uk/react/starters/lab-3.zip` | `starters/react/lab-3/` | the starter, unpacked by students into `react-labs/lab-3/` |
 | `/uk/react/labs/lab-3/result.webp` | the reference solution | the page, in the handout's §1 |
 | `/uk/react/labs/lab-3/frames.webp` | the reference solution and a debug overlay | the mockup with numbered component frames, in §4.2 |
 | `/uk/react/labs/lab-3.pdf` | built from the handout | the downloadable handout |
@@ -124,8 +124,8 @@ Not verified:
 ## Build
 
 ```bash
-git add react-lab-3-starter                                  # the script packs tracked files only
-python docs/web/build-pack.py react-lab-3-starter react      # public/uk/react/starters/lab-3.zip
+git add starters/react/lab-3                                 # the script packs tracked files only
+python docs/web/build-pack.py starters/react/lab-3           # public/uk/react/starters/lab-3.zip
 python docs/web/build-handout.py lab-3 react                 # public/uk/react/labs/lab-3.pdf, from PowerShell
 ```
 

@@ -10,9 +10,9 @@
  * Outputs:
  *   public/uk/web/labs/lab-7/mockup-{desktop,tablet,mobile}.webp   full-page captures
  *   public/uk/web/labs/lab-7/mockup-mobile-menu.webp               first screen, menu open
- *   src/data/courtly-mockup.json                            where each section starts in the
- *                                                           full-page captures (auto-check viewer)
- *   courtly-assets/img/og-image.jpg
+ *   src/data/courtly-mockup.json                                   where each section starts in the
+ *                                                                  full-page captures (auto-check viewer)
+ *   starters/web/courtly-assets/img/og-image.jpg
  *
  * Edge over CDP rather than `msedge --screenshot`, which returns a blank frame
  * here; `mobile: false` at phone width, because mobile emulation desyncs the
@@ -164,7 +164,7 @@ await open(pathToFileURL(OG).href, 1200, 630);
 await imagesReady();
 {
   const png = await capture(1200, 630);
-  const info = await sharp(png).jpeg({ quality: 85, mozjpeg: true }).toFile(path.join(ROOT, 'courtly-assets/img/og-image.jpg'));
+  const info = await sharp(png).jpeg({ quality: 85, mozjpeg: true }).toFile(path.join(ROOT, 'starters/web/courtly-assets/img/og-image.jpg'));
   console.log(`${'og-image.jpg'.padEnd(26)} ${info.width}×${info.height}  ${(info.size / 1024).toFixed(0)} KB`);
 }
 

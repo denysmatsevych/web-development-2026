@@ -18,7 +18,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 const API = 'https://api.tvmaze.com';
-const OUT = 'showfinder-starter/check/fixtures';
+const OUT = 'starters/web/showfinder-starter/check/fixtures';
 
 /** Searches the checks and offline.html replay; the first three are the checks' own. */
 const QUERIES = ['girls', 'gir', 'law & order', 'doctor', 'star', 'dark'];

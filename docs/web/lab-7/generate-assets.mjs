@@ -20,7 +20,7 @@
 import sharp from 'sharp';
 import { mkdirSync } from 'node:fs';
 
-const OUT = 'courtly-assets/img';
+const OUT = 'starters/web/courtly-assets/img';
 mkdirSync(OUT, { recursive: true });
 
 let seed = 20261005;

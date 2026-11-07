@@ -4,7 +4,7 @@
 | --- | --- | --- |
 | `/web-development/labs/lab-8/` | `src/content/labs/web-development/uk/lab-8.md` | the handout: experiments under the predict → ask the AI → run protocol, five code challenges, report, defence |
 | `/web-development/labs/lab-8/task/` | `src/content/tasks/web-development/uk/lab-8.md` | the brief: the spec of every function; each test checks one rule from it |
-| `/uk/web/starters/js-basics-starter.zip` | `js-basics-starter/` | the stubs, the tests, the TVmaze snapshot and the report page |
+| `/uk/web/starters/js-basics-starter.zip` | `starters/web/js-basics-starter/` | the stubs, the tests, the TVmaze snapshot and the report page |
 
 ## Why it looks like this
 
@@ -27,7 +27,7 @@
 
 ## The dataset
 
-`js-basics-starter/data/shows.json` is 30 of the 240 shows on
+`starters/web/js-basics-starter/data/shows.json` is 30 of the 240 shows on
 `https://api.tvmaze.com/shows?page=0`, fetched on 2026-10-04: ids 1, 2, 5, 29,
 32, 40, 49, 66, 70, 82, 83, 97, 112, 118, 123, 143, 153, 156, 169, 170, 174,
 175, 179, 180, 184, 197, 208, 210, 216 and 246. The ids were picked so that
@@ -57,10 +57,10 @@ Back the folder up outside the repo.
 ## Regenerating
 
 ```sh
-python docs/web/build-pack.py js-basics-starter  # public/uk/web/starters/js-basics-starter.zip
-python docs/web/build-handout.py lab-8           # public/uk/web/labs/lab-8.pdf
-node docs/web/lab-8/solution/verify.mjs          # local only
+python docs/web/build-pack.py starters/web/js-basics-starter  # public/uk/web/starters/js-basics-starter.zip
+python docs/web/build-handout.py lab-8                        # public/uk/web/labs/lab-8.pdf
+node docs/web/lab-8/solution/verify.mjs                       # local only
 ```
 
-Edit the starter in `js-basics-starter/`, then rebuild the zip. Re-run
+Edit the starter in `starters/web/js-basics-starter/`, then rebuild the zip. Re-run
 `verify.mjs` after any change to `src/` or `test/`.

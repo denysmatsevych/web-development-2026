@@ -16,7 +16,7 @@
 import sharp from 'sharp';
 import { mkdirSync } from 'node:fs';
 
-const OUT = 'flowtask-starter/img';
+const OUT = 'starters/web/flowtask-starter/img';
 mkdirSync(OUT, { recursive: true });
 
 let seed = 20260930;

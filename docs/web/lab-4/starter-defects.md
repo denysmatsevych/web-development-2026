@@ -9,7 +9,7 @@ grading reference.
 | `src/content/labs/web-development/uk/lab-4.md` | `/web-development/labs/lab-4/` |
 | `src/content/labs/web-development/uk/lab-4.md` via `docs/web/build-handout.py lab-4` | `/uk/web/labs/lab-4.pdf` (re-run after editing the handout) |
 | `src/content/tasks/web-development/uk/lab-4.md` | `/web-development/labs/lab-4/task/` |
-| `flowtask-starter/` (see §6) | the code students audit |
+| `starters/web/flowtask-starter/` (see §6) | the code students audit |
 
 ## 1. Why a seeded starter
 
@@ -97,7 +97,7 @@ has a route to the minimum.
 
 ## 6. The starter as built
 
-`flowtask-starter/` at the repo root — outside `src/`, so Astro never sees it.
+`starters/web/flowtask-starter/` — outside `src/`, so Astro never sees it.
 It is plain static files; there is no build step.
 
 ```text
@@ -148,7 +148,7 @@ to open it. Use Python's `zipfile`, which also guarantees forward slashes:
 ```bash
 python - <<'EOF'
 import os, zipfile
-src, out = 'flowtask-starter', 'public/uk/web/starters/flowtask-starter.zip'
+src, out = 'starters/web/flowtask-starter', 'public/uk/web/starters/flowtask-starter.zip'
 top = ['index.html', 'about.html', 'README.md', 'robots.txt', '.nojekyll']
 with zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as z:
     for n in top:

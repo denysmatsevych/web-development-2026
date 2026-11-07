@@ -40,7 +40,7 @@ handout.
 ## Regenerating
 
 ```sh
-node docs/web/lab-7/generate-assets.mjs   # courtly-assets/img/*.webp (deterministic)
+node docs/web/lab-7/generate-assets.mjs   # starters/web/courtly-assets/img/*.webp (deterministic)
 node docs/web/lab-7/render-mockup.mjs     # public/uk/web/labs/lab-7/*.webp + og-image.jpg + src/data/courtly-mockup.json (Edge, network)
 python docs/web/lab-7/build-pack.py        # public/uk/web/starters/courtly-assets.zip (+ SPEC.md, mockup/)
 python docs/web/build-handout.py lab-7    # public/uk/web/labs/lab-7.pdf

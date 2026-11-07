@@ -3,7 +3,7 @@
 | Route | Source | What it is |
 | --- | --- | --- |
 | `/react/labs/lab-2/` | `src/content/labs/react/uk/lab-2.md` | the handout: useful links instead of theory, the starter, four components, the two trees, checks and Vercel, report, defence |
-| `/uk/react/starters/lab-2.zip` | `react-lab-2-starter/` | the starter, unpacked by students into `react-labs/lab-2/` |
+| `/uk/react/starters/lab-2.zip` | `starters/react/lab-2/` | the starter, unpacked by students into `react-labs/lab-2/` |
 | `/uk/react/labs/lab-2/result.webp` | the reference solution | the screenshot in the handout's §1 |
 | `/uk/react/labs/lab-2.pdf` | built from the handout | the downloadable handout |
 
@@ -92,7 +92,7 @@ Not verified:
 ## Build
 
 ```bash
-git add react-lab-2-starter                                  # the script packs tracked files only
-python docs/web/build-pack.py react-lab-2-starter react      # public/uk/react/starters/lab-2.zip
+git add starters/react/lab-2                                 # the script packs tracked files only
+python docs/web/build-pack.py starters/react/lab-2           # public/uk/react/starters/lab-2.zip
 python docs/web/build-handout.py lab-2 react                 # public/uk/react/labs/lab-2.pdf
 ```
