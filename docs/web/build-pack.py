@@ -16,9 +16,10 @@ straight into a repository or a lab-N/ folder. Python's zipfile rather than
 
 A rebuild without edits gives the same zip. Text files go in with LF line
 endings whatever the checkout has (with `core.autocrlf` on, Git writes CRLF
-into the working tree), and each entry is dated by the file's last commit,
-not by its modification time, which every checkout resets. A file that has
-no commit yet keeps its modification time.
+into the working tree), and each entry is dated by the last commit that
+changed the file, not by its modification time, which every checkout resets.
+A commit that only moved the file doesn't count. A file that has no commit
+yet keeps its modification time.
 
 A pack that adds files from outside its folder (Lab 7's asset pack) has its
 own script beside the lab's docs. Only files Git tracks go in, so whatever a
@@ -35,8 +36,13 @@ TEXT = {".css", ".html", ".js", ".json", ".jsx", ".md", ".mjs", ".svg", ".ts", "
 
 
 def committed(path):
-    """Local date and time of the last commit that touched `path`, or None."""
-    out = subprocess.run(["git", "log", "-1", "--format=%ct", "--", str(path)],
+    """Local date and time of the last commit that changed `path`, or None.
+
+    --follow carries the history across a move, and --diff-filter=r skips the
+    move itself, so moving a starter doesn't re-date every file in its zip.
+    """
+    out = subprocess.run(["git", "log", "-1", "--follow", "--diff-filter=r",
+                          "--format=%ct", "--", str(path)],
                          cwd=ROOT, capture_output=True, text=True).stdout.strip()
     return datetime.datetime.fromtimestamp(int(out)).timetuple()[:6] if out else None
 
