@@ -2,7 +2,7 @@
 number: 0
 kind: individual
 title: "Individual assignment"
-summary: "You will build a responsive, accessible web application with HTML, CSS, JavaScript/TypeScript, and a REST API—from choosing a topic to deployment and an oral defense."
+summary: "You will build a responsive, accessible web application with HTML, CSS, JavaScript/TypeScript, and a REST API — from choosing a topic to deployment and an oral defense."
 discipline: "Modern Web Development: HTML, CSS, JS/TS"
 level: "Year 3, specialty F3: Computer Science"
 format: "Individual"
@@ -99,7 +99,7 @@ Choose a topic that lets you demonstrate:
 | 6 | TypeScript and typing APIs/code | 8 |
 | 7 | Typing existing code, refactoring, and code review | 6 |
 | 8 | Vite/NPM, Git, ESLint, Prettier, testing, deployment | 6 |
-| 9 | Comprehensive improvements and defense preparation | 6 |
+| 9 | Final improvements and defense preparation | 6 |
 | | **Total** | **62** |
 
 ## 6. Deliverables
@@ -107,7 +107,7 @@ Choose a topic that lets you demonstrate:
 You must submit:
 
 1. A Git repository with the source code.
-2. A published web application with an accessible URL.
+2. A published web application with a public URL.
 3. A README describing the project's purpose, technologies, API, setup
    instructions, and main features, plus a brief technical report describing
    the solutions you implemented.
@@ -135,7 +135,7 @@ During your defense:
 - show your Git repository;
 - explain your project structure;
 - explain key parts of your HTML, CSS, and JavaScript/TypeScript;
-- demonstrate how the REST API works;
+- demonstrate how your application uses the REST API;
 - demonstrate debugging and testing;
 - justify your main technical decisions;
 - answer questions about your own code.
