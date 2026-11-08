@@ -28,12 +28,18 @@ Deviations from the plan:
   leaves decision 8 open there.
 - **§4.7 is tasks only** (the instructor's review, 2026-11-08): measure with
   the highlight, refactor, measure again, and write «До:» and «Після:» in a
-  new «Колокація стану» section of the README. The explanation of why
-  `CafeInfo` re-renders, the reading of the diagram, the react.dev mapping
-  table, the reason for the fragment, the full `App.jsx` and §4.7's
-  «Що має вийти» are gone; §7's +1 table holds the checks. §7 gains a
-  «Порівняння» row; the second commit is
+  new «Колокація стану» section of the README. The explanations, the
+  reading of the diagram, the react.dev mapping table, the full `App.jsx`
+  and §4.7's «Що має вийти» are gone; §7's +1 table holds the checks. §7
+  gains a «Порівняння» row; the second commit is
   `docs: compare renders before and after state colocation`.
+- **The answers left this file** (PR review, 2026-11-08). The repository
+  is public, and the defence asks for what §4.7 no longer explains. The
+  code after §4.7, both diagram answers, the expected «До:» and «Після:»
+  lists and the reasons behind them are in the gitignored
+  `solution/README.md` and `solution/src/`, as ЛР-3's answer key is; the
+  sections below that held them now point there. The review also dropped
+  the `<title>` defence question, which nothing in the lab covers.
 
 ## Context
 
@@ -122,34 +128,19 @@ work this time. Students do five things:
    effect writing to `localStorage`. Then the checks, `git push` and Vercel:
    this is the 1-point lab.
 5. **+1 бал: колокація стану.** With **Highlight updates when components
-   render** on, typing makes `CafeInfo` flash too, though the filters have
-   nothing to do with it. Reading the diagram shows that every arrow
-   carrying the state sits under one branch of `App`. Students extract
-   `FilterableMenuTable` with ЛР-3's recipe. The two `useState` calls and
-   the effect move into it, `App` keeps only the page, the page doesn't
-   change, and `CafeInfo` stops flashing. They update the diagram and push
-   again.
+   render** on, students note which components re-render while they type.
+   They extract `FilterableMenuTable` with ЛР-3's recipe: the two
+   `useState` calls and the effect move into it, `App` keeps only the
+   page, and the page doesn't change. They note the re-renders again,
+   update the diagram and push again. What they should see, and why, is in
+   `solution/README.md`.
 
 ### Why `CafeInfo` is in the starter
 
-Without it, everything `App` renders already uses the state, the `<h1>`
-aside, so moving the state down would change nothing anyone can see.
 `CafeInfo` is the one part of the page that has nothing to do with the
-filters, and it gives §4.7 something to show:
-
-- **The evidence is a re-render, not a wrong result.** With the state in
-  `App`, `CafeInfo` re-renders on every keystroke because its parent did,
-  but it shows the same text. The handout and the defence say "re-renders",
-  never "changes".
-- **The reason is responsibility first and re-render scope second.** `App`
-  lays out the page; the filtering feature, with its state and its
-  `localStorage` effect, now lives in one component that could move to
-  another page as a unit. Re-rendering ten rows and a paragraph is cheap,
-  and the React Compiler (ЛР-15) would skip `CafeInfo` anyway, so the lab
-  doesn't claim a speed-up.
-- **It matches react.dev's final code,** where `App` only renders
-  `FilterableProductTable`. ЛР-3 mapped that component to `App`; §4.7
-  explains why it now gets its own component: `App` has gained a second job.
+filters, so §4.7 has something to compare. The reasons the defence asks
+for, and why the lab doesn't claim a speed-up, are in
+`solution/README.md`.
 
 `CafeInfo` sits in the starter rather than being written in §4.7 to save
 class time. §4.1's file table says what it shows, and §4.2 notes that it
@@ -163,7 +154,7 @@ offer one that doesn't take another lab's topic:
 | Candidate | Why not |
 | --- | --- |
 | Fetch the menu from `public/menu.json` | ЛР-14's topic (HTTP clients, TanStack Query) and presentation П2.4's demo. react.dev also recommends against fetching in effects in real apps. |
-| `document.title` with the number of items found | React 19 renders `<title>` from any component and hoists it into `<head>`, so an effect is the outdated way. It makes a good defence question. |
+| `document.title` with the number of items found | React 19 renders `<title>` from any component and hoists it into `<head>`, so an effect is the outdated way. The lab doesn't teach `<title>`, so it isn't a defence question either. |
 | `/` focuses the search (a `keydown` listener on `window`) | The best cleanup example, but keyboard events are ЛР-5's self-study, and it needs `useRef`. |
 | A clock or a timer | There's no natural place for one on a menu page. |
 
@@ -283,7 +274,7 @@ can change during the build; it must stay unrelated to the filters.
 
 ### The code after §4.4 (the 1-point lab)
 
-All the code in this section and the next was checked on 2026-11-08:
+All the code in this section, and the code after §4.7, was checked on 2026-11-08:
 Prettier-clean, `eslint .` with no problems, and `vite build` passes, in a
 `react-labs` workspace built as ЛР-1 describes (React 19.3.1, ESLint 10,
 `eslint-plugin-react-hooks` 7.1.1, Prettier 3.9.10).
@@ -395,107 +386,20 @@ export default function MenuTable({ menu, filterText, inStockOnly }) {
 
 ### The code after §4.7 (+1 point)
 
-`src/components/FilterableMenuTable.jsx`: the state, the effect and the two
-components move here unchanged; `menu` arrives as a prop.
+The reference code is `solution/src/` (gitignored), and why it has this
+shape is in `solution/README.md`. The handout gives §4.7 as tasks only, so
+this public file doesn't hold that code either.
 
-```jsx
-import { useEffect, useState } from 'react'
-import SearchBar from './SearchBar.jsx'
-import MenuTable from './MenuTable.jsx'
+### The data flow diagrams
 
-export default function FilterableMenuTable({ menu }) {
-  const [filterText, setFilterText] = useState(
-    () => localStorage.getItem('menu.filterText') ?? '',
-  )
-  const [inStockOnly, setInStockOnly] = useState(
-    () => localStorage.getItem('menu.inStockOnly') === 'true',
-  )
-
-  useEffect(() => {
-    localStorage.setItem('menu.filterText', filterText)
-    localStorage.setItem('menu.inStockOnly', String(inStockOnly))
-  }, [filterText, inStockOnly])
-
-  return (
-    <>
-      <SearchBar
-        filterText={filterText}
-        inStockOnly={inStockOnly}
-        onFilterTextChange={setFilterText}
-        onInStockOnlyChange={setInStockOnly}
-      />
-      <MenuTable
-        menu={menu}
-        filterText={filterText}
-        inStockOnly={inStockOnly}
-      />
-    </>
-  )
-}
-```
-
-The fragment matters. `.app` is a grid with a `gap`, and `SearchBar` and
-`MenuTable` must stay its direct children for the page to look the same. A
-`<div>` wrapper would lose the gap between them, and «сторінка не
-змінилася» would fail. The handout says to use `<>…</>` and why.
-
-`src/App.jsx`:
-
-```jsx
-import FilterableMenuTable from './components/FilterableMenuTable.jsx'
-import CafeInfo from './components/CafeInfo.jsx'
-import { menu } from './data.js'
-
-export default function App() {
-  return (
-    <main className="app">
-      <h1>Меню кав'ярні</h1>
-      <FilterableMenuTable menu={menu} />
-      <CafeInfo />
-    </main>
-  )
-}
-```
-
-`App` keeps the `data.js` import and passes `menu` down, as react.dev's
-`App` passes `PRODUCTS`, so data still arrives from the top, as in ЛР-3.
-
-### The data flow diagrams (answers)
-
-After §4.5:
-
-```mermaid
-flowchart TD
-  App -->|"filterText, inStockOnly"| SearchBar
-  App -->|"menu, filterText, inStockOnly"| MenuTable
-  App --> CafeInfo
-  MenuTable -->|category| MenuCategory["MenuCategory × 3"]
-  MenuCategory -->|item| MenuItemRow["MenuItemRow × 4, 3, 3"]
-  SearchBar -.->|"onFilterTextChange, onInStockOnlyChange"| App
-  App -.->|useEffect| Storage[("localStorage")]
-```
-
-After §4.7:
-
-```mermaid
-flowchart TD
-  App -->|menu| FilterableMenuTable
-  App --> CafeInfo
-  FilterableMenuTable -->|"filterText, inStockOnly"| SearchBar
-  FilterableMenuTable -->|"menu, filterText, inStockOnly"| MenuTable
-  MenuTable -->|category| MenuCategory["MenuCategory × 3"]
-  MenuCategory -->|item| MenuItemRow["MenuItemRow × 4, 3, 3"]
-  SearchBar -.->|"onFilterTextChange, onInStockOnlyChange"| FilterableMenuTable
-  FilterableMenuTable -.->|useEffect| Storage[("localStorage")]
-```
+Both answers, with what else counts as right or wrong, are in
+`solution/README.md`.
 
 The convention, which §4.5 states: a solid arrow is props going down; a
 dotted arrow is data going back up through a callback, or out to an external
 system. The setters also travel down as props; the dotted arrow stands for
 the call that carries the new value back, which is what step 5 calls inverse
-data flow. In the first diagram, `App --> CafeInfo` is the only arrow from
-`App` without a label; in the second, every arrow touching the state starts
-or ends at `FilterableMenuTable`.
+data flow.
 
 ## Timing
 
@@ -760,53 +664,11 @@ commit history for the 1-point lab:
 5. `docs: add the lab 4 data flow`.
 
 **4.7. Колокація стану: `FilterableMenuTable` (+1 бал).** Start only after
-§4.6 is pushed and deployed.
-
-1. **Хто рендериться, коли змінюється стан.** In Components ⚛, open the
-   settings (⚙) → **General** and turn on **Highlight updates when
-   components render**. Type in the search field: a frame flashes around
-   every component that re-rendered, and `CafeInfo` is among them, though
-   it uses neither filter. Its text doesn't change: it re-renders because
-   its parent, `App`, re-rendered.
-2. **Що показує діаграма.** On the diagram from §4.5, every labelled arrow
-   and both dotted arrows connect `App` with `SearchBar`, `MenuTable` or
-   `localStorage`; the arrow to `CafeInfo` has no label. `App` now has two
-   jobs: it lays out the page, and it owns the filtering. Thinking in React
-   step 4 allows a component created only to hold the state, and react.dev's
-   final code has one: `App` renders only `FilterableProductTable`. The
-   principle is called **колокація стану**: keep state as close as
-   possible to the components that use it.
-3. **Рефакторинг.** Extract `src/components/FilterableMenuTable.jsx` with
-   ЛР-3's recipe, plus one rule for this case: the `useState` calls and the
-   `useEffect` that the moved JSX uses move with it, together with the
-   `react` import. The component renders `SearchBar` and `MenuTable` inside a
-   fragment `<>…</>`, not a `<div>`, so they stay children of `.app`'s grid
-   and the gap between them stays. `App` renders `<FilterableMenuTable
-   menu={menu} />` and keeps the `data.js` import. A props table:
-   `menu`, «масив категорій з `data.js`». The final `App.jsx` in full, to
-   compare with.
-4. **Діаграма.** Rebuild the diagram in `README.md`: `App` passes `menu` to
-   `FilterableMenuTable`, and the arrows that were `App`'s now start or end
-   at `FilterableMenuTable`.
-
-«Що має вийти»: the page didn't change; after `F5` the filters still come
-back, since the `localStorage` keys are the same; with highlighting on,
-typing makes `SearchBar` and the table flash but not `CafeInfo`; in
-Components ⚛, `App` has no hooks, and `FilterableMenuTable` has two `State`
-values and an `Effect`; the new diagram renders in Mermaid Live Editor.
-
-The mapping to react.dev, updated:
-
-| react.dev | ЛР-3 | ЛР-4 після §4.7 |
-| --- | --- | --- |
-| `App` | — | `App` |
-| `FilterableProductTable` | `App` | `FilterableMenuTable` |
-
-Commits `refactor: move the filter state into FilterableMenuTable` and
-`docs: update the lab 4 data flow`, then `git push`; Vercel redeploys the
-project by itself. Run §4.6's three checks again before the push.
-Довідка: Step 4 (the paragraph on a component created only to hold the
-state), State Colocation, ЛР-3's recipe.
+§4.6 is pushed and deployed. The planned version explained the result step
+by step; the review cut it to tasks only (see **Deviations**), so the
+handout's §4.7 is the text as shipped, and the explanation it dropped is in
+`solution/README.md`. Довідка: Step 4 (the paragraph on a component created
+only to hold the state), State Colocation.
 
 **4.8. Додаткове завдання** (not graded). Two short parts, in whichever
 component holds the state:
@@ -843,97 +705,11 @@ The data flow diagram is in `lab-4/README.md`; the report may repeat it.
 
 ### §6. Усний захист
 
-ЛР-3's intro sentence, then grouped interview questions. The «Колокація
-стану» group is asked of students who did §4.7.
-
-_Стан і `useState`_
-
-- Що таке стан? Чим він відрізняється від пропсів і від звичайної змінної
-  всередині компонента?
-- Що повертає `useState`? Що відбувається після виклику сетера?
-- Чому після `setFilterText('чай')` змінна `filterText` у тому самому
-  обробнику ще має старе значення? (стан як знімок)
-- Що таке функція-ініціалізатор у `useState`? Чим
-  `useState(() => localStorage.getItem(…))` відрізняється від
-  `useState(localStorage.getItem(…))`?
-- Чому стан не можна змінювати напряму (`filterText = 'чай'`)?
-- Чому хуки викликають лише на верхньому рівні компонента, а не в умовах
-  чи циклах?
-
-_Thinking in React, кроки 4–5_
-
-- Чому в §4.2 стан опинився в `App`, а не в `SearchBar` чи `MenuTable`? Що
-  станеться, якщо перенести його в `SearchBar`?
-- Що таке «підняття стану» (lifting state up)?
-- Що таке зворотний потік даних? Як текст із поля потрапляє до компонента,
-  який зберігає стан?
-- Чому `SearchBar` отримує `setFilterText` пропсом і не змінює стан сам?
-- Чи є в цьому застосунку єдине джерело правди для фільтрів? Де воно?
-
-_Обчислені дані_
-
-- Чому відфільтроване меню й кількість у заголовку категорії — не стан?
-- Що не так з ефектом, який записує відфільтроване меню в окремий стан?
-  Що про це каже ESLint?
-- Скільки разів `filterMenu` виконується, поки ви вводите слово? Чи це
-  проблема для десяти позицій? А для десяти тисяч? (а hook for ЛР-15)
-
-_Поля й події_
-
-- Що робить React, якщо дати полю `value` без `onChange`? Як прочитати
-  попередження в консолі?
-- Що таке контрольоване поле? Звідки воно бере значення?
-- Чим `e.target.value` відрізняється від `e.target.checked`?
-
-_`useEffect`_
-
-- Що таке ефект? Чим він відрізняється від обробника події?
-- Коли запускається ефект: до чи після того, як React оновив сторінку?
-- Що означають масив залежностей `[filterText, inStockOnly]`, порожній
-  масив `[]` і відсутність масиву?
-- Чому в режимі розробки ефект запускається двічі під час монтування? Чи
-  шкодить це вашому ефекту?
-- Що таке функція очищення (cleanup)? Чому вашому ефекту вона не потрібна?
-  Наведіть ефект, якому вона потрібна.
-- Чому значення читаються з `localStorage` в ініціалізаторі, а не в
-  ефекті? Що піде не так, якщо відновлювати їх в ефекті?
-- Можна було записувати в `localStorage` в обробниках `onChange`. Чим ефект
-  кращий у цьому застосунку?
-- Що таке «зовнішня система»? Наведіть приклади, де ефект потрібен, і де
-  без нього можна обійтися.
-- У React 19 `<title>` можна відрендерити з компонента. Чому для заголовка
-  вкладки тепер не потрібен `useEffect`?
-
-_Колокація стану_
-
-- Що таке колокація стану? Чим вона відрізняється від підняття стану? Як
-  їх поєднати («так низько, як можна, так високо, як потрібно»)?
-- Чому `CafeInfo` перерендерювався під час введення тексту? Чи змінювався
-  при цьому його вміст?
-- Що змінилося в дереві рендерингу після §4.7? Які компоненти тепер
-  рендеряться, коли змінюється стан?
-- Чому `FilterableMenuTable` повертає фрагмент, а не `<div>`? Що сталося б
-  зі сторінкою?
-- Чим `App` після §4.7 кращий, якщо швидкість тут майже не змінилася?
-- Якщо `CafeInfo` має показувати, скільки позицій зараз у наявності за
-  фільтром, де тоді має жити стан?
-- Чим цей коміт `refactor:` відрізняється від попередніх `feat:`? Як ви
-  перевірили, що поведінка не змінилася?
-
-_`localStorage`_
-
-- Чому `inStockOnly` повертається з `localStorage` рядком і як ви це
-  врахували?
-- Чому значення на localhost і на Vercel різні?
-- Що не можна зберігати в `localStorage` і чому?
-
-_Клієнтські компоненти й інструменти_
-
-- Що таке клієнтський компонент? Чому `useState` і `useEffect` працюють лише
-  в клієнтських компонентах?
-- Як змінити стан компонента в React DevTools без коду?
-- Які правила хуків перевіряє `eslint-plugin-react-hooks`? Яке з них
-  спрацювало у вас?
+ЛР-3's intro sentence, then grouped interview questions: «Стан і
+`useState`», «Thinking in React, кроки 4–5», «Обчислені дані», «Поля й
+події», «`useEffect`», «Колокація стану» (asked of students who did §4.7),
+«`localStorage`» and «Клієнтські компоненти й інструменти». The handout's
+§6 is the list as shipped, and the answers are in `solution/README.md`.
 
 ### §7. Критерії готовності
 
@@ -1009,18 +785,17 @@ Work on a new branch from `main`, `feat/react-lab-4`.
   - a string `State` can be edited (double-click, type, `Enter`) and a
     boolean one ticked, and the table follows;
   - **Highlight updates when components render** still exists in v8, and
-    where (⚙ → General). Before §4.7 typing highlights `CafeInfo`; after,
-    it doesn't. If v8 has dropped the setting, use **Profiler ⚛** instead:
-    record while typing, with «Record why each component rendered», and
-    read `CafeInfo` («The parent component rendered») before and its
-    absence after.
+    where (⚙ → General), and what it outlines before and after §4.7 (the
+    expected lists go in `solution/README.md`). If v8 has dropped the
+    setting, use **Profiler ⚛** instead: record while typing, with «Record
+    why each component rendered».
 - **Headless Edge** (`shots.mjs`): typing filters the rows; `ЧАЙ` matches
   `чай`; the checkbox hides the unavailable items and changes the counts;
   empty categories disappear; both `localStorage` keys are written; after a
   reload the field, the checkbox and the table are restored; no React
   warnings once §4.3 is done; the `#root` HTML is the same before and after
-  §4.7 (the fragment adds no node), and a `<div>` wrapper instead does
-  change the gap. In development StrictMode runs the effect twice on mount;
+  §4.7, and the fragment check in `solution/README.md` holds. In
+  development StrictMode runs the effect twice on mount;
   check that nothing visible changes.
 - **The apostrophe.** «Трав'яний чай» uses `'` (U+0027). Check what the
   Ukrainian keyboard layouts on Windows and macOS type for the apostrophe.

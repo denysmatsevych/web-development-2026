@@ -9,9 +9,12 @@
 
 `solution/` holds the reference solution (gitignored): `app-state/`,
 `src/` and `extra/` overlay the starter's `src/` for the 1-point lab, the
-+1 task and the ungraded extra; its `README.md` has both diagram answers and
-defence notes; `shots.mjs` checks every stage in headless Edge and takes the
-screenshot. The plan the lab was built from is
++1 task and the ungraded extra; its `README.md` has both diagram answers,
+the expected «Колокація стану» lists and defence notes; `shots.mjs` checks
+every stage in headless Edge and takes the screenshot. The repository is
+public and §4.7 leaves its reasons to the defence, so the answers, and the
+measurements that give them away, stay in `solution/`, not in this README
+or the plan. The plan the lab was built from is
 [state-and-effects-plan.md](state-and-effects-plan.md).
 
 ## Why it looks like this
@@ -44,10 +47,9 @@ screenshot. The plan the lab was built from is
   state in an effect and keeping the filtered menu in state as
   `react-hooks/set-state-in-effect` errors, and a missing dependency as an
   `exhaustive-deps` warning, so §7 asks for no warnings either.
-- **A fragment in `FilterableMenuTable`.** `.app` is a grid with a gap; a
-  `<div>` wrapper would remove the gap between the search bar and the table,
-  and the page would change. The handout requires the fragment without the
-  reason, which is a defence question.
+- **A fragment in `FilterableMenuTable`.** The handout requires `<>…</>`
+  without the reason, which is a defence question; the reason and its
+  check are in `solution/README.md`.
 - **The reset button in §4.8 is always shown.** Hiding it while no filter is
   active would drop keyboard focus to `<body>` the moment it's pressed.
 - **The `{' '}` after the checkbox** is how Prettier writes the space once
@@ -81,10 +83,8 @@ On Windows 11 with Node.js 24.20 and npm 11.19, in a `react-labs` workspace with
     «Десерти (2)»; «піца» leaves no category; no React warnings;
   - §4.4 and §4.7: both keys are written, and a reload restores the field,
     the checkbox and the table; the `#root` HTML is identical in the two
-    stages; the fragment keeps a 20 px gap, a `<div>` makes it 0;
-  - a render counter in `CafeInfo`: typing three letters renders it 6 times
-    with the state in `App` (StrictMode renders twice) and 0 times after
-    §4.7;
+    stages; the fragment and render-count checks are recorded in
+    `solution/README.md`;
   - §4.8: «піца» shows «Нічого не знайдено»; the reset clears both filters
     and `localStorage` follows;
 - in Chrome headless with React DevTools 8.0.0 (ЛР-2's recipe):
@@ -95,9 +95,9 @@ On Windows 11 with Node.js 24.20 and npm 11.19, in a `react-labs` workspace with
     filter the table and put «чай» in the page's field. The boolean has a
     checkbox at the right edge of the panel, and ticking it filters too;
   - **Highlight updates when components render** is under the
-    **Components ⚛** gear → **General**. With it on, typing outlines and
-    labels `App`, `SearchBar`, `MenuTable`, its categories and rows and
-    `CafeInfo` before §4.7, and no `App` or `CafeInfo` after;
+    **Components ⚛** gear → **General**, and it outlines and labels the
+    components that render; what it shows before and after §4.7 is in
+    `solution/README.md`;
 - Mermaid 11.4.1 in Edge renders the starter's diagram, §4.5's blog example
   and both answers without errors, with the state's owner at the top;
 - the readings' languages (2026-11-08): Thinking in React, Synchronizing
