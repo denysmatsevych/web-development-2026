@@ -328,8 +328,9 @@ Rules stated under the table:
 **ЛР 4's extra point** (the teacher's decision, 2026-11-08, not in the
 programme): its main part gives the usual 1 point, and its §4.7 one more. The
 programme counts 1 point per lab, so with it Part 1 can give 7 points rather
-than 6. Whether the extra point is a bonus within the 65 points for current
-work, or replaces one elsewhere, is still to be settled.
+than 6. The extra point is a bonus above the 65 points for current work
+(settled the same day), so current work can reach 66; no other task gives
+way.
 
 **Students on an individual plan** take another route, agreed with the
 teacher and not in the programme's table: instead of the labs and module

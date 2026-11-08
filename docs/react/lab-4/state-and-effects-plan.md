@@ -24,8 +24,8 @@ Deviations from the plan:
   shows the checkbox hiding something.
 - **The highlight setting was found and checked** in DevTools 8 (Components
   ⚛ gear → General), so the Profiler fallback isn't in the handout.
-- **`course-plan.md` notes the extra point** next to the grading rules and
-  leaves decision 8 open there.
+- **`course-plan.md` notes the extra point** next to the grading rules,
+  with decision 8 as settled after the review: a bonus above the 65.
 - **§4.7 is tasks only** (the instructor's review, 2026-11-08): measure with
   the highlight, refactor, measure again, and write «До:» and «Після:» in a
   new «Колокація стану» section of the README. The explanations, the
@@ -853,10 +853,10 @@ Proposed, following ЛР-3 unless the instructor says otherwise:
    included, is done in class and checked by push times on GitHub
    **Activity**; §4.8 is the one ungraded task.
 
-To settle before publishing:
+Settled by the instructor after the review (2026-11-08):
 
 8. **The programme's point count.** The programme gives every lab 1 point
    and Part 1 six points (6 × 1). With §4.7, ЛР-4 can give 2, so Part 1 can
-   give 7, and current work can exceed 65. Either the extra point is a bonus
-   within the 65-point cap, or another task gives way. The handout's §7 and
-   `course-plan.md`'s grading notes should say which.
+   give 7. The extra point is a bonus above the 65 points for current work,
+   so current work can reach 66 and no other task gives way. The handout's
+   §7 and `course-plan.md`'s grading notes say so.
