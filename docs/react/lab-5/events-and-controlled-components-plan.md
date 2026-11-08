@@ -177,9 +177,9 @@ always names the element with the handler.
 
 ### Why the native reset button
 
-`<button type="reset">` needs no JavaScript, so it shows plainly who owns each
-value: the browser resets what it holds, and React state needs `onReset`. The
-handout lets students see which fields stay before it tells them what to do.
+`<button type="reset">` needs no JavaScript, so students see what the browser
+does with each value before they write a handler. The handout has them note
+which fields are cleared before it tells them what to do.
 The *why* is a defence question, so the mechanism (checked in React DOM
 19.3.1's source and in Edge) and the measured result are in
 `solution/README.md`.
@@ -747,8 +747,8 @@ The lab gives 1 point after the defence. One table:
   react`, run from PowerShell, after the instructor has reviewed the handout;
 - `docs/react/lab-5/solution/` (gitignored, next to ЛР-4's): overlays of the
   starter's `src/` after §4.2, §4.3, §4.4, §4.5, §4.6 and §4.8; a `README.md`
-  with the filled-in table, what the highlight shows at each step, why the
-  native reset leaves the controlled values, and the defence answers; a
+  with the filled-in table, what the highlight shows at each step, what the
+  native reset does and why, and the defence answers; a
   `shots.mjs` that checks every stage and takes the screenshot;
 - `docs/react/lab-5/README.md`: the lasting facts and what was verified, with
   no answers;
@@ -796,7 +796,8 @@ Work on a new branch from `main`, `feat/react-lab-5`.
 - **`role="status"`** is announced by NVDA or Narrator when the confirmation
   appears (optional, if a screen reader is at hand);
 - **§4.8**: `onInput` on a form fires for a textarea and for text and date
-  inputs; the stepper's buttons don't fire it; `beforeunload` asks for
+  inputs; whether the stepper's buttons fire it (the result goes in
+  `solution/README.md`); `beforeunload` asks for
   confirmation after typing (Chrome needs a user gesture first); without the
   cleanup the warning stays after a submit;
 - **Timed dry run:** follow the handout as a student, without AI: §4.1–4.7 in
