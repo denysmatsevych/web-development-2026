@@ -1,8 +1,9 @@
 # Plan: React ЛР-5 «Управління подіями. Контрольовані та неконтрольовані компоненти»
 
 Status: proposed on 2026-11-08 and built the same day on branch
-`feat/react-lab-5`, Ukrainian only, without the PDF, after the instructor
-asked to implement it, so the decisions at the end were built as proposed.
+`feat/react-lab-5`, Ukrainian only, after the instructor asked to implement
+it, so the decisions at the end were built as proposed. The PDF followed
+the instructor's review of the handout.
 The lasting facts and what was verified are in this folder's
 [README.md](README.md); this file stays as the plan the lab was built from.
 

@@ -5,8 +5,7 @@
 | `/react/labs/lab-5/` | `src/content/labs/react/uk/lab-5.md` | the handout: useful links instead of theory, a table booking form made to work one event at a time (submit, a controlled comment, `Ctrl+Enter`, the guests stepper, reset), checks and Vercel, an ungraded extra, report, defence |
 | `/uk/react/starters/lab-5.zip` | `starters/react/lab-5/` | the starter, unpacked by students into `react-labs/lab-5/` |
 | `/uk/react/labs/lab-5/result.webp` | the reference solution | the form after a booking, in the handout's §1 |
-
-There is no PDF yet: the handout has no `handout:` field until it is built.
+| `/uk/react/labs/lab-5.pdf` | built from the handout | the downloadable handout |
 
 `solution/` holds the reference solution (gitignored): `stage-42/` to
 `stage-45/`, `src/` and `extra/` overlay the starter's `src/` for each step,
@@ -52,6 +51,13 @@ was built from is
 - **No validation beyond `required`**: Zod, React Hook Form and Actions are
   ЛР-6's.
 - **No +1 task.** The programme gives each lab 1 point; §4.8 is ungraded.
+- **§4.5's notes come before the `GuestsStepper` listing.** Code blocks
+  don't split across PDF pages, and the 45-line listing jumped to the next
+  page and left most of page 8 empty. With the notes first, the PDF has 16
+  pages: page 8 ends halfway, before the listing, and §7 fits on the last
+  page.
+- **The PDF was built after the handout's review.** It embeds the
+  screenshot from the local `public/` folder.
 
 ## Verified on 2026-11-08
 
@@ -84,6 +90,8 @@ with ЛР-1's tooling (React 19.3.1, Vite 8.3.5, ESLint 10,
 - the site: `npm run check` and `npm run build` pass; the labs index lists
   ЛР-5; the handout has no horizontal scroll at 390 px, and the screenshot
   loads;
+- the PDF: 16 pages with the screenshot, code blocks and tables; no code
+  block or table row is split across pages;
 - the readings' languages and anchors (2026-11-08): «Реагування на події»
   and «Поширення стану між компонентами» are Ukrainian; the `<input>`
   reference, Manipulating the DOM with Refs and Synchronizing with Effects
@@ -113,6 +121,5 @@ python docs/web/build-handout.py lab-5 react                 # public/uk/react/l
 
 Rebuild the zip after the starter is committed: each entry is dated by the
 file's last commit, and a file with no commit yet keeps its modification
-time. Build the PDF once the handout is reviewed, add `handout:
-/uk/react/labs/lab-5.pdf` to its frontmatter, and rebuild it after every
-handout edit.
+time. Rebuild the PDF after every handout edit; the handout's `handout:`
+field points to it.
