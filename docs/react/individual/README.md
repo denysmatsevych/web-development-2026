@@ -21,9 +21,12 @@ python docs/web/build-handout.py individual react
 ## Why it looks like this
 
 - **Only for students on an individual plan.** It replaces the labs and
-  module tests, so the summary (the page lead and the card) says who it's
-  for: every student sees card `00` on `/react/labs/`. The PDF doesn't
-  print the summary, so it doesn't say this.
+  module tests, and every student sees card `00` on `/react/labs/`. So the
+  summary (the page lead and the card) says who it's for, and so does the
+  «Для кого» line above the deadline, because the PDF doesn't print the
+  summary. The labs-index lead, shared by both courses, only says the ІЗ is
+  numbered `00`; it used to say the ІЗ runs all semester, which read as
+  "every student does it" on the React page (the PR #53 review).
 - **Not the final project.** The final project (ЛР 21–27) is for the regular
   route and gets its own task; this one runs all semester.
 - **No numeric minimums.** Requirements describe what the app has, not how
@@ -96,12 +99,10 @@ python docs/web/build-handout.py individual react
 
 ## Not checked
 
-- Whether GitHub renders the two Mermaid examples. Both use only basic
-  `flowchart` syntax.
+- Whether GitHub draws the two Mermaid examples. Its Markdown API (checked
+  2026-11-08) marks both as `mermaid` blocks and tokenizes every node shape
+  and edge label, but the drawing happens in GitHub's browser viewer. Both
+  use only basic `flowchart` syntax.
 - The `vercel.json` rewrite on a real deployment.
 - A dry run: an app built from the handout alone, to find unclear
   requirements and gauge the work per tier.
-- The labs index lead («індивідуальне завдання під номером 00 виконується
-  протягом семестру») is shared by both courses. On the React page it's
-  shown to every student; whether it reads as "everyone does it" is the
-  instructor's call.

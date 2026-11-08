@@ -373,6 +373,10 @@ unpicked, so the lectures should still introduce them.
   The rule «Лабораторна робота … оцінюється в 1 бал» doesn't say a double-slot
   defence is worth 2.
 - **Part 4 grading row.** «поетапний робота» should be «поетапна робота».
+- **Section 8, individual plan.** It says students on an individual plan
+  still sit current control. On their route they do the ІЗ in place of the
+  labs and module tests (see the grading note above), so the sentence should
+  end with the exam, as the summary under «Політики курсу» does.
 
 ## Рекомендована література
 
