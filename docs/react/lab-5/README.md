@@ -106,7 +106,10 @@ Not verified:
   not with the **Highlight updates** outlines (which ЛР-4 checked exist);
 - `Ctrl+Enter` from a real keyboard on Windows, and `⌘+Enter` on macOS; the
   check sent the key events through the DevTools protocol;
-- Firefox and Safari;
+- Firefox and Safari, including `Ctrl+Enter`: if it adds a line break in
+  the comment, or runs `handleSubmit` twice from a one-line field (the
+  browser's own `Enter` submission on top of `requestSubmit()`), add
+  `e.preventDefault()` before `requestSubmit()` in §4.4;
 - a screen reader announcing `role="status"` and the `<output>`;
 - the fifth Vercel project;
 - Windows **Extract All** and macOS Archive Utility folder names.

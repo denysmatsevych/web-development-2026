@@ -14,6 +14,9 @@ Deviations from the plan:
 - **`GuestsStepper` wraps its buttons and number in a
   `<div className="stepper-controls">`.** A `<legend>` can't sit above a flex
   row inside the `<fieldset>` itself, so the row is its own element.
+- **The date and time share a `<div className="row">`:** side by side on a
+  wide screen, one under the other on a narrow one. The listings below don't
+  show it.
 - **The confirmation reads «Столик на 2 особи заброньовано на ім'я Олена: 14
   листопада о 18:00.»** rather than «Бронювання прийнято: Олена, …».
 - **§4.5's «Що має вийти» adds a keyboard check:** `Tab` to «+» and
