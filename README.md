@@ -90,7 +90,8 @@ starters/           the source of each zip: <course>/<name>/ becomes public/uk/<
 │  └─ watchlist-starter/        a DOM app to build from AI drafts, with an in-browser self-check
 └─ react/                       named after the lab, since the zip unpacks into the student's lab-N/ folder
    ├─ lab-2/                    configuration, styles and data for writing ЛР-2's components by hand
-   └─ lab-3/                    a working app in one component, for ЛР-3 to split by its component tree
+   ├─ lab-3/                    a working app in one component, for ЛР-3 to split by its component tree
+   └─ lab-4/                    ЛР-3's components plus a filter function, for ЛР-4 to add state and an effect
 ```
 
 See `docs/agents/design-system.md` for which stylesheet owns what and how
