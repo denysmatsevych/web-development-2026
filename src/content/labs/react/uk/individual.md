@@ -85,7 +85,9 @@ Query), вимогу нижчого рівня виконує новий інс�
 - сценарій запису даних;
 - спільний стан, який читають компоненти з різних частин дерева.
 
-Оберіть тему з таблиці або запропонуйте власну.
+Оберіть тему з таблиці або запропонуйте власну. API має приймати запис,
+справжній чи імітований; API лише для читання (наприклад, TVmaze чи PokéAPI)
+підходить тільки для рівнів E і D.
 
 | №   | Тема                                                       | API                                                                                                              | Запис даних                                    |
 | --- | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
@@ -94,41 +96,13 @@ Query), вимогу нижчого рівня виконує новий інс�
 | 3   | Блог: дописи, коментарі, автори                             | [DummyJSON](https://dummyjson.com/docs/posts) або [JSONPlaceholder](https://jsonplaceholder.typicode.com/guide/) | додавання, зміна, видалення — імітація         |
 | 4   | Дошка завдань (канбан)                                      | [DummyJSON](https://dummyjson.com/docs/todos): `todos`, `users`                                                  | додавання, зміна, видалення — імітація         |
 | 5   | Магазин із входом користувача                               | [Platzi Fake Store API](https://api.escuelajs.co/docs): `products`, `users`, `auth`                              | справжній запис, зміна й видалення             |
-| 6   | Серіали чи покемони з власними відгуками й списками перегляду | [TVmaze](https://www.tvmaze.com/api), [PokéAPI](https://pokeapi.co/docs/v2) — лише читання                     | файл `db.json` (§3.3)                          |
 
 DummyJSON і JSONPlaceholder **імітують** запис: сервер відповідає створеним
-або зміненим об'єктом, але не зберігає його, і наступний `GET` поверне старі
-дані. Після успішної відповіді оновіть стан застосунку самі. У DummyJSON є
-також вхід (`POST /auth/login`), на ньому можна зробити захищений маршрут; це
-не обов'язково.
-
-### 3.3. Файл як база даних
-
-Якщо ваш API дає лише читати дані (TVmaze, PokéAPI), дані форми рівня C
-зберігайте у файлі `db.json` у репозиторії:
-
-- **Vite:** встановіть [json-server](https://github.com/typicode/json-server)
-  (`npm install -D json-server`) і запустіть його окремо від застосунку:
-  `npx json-server db.json`. Він піднімає на `http://localhost:3000`
-  справжній REST API (GET, POST, PUT, PATCH, DELETE) за ключами файлу й
-  переписує файл після кожної зміни, тож запис видно прямо в `db.json`.
-- **Next.js:** читайте й записуйте файл у
-  [Route Handler](https://nextjs.org/docs/app/api-reference/file-conventions/route)
-  або Server Action через `fs/promises`.
-
-Приклад `db.json` для json-server:
-
-```json
-{
-  "reviews": [{ "id": "1", "showId": 82, "text": "Чудовий серіал" }]
-}
-```
-
-**Запис — на localhost.** Файлова система застосунку, розгорнутого на
-Vercel, доступна лише для читання, тому `db.json` записується тільки тоді,
-коли застосунок запущено локально. Сценарій запису запускайте й показуйте на
-захисті на localhost. На Vercel ця частина застосунку може показувати стан
-помилки (§4.2): це очікувано й на оцінку не впливає.
+або зміненим об'єктом, але не зберігає його. Після успішної відповіді
+оновіть стан застосунку самі. Після оновлення сторінки застосунок знову
+покаже початкові дані, і це нормально. У DummyJSON є також вхід
+(`POST /auth/login`), на ньому можна зробити захищений маршрут; це не
+обов'язково.
 
 ## 4. Вимоги за рівнями
 
@@ -142,7 +116,6 @@ Vercel, доступна лише для читання, тому `db.json` за
 | Запити (D)                              | модуль API; `useEffect` зі скасуванням запиту                                                                | модуль API; запит у серверному компоненті або в клієнтському з `useEffect` і скасуванням          |
 | Завантаження, помилка, порожньо (D)     | стан компонента                                                                                              | файли `loading` і `error` (повтор через `retry`), порожній стан — у компоненті                    |
 | Публічні змінні оточення (D)            | `VITE_`                                                                                                      | `NEXT_PUBLIC_`                                                                                    |
-| Файл як база даних (C)                  | json-server на `db.json`                                                                                     | Route Handler або Server Action, що записує `db.json`                                             |
 | TanStack Query або RTK Query (A)        | замінює власний код запитів                                                                                  | для даних на клієнті: запити, мутація форми рівня C, інвалідація                                  |
 | Тести (A)                               | Vitest і React Testing Library                                                                               | те саме для клієнтських компонентів; асинхронні серверні компоненти Vitest не підтримує           |
 
@@ -212,8 +185,7 @@ flowchart TD
 - Форма на React Hook Form + Zod:
   - валідація за схемою; повідомлення про помилки прив'язані до полів
     (`aria-invalid`, `aria-describedby`);
-  - надсилає запит POST, PUT, PATCH або DELETE (для API лише на читання — у
-    файл `db.json`, §3.3);
+  - надсилає запит POST, PUT, PATCH або DELETE;
   - показує успіх і обробляє помилку сервера.
 - Розширення axe DevTools не знаходить порушень на жодному маршруті, а
   основний сценарій можна пройти лише клавіатурою. Результат перевірки axe —
@@ -283,8 +255,7 @@ flowchart TD
 2. Адресу застосунку на Vercel.
 3. `README.md`, у якому:
    - що робить застосунок і який рівень ви заявляєте;
-   - як запустити застосунок локально, а для `db.json` — як запустити
-     json-server;
+   - як запустити застосунок локально;
    - адреса на Vercel;
    - дерево компонентів (E) і діаграма потоку даних (C) у Mermaid;
    - результат перевірки axe (C), обґрунтування патерну (B), вимірювання в
@@ -355,27 +326,25 @@ _Рівень C_
     `zodResolver` поєднує їх.
 12. [axe DevTools](https://www.deque.com/axe/devtools/) — розширення
     браузера для перевірки доступності.
-13. [json-server](https://github.com/typicode/json-server) — REST API з файлу
-    `db.json`.
 
 _Рівень B_
 
-14. [Zustand](https://zustand.docs.pmnd.rs/),
+13. [Zustand](https://zustand.docs.pmnd.rs/),
     [Redux Toolkit](https://redux-toolkit.js.org/),
     [Jotai](https://jotai.org/).
-15. [React patterns](https://www.patterns.dev/react/) — Container/Presentational,
+14. [React patterns](https://www.patterns.dev/react/) — Container/Presentational,
     HOC, Render Props, Compound Components з прикладами.
 
 _Рівень A_
 
-16. [TanStack Query](https://tanstack.com/query/latest/docs/framework/react/overview)
+15. [TanStack Query](https://tanstack.com/query/latest/docs/framework/react/overview)
     або, з Redux Toolkit,
     [RTK Query](https://redux-toolkit.js.org/rtk-query/overview).
-17. [`<Profiler>`](https://uk.react.dev/reference/react/Profiler),
+16. [`<Profiler>`](https://uk.react.dev/reference/react/Profiler),
     [`memo`](https://uk.react.dev/reference/react/memo) і
     [React Compiler](https://uk.react.dev/learn/react-compiler).
-18. [Vitest](https://vitest.dev/guide/) і
+17. [Vitest](https://vitest.dev/guide/) і
     [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/);
     для Next.js — [Setting up Vitest](https://nextjs.org/docs/app/guides/testing/vitest).
-19. [Використання TypeScript](https://uk.react.dev/learn/typescript) у
+18. [Використання TypeScript](https://uk.react.dev/learn/typescript) у
     документації React.

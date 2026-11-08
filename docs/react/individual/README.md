@@ -3,7 +3,7 @@
 | Route | Source | What it is |
 | --- | --- | --- |
 | `/react/labs/individual/` | `src/content/labs/react/uk/individual.md` | the handout: who it's for, the E–A ladder and its rules, topics, requirements by tier, steps and dates, deliverables, submission, links |
-| `/uk/react/labs/individual.pdf` | built from the handout | the downloadable handout, 9 A4 pages |
+| `/uk/react/labs/individual.pdf` | built from the handout | the downloadable handout, 8 A4 pages |
 
 The handout is the single source for the tiers, rules and dates; this file
 doesn't restate them. The grading section of
@@ -30,14 +30,15 @@ python docs/web/build-handout.py individual react
   many. This includes what makes a topic "complex" from C.
 - **Vite or Next.js.** The tiers are the same; one table in §4 gives the
   Next.js form of each requirement that differs.
-- **A JSON file as the database** for read-only APIs: json-server on
-  `db.json` (Vite), a Route Handler or Server Action (Next.js). It writes
-  only on localhost, because a Vercel deployment's filesystem is read-only,
-  so students run and show the write flow on localhost. On Vercel that part
-  may show its error state, and §3.3 tells students that's expected.
-  localStorage was considered and rejected: it sends no request, so the C
-  form would have no server error to handle and A's mutation and
-  invalidation would show little (the PR #53 review, 2026-11-08).
+- **Writes are simulated, not stored.** From C the API must accept writes,
+  really (Platzi) or as a simulation (DummyJSON and JSONPlaceholder answer
+  with the new object but don't keep it). After a refresh the original data
+  comes back, and that's fine: C is about sending the write request and
+  updating the UI. Read-only APIs (TVmaze, PokéAPI) fit E and D only, since
+  the C form would have nowhere to send its request. A JSON file database
+  for read-only APIs (json-server, or a Next.js Route Handler) was built
+  and dropped in the PR #53 review (2026-11-08): nothing needs to persist,
+  and it wrote only on localhost.
 - **A higher tier replaces tools, not behaviour.** B moves the shared state
   into a library and A replaces the request code, so §2 says the new tool
   meets the lower tier's requirement. Without it, "cumulative" would make an
@@ -59,8 +60,8 @@ python docs/web/build-handout.py individual react
 - **Versions** (`npm view`, latest): React 19.3, Vite 8.3, Next.js 16.4,
   React Router 8.5, React Hook Form 7.91, `@hookform/resolvers` 7.0, Zod
   4.6, Zustand 5.1, Redux Toolkit 2.14, Jotai 3.0, TanStack Query 5.107,
-  Vitest 5.1, React Testing Library 16.3, TypeScript 7.0, json-server
-  1.0.0-beta.15, ESLint 10.14, Prettier 3.9, create-vite 9.3.
+  Vitest 5.1, React Testing Library 16.3, TypeScript 7.0, ESLint 10.14,
+  Prettier 3.9, create-vite 9.3.
 - **React Router 8** still has declarative mode with `<Routes>`/`<Route>`,
   `:id` dynamic segments and `useParams`. The programme names v7.
 - **create-vite 9**: the React templates default to Oxlint (`"lint":
@@ -70,13 +71,7 @@ python docs/web/build-handout.py individual react
   (`"lint": "eslint"`) and the App Router. The `error` file's retry prop is
   `retry`, not the older `reset`. The Vitest guide says Vitest doesn't
   support async Server Components.
-- **Vercel**: the Vite page gives the SPA rewrite used in §4.2. The
-  functions runtime page says "read-only filesystem with writable /tmp
-  scratch space up to 500 MB".
-- **json-server 1.0.0-beta.15**: run locally on a sample `db.json`. A POST
-  returned 201 with `Access-Control-Allow-Origin: *`, and the new record was
-  written to the file with a generated string id. It also adds a `$schema`
-  key to the file.
+- **Vercel**: the Vite page gives the SPA rewrite used in §4.2.
 - **Write endpoints** (POST with an `Origin` header): DummyJSON
   `carts/add`, `recipes/add`, `posts/add`, `todos/add` and JSONPlaceholder
   `posts` all answer 201, CORS on. DummyJSON's `auth/login` returns a token.
@@ -86,7 +81,8 @@ python docs/web/build-handout.py individual react
   `fakeapi.platzi.com` no longer resolves, so the handout links
   `api.escuelajs.co/docs`.
 - **MockAPI.io** was dropped from the topic table: its free plan couldn't be
-  checked (the site renders client-side), and the JSON file covers own data.
+  checked (the site renders client-side), and DummyJSON and JSONPlaceholder
+  already cover simulated writes.
 - **Every external link** in the handout returned 200.
 - **The page**: `npm run check` (0 errors; the 4 hints are in the legacy
   redirect pages) and `npm run build`. In headless Edge at 390 and 1280 px:
@@ -103,9 +99,6 @@ python docs/web/build-handout.py individual react
 - Whether GitHub renders the two Mermaid examples. Both use only basic
   `flowchart` syntax.
 - The `vercel.json` rewrite on a real deployment.
-- Whether a Next.js Route Handler on Vercel can read `db.json` at all: that
-  depends on the file being traced into the function bundle. Writes fail
-  there either way.
 - A dry run: an app built from the handout alone, to find unclear
   requirements and gauge the work per tier.
 - The labs index lead («індивідуальне завдання під номером 00 виконується

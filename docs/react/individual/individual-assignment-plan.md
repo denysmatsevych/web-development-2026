@@ -36,7 +36,9 @@ Deviations from the plan:
 - **The PR #53 review (2026-11-08):**
   - §2: when a higher tier replaces a tool, the new tool meets the lower
     tier's requirement;
-  - §3.3: the Vercel deployment may show the `db.json` part's error state;
+  - the JSON file database (§3.3) is gone: from C the API must accept
+    writes, real or simulated, so read-only APIs (TVmaze, PokéAPI) fit E
+    and D only and topic 6 left the table;
   - §4.5: the C-level custom hook may wrap the library's query hook, and
     «до» with React Compiler on from the start is a run with it off.
 
