@@ -25,7 +25,7 @@ both in the same sitting. The Web Development course has its own plan in
 The course is registered under the slug `react` with `status: 'published'`
 (see `src/data/courses.ts`), so it is on the public site. As of 2026-11-08,
 the built parts are Лекція 0, an introductory deck that isn't in the
-programme, the individual assignment, and ЛР 1–4.
+programme, the individual assignment, and ЛР 1–5.
 
 When a lab is built, add a row here, as the Web Development plan does, and put
 its instructor docs in `docs/react/lab-N/` (the README's **Docs** section has
@@ -48,7 +48,8 @@ repositories.
 | ЛР 2 | `/react/labs/lab-2` | components and props, written by hand in class: a starter for `lab-2/`, `Header`, `Avatar`, `Profile`, `Card`, the render and module trees, deploy to Vercel; [lab-2/README.md](lab-2/README.md) |
 | ЛР 3 | `/react/labs/lab-3` | Thinking in React, done by hand in class: a starter for `lab-3/` with the whole app in `App`, the component hierarchy from a framed mockup, `MenuItemRow`, `MenuCategory`, `MenuTable` and `SearchBar` extracted without changing the page, the state table, deploy to Vercel; [lab-3/README.md](lab-3/README.md) |
 | ЛР 4 | `/react/labs/lab-4` | useState and useEffect, by hand in class, on ЛР-3's café menu: a starter for `lab-4/`, Thinking in React steps 4–5 in code, the filters saved to `localStorage` by an effect, a data flow diagram, deploy to Vercel; +1 point for moving the state into `FilterableMenuTable` (state colocation); [lab-4/README.md](lab-4/README.md) |
-| ЛР 5–27 | not built | |
+| ЛР 5 | `/react/labs/lab-5` | events and controlled/uncontrolled components, by hand in class, on a new table booking form: a starter for `lab-5/`, the browser's own form submission first, then `onSubmit` with `FormData`, a controlled comment with a counter, `Ctrl+Enter` on the form, a guests stepper that goes from uncontrolled to controlled, the native reset with `onReset` and a ref, a README table of who owns each value, deploy to Vercel; [lab-5/README.md](lab-5/README.md) |
+| ЛР 6–27 | not built | |
 
 Лекція 0 reads its topic slides from the **Теми презентацій** table below
 when the site is built. Keep that table's rows in their current shape: the
