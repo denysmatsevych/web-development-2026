@@ -1,0 +1,108 @@
+# React ІЗ — individual assignment
+
+| Route | Source | What it is |
+| --- | --- | --- |
+| `/react/labs/individual/` | `src/content/labs/react/uk/individual.md` | the handout: who it's for, the E–A ladder and its rules, topics, requirements by tier, steps and dates, deliverables, submission, links |
+| `/uk/react/labs/individual.pdf` | built from the handout | the downloadable handout, 8 A4 pages |
+
+The handout is the single source for the tiers, rules and dates; this file
+doesn't restate them. The grading section of
+[../course-plan.md](../course-plan.md) says how the route sits next to the
+programme. The plan the page was built from, with the decisions behind it,
+is [individual-assignment-plan.md](individual-assignment-plan.md).
+
+After any change to the handout, rebuild the PDF from PowerShell (Edge
+writes no PDF from the Bash tool):
+
+```
+python docs/web/build-handout.py individual react
+```
+
+## Why it looks like this
+
+- **Only for students on an individual plan.** It replaces the labs and
+  module tests, and every student sees card `00` on `/react/labs/`. So the
+  summary (the page lead and the card) says who it's for, and so does the
+  «Для кого» line above the deadline, because the PDF doesn't print the
+  summary. The labs-index lead, shared by both courses, only says the ІЗ is
+  numbered `00`; it used to say the ІЗ runs all semester, which read as
+  "every student does it" on the React page (the PR #53 review).
+- **Not the final project.** The final project (ЛР 21–27) is for the regular
+  route and gets its own task; this one runs all semester.
+- **No numeric minimums.** Requirements describe what the app has, not how
+  many. This includes what makes a topic "complex" from C.
+- **Vite or Next.js.** The tiers are the same; one table in §4 gives the
+  Next.js form of each requirement that differs.
+- **Writes are simulated, not stored.** From C the API must accept writes,
+  really (Platzi) or as a simulation (DummyJSON and JSONPlaceholder answer
+  with the new object but don't keep it). After a refresh the original data
+  comes back, and that's fine: C is about sending the write request and
+  updating the UI. Read-only APIs (TVmaze, PokéAPI) fit E and D only, since
+  the C form would have nowhere to send its request. A JSON file database
+  for read-only APIs (json-server, or a Next.js Route Handler) was built
+  and dropped in the PR #53 review (2026-11-08): nothing needs to persist,
+  and it wrote only on localhost.
+- **A higher tier replaces tools, not behaviour.** B moves the shared state
+  into a library and A replaces the request code, so §2 says the new tool
+  meets the lower tier's requirement. Without it, "cumulative" would make an
+  A app fail D's `useEffect` cancellation (the PR #53 review).
+- **RTK Query counts as TanStack Query at A** for students who chose Redux
+  Toolkit at B. It ships in the same package and does the same job (cached
+  queries, mutations, invalidation through tags). Adding TanStack Query on
+  top would give the app two server caches.
+- **No defence questions.** Unlike the labs, the handout has no list of
+  questions to prepare; §2's rules describe the defence (the instructor's
+  review, 2026-11-08).
+- **Cells that mustn't wrap.** The ladder's bands are written
+  `61&#8288;–&#8288;67` (word joiners stop the break after the en dash), and
+  the steps table's first column `1.&nbsp;Тема` (so «2. Розробка» doesn't
+  split after the number).
+
+## Checked on 2026-11-07
+
+- **Versions** (`npm view`, latest): React 19.3, Vite 8.3, Next.js 16.4,
+  React Router 8.5, React Hook Form 7.91, `@hookform/resolvers` 7.0, Zod
+  4.6, Zustand 5.1, Redux Toolkit 2.14, Jotai 3.0, TanStack Query 5.107,
+  Vitest 5.1, React Testing Library 16.3, TypeScript 7.0, ESLint 10.14,
+  Prettier 3.9, create-vite 9.3.
+- **React Router 8** still has declarative mode with `<Routes>`/`<Route>`,
+  `:id` dynamic segments and `useParams`. The programme names v7.
+- **create-vite 9**: the React templates default to Oxlint (`"lint":
+  "oxlint"`), which is why §4 points Vite users to ЛР-1's ESLint setup;
+  `react-ts` builds with `tsc -b && vite build`.
+- **Next.js 16**: create-next-app's defaults include TypeScript, ESLint
+  (`"lint": "eslint"`) and the App Router. The `error` file's retry prop is
+  `retry`, not the older `reset`. The Vitest guide says Vitest doesn't
+  support async Server Components.
+- **Vercel**: the Vite page gives the SPA rewrite used in §4.2.
+- **Write endpoints** (POST with an `Origin` header): DummyJSON
+  `carts/add`, `recipes/add`, `posts/add`, `todos/add` and JSONPlaceholder
+  `posts` all answer 201, CORS on. DummyJSON's `auth/login` returns a token.
+- **Platzi Fake Store API**: `api.escuelajs.co` answers with CORS `*` and
+  allows GET/PUT/PATCH/POST/DELETE. Its Swagger spec lists POST, PUT and
+  DELETE for products and users, plus `auth/login`. The old docs domain
+  `fakeapi.platzi.com` no longer resolves, so the handout links
+  `api.escuelajs.co/docs`.
+- **MockAPI.io** was dropped from the topic table: its free plan couldn't be
+  checked (the site renders client-side), and DummyJSON and JSONPlaceholder
+  already cover simulated writes.
+- **Every external link** in the handout returned 200.
+- **The page**: `npm run check` (0 errors; the 4 hints are in the legacy
+  redirect pages) and `npm run build`. In headless Edge at 390 and 1280 px:
+  no page-level horizontal scroll. On phones, wide tables scroll inside
+  their own box (`lab.css`), so the ladder's last column is reached by
+  scrolling. Card `00` comes first on `/react/labs/` and on the English
+  index, which links the Ukrainian page. Internal links carry the base
+  path, and the anchor into the Web Dev ІЗ topic table matches its heading.
+- **Mermaid**: both examples (the component tree in §4.1, the data flow in
+  §4.3) render with mermaid 12.2.0, 5 nodes and 4 edges each.
+
+## Not checked
+
+- Whether GitHub draws the two Mermaid examples. Its Markdown API (checked
+  2026-11-08) marks both as `mermaid` blocks and tokenizes every node shape
+  and edge label, but the drawing happens in GitHub's browser viewer. Both
+  use only basic `flowchart` syntax.
+- The `vercel.json` rewrite on a real deployment.
+- A dry run: an app built from the handout alone, to find unclear
+  requirements and gauge the work per tier.

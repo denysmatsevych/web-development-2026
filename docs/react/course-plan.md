@@ -42,6 +42,7 @@ repositories.
 | Plan | Site | Note |
 | --- | --- | --- |
 | — | `/react/lectures/lecture-0` | Лекція 0: the course on one diagram, grading, course rules and every presentation topic |
+| — | `/react/labs/individual` | the individual assignment (ІЗ) for students on an individual plan, listed as card `00`: a React app graded by tiers E–A in place of the labs and module tests; [individual/README.md](individual/README.md) |
 | Лекції 1–8 | not built | |
 | ЛР 1 | `/react/labs/lab-1` | local setup: the `react-labs` repository, Node.js, Vite, ESLint, Prettier, React DevTools, `AGENTS.md`, deploy to Vercel; [lab-1/README.md](lab-1/README.md) |
 | ЛР 2 | `/react/labs/lab-2` | components and props, written by hand in class: a starter for `lab-2/`, `Header`, `Avatar`, `Profile`, `Card`, the render and module trees, deploy to Vercel; [lab-2/README.md](lab-2/README.md) |
@@ -323,6 +324,13 @@ Rules stated under the table:
 - Every student defends at least 2 presentations; at most 4 count towards the
   total (20 points). Topics and order are agreed with the teacher.
 
+**Students on an individual plan** take another route, agreed with the
+teacher and not in the programme's table: instead of the labs and module
+tests they do the individual assignment (ІЗ), and the tier they reach and
+defend at the exam sets the course grade. The handout at
+`/react/labs/individual` holds the tiers, rules and dates. The final project (ЛР 21–27) belongs to the regular route and gets its
+own task.
+
 ### Шкала оцінювання: національна та ECTS
 
 | Сума балів | Оцінка ECTS | Для екзамену, курсового проєкту (роботи), практики | Для заліку |
@@ -365,6 +373,10 @@ unpicked, so the lectures should still introduce them.
   The rule «Лабораторна робота … оцінюється в 1 бал» doesn't say a double-slot
   defence is worth 2.
 - **Part 4 grading row.** «поетапний робота» should be «поетапна робота».
+- **Section 8, individual plan.** It says students on an individual plan
+  still sit current control. On their route they do the ІЗ in place of the
+  labs and module tests (see the grading note above), so the sentence should
+  end with the exam, as the summary under «Політики курсу» does.
 
 ## Рекомендована література
 
@@ -400,8 +412,7 @@ A summary of section 8; the programme has the full wording.
 
 - **Attendance** at lectures and labs is mandatory. Missed classes are made up
   within the term set by the dean's office. Students on an individual plan
-  agree their assignments with the teacher and still sit current control and
-  the exam.
+  agree their assignments with the teacher and sit the exam.
 - **Non-formal learning** is recognised at the teacher's discretion, case by
   case.
 - **Online classes** run on Google Meet (meeting code word «denysmatsevych»)

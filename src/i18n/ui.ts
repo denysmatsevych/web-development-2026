@@ -36,7 +36,7 @@ export const ui = {
       sectionLectures: 'Керовані клавіатурою презентації лекцій — для показу в аудиторії або читання як конспекту.',
       sectionLabs: 'Практичні завдання до лекцій із PDF-файлами для завантаження.',
       labsLead: 'Практичні завдання, що доповнюють лекції. Кожна лабораторна містить покрокові вказівки та PDF для завантаження.',
-      labsLeadWithIndividual: 'Практичні завдання, що доповнюють лекції. Кожна лабораторна містить покрокові вказівки та PDF для завантаження; індивідуальне завдання під номером 00 виконується протягом семестру.',
+      labsLeadWithIndividual: 'Практичні завдання, що доповнюють лекції. Кожна лабораторна містить покрокові вказівки та PDF для завантаження; індивідуальне завдання позначене номером 00.',
       lecturesLead: 'Презентації з керуванням клавіатурою: ← / → — гортати, N — нотатки доповідача, F — повний екран, Ctrl+P — зберегти PDF.',
     },
     theme: {
@@ -133,7 +133,7 @@ export const ui = {
       sectionLectures: 'Keyboard-driven slide decks to present in class or read as notes.',
       sectionLabs: 'Hands-on assignments that build on lectures, with downloadable PDF handouts.',
       labsLead: 'Hands-on assignments that build on each lecture. Each lab includes a walkthrough and a downloadable PDF handout.',
-      labsLeadWithIndividual: 'Hands-on assignments that build on each lecture. Each lab includes a walkthrough and a downloadable PDF handout; the individual assignment, numbered 00, runs throughout the semester.',
+      labsLeadWithIndividual: 'Hands-on assignments that build on each lecture. Each lab includes a walkthrough and a downloadable PDF handout; the individual assignment is numbered 00.',
       lecturesLead: 'Keyboard-driven slide decks: ← / → to move, N for speaker notes, F for fullscreen, and Ctrl+P to save as PDF.',
     },
     theme: {
