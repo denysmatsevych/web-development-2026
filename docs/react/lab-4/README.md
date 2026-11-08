@@ -5,9 +5,7 @@
 | `/react/labs/lab-4/` | `src/content/labs/react/uk/lab-4.md` | the handout: useful links instead of theory, Thinking in React steps 4–5 in code, `useEffect` with `localStorage`, the data flow diagram, checks and Vercel, the +1 task on state colocation, report, defence |
 | `/uk/react/starters/lab-4.zip` | `starters/react/lab-4/` | the starter, unpacked by students into `react-labs/lab-4/` |
 | `/uk/react/labs/lab-4/result.webp` | the reference solution | the page with a search and the checkbox, in the handout's §1 |
-
-There is no PDF yet: it waits for the instructor's review of the handout,
-as ЛР-3's did. Build it then and add the `handout:` field.
+| `/uk/react/labs/lab-4.pdf` | built from the handout | the downloadable handout |
 
 `solution/` holds the reference solution (gitignored): `app-state/`,
 `src/` and `extra/` overlay the starter's `src/` for the 1-point lab, the
@@ -55,6 +53,10 @@ screenshot. The plan the lab was built from is
 - **The `{' '}` after the checkbox** is how Prettier writes the space once
   the `<input>` spans several lines; the handout gives `SearchBar` in that
   form so saving doesn't change it.
+- **The PDF waited for the handout's review,** so it was built last. It
+  has 15 pages and embeds the screenshot from the local `public/` folder.
+  §7's 1-point table starts low on page 14 and continues on page 15 under a
+  repeated header.
 
 ## Verified on 2026-11-08
 
@@ -120,9 +122,10 @@ Not verified:
 ```bash
 git add starters/react/lab-4                                 # the script packs tracked files only
 python docs/web/build-pack.py starters/react/lab-4           # public/uk/react/starters/lab-4.zip
-python docs/web/build-handout.py lab-4 react                 # public/uk/react/labs/lab-4.pdf, from PowerShell, after review
+python docs/web/build-handout.py lab-4 react                 # public/uk/react/labs/lab-4.pdf, from PowerShell
 ```
 
 Rebuild the zip after the starter is committed: each entry is dated by the
 file's last commit, and a file with no commit yet keeps its modification
-time.
+time. Rebuild the PDF after every handout edit; the handout's `handout:`
+field points to it.
