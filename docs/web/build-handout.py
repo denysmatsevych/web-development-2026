@@ -108,19 +108,25 @@ body = re.sub(r"(!\[[^\]]*\]\()/", rf"\g<1>{PUBLIC}/", body)
 # rule for adding /en/ (in the Markdown link plugin, run by Node), so a link
 # opens the same page from the PDF as from the site.
 SITE_LINK = re.compile(r"\]\((/[^)\s]*)")
+hrefs = sorted(set(SITE_LINK.findall(body))) if LANG == "en" else []
 localized = {}
-if LANG == "en":
-    hrefs = sorted(set(SITE_LINK.findall(body)))
+if hrefs:
     plugin = (ROOT / "plugins" / "base-links.mjs").as_uri()
-    node = subprocess.run(
-        ["node", "--input-type=module", "-e",
-         f"import {{ createEnglishLocalizer }} from {json.dumps(plugin)};"
-         "const localize = createEnglishLocalizer();"
-         "let input = ''; for await (const chunk of process.stdin) input += chunk;"
-         "process.stdout.write(JSON.stringify(JSON.parse(input).map((href) => localize(href))));"],
-        input=json.dumps(hrefs), capture_output=True, text=True, encoding="utf-8",
-        cwd=ROOT, check=True,
-    )
+    try:
+        node = subprocess.run(
+            ["node", "--input-type=module", "-e",
+             f"import {{ createEnglishLocalizer }} from {json.dumps(plugin)};"
+             "const localize = createEnglishLocalizer();"
+             "let input = ''; for await (const chunk of process.stdin) input += chunk;"
+             "process.stdout.write(JSON.stringify(JSON.parse(input).map((href) => localize(href))));"],
+            input=json.dumps(hrefs), capture_output=True, text=True, encoding="utf-8",
+            cwd=ROOT, check=True,
+        )
+    except FileNotFoundError:
+        sys.exit("Node is needed to add /en/ to an English handout's site links, "
+                 "but `node` is not on PATH.")
+    except subprocess.CalledProcessError as error:
+        sys.exit(f"Node could not add /en/ to the handout's site links:\n{error.stderr}")
     localized = dict(zip(hrefs, json.loads(node.stdout)))
 body = SITE_LINK.sub(lambda m: f"]({SITE}{localized.get(m[1], m[1])}", body)
 
