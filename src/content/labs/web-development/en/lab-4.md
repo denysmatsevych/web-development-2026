@@ -46,9 +46,9 @@ After completing this lab, you must be able to:
 
 ## 3. Lab tasks
 
-1. Run a series of experiments on accessibility, automated testing, technical
-   SEO, and Core Web Vitals, relying on the official documentation [1]–[15] and
-   experiments in the browser.
+1. Carry out a series of research tasks on accessibility, automated testing,
+   technical SEO, and Core Web Vitals, relying on the official documentation
+   [1]–[15] and experiments in the browser.
 2. Run an initial audit of the
    [provided starter project](/web-development/labs/lab-4/task/) using DevTools
    and automated tools.
@@ -200,7 +200,7 @@ that need a manual check.
 
 Typical examples where this rule is tested: the advice "add `aria-label` to all
 buttons" — for a button with ordinary visible text, this attribute is
-unnecessary and only overwrites the accessible name; the advice "add
+unnecessary and only overrides the accessible name; the advice "add
 `role="button"` to this `<div>`" — the question is why not use a native
 `<button>` instead, which provides the role, focus, and keyboard handling without
 any attribute.
@@ -489,7 +489,7 @@ false positives, and which need a manual check.
 **Email subject:**
 
 ```
-[Web] Lab 4-5: AI Agent for a Web Quality Audit: Accessibility, Technical SEO, and Core Web Vitals
+[Web] Lab 4-5: AI agent for a web quality audit: accessibility, technical SEO, and Core Web Vitals
 ```
 
 In the email, include links to:

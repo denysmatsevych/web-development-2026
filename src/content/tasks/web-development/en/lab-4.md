@@ -1,7 +1,7 @@
 ---
-title: "FlowTask — starter project for Web Quality Audit"
-summary: "A landing page for a SaaS service with deliberately introduced accessibility, technical SEO, and performance issues. The basis for the audit in Lab 4-5."
-goal: "Perform a comprehensive audit of the provided FlowTask starter project, confirm each detected issue, fix the justified ones, and re-check the result. The practical part corresponds to section 5 of the lab."
+title: "FlowTask — starter project for a web quality audit"
+summary: "A landing page for a SaaS service with deliberately introduced accessibility, technical SEO, and performance problems. The basis for the audit in Lab 4-5."
+goal: "Perform a comprehensive audit of the provided FlowTask starter project, confirm each problem you find, fix the justified ones, and re-check the result. The practical part corresponds to section 5 of the lab."
 label: "Assignment"
 highlights:
   - "Provided starter project"
@@ -10,8 +10,8 @@ highlights:
   - "Bonus until September 30, 2026"
 acceptance:
   - "Initial audit recorded before any changes, along with measurement conditions"
-  - "Accessibility — at least 2 confirmed issues fixed"
-  - "Technical SEO — at least 2 confirmed issues fixed"
+  - "Accessibility — at least 2 confirmed problems fixed"
+  - "Technical SEO — at least 2 confirmed problems fixed"
   - "Performance — 1 fix or justification that no change is needed"
   - "AI — 5 recommendations analyzed, at least 1 rejected with a citation"
   - "JSON-LD matches actual content and passes Schema Markup Validator"
@@ -228,13 +228,13 @@ origin, not paths from the other deployment.
 - Open the Accessibility Tree for an element you fixed and show how its Role and
   Name changed.
 - Navigate the page with the keyboard from the first element to the form button.
-- Show an issue detected by axe or Lighthouse directly in the HTML.
-- Show an issue you found manually that the tool did not detect.
+- Show a problem detected by axe or Lighthouse directly in the HTML.
+- Show a problem you found manually that the tool did not detect.
 - Show an AI recommendation you rejected and cite the source you relied on.
 - Show the JSON-LD and match its data with visible page content.
 - Show `robots.txt` and `sitemap.xml` on the origin where they actually work.
 - Identify the LCP element and show the values before and after optimization.
 
 > **Summary.** The outcome must be the same FlowTask page — but one where every
-> fixed issue is confirmed, every change is justified, and every number in the
+> fixed problem is confirmed, every change is justified, and every number in the
 > report was obtained under known conditions.
