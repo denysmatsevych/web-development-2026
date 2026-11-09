@@ -21,10 +21,12 @@ A centred title block opens the handout: the university and the department,
 a rule, the title, and the course from the lab's `discipline:` field. Every
 page's footer carries the short attribution and the page number.
 
-Needs `markdown-it-py` (pip) and Microsoft Edge; fonts come from jsDelivr
-(Fontsource), so the run needs network access.
+Needs `markdown-it-py` (pip), Microsoft Edge, and Node for an English
+handout's site links; fonts come from jsDelivr (Fontsource), so the run needs
+network access.
 """
 import argparse
+import json
 import pathlib
 import re
 import subprocess
@@ -101,10 +103,32 @@ if m:
 # so the PDF shows them before they are deployed.
 PUBLIC = (ROOT / "public").as_uri()
 body = re.sub(r"(!\[[^\]]*\]\()/", rf"\g<1>{PUBLIC}/", body)
-# Site-relative links would be dead in a downloaded file. An English
-# handout's links still open the Ukrainian pages: unlike the site, this script
-# does not add /en/ to a link whose English page exists.
-body = re.sub(r"\]\(/", f"]({SITE}/", body)
+# Site-relative links would be dead in a downloaded file, so they get the
+# site's address. An English handout's links first go through the site's own
+# rule for adding /en/ (in the Markdown link plugin, run by Node), so a link
+# opens the same page from the PDF as from the site.
+SITE_LINK = re.compile(r"\]\((/[^)\s]*)")
+hrefs = sorted(set(SITE_LINK.findall(body))) if LANG == "en" else []
+localized = {}
+if hrefs:
+    plugin = (ROOT / "plugins" / "base-links.mjs").as_uri()
+    try:
+        node = subprocess.run(
+            ["node", "--input-type=module", "-e",
+             f"import {{ createEnglishLocalizer }} from {json.dumps(plugin)};"
+             "const localize = createEnglishLocalizer();"
+             "let input = ''; for await (const chunk of process.stdin) input += chunk;"
+             "process.stdout.write(JSON.stringify(JSON.parse(input).map((href) => localize(href))));"],
+            input=json.dumps(hrefs), capture_output=True, text=True, encoding="utf-8",
+            cwd=ROOT, check=True,
+        )
+    except FileNotFoundError:
+        sys.exit("Node is needed to add /en/ to an English handout's site links, "
+                 "but `node` is not on PATH.")
+    except subprocess.CalledProcessError as error:
+        sys.exit(f"Node could not add /en/ to the handout's site links:\n{error.stderr}")
+    localized = dict(zip(hrefs, json.loads(node.stdout)))
+body = SITE_LINK.sub(lambda m: f"]({SITE}{localized.get(m[1], m[1])}", body)
 
 md = MarkdownIt("commonmark").enable("table")
 # markdown-it refuses file: URLs; let through only the public/ images above.
