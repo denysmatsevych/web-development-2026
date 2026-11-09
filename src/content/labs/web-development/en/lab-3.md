@@ -29,7 +29,8 @@ After completing this lab, you must be able to:
   the content.
 - Know the purpose of the main elements and meta tags in `<head>`, in particular
   `title` and `meta description`.
-- Write clear text content, links, and alternative descriptions for images.
+- Write text content, links, and alternative descriptions for images that are
+  clear to the user.
 - Distinguish semantic decisions from visual styling and use `a` and `button`
   correctly.
 - Use AI assistants to audit HTML, verify their recommendations against the
@@ -37,9 +38,9 @@ After completing this lab, you must be able to:
 
 ## 3. Lab tasks
 
-1. **Run a series of experiments** on semantic HTML, heading structure,
-   metadata, and SEO content, relying on the official documentation and your own
-   experiments in the browser.
+1. **Carry out a series of research tasks** on semantic HTML, heading
+   structure, metadata, and SEO content, relying on the official documentation
+   and your own experiments in the browser.
 2. **Analyze the result of [Lab 2](/web-development/labs/lab-2/)** and identify
    which parts of the existing HTML structure can be improved without changing
    the main visual concept.
@@ -326,7 +327,7 @@ recommendations, and then decide on your own how to implement them.
 **Email subject:**
 
 ```
-[Web] Lab 3: AI-assisted Semantic HTML and SEO: Optimizing the Structure, Metadata, and Content of a Web Page
+[Web] Lab 3: AI-assisted semantic HTML and SEO: optimizing the structure, metadata, and content of a web page
 ```
 
 In the email, include links to:
