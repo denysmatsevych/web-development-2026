@@ -29,8 +29,7 @@ using:
 - Browser DevTools for layout analysis.
 
 Particular emphasis is placed not on writing CSS "by template", but on
-experimenting, observing layout behavior, and fixing issues with reasoned
-arguments.
+experimenting, observing layout behavior, and justifying each fix.
 
 ## 2. Objectives and learning outcomes
 
@@ -302,7 +301,7 @@ The markup for each challenge is provided in the
 1. place logo, navigation, and button on a single line;
 2. ensure vertical alignment;
 3. maintain spacing between elements using `gap`;
-4. allow navigation items to wrap onto a new line;
+4. allow the navigation to wrap onto a new line;
 5. do not use `position: absolute` to build the layout;
 6. verify behavior on a narrow viewport.
 
@@ -378,8 +377,8 @@ navigation, grouping action buttons, and individual components.
 +---------------------+
 ```
 
-Determine the breakpoint independently or, if possible, implement the layout
-shift without a media query.
+Choose the breakpoint yourself or, if possible, implement the layout shift
+without a media query.
 
 **Do not use:** `float`; tables for layout; absolute positioning as the primary
 layout mechanism; a fixed width for the entire page.
@@ -486,8 +485,8 @@ Initial CSS uses breakpoint-based typography:
 }
 ```
 
-Replace it with fluid typography using `clamp()`. Select specific values
-independently.
+Replace it with fluid typography using `clamp()`. Choose the exact values
+yourself.
 
 ```css
 .hero h1 {
@@ -560,9 +559,8 @@ For each problem found, record:
 ### Challenge 9. AI-generated layout review
 
 The AI agent here serves two roles: first it **generates** a solution, then it
-**reviews** it as a reviewer using the prompt from §7. Between these steps, you
-verify the code independently to have a baseline to compare against AI
-recommendations.
+**reviews** it with the prompt from §7. Between these steps, you verify the
+code independently to have a baseline to compare against AI recommendations.
 
 #### Stage 1. Generation
 
@@ -580,8 +578,8 @@ with the final version.
 2. independently find at least 3 potential problems or redundant choices.
 
 Pay particular attention to excessive media queries, fixed widths, `min-width`,
-overflow, duplicate CSS, incorrect usage of Flexbox/Grid, opportunities to use
-`minmax()`/`auto-fit`, and container queries.
+overflow, duplicate CSS, incorrect usage of Flexbox/Grid, and places where
+`minmax()`/`auto-fit` or a container query would do the job.
 
 #### Stage 3. AI code review
 
@@ -695,7 +693,7 @@ in Challenge 8; the code review prompt is a mandatory step in Challenge 9.
 **Email subject:**
 
 ```
-[Web] Lab 6: Responsive Layout, Container Queries, Fluid Typography, and Debugging CSS Layout
+[Web] Lab 6: Responsive layout, container queries, fluid typography, and debugging CSS layout
 ```
 
 In the email, include links to:
@@ -708,13 +706,13 @@ Vercel: https://<project>.vercel.app/
 
 **Conclusion:**
 
-State what new skills were acquired, which layout mechanisms were utilized,
-what problem container queries solved, what issue `clamp()` resolved, and what
-was discovered using DevTools.
+State what you learned, which layout mechanisms you used, what problem the
+container query solved, what problem `clamp()` solved, and what you found with
+DevTools.
 
 ## 9. Grading
 
-A successful defense — **2 points** OR participation during the class session.
+A successful defense — **2 points**, OR doing the work in class.
 
 ## 10. Oral defense
 
