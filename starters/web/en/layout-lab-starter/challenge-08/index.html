@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Challenge 8 — Debug the layout</title>
+  <link rel="stylesheet" href="../base.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<details class="task" open>
+  <summary>Task · Challenge 8. Debug the layout</summary>
+  <p class="task-back"><a href="../index.html">← All challenges</a></p>
+  <p><code>style.css</code> contains deliberately introduced errors. On a narrow
+    viewport, the page has horizontal scroll, a clipped hero heading, cards
+    overflowing the container, and a sidebar occupying a disproportionate amount
+    of space.</p>
+  <ol>
+    <li>Open DevTools and identify the element causing overflow.</li>
+    <li>Inspect its box model, its computed <code>width</code>, <code>min-width</code>,
+      and <code>max-width</code>, and the Grid/Flexbox overlay.</li>
+    <li>Locate the CSS rule causing the issue and determine the root cause.</li>
+    <li>Make a minimal fix and re-check the layout.</li>
+  </ol>
+  <p>For each problem, record:</p>
+  <table>
+    <tr><th>Problem</th><th>Cause</th><th>CSS property</th><th>Fix</th></tr>
+    <tr><td>Horizontal overflow</td><td>…</td><td>…</td><td>…</td></tr>
+    <tr><td>Heading overflow</td><td>…</td><td>…</td><td>…</td></tr>
+    <tr><td>Card overflow</td><td>…</td><td>…</td><td>…</td></tr>
+  </table>
+  <p><strong>Important:</strong> <code>overflow-x: hidden</code> is not a fix.
+    Explain why the overflow occurred instead of hiding it.</p>
+</details>
+
+<div class="page">
+  <aside class="sidebar">
+    <h2>Menu</h2>
+    <ul>
+      <li><a href="#">Overview</a></li>
+      <li><a href="#">Components</a></li>
+      <li><a href="#">Settings</a></li>
+    </ul>
+  </aside>
+
+  <main class="main">
+    <section class="hero">
+      <h1>Build interfaces that adapt to their environment.</h1>
+      <p>Responsive interfaces should adapt naturally to available space.</p>
+    </section>
+
+    <section class="cards">
+      <article class="card">
+        <h2>Flexbox</h2>
+        <p>One-dimensional layout: a row or a column of items.</p>
+      </article>
+      <article class="card">
+        <h2>Grid</h2>
+        <p>Two-dimensional layout: rows and columns at the same time.</p>
+      </article>
+      <article class="card">
+        <h2>Container queries</h2>
+        <p>Components that respond to the width of their container.</p>
+      </article>
+    </section>
+  </main>
+</div>
+</body>
+</html>

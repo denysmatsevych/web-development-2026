@@ -1,0 +1,33 @@
+/* Challenge 8. Debug the layout.
+   This file contains deliberately introduced errors. Find the root cause of
+   each one in DevTools and make a minimal fix. overflow-x: hidden is not a fix. */
+
+.page {
+  width: 1200px;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+}
+
+.sidebar {
+  padding: 1rem;
+  background: var(--surface);
+}
+
+.main {
+  width: 1000px;
+  padding: 1rem;
+}
+
+.cards {
+  display: flex;
+  gap: 24px;
+}
+
+.card {
+  width: 350px;
+}
+
+.hero h1 {
+  font-size: 64px;
+  white-space: nowrap;
+}

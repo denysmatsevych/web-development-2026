@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Challenge 5–6 — Container query card</title>
+  <link rel="stylesheet" href="../base.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<details class="task" open>
+  <summary>Task · Challenge 5–6. Container query: reusable card</summary>
+  <p class="task-back"><a href="../index.html">← All challenges</a></p>
+  <p>The same <code>.product-card</code> appears in three places: in <code>.sidebar</code>,
+    in <code>main</code>, and in the modal-like container <code>.modal</code>.</p>
+  <p><strong>Challenge 5</strong></p>
+  <ol>
+    <li>Build the <code>.content-layout</code> layout (sidebar + main) and limit the
+      width of <code>.modal</code>, so that you have three containers of different
+      widths.</li>
+    <li>In a narrow container the card is vertical; in a wide one, the image and the
+      text block sit side by side.</li>
+    <li>Do not use <code>@media</code> to change the card layout: set
+      <code>container-type</code> on the <code>.card-wrapper</code> wrapper and use
+      <code>@container</code>.</li>
+    <li>Check that each card adapts regardless of the viewport: in DevTools,
+      change the width of the container, not of the window.</li>
+  </ol>
+  <p><strong>Bonus:</strong> implement a named container —
+    <code>container: card / inline-size;</code>.</p>
+  <p><strong>Challenge 6</strong> — continue in the same <code>style.css</code></p>
+  <ol>
+    <li>Make the size of the <code>.product-card__title</code> heading depend on the
+      container width.</li>
+    <li>Research <code>cqw</code>, <code>cqi</code>, <code>cqmin</code>, and <code>cqmax</code>,
+      comparing them with <code>vw</code>.</li>
+    <li>Compare the same card in a wide and a narrow container without resizing the
+      viewport. Explain why <code>vw</code> and <code>cqw</code> produce different behaviors.</li>
+  </ol>
+</details>
+
+<div class="content-layout">
+  <aside class="sidebar">
+    <div class="card-wrapper">
+      <article class="product-card">
+        <img src="../img/product.svg" alt="" width="320" height="240">
+        <div class="product-card__body">
+          <h2 class="product-card__title">Wireless headphones</h2>
+          <p>Noise cancelling, 30 hours of battery life, USB-C charging.</p>
+          <p class="product-card__price">$129</p>
+          <button>Add to cart</button>
+        </div>
+      </article>
+    </div>
+  </aside>
+
+  <main>
+    <div class="card-wrapper">
+      <article class="product-card">
+        <img src="../img/product.svg" alt="" width="320" height="240">
+        <div class="product-card__body">
+          <h2 class="product-card__title">Wireless headphones</h2>
+          <p>Noise cancelling, 30 hours of battery life, USB-C charging.</p>
+          <p class="product-card__price">$129</p>
+          <button>Add to cart</button>
+        </div>
+      </article>
+    </div>
+  </main>
+</div>
+
+<!-- Modal-like container: a third place for the same card. -->
+<div class="modal">
+  <div class="card-wrapper">
+    <article class="product-card">
+      <img src="../img/product.svg" alt="" width="320" height="240">
+      <div class="product-card__body">
+        <h2 class="product-card__title">Wireless headphones</h2>
+        <p>Noise cancelling, 30 hours of battery life, USB-C charging.</p>
+        <p class="product-card__price">$129</p>
+        <button>Add to cart</button>
+      </div>
+    </article>
+  </div>
+</div>
+</body>
+</html>
