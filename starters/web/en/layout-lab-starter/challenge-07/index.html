@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Challenge 7 — Fluid typography</title>
+  <link rel="stylesheet" href="../base.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<details class="task" open>
+  <summary>Task · Challenge 7. Fluid typography</summary>
+  <p class="task-back"><a href="../index.html">← All challenges</a></p>
+  <p><code>style.css</code> uses breakpoint-based typography: a separate
+    <code>font-size</code> for each breakpoint. Replace it with fluid typography
+    using <code>clamp()</code>; choose the exact values yourself.</p>
+  <ul>
+    <li>text does not become too small, nor excessively large;</li>
+    <li>it scales smoothly, without a separate breakpoint for each font size.</li>
+  </ul>
+  <p><strong>DevTools experiment:</strong> resize the viewport, select
+    <code>h1</code>, open Computed, and record the actual <code>font-size</code>
+    for at least three widths.</p>
+</details>
+
+<section class="hero">
+  <p class="eyebrow">Modern Web Development</p>
+  <h1>Build interfaces that adapt to their environment.</h1>
+  <p class="hero-text">
+    Responsive interfaces should adapt naturally to available space.
+  </p>
+  <a class="button" href="#">Explore</a>
+</section>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Challenge 9 — AI-generated layout review</title>
+  <link rel="stylesheet" href="../base.css">
+</head>
+<body>
+<details class="task" open>
+  <summary>Task · Challenge 9. AI-generated layout review</summary>
+  <p class="task-back"><a href="../index.html">← All challenges</a></p>
+  <p>The AI agent here serves two roles: first it <strong>generates</strong> a
+    solution, then it <strong>reviews</strong> it. Between these steps, you
+    verify the code independently.</p>
+  <p><strong>Stage 1. Generation.</strong> Get a CSS solution from an AI agent for
+    the following task:</p>
+  <blockquote>Create a responsive dashboard with a header, sidebar, main content
+    area and a grid of cards. It should work on desktop, tablet and mobile.</blockquote>
+  <p>Put the AI's answer, unchanged, in <code>challenge-09/original/</code> and your
+    fixed version in <code>challenge-09/final/</code>, so that at the end you can
+    compare the initial and final CSS.</p>
+  <p><strong>Stage 2. Self-verification.</strong> Inspect the solution in DevTools
+    and independently find at least 3 potential problems or redundant choices.
+    Pay attention to excessive media queries, fixed widths,
+    <code>min-width</code>, overflow, duplicate CSS, incorrect usage of
+    Flexbox/Grid, and places where <code>minmax()</code>/<code>auto-fit</code>
+    or a container query would do the job.</p>
+  <p><strong>Stage 3. AI code review.</strong></p>
+  <ol>
+    <li>Pass the generated code to the AI agent with the code review prompt (§7
+      of the lab).</li>
+    <li>Verify each AI recommendation against MDN/web.dev and compare it with your
+      own review: what the AI found, and what you found.</li>
+    <li>Fix the problems that turn out to be justified.</li>
+    <li>Compare the initial and final CSS.</li>
+  </ol>
+  <table>
+    <tr><th>AI recommendation</th><th>Accepted?</th><th>Verification</th><th>Justification</th></tr>
+    <tr><td>…</td><td>Yes/No</td><td>MDN/web.dev</td><td>…</td></tr>
+    <tr><td>…</td><td>Yes/No</td><td>MDN/web.dev</td><td>…</td></tr>
+    <tr><td>…</td><td>Yes/No</td><td>MDN/web.dev</td><td>…</td></tr>
+  </table>
+</details>
+</body>
+</html>

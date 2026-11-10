@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Challenge 1 — Flexbox header</title>
+  <link rel="stylesheet" href="../base.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<details class="task" open>
+  <summary>Task · Challenge 1. Flexbox: responsive header</summary>
+  <p class="task-back"><a href="../index.html">← All challenges</a></p>
+  <ol>
+    <li>Place the logo, navigation, and button on a single line.</li>
+    <li>Ensure vertical alignment.</li>
+    <li>Set the spacing between elements with <code>gap</code>.</li>
+    <li>Allow the navigation to wrap onto a new line.</li>
+    <li>Do not use <code>position: absolute</code> to build the layout.</li>
+    <li>Check the behavior on a narrow viewport.</li>
+  </ol>
+  <p><strong>Bonus challenge:</strong> when space is insufficient, the navigation
+    wraps onto the next line automatically — without a media query.</p>
+  <p><strong>Expected result:</strong> the header remains functional across
+    different viewport widths.</p>
+</details>
+
+<header class="header">
+  <a class="logo" href="#">WebLab</a>
+
+  <nav class="navigation">
+    <a href="#">Home</a>
+    <a href="#">Projects</a>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+  </nav>
+
+  <button class="header-action">Get started</button>
+</header>
+</body>
+</html>

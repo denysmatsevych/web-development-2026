@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Challenge 2 — Grid cards</title>
+  <link rel="stylesheet" href="../base.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<details class="task" open>
+  <summary>Task · Challenge 2. Grid: adaptive card layout</summary>
+  <p class="task-back"><a href="../index.html">← All challenges</a></p>
+  <ul>
+    <li>cards have a minimum width of 220px;</li>
+    <li>the number of columns adapts to the available space;</li>
+    <li>a uniform <code>gap</code> between cards;</li>
+    <li>no horizontal overflow;</li>
+    <li>no separate media queries for 2, 3, or 4 columns.</li>
+  </ul>
+  <p><strong>Use:</strong> <code>repeat()</code>, <code>minmax()</code>, <code>auto-fit</code>.</p>
+  <p><strong>Experiment:</strong> compare <code>repeat(auto-fit, minmax(220px, 1fr))</code>
+    and <code>repeat(auto-fill, minmax(220px, 1fr))</code>, explaining the difference
+    based on the outcome. The difference shows when a row has room for more
+    columns than there are cards: widen the viewport or temporarily remove a few
+    cards.</p>
+</details>
+
+<section class="features">
+  <article class="feature-card">
+    <h2>Fast builds</h2>
+    <p>Static output with no client-side runtime by default.</p>
+  </article>
+  <article class="feature-card">
+    <h2>Accessible</h2>
+    <p>Semantic markup and visible focus states out of the box.</p>
+  </article>
+  <article class="feature-card">
+    <h2>Responsive</h2>
+    <p>Layouts that adapt to the space they are given.</p>
+  </article>
+  <article class="feature-card">
+    <h2>Typed</h2>
+    <p>Type-checked content collections and components.</p>
+  </article>
+  <article class="feature-card">
+    <h2>Composable</h2>
+    <p>Small components that combine into full pages.</p>
+  </article>
+  <article class="feature-card">
+    <h2>Deployable</h2>
+    <p>One command to publish to GitHub Pages or Vercel.</p>
+  </article>
+</section>
+</body>
+</html>
