@@ -82,6 +82,7 @@ starters/           the source of each zip: <course>/<name>/ becomes public/uk/<
 ├─ web/
 │  ├─ courtly-assets/           design asset pack (tokens, images, spec)
 │  ├─ courtly-booking-starter/  a catalogue app with seeded JS defects to debug
+│  ├─ en/                       English versions, same names; <course>/en/<name>/ becomes public/en/<course>/starters/<name>.zip
 │  ├─ flowtask-starter/         a landing page to audit and fix
 │  ├─ js-basics-starter/        pure data functions with provided node --test tests
 │  ├─ layout-lab-starter/       responsive-layout code challenges
@@ -109,7 +110,8 @@ under `/en/…`, in development and on the deployed site alike.
 copy-button labels in a component.
 
 **Add a lab (or task, or lecture) translation.** Only new files, no code. One
-PR translates one lab, together with its task and its English PDF:
+PR translates one lab, together with its task, its English PDF and its
+starter, if it has one:
 
 1. Copy the Ukrainian file into the sibling `en/` folder with the same file
    name: `src/content/labs/<course>/en/<lab>.md`, likewise
@@ -122,6 +124,11 @@ PR translates one lab, together with its task and its English PDF:
 5. For a lab's PDF handout, run `docs/web/build-handout.py` with `--lang en`.
    The usage at the top of the script says what to put in `handout:` and how
    to mark the deadline.
+6. For a lab's starter, copy `starters/<course>/<name>/` into the sibling
+   `en/` folder, `starters/<course>/en/<name>/`, and translate everything in
+   it a student reads: task text on its pages, comments, its README. `git add`
+   it, pack it with `docs/web/build-pack.py`, and link the English lab to the
+   English zip, `/en/<course>/starters/<name>.zip`.
 
 **Write the English text** to the same rules in every translation:
 
@@ -150,7 +157,8 @@ images. These live in `starters/<course>/` (listed in the tree above), each
 with its own `README.md` explaining what it's for and which lab it belongs
 to. A new one follows the same pattern: its own directory, named like the zip
 it becomes, its own README, and a line in the tree. `docs/web/build-pack.py`
-packs it.
+packs it. Its English version is part of the lab's translation (see
+**Languages and translations**).
 
 ## Deploy
 

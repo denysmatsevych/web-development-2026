@@ -2,11 +2,14 @@
 
 Run from the repo root with the folder's path:
 
-    python docs/web/build-pack.py starters/web/js-basics-starter  # public/uk/web/starters/js-basics-starter.zip
-    python docs/web/build-pack.py starters/react/lab-2            # public/uk/react/starters/lab-2.zip
+    python docs/web/build-pack.py starters/web/js-basics-starter      # public/uk/web/starters/js-basics-starter.zip
+    python docs/web/build-pack.py starters/web/en/layout-lab-starter  # public/en/web/starters/layout-lab-starter.zip
+    python docs/web/build-pack.py starters/react/lab-2                # public/uk/react/starters/lab-2.zip
 
-starters/<course>/<name>/ becomes public/uk/<course>/starters/<name>.zip (the
-layout is in README.md). File managers unpack a zip into a folder named after
+starters/<course>/<name>/ becomes public/uk/<course>/starters/<name>.zip, and
+its English version, starters/<course>/en/<name>/, becomes
+public/en/<course>/starters/<name>.zip under the same name (the layout is in
+README.md). File managers unpack a zip into a folder named after
 it, which is why a React starter's folder is named after its lab: lab-2.zip
 unpacks into the lab-2/ folder the lab needs.
 
@@ -55,14 +58,18 @@ def tracked(folder):
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-USAGE = ("usage: python docs/web/build-pack.py starters/<course>/<name>"
-         "   (e.g. starters/web/js-basics-starter, or starters/react/lab-2)")
+USAGE = ("usage: python docs/web/build-pack.py starters/<course>/[en/]<name>"
+         "   (e.g. starters/web/js-basics-starter, starters/web/en/layout-lab-starter,"
+         " or starters/react/lab-2)")
 if len(sys.argv) != 2:
     sys.exit(USAGE)
 SRC = (ROOT / sys.argv[1]).resolve()
-if not SRC.is_dir() or SRC.parent.parent != ROOT / "starters":
+# The folder sets the language, as for content: an `en/` level means English.
+LANG = "en" if SRC.parent.name == "en" else "uk"
+COURSE = SRC.parent.parent if LANG == "en" else SRC.parent
+if not SRC.is_dir() or SRC.name == "en" or COURSE.parent != ROOT / "starters":
     sys.exit(f"no starter folder {sys.argv[1]}/\n{USAGE}")
-OUT = ROOT / "public/uk" / SRC.parent.name / "starters" / f"{SRC.name}.zip"
+OUT = ROOT / "public" / LANG / COURSE.name / "starters" / f"{SRC.name}.zip"
 OUT.parent.mkdir(parents=True, exist_ok=True)
 
 files = tracked(SRC)
