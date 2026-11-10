@@ -69,6 +69,8 @@ export const ui = {
       close: 'Закрити',
       enlargeMockup: 'Збільшити макет',
       pricingMockup: 'Макет секції тарифів',
+      pricingHeading: 'Наші тарифи',
+      pricingLead: 'Оберіть план, який найкраще підходить для ваших завдань',
     },
     docs: {
       copy: 'Копіювати',
@@ -166,6 +168,8 @@ export const ui = {
       close: 'Close',
       enlargeMockup: 'Enlarge mockup',
       pricingMockup: 'Pricing section mockup',
+      pricingHeading: 'Our plans',
+      pricingLead: 'Choose the plan that best fits your needs',
     },
     docs: {
       copy: 'Copy',
