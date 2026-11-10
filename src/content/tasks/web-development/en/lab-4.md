@@ -42,7 +42,7 @@ a tool or a manual check, fix the justified ones, and re-check the result.
 
 ## 2. Project structure
 
-**Download:** [flowtask-starter.zip](/uk/web/starters/flowtask-starter.zip) (≈ 2.8 MB).
+**Download:** [flowtask-starter.zip](/en/web/starters/flowtask-starter.zip) (≈ 2.8 MB).
 Unpack the archive either into a **separate repository** (the simplest option) or
 into the `lab-4/` folder of your shared repository for lab assignments — both
 options are acceptable. Only one thing is essential: on **Vercel**, the project
