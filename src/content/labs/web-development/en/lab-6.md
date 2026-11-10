@@ -71,7 +71,7 @@ After completing this lab, you must be able to:
 
 > **Starter project.** Markup for all challenges and the page with deliberately
 > introduced errors for Challenge 8 —
-> [layout-lab-starter.zip](/uk/web/starters/layout-lab-starter.zip). A description
+> [layout-lab-starter.zip](/en/web/starters/layout-lab-starter.zip). A description
 > of its contents is in the `README.md` inside the archive.
 
 ## 4. Research tasks
@@ -275,7 +275,7 @@ an ordinary nested Grid?
 ## 5. Practical part: Code challenges
 
 The markup for each challenge is provided in the
-[starter project](/uk/web/starters/layout-lab-starter.zip).
+[starter project](/en/web/starters/layout-lab-starter.zip).
 
 ### Challenge 1. Flexbox: responsive header
 
