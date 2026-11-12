@@ -1,0 +1,81 @@
+/*
+ * Courtly — design tokens.
+ *
+ * Copy this block to the beginning of your own CSS. You may rename the
+ * variables, but not change the values: they match the mockup, and the
+ * text / background pairs below are checked for WCAG 2.2 AA contrast.
+ *
+ * Font: Montserrat (variable, 400–800) with the latin + cyrillic subsets.
+ */
+:root {
+  /* ---------- Colors ---------- */
+  --color-primary: #0b6e4f;          /* buttons, links, accents */
+  --color-primary-hover: #085a40;
+  --color-primary-soft: #e3f1ea;     /* "sport type" chip background */
+  --color-accent: #c6f432;           /* lime: CTA on dark, step numbers */
+  --color-accent-hover: #b3e01f;
+
+  --color-background: #f6f8f5;       /* page background */
+  --color-surface: #ffffff;          /* cards, form, header */
+  --color-surface-alt: #eaf1ec;      /* "How it works" section */
+  --color-border: #d5dfd8;
+
+  --color-text: #13201a;             /* body text */
+  --color-text-muted: #4a5a52;       /* descriptions, captions */
+
+  --color-dark: #0f2a1f;             /* Final CTA and footer background */
+  --color-on-dark: #f1f7f3;
+  --color-on-dark-muted: #b4c7bb;
+
+  --color-rating: #a15c00;           /* rating star */
+  --color-focus: #0b6e4f;            /* on dark sections, override with --color-accent */
+
+  /* ---------- Typography ---------- */
+  --font-family-base: "Montserrat", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 800;
+
+  /* Fluid: linear between a 375px and a 1440px viewport */
+  --font-size-h1: clamp(2rem, 1.472rem + 2.254vw, 3.5rem);        /* 32 → 56px */
+  --font-size-h2: clamp(1.625rem, 1.317rem + 1.315vw, 2.5rem);    /* 26 → 40px */
+  --font-size-h3: clamp(1.1875rem, 1.121rem + 0.282vw, 1.375rem); /* 19 → 22px */
+  --font-size-lead: clamp(1.0625rem, 0.996rem + 0.282vw, 1.25rem); /* 17 → 20px */
+  --font-size-base: 1rem;            /* 16px */
+  --font-size-small: 0.875rem;       /* 14px */
+  --font-size-xs: 0.8125rem;         /* 13px: chips, eyebrow */
+
+  --line-height-tight: 1.15;         /* headings */
+  --line-height-base: 1.6;           /* text */
+
+  /* ---------- Spacing (4px step) ---------- */
+  --space-2xs: 0.25rem;  /*  4px */
+  --space-xs: 0.5rem;    /*  8px */
+  --space-sm: 0.75rem;   /* 12px */
+  --space-md: 1rem;      /* 16px */
+  --space-lg: 1.5rem;    /* 24px */
+  --space-xl: 2rem;      /* 32px */
+  --space-2xl: 3rem;     /* 48px */
+  --space-3xl: 4rem;     /* 64px */
+  --space-section: clamp(3.5rem, 2.5rem + 4vw, 6rem); /* vertical section padding */
+
+  /* ---------- Layout ---------- */
+  --container-max: 75rem;                              /* 1200px */
+  --container-gutter: clamp(1rem, 0.5rem + 2vw, 2rem); /* 16 → 32px */
+  --header-height: 4.5rem;                             /* 72px */
+  --control-height: 3rem;                              /* 48px: buttons and fields */
+
+  /* ---------- Shape & depth ---------- */
+  --radius-sm: 0.5rem;   /*  8px: fields, chips */
+  --radius-md: 0.75rem;  /* 12px: buttons */
+  --radius-lg: 1.25rem;  /* 20px: cards, images, CTA */
+  --radius-pill: 999px;
+
+  --border-width: 1px;
+  --shadow-sm: 0 1px 2px rgb(15 42 31 / 0.06), 0 1px 3px rgb(15 42 31 / 0.08);
+  --shadow-md: 0 12px 32px -12px rgb(15 42 31 / 0.25);
+
+  --transition-fast: 150ms ease;
+}

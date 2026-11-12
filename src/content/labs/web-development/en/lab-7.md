@@ -16,7 +16,7 @@ sports venues — following the provided mockup. Deploy and publish it on
 **GitHub Pages or Vercel**.
 
 - **Mockup, design tokens, and component specifications:**
-  [Courtly — mockup and design system](/en/web-development/labs/lab-7/task/).
+  [Courtly — mockup and design system](/web-development/labs/lab-7/task/).
 - **Images, `tokens.css`, specification, mockup captures, favicon, OG image:**
   [courtly-assets.zip](/uk/web/starters/courtly-assets.zip) (≈ 900 KB).
 - **Your own CSS**, without any CSS frameworks or UI component libraries.
@@ -28,6 +28,11 @@ The page structure, section order, column counts, and card layout must match
 the mockup; minor deviations in spacing and exact dimensions are acceptable.
 Use the values from `tokens.css` without changes.
 
+**The page is in Ukrainian.** Courtly is a Ukrainian service, and the mockup
+shows its Ukrainian text: copy every text from the mockup as it is, without
+translating it. Where this assignment names a text on the page, it quotes the
+Ukrainian, with an English translation in brackets for you.
+
 ## 1. Page sections
 
 Copy, section order, and appearance are in the mockup. Below is only what cannot
@@ -35,31 +40,31 @@ be seen directly from the mockup: semantic markup, `id`s, and where links point.
 
 | Section | `id` | What is important |
 | --- | --- | --- |
-| Header | — | `<header>` + `<nav>`; "Book now" is a link to `#venues`; below 1024 px — mobile menu |
-| Hero | — | the only `<h1>`; "Find a venue" is a link to `#venues` |
+| Header | — | `<header>` + `<nav>`; «Забронювати» ("Book") is a link to `#venues`; below 1024 px — mobile menu |
+| Hero | — | the only `<h1>`; «Знайти майданчик» ("Find a venue") is a link to `#venues` |
 | Search form | `search` | see below |
 | Popular venues | `venues` | 6 cards, each an `<article>` with an `<h3>` |
 | How it works | `how` | 3 steps, for example an `<ol>` |
-| About the service | `about` | target of the "About" navigation item |
-| Final CTA | — | "Find a venue" is a link to `#search` |
+| About the service | `about` | target of the «Про сервіс» ("About the service") navigation item |
+| Final CTA | — | «Знайти майданчик» is a link to `#search` |
 | Footer | `contacts` | `<footer>`; email and phone are `mailto:` and `tel:` links |
 
-**Form.** Demonstrative, with `action="#venues"`. Every field has an associated
+**Form.** A demo form, with `action="#venues"`. Every field has an associated
 `<label>` and `required`:
 
-- **City** — `<select>`: "Select a city" (`value=""`), Kyiv, Lviv, Odesa,
-  Kharkiv, Dnipro;
-- **Sport** — `<select>`: "Any" (`value=""`), Football, Tennis, Basketball,
-  Volleyball;
-- **Date** — `<input type="date">`;
-- **Search** — `<button type="submit">`.
+- **Місто** (City) — `<select>`: «Оберіть місто» ("Choose a city",
+  `value=""`), Київ, Львів, Одеса, Харків, Дніпро;
+- **Вид спорту** (Sport) — `<select>`: «Будь-який» ("Any", `value=""`),
+  Футбол, Теніс, Баскетбол, Волейбол;
+- **Дата** (Date) — `<input type="date">`;
+- **Знайти** (Search) — `<button type="submit">`.
 
 **Cards.** Names, sports, and prices should match the mockup; features and ratings
-can be your own. "Book now" triggers an action, so it is a `<button type="button">`.
+can be your own. «Забронювати» triggers an action, so it is a `<button type="button">`.
 Each button must have a unique accessible name containing the venue name,
-for example `Book now<span class="visually-hidden"> at Arena Sport</span>`.
+for example `Забронювати<span class="visually-hidden"> Arena Sport</span>`.
 
-## 2. Mandatory technical solutions
+## 2. Required techniques
 
 1. **CSS Variables.** Colors, font family, typography, spacing, and border
    radii come from `tokens.css`. On dark sections (CTA, footer), the focus color
@@ -76,8 +81,7 @@ for example `Book now<span class="visually-hidden"> at Arena Sport</span>`.
    2 rows**; on tablet and mobile, it takes a single cell like a regular card.
 5. **Flexbox** — in the header, form, and inside cards where appropriate.
 6. **Mobile menu** — `<button type="button">` with an accessible name,
-   `aria-expanded`, and `aria-controls`; opens and closes with keyboard
-   navigation.
+   `aria-expanded`, and `aria-controls`; opens and closes from the keyboard.
 7. **Hero image** — the primary candidate for LCP: `srcset` with both files,
    explicit `width` and `height`, `fetchpriority="high"`, **without**
    `loading="lazy"`. All other images must have `width`, `height`, and
@@ -104,7 +108,7 @@ Target guideline — **WCAG 2.2 AA**.
 
 **SEO — in `<head>`**
 
-- `<meta charset>`, `<meta name="viewport">`, `lang="en"` (or `lang="uk"` if deploying the Ukrainian text);
+- `<meta charset>`, `<meta name="viewport">`, `lang="uk"`;
 - `<title>` and `<meta name="description">`;
 - Canonical URL;
 - `og:title`, `og:description`, `og:url`, `og:image` — an **absolute URL** to
@@ -143,7 +147,7 @@ GitHub Pages: https://<username>.github.io/<repository>/
 Vercel: https://<project>.vercel.app/
 ```
 
-Also attach to the email:
+Also include in the email:
 
 - **one Lighthouse screenshot** with the scores for all four categories;
 - **a brief description of working with AI:** which tool and model were used,
@@ -153,7 +157,7 @@ Also attach to the email:
   > AI: ChatGPT (GPT-5). Generated the initial HTML skeleton of sections, then
   > reviewed the completed page for semantic HTML, accessibility, and responsive
   > layout. Identified 7 issues, 5 of which were fixed: the form was missing a
-  > `<label>` for the date input, "Book now" buttons shared identical names, a
+  > `<label>` for the date input, «Забронювати» buttons shared identical names, a
   > horizontal scrollbar appeared at 320 px, the hero image lacked
   > `width`/`height`, and focus outlines were invisible in the footer. 2 recommendations
   > were rejected: adding `role="button"` to `<button>` (redundant ARIA on native
@@ -163,17 +167,17 @@ Also attach to the email:
 Before submitting, open both links in an Incognito window: both the live site
 and the repository must open publicly without requiring authentication.
 
-AI assistance is permitted and encouraged, but you must be prepared to explain
-every decision in your HTML and CSS during oral defense if needed.
+AI assistance is permitted and encouraged, but if asked, you must be able to
+explain every decision in your own HTML and CSS.
 
 ## Acceptance criteria
 
 ```text
 [ ] The page matches the mockup at 1440, 768, and 375 px
-[ ] No horizontal scrolling, especially at 320 px
+[ ] No horizontal scrolling, including at 320 px
 [ ] Sections have the ids from the table in §1; links point to the specified targets
 [ ] Form: labels, required, action="#venues"
-[ ] "Book now" buttons — <button> elements with unique accessible names
+[ ] «Забронювати» buttons — <button> elements with unique accessible names
 [ ] Tokens from tokens.css; --color-focus is overridden on dark sections
 [ ] Headings scale via clamp(); Montserrat includes the cyrillic subset
 [ ] Grid: 1 → 2 → 3 columns; featured card spans 2 × 2 on desktop
