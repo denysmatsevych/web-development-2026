@@ -12,7 +12,7 @@ highlights:
 acceptance:
   - "Desktop 1440 px matches the mockup: inline navigation, 2-column hero, 3-column cards"
   - "Featured card Arena Sport spans 2 columns × 2 rows, 3 × 3 grid with no empty cells"
-  - "Tablet 768 px: «Меню» (Menu) button, 2 × 2 form, 2-column cards, vertical steps"
+  - "Tablet 768 px: Menu button, 2 × 2 form, 2-column cards, vertical steps"
   - "Mobile 375 px: single column, full-width form controls and buttons"
   - "Mobile menu opens and closes, aria-expanded updates"
   - "Featured card on desktop — image on the left, content on the right; vertical on tablet and mobile"
@@ -43,10 +43,10 @@ Captures are rendered **at a 1 : 1 scale**: 1 image px = 1 CSS px. Anything not
 detailed in the specification (§4) can be measured directly on the image in any
 image viewer.
 
-Copy for headings, buttons, and form fields is taken from the lab assignment.
-It is in Ukrainian, and so is your page: copy it as it is, without translating
-it. Venue details and ratings in the mockup are illustrative: you may write
-your own.
+The texts of headings, buttons, and form fields come from the lab assignment.
+They are in Ukrainian, and so is your page: use them as they are, without
+translating them. Venue details and ratings in the mockup are illustrative:
+you may write your own.
 
 **Download:** [courtly-assets.zip](/en/web/starters/courtly-assets.zip) — `tokens.css`,
 `SPEC.md` (§2–5 of this page), mockup captures, favicon, logo mark,
@@ -94,7 +94,7 @@ it, the browser substitutes a system font for every Ukrainian letter.
 | `--font-size-h3` | 19 px | 22 px | card titles, steps |
 | `--font-size-lead` | 17 px | 20 px | hero subtitle, section leads |
 | `--font-size-base` | 16 px | 16 px | body text |
-| `--font-size-small` | 14 px | 14 px | price «/год» (per hour), field labels, footer |
+| `--font-size-small` | 14 px | 14 px | price <span lang="uk">«/год»</span> (per hour), field labels, footer |
 | `--font-size-xs` | 13 px | 13 px | chips, badges |
 
 Between 375 and 1440 px, font sizes scale linearly — this is handled by `clamp()`
@@ -120,7 +120,7 @@ Mobile-first, two breakpoints: **640 px** (`40rem`) and **1024 px** (`64rem`).
 
 | | < 640 px | 640–1023 px | ≥ 1024 px |
 | --- | --- | --- | --- |
-| Header | «Меню» (Menu) button | «Меню» button | inline navigation |
+| Header | <span lang="uk">«Меню»</span> (Menu) button | <span lang="uk">«Меню»</span> button | inline navigation |
 | Hero | vertical, 16 : 9 image | vertical, 16 : 9 image | 2 columns, 4 : 3 image |
 | Search form | 1 column | 2 × 2 | 4 across in a row |
 | Cards | 1 column | 2 columns | 3 columns, featured 2 × 2 |
@@ -156,9 +156,9 @@ Container — `max-width` `--container-max` (1200) plus side padding
 | Header | height `--header-height` (72), background `--color-surface`, bottom border 1 px `--color-border` |
 | Logo | mark 40 × 40, adjacent text "Courtly" 22 px (1.375rem) `--font-weight-bold`; gap `--space-xs` (8) |
 | Navigation, ≥ 1024 px | links `--font-size-base`, `--font-weight-semibold`, `--color-text`, hover `--color-primary`; gap between links `--space-xl` (32), from nav to button `--space-2xl` (48) |
-| «Меню» button, < 1024 px | height 44 px, padding 0 `--space-md` (16), border 1 px `--color-border`, `--radius-md`; icon — three 18 × 2 px bars with 6 px step, transforms into an X when open |
+| <span lang="uk">«Меню»</span> button, < 1024 px | height 44 px, padding 0 `--space-md` (16), border 1 px `--color-border`, `--radius-md`; icon — three 18 × 2 px bars with 6 px step, transforms into an X when open |
 | Menu panel | full width below header: background `--color-surface`, `--shadow-md`, padding `--space-lg` (24) top and `--space-xl` (32) bottom |
-| Menu item | 17 px (1.0625rem) `--font-weight-semibold`, vertical padding `--space-sm` (12), bottom divider 1 px `--color-border`; «Забронювати» (Book) — full width, `--space-lg` (24) below list |
+| Menu item | 17 px (1.0625rem) `--font-weight-semibold`, vertical padding `--space-sm` (12), bottom divider 1 px `--color-border`; <span lang="uk">«Забронювати»</span> (Book) — full width, `--space-lg` (24) below list |
 
 ### Hero
 
@@ -177,7 +177,7 @@ Container — `max-width` `--container-max` (1200) plus side padding
 | Form | `--space-2xl` (48) below hero; background `--color-surface`, border 1 px `--color-border`, `--radius-lg`, `--shadow-md`; padding `--space-lg` (24), from 1024 px `--space-lg` / `--space-xl` (24 / 32); gap between controls `--space-md` (16) |
 | Field label | `--font-size-small`, `--font-weight-semibold`; gap to input `--space-2xs` (4) |
 | Input | height `--control-height` (48), padding 0 `--space-sm` (12), background `--color-background`, border 1 px `--color-border` (hover `--color-text-muted`), `--radius-sm` |
-| «Знайти» (Search) button | primary; below 1024 px full column width, from 1024 px — minimum 160 px |
+| <span lang="uk">«Знайти»</span> (Search) button | primary; below 1024 px full column width, from 1024 px — minimum 160 px |
 
 ### Buttons
 
@@ -203,7 +203,7 @@ Regular card                   Featured card on desktop
 │ Title (h3)           │       │ image      │ ✓ perks          │
 │ Description          │       │            │ available slots  │
 │ ──────────────────── │       │            │ ──────────────── │
-│ 350 грн/год  [Button]│       │            │ price   [Button] │
+│ 350 UAH/hr   [Button]│       │            │ price   [Button] │
 └──────────────────────┘       └────────────┴──────────────────┘
 ```
 
@@ -214,12 +214,12 @@ Regular card                   Featured card on desktop
 | Image | 4 : 3, `object-fit: cover` |
 | Text content | padding `--space-lg` (24), elements spaced by `--space-sm` (12) |
 | "Sport type" chip | padding `--space-2xs` / `--space-sm` (4 / 12), `--radius-pill`, background `--color-primary-soft`, text `--color-primary`, `--font-size-xs`, `--font-weight-semibold`; placed on the left, rating on the right |
-| Rating | `--font-size-small`, `--font-weight-semibold`; star icon `--color-rating`; «(98 відгуків)» ("98 reviews") — regular, `--color-text-muted` |
+| Rating | `--font-size-small`, `--font-weight-semibold`; star icon `--color-rating`; <span lang="uk">«(98 відгуків)»</span> ("98 reviews") — regular, `--color-text-muted` |
 | Description | `--color-text-muted` |
 | "Price + button" row | aligned to bottom of card; top border 1 px `--color-border` and padding-top `--space-md` (16); gap `--space-md` between price and button, wraps if insufficient space |
-| Price | amount in hryvnias, such as «350 грн», 20 px (1.25rem) `--font-weight-bold` `--color-text`; «/год» (per hour) — `--font-size-small`, `--color-text-muted` |
+| Price | amount in hryvnias, such as <span lang="uk">«350 грн»</span>, 20 px (1.25rem) `--font-weight-bold` `--color-text`; <span lang="uk">«/год»</span> (per hour) — `--font-size-small`, `--color-text-muted` |
 | Button | outline; on featured card — primary |
-| «Вибір тижня» (Pick of the week) badge | featured card only, across all screen widths: top-left corner of image with `--space-md` (16) offset; padding 4 / 12, `--radius-pill`, background `--color-accent`, text `--color-dark`, `--font-size-xs`, `--font-weight-bold`, uppercase, letter-spacing 0.06em |
+| <span lang="uk">«Вибір тижня»</span> (Pick of the week) badge | featured card only, across all screen widths: top-left corner of image with `--space-md` (16) offset; padding 4 / 12, `--radius-pill`, background `--color-accent`, text `--color-dark`, `--font-size-xs`, `--font-weight-bold`, uppercase, letter-spacing 0.06em |
 
 **Featured card on desktop** (≥ 1024 px):
 

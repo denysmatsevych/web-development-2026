@@ -1,6 +1,6 @@
 ---
 number: 7
-title: "Module assessment 1: responsive landing page Courtly"
+title: "Module assessment 1: responsive Courtly landing page"
 summary: "A comprehensive assignment covering HTML, CSS, SEO, accessibility, and responsive design: a landing page for the Courtly sports venue booking service based on a provided mockup and design system, with fluid typography and a Lighthouse audit."
 discipline: "Modern Web Development: HTML, CSS, JS/TS"
 level: "Year 3, Computer Science"
@@ -29,38 +29,40 @@ the mockup; minor deviations in spacing and exact dimensions are acceptable.
 Use the values from `tokens.css` without changes.
 
 **The page is in Ukrainian.** Courtly is a Ukrainian service, and the mockup
-shows its Ukrainian text: copy every text from the mockup as it is, without
-translating it. Where this assignment names a text on the page, it quotes the
-Ukrainian, with an English translation in brackets for you.
+shows its Ukrainian text: use all of it as it is, without translating it.
+Where this assignment names text on the page, it quotes the Ukrainian, with an
+English translation in brackets for you.
 
 ## 1. Page sections
 
-Copy, section order, and appearance are in the mockup. Below is only what cannot
+Texts, section order, and appearance are in the mockup. Below is only what cannot
 be seen directly from the mockup: semantic markup, `id`s, and where links point.
 
 | Section | `id` | What is important |
 | --- | --- | --- |
-| Header | — | `<header>` + `<nav>`; «Забронювати» ("Book") is a link to `#venues`; below 1024 px — mobile menu |
-| Hero | — | the only `<h1>`; «Знайти майданчик» ("Find a venue") is a link to `#venues` |
+| Header | — | `<header>` + `<nav>`; <span lang="uk">«Забронювати»</span> ("Book") is a link to `#venues`; below 1024 px — mobile menu |
+| Hero | — | the only `<h1>`; <span lang="uk">«Знайти майданчик»</span> ("Find a venue") is a link to `#venues` |
 | Search form | `search` | see below |
 | Popular venues | `venues` | 6 cards, each an `<article>` with an `<h3>` |
 | How it works | `how` | 3 steps, for example an `<ol>` |
-| About the service | `about` | target of the «Про сервіс» ("About the service") navigation item |
-| Final CTA | — | «Знайти майданчик» is a link to `#search` |
+| About the service | `about` | target of the <span lang="uk">«Про сервіс»</span> ("About the service") navigation item |
+| Final CTA | — | <span lang="uk">«Знайти майданчик»</span> is a link to `#search` |
 | Footer | `contacts` | `<footer>`; email and phone are `mailto:` and `tel:` links |
 
 **Form.** A demo form, with `action="#venues"`. Every field has an associated
 `<label>` and `required`:
 
-- **Місто** (City) — `<select>`: «Оберіть місто» ("Choose a city",
-  `value=""`), Київ, Львів, Одеса, Харків, Дніпро;
-- **Вид спорту** (Sport) — `<select>`: «Будь-який» ("Any", `value=""`),
-  Футбол, Теніс, Баскетбол, Волейбол;
-- **Дата** (Date) — `<input type="date">`;
-- **Знайти** (Search) — `<button type="submit">`.
+- **<span lang="uk">Місто</span>** (City) — `<select>`:
+  <span lang="uk">«Оберіть місто»</span> ("Choose a city", `value=""`),
+  <span lang="uk">Київ, Львів, Одеса, Харків, Дніпро</span>;
+- **<span lang="uk">Вид спорту</span>** (Sport) — `<select>`:
+  <span lang="uk">«Будь-який»</span> ("Any", `value=""`),
+  <span lang="uk">Футбол, Теніс, Баскетбол, Волейбол</span>;
+- **<span lang="uk">Дата</span>** (Date) — `<input type="date">`;
+- **<span lang="uk">Знайти</span>** (Search) — `<button type="submit">`.
 
 **Cards.** Names, sports, and prices should match the mockup; features and ratings
-can be your own. «Забронювати» triggers an action, so it is a `<button type="button">`.
+can be your own. <span lang="uk">«Забронювати»</span> triggers an action, so it is a `<button type="button">`.
 Each button must have a unique accessible name containing the venue name,
 for example `Забронювати<span class="visually-hidden"> Arena Sport</span>`.
 
@@ -98,7 +100,7 @@ Target guideline — **WCAG 2.2 AA**.
 - HTML landmarks: `<header>`, `<nav>`, `<main>`, `<section>`, `<article>`,
   `<footer>`;
 - A single `<h1>`, followed by `<h2>` for sections and `<h3>` for cards, steps,
-  and benefits; headings are not used merely for font sizing;
+  and perks; headings are not used merely for font sizing;
 - All interactive elements are reachable and operable via keyboard;
   `:focus-visible` is clearly visible on both light and dark sections;
 - `<a>` is used for navigation, `<button>` for actions;
@@ -157,7 +159,7 @@ Also include in the email:
   > AI: ChatGPT (GPT-5). Generated the initial HTML skeleton of sections, then
   > reviewed the completed page for semantic HTML, accessibility, and responsive
   > layout. Identified 7 issues, 5 of which were fixed: the form was missing a
-  > `<label>` for the date input, «Забронювати» buttons shared identical names, a
+  > `<label>` for the date input, <span lang="uk">«Забронювати»</span> buttons shared identical names, a
   > horizontal scrollbar appeared at 320 px, the hero image lacked
   > `width`/`height`, and focus outlines were invisible in the footer. 2 recommendations
   > were rejected: adding `role="button"` to `<button>` (redundant ARIA on native
@@ -177,7 +179,7 @@ explain every decision in your own HTML and CSS.
 [ ] No horizontal scrolling, including at 320 px
 [ ] Sections have the ids from the table in §1; links point to the specified targets
 [ ] Form: labels, required, action="#venues"
-[ ] «Забронювати» buttons — <button> elements with unique accessible names
+[ ] Card booking buttons — <button> elements with unique accessible names
 [ ] Tokens from tokens.css; --color-focus is overridden on dark sections
 [ ] Headings scale via clamp(); Montserrat includes the cyrillic subset
 [ ] Grid: 1 → 2 → 3 columns; featured card spans 2 × 2 on desktop
