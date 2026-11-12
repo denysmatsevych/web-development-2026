@@ -127,8 +127,11 @@ same dimensions compresses to ~200 KB and A9 stops being a finding, so do not
 "optimise" this file.
 
 **Delivery.** `public/uk/web/starters/flowtask-starter.zip` (~2.85 MB), linked from §2 of
-the brief. Students unpack it either into a repository of its own or into a
-`lab-4/` folder of their multi-lab repository — most of them already keep
+the brief. The English brief links `public/en/web/starters/flowtask-starter.zip`,
+packed from `starters/web/en/flowtask-starter/`: the same files with the README
+translated, so a fix to the code or the assets goes into both folders. Students
+unpack it either into a repository of its own or into a `lab-4/` folder of
+their multi-lab repository — most of them already keep
 `lab-1/`, `lab-2/`, … side by side, and nothing in the starter needs repo root.
 The only real constraint is that the **Vercel** deploy must serve the project
 from the origin root, or §4.6's `robots.txt` check has nothing to look at; for
@@ -145,6 +148,7 @@ use:
 
 ```bash
 python docs/web/build-pack.py starters/web/flowtask-starter
+python docs/web/build-pack.py starters/web/en/flowtask-starter
 ```
 
 Do **not** use `tar -a -cf out.zip` instead: `-a` picks a compression filter by

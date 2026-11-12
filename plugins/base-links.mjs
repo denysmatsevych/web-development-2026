@@ -82,14 +82,18 @@ function findEnglishTargets(courses) {
   return targets;
 }
 
-export default function baseLinks({ base = '' } = {}) {
-  const prefix = base.replace(/\/$/, '');
+/**
+ * Rule 2 above as a function of a root-relative URL, for the English pages
+ * that exist when it is called. Exported so whatever else turns English
+ * Markdown into links (the PDF handouts) follows the same rule as the site.
+ */
+export function createEnglishLocalizer() {
   const courses = findCourses();
   const englishTargets = findEnglishTargets(courses);
 
   /** Add `/en` when the hub or course page has an English version. */
-  const localize = (value) => {
-    // Already localized by the author: keep as is (it still gets the base below).
+  return (value) => {
+    // Already localized by the author: keep as is (it still gets the base).
     if (value.startsWith('/en/')) return value;
     const [path] = value.split(/[?#]/);
     if (path === '/') return `/en${value}`;
@@ -98,6 +102,11 @@ export default function baseLinks({ base = '' } = {}) {
     const route = path.endsWith('/') ? path : `${path}/`;
     return englishTargets.has(route) ? `/en${value}` : value;
   };
+}
+
+export default function baseLinks({ base = '' } = {}) {
+  const prefix = base.replace(/\/$/, '');
+  const localize = createEnglishLocalizer();
 
   return {
     name: 'base-links',

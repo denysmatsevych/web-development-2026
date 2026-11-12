@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Challenge 4 — Subgrid cards</title>
+  <link rel="stylesheet" href="../base.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<details class="task" open>
+  <summary>Task · Challenge 4. Subgrid: aligned cards</summary>
+  <p class="task-back"><a href="../index.html">← All challenges</a></p>
+  <p>The cards have headings and text of different lengths. Align the headings,
+    body text, and “Read more” buttons at the same levels — without fixed heights.</p>
+  <ol>
+    <li>First, implement a solution <strong>without subgrid</strong> (each card is its
+      own Grid or Flexbox) and note what lines up and what doesn't. Keep this
+      version so you can compare it with the subgrid solution later.</li>
+    <li>Replace the implementation with <strong>subgrid</strong> (see the experiment in §4.5 of the lab).</li>
+    <li>Explain: what problem does subgrid solve that is more difficult to handle
+      with an ordinary nested Grid?</li>
+  </ol>
+</details>
+
+<section class="cards">
+  <article class="card">
+    <h2>Grid</h2>
+    <p>Two-dimensional layout.</p>
+    <a class="button" href="#">Read more</a>
+  </article>
+  <article class="card">
+    <h2>Container queries and reusable components</h2>
+    <p>Components that respond to the width of their own container instead of the viewport, so the same card works in a sidebar, a main column and a modal.</p>
+    <a class="button" href="#">Read more</a>
+  </article>
+  <article class="card">
+    <h2>Fluid type</h2>
+    <p>clamp() sets a minimum, a preferred value and a maximum.</p>
+    <a class="button" href="#">Read more</a>
+  </article>
+  <article class="card">
+    <h2>Subgrid</h2>
+    <p>A nested grid that shares the tracks of its parent. Useful whenever sibling components have to line up their inner parts: titles, text and actions.</p>
+    <a class="button" href="#">Read more</a>
+  </article>
+</section>
+</body>
+</html>
