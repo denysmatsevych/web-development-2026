@@ -54,7 +54,9 @@ React Hook Form, показувати доступні повідомлення 
    [Controller](https://react-hook-form.com/docs/usecontroller/controller),
    [useWatch](https://react-hook-form.com/docs/usewatch),
    [reset](https://react-hook-form.com/docs/useform/reset),
-   [setFocus](https://react-hook-form.com/docs/useform/setfocus) (§4.3–4.5).
+   [setFocus](https://react-hook-form.com/docs/useform/setfocus),
+   [getValues](https://react-hook-form.com/docs/useform/getvalues),
+   [trigger](https://react-hook-form.com/docs/useform/trigger) (§4.3–4.5).
 4. Zod: [Basics](https://zod.dev/basics),
    [Defining schemas](https://zod.dev/api),
    [Customizing errors](https://zod.dev/error-customization) — схема,
@@ -470,6 +472,8 @@ React Hook Form. Правил на цьому кроці ще немає: сто
      handleSubmit,
      reset,
      setFocus,
+     getValues,
+     trigger,
      formState: { errors },
    } = useForm({
      resolver: zodResolver(bookingSchema),
@@ -487,7 +491,8 @@ React Hook Form. Правил на цьому кроці ще немає: сто
      зміною, навіть поки людина ще вперше вводить значення; `'onTouched'` —
      уперше, коли поле залишають, а далі з кожною зміною. Останній не
      показує помилок, поки людина не закінчила вводити, але одразу показує,
-     що помилку виправлено.
+     що помилку виправлено;
+   - `getValues` і `trigger` знадобляться в кроці 5.
 
 2. **`noValidate`.** Додайте атрибут формі:
 
@@ -548,15 +553,25 @@ React Hook Form. Правил на цьому кроці ще немає: сто
    минув (наприклад, 08:00), і перейдіть до іншого поля: під часом
    з'явиться «Цей час сьогодні вже минув». Тепер змініть дату на завтрашню:
    повідомлення лишилося, хоча час уже правильний. Після зміни поля React
-   Hook Form оновлює помилки лише цього поля, а про час дата не знає. Додайте
-   в `register` дати залежність:
+   Hook Form оновлює помилки лише цього поля, а про час дата не знає. Нехай
+   дата сама просить перевірити час. Замініть `register` дати на:
 
    ```jsx
-   {...register('date', { deps: 'time' })}
+   {...register('date', {
+     onChange: () => {
+       if (getValues('time')) trigger('time')
+     },
+   })}
    ```
 
-   `deps` просить після кожної зміни дати перевірити й поле «Час». Повторіть:
-   тепер повідомлення зникає, щойно змінюється дата.
+   - `onChange` у параметрах `register` — ваша функція, яку React Hook Form
+     викликає після кожної зміни поля, на додачу до своєї обробки;
+   - `trigger('time')` перевіряє поле «Час» і оновлює його повідомлення;
+   - `getValues('time')` повертає поточне значення часу. Поки час порожній,
+     перевіряти його зарано: під полем, до якого людина ще не дійшла,
+     з'явилося б «Оберіть час».
+
+   Повторіть: тепер повідомлення зникає, щойно змінюється дата.
 
 **Що має вийти:**
 
@@ -566,7 +581,7 @@ React Hook Form. Правил на цьому кроці ще немає: сто
 - поки ви вперше вводите значення, повідомлення немає; воно з'являється, коли
   ви залишаєте поле, і зникає, щойно значення виправлено;
 - час 22:00 дає «Столик можна забронювати з 8:00 до 20:00»;
-- з `deps` повідомлення про час, що минув, зникає після зміни дати;
+- повідомлення про час, що минув, зникає, щойно змінюється дата;
 - якщо ввести ім'я з пробілами на початку й у кінці, у підтвердження воно
   потрапляє без них: `onValid` отримує дані, які повернула схема;
 - «Очистити» прибирає й повідомлення про помилки.
@@ -575,6 +590,8 @@ React Hook Form. Правил на цьому кроці ще немає: сто
 **Довідка:** [Schema Validation](https://react-hook-form.com/get-started#SchemaValidation),
 [Handle errors](https://react-hook-form.com/get-started#Handleerrors),
 [useForm: mode](https://react-hook-form.com/docs/useform#mode),
+[getValues](https://react-hook-form.com/docs/useform/getvalues),
+[trigger](https://react-hook-form.com/docs/useform/trigger),
 [@hookform/resolvers: Zod](https://github.com/react-hook-form/resolvers#zod),
 [Validating Input](https://www.w3.org/WAI/tutorials/forms/validation/),
 [`aria-invalid`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-invalid),
@@ -1020,7 +1037,9 @@ _React Hook Form_
 - Навіщо `defaultValues`? Що робить `reset()`?
 - Чому `setFocus('name')` стоїть перед `reset()`? Що буде, якщо поміняти їх
   місцями?
-- Навіщо `deps: 'time'` на полі дати?
+- Навіщо `trigger('time')` в `onChange` дати? Навіщо умова
+  `getValues('time')`?
+- У `register` є опція `deps`. Чому форма не використовує `deps: 'time'`?
 - Чому «Очистити» тепер `type="button"` з `onClick`, а не `type="reset"` з
   `onReset` на формі?
 

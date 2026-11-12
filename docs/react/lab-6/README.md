@@ -69,6 +69,10 @@ plan. The plan the lab was built from is
   returns is `dispatch` (react.dev's examples use the same name), the
   action's comment is reworded, and §4.5's main listing sits outside the
   numbered steps.
+- **§4.4 re-checks the time from the date's `onChange`** with
+  `trigger('time')`, once the time has a value, instead of the plan's
+  `deps: 'time'`. Changed after the PR review; the defence asks why, so the
+  reason is in `solution/README.md`.
 - **`onValid(data)`, not `onValid(booking)`:** in §4.3 a `booking` parameter
   would shadow the `booking` state.
 - **§4.8 runs `npm install` before swapping libraries.** On a workspace npm
@@ -105,7 +109,8 @@ Zod 4.6.7, `@hookform/resolvers` 7.0.6, and for §4.8 Formik 2.4.9 and Yup
 - in Edge 157 headless, on Vite dev servers (`solution/shots.mjs`), each
   step behaves as its «Що має вийти» says, with no React warnings in the
   console; the steps that make students break something (dispatching
-  without `startTransition`, the past-time message without `deps`, §4.7
+  without `startTransition`, the past-time message without the date's
+  `onChange`, §4.7
   without `defaultValue`) behave as the handout says too. Results, renders
   and the cases kept for the defence are in `solution/README.md`;
 - Zod in Node: the object-level `refine` runs next to field errors;
