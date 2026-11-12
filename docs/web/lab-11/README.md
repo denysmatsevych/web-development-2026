@@ -113,6 +113,7 @@ record gets empty episode and cast lists.
 - `verify.mjs` + `cdp.mjs` — the headless Edge harness;
 - `experiments.mjs` + `answer-key.md` — the §4 answer key, run against the
   live API;
+- `en.mjs` — the Ukrainian → English string pairs for `--lang en`;
 - `calibration.md` — which checks each agent's draft of each prompt failed,
   and what that changed.
 
@@ -129,16 +130,30 @@ Back the folder up outside the repo.
 ## Regenerating
 
 ```sh
-node docs/web/lab-11/record-fixtures.mjs                       # check/fixtures/ from the live API
-python docs/web/build-pack.py starters/web/showfinder-starter  # public/uk/web/starters/showfinder-starter.zip
-python docs/web/build-handout.py lab-11                        # public/uk/web/labs/lab-11.pdf
-node docs/web/lab-11/solution/verify.mjs all                   # local only
-node docs/web/lab-11/solution/experiments.mjs                  # local only: §4 answer key
+node docs/web/lab-11/record-fixtures.mjs                          # check/fixtures/ from the live API
+python docs/web/build-pack.py starters/web/showfinder-starter     # public/uk/web/starters/showfinder-starter.zip
+python docs/web/build-pack.py starters/web/en/showfinder-starter  # public/en/web/starters/showfinder-starter.zip
+python docs/web/build-handout.py lab-11                           # public/uk/web/labs/lab-11.pdf
+python docs/web/build-handout.py lab-11 --lang en                 # public/en/web/labs/lab-11.pdf
+node docs/web/lab-11/solution/verify.mjs all                      # local only
+node docs/web/lab-11/solution/verify.mjs all --lang en            # local only: the English starter
+node docs/web/lab-11/solution/experiments.mjs                     # local only: §4 answer key
+node docs/web/lab-11/solution/experiments.mjs --lang en           # local only: the English one
 ```
+
+The English starter has the same `check/` logic with English texts; only
+`view.js` counts episodes with English plurals. The solution, the traps and
+the experiment snippets stay in Ukrainian; with `--lang en`, the scripts swap
+their interface strings for the English ones through `solution/en.mjs`, which
+lists each pair. The English server error is "Could not get data from
+TVmaze.", not a translation that starts with "Failed to fetch": C3.10 rejects
+that phrase on the page, because it is the browser's own `TypeError` message.
 
 The two `node` scripts in `solution/` drive headless Edge; on the course
 machine Edge starts only from PowerShell, outside the agent sandbox. Edit the
-starter in `starters/web/showfinder-starter/`, then rebuild the zip. Re-run `verify.mjs`
-after any change to `check/`, the fixtures, the shell's ids or `view.js`, and
-`experiments.mjs` after changing a §4 snippet: it also confirms that each
-snippet appears in the handout word for word.
+starter in `starters/web/showfinder-starter/` and its English copy in
+`starters/web/en/showfinder-starter/`, then rebuild both zips (see the root
+`README.md` → **Per-lab starter kits and asset packs**). Re-run `verify.mjs`
+in both languages after any change to `check/`, the fixtures, the shell's ids
+or `view.js`, and `experiments.mjs` after changing a §4 snippet: it also
+confirms that each snippet appears in the handout word for word.
