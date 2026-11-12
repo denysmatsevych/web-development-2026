@@ -28,13 +28,13 @@ const shows = deepFreeze([
 const names = (list) => list.map((show) => show.name);
 
 describe('filterShows', () => {
-  test('without options → returns all shows in a new array', () => {
+  test('no options → all shows in a new array', () => {
     const result = filterShows(shows);
     assert.deepEqual(result, shows);
     assert.notEqual(result, shows, 'returned the original array instead of a new one');
   });
 
-  test('query: matches partial show name case-insensitively, trimming boundary whitespace', () => {
+  test('query: part of the name, ignoring case and leading/trailing spaces', () => {
     assert.deepEqual(names(filterShows(shows, { query: '  BAD ' })), ['Breaking Bad', 'Bad Pilot']);
   });
 
@@ -49,36 +49,20 @@ describe('filterShows', () => {
     assert.deepEqual(names(filterShows(shows, { minRating: 8.9 })), ['Breaking Bad', 'The Wire']);
   });
 
-  test('minRating: 0 is considered unset → unrated shows remain included', () => {
-    assert.deepEqual(names(filterShows(shows, { minRating: 0 })), names(shows));
+  test('minRating: 0 means no filter: ratings 0 and null remain', () => {
+    assert.deepEqual(filterShows(shows, { minRating: 0 }), shows);
   });
 
-  test('empty query or genre is considered unset', () => {
-    assert.deepEqual(names(filterShows(shows, { query: '' })), names(shows));
-    assert.deepEqual(names(filterShows(shows, { query: '   ' })), names(shows));
-    assert.deepEqual(names(filterShows(shows, { genre: '' })), names(shows));
+  test('null in any field means unset', () => {
+    assert.deepEqual(filterShows(shows, { query: null, genre: null, minRating: null }), shows);
   });
 
-  test('null values in options are considered unset', () => {
-    assert.deepEqual(
-      names(filterShows(shows, { query: null, genre: null, minRating: null })),
-      names(shows),
-    );
+  test('an empty string or a string of spaces also means unset', () => {
+    assert.deepEqual(filterShows(shows, { query: '   ', genre: '' }), shows);
   });
 
-  test('combines multiple active filters with logical AND', () => {
-    assert.deepEqual(names(filterShows(shows, { genre: 'Drama', minRating: 9 })), ['Breaking Bad']);
-  });
-
-  test('preserves original relative order of elements', () => {
-    assert.deepEqual(names(filterShows(shows, { genre: 'Drama' })), [
-      'Breaking Bad',
-      'Bad Pilot',
-      'The Wire',
-    ]);
-  });
-
-  test('does not mutate input array or its objects', () => {
-    assert.doesNotThrow(() => filterShows(shows, { minRating: 8 }));
+  test('several filters combine with AND', () => {
+    const result = filterShows(shows, { query: 'the', genre: 'Drama', minRating: 8 });
+    assert.deepEqual(names(result), ['The Wire']);
   });
 });

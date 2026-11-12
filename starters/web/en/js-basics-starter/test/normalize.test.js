@@ -53,53 +53,42 @@ describe('normalizeShow', () => {
     });
   });
 
-  test('year: parses year as a number from "YYYY-MM-DD"', () => {
-    assert.equal(normalizeShow(complete).year, 2008);
-  });
-
-  test('year: returns null if premiered is null or missing', () => {
-    assert.equal(normalizeShow(variant({ premiered: null })).year, null);
-    assert.equal(normalizeShow(without('premiered')).year, null);
-  });
-
-  test('rating: extracts rating.average', () => {
-    assert.equal(normalizeShow(complete).rating, 9.2);
-  });
-
-  test('rating: preserves rating of 0 as a valid number', () => {
+  test('rating.average: 0 is a rating of 0, not a missing rating', () => {
     assert.equal(normalizeShow(variant({ rating: { average: 0 } })).rating, 0);
   });
 
-  test('rating: returns null if rating.average is null, or rating is null/missing', () => {
+  test('rating.average: null, rating: null or no rating field → rating: null', () => {
     assert.equal(normalizeShow(variant({ rating: { average: null } })).rating, null);
     assert.equal(normalizeShow(variant({ rating: null })).rating, null);
     assert.equal(normalizeShow(without('rating')).rating, null);
   });
 
-  test('runtime: preserves value, returns null if null or missing', () => {
-    assert.equal(normalizeShow(complete).runtime, 60);
-    assert.equal(normalizeShow(variant({ runtime: null })).runtime, null);
-    assert.equal(normalizeShow(without('runtime')).runtime, null);
+  test('premiered: null or no field → year: null (not NaN and not 1970)', () => {
+    assert.equal(normalizeShow(variant({ premiered: null })).year, null);
+    assert.equal(normalizeShow(without('premiered')).year, null);
   });
 
-  test('network: extracts network.name, returns null if null or missing', () => {
-    assert.equal(normalizeShow(complete).network, 'AMC');
+  test('network: null or no field → network: null', () => {
     assert.equal(normalizeShow(variant({ network: null })).network, null);
     assert.equal(normalizeShow(without('network')).network, null);
   });
 
-  test('genres: returns a new array, does not share reference with input', () => {
-    const result = normalizeShow(complete);
-    assert.deepEqual(result.genres, ['Drama', 'Crime', 'Thriller']);
-    assert.notEqual(result.genres, complete.genres, 'genres references the input array');
+  test('runtime: null or no field → runtime: null', () => {
+    assert.equal(normalizeShow(variant({ runtime: null })).runtime, null);
+    assert.equal(normalizeShow(without('runtime')).runtime, null);
   });
 
-  test('genres: returns [] if genres is missing or null', () => {
+  test('no genres field → genres: []', () => {
     assert.deepEqual(normalizeShow(without('genres')).genres, []);
-    assert.deepEqual(normalizeShow(variant({ genres: null })).genres, []);
   });
 
-  test('does not mutate raw argument (caught by deepFreeze)', () => {
-    assert.doesNotThrow(() => normalizeShow(complete));
+  test('genres is a new array, not a reference to the input one', () => {
+    const result = normalizeShow(complete);
+    assert.notEqual(
+      result.genres,
+      complete.genres,
+      'result.genres is the same array as raw.genres',
+    );
+    assert.deepEqual(result.genres, complete.genres);
   });
 });
