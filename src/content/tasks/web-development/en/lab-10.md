@@ -29,6 +29,11 @@ service whose landing page you built in Lab 7. Here, users search for sports
 venues by city and sport type, select a date, open a booking dialog, and view
 their active bookings.
 
+**The page is in Ukrainian.** Courtly is a Ukrainian service, as in Lab 7.
+Where this assignment names text on the page, it quotes the Ukrainian, with an
+English translation in brackets for you. The language is not a defect: leave
+the texts as they are.
+
 The codebase was assembled as if rushed before a deadline: while superficially
 functional, it contains **deliberately introduced defects** across three
 categories — runtime exceptions, discrepancies between JavaScript code and the
@@ -82,33 +87,47 @@ table (§5.6 of the lab).
 
 ### 3.1. Header and mobile menu
 
-- The header contains the logo, navigation links, a "My bookings" button with a
-  booking counter, and — on screens narrower than 1024 px — a mobile menu toggle.
+- The header contains the logo, navigation links, a
+  <span lang="uk">«Мої бронювання»</span> (My bookings) button with a booking
+  counter, and — on screens narrower than 1024 px — a mobile menu toggle.
 - The menu button toggles navigation visibility; `aria-expanded` on the button
   always mirrors the live menu state.
-- The "My bookings" button opens a dialog displaying recorded bookings (§3.6).
+- The <span lang="uk">«Мої бронювання»</span> button opens a dialog displaying
+  recorded bookings (§3.6).
 
 ### 3.2. Initial state
 
 - Upon page load, the catalogue below the search form displays **popular
   venues** — the six venues with the highest rating, sorted descending.
-- The status line above the list reads: "Popular venues: 6".
+- The status line above the list reads:
+  <span lang="uk">«Популярні майданчики: 6»</span> (Popular venues: 6).
 - The Console remains clean with zero errors or warnings after initial render.
 
 ### 3.3. Search
 
-- Search form: **City** ("All cities", Kyiv, Lviv, Odesa, Kharkiv, Dnipro),
-  **Sport** ("All sports", Football, Tennis, Basketball, Volleyball),
-  **Date** (defaults to today), and a **"Find"** submit button. Submitting the
-  form does not reload the page.
-- While search queries are in-flight, the status line indicates "Searching…", and
-  the container has `aria-busy="true"`.
+- Search form. Submitting it does not reload the page.
+  - **<span lang="uk">Місто</span>** (City):
+    <span lang="uk">«Усі міста»</span> (All cities),
+    <span lang="uk">Київ, Львів, Одеса, Харків, Дніпро</span>
+    (Kyiv, Lviv, Odesa, Kharkiv, Dnipro).
+  - **<span lang="uk">Вид спорту</span>** (Sport):
+    <span lang="uk">«Усі види»</span> (All sports),
+    <span lang="uk">Футбол, Теніс, Баскетбол, Волейбол</span>
+    (Football, Tennis, Basketball, Volleyball).
+  - **<span lang="uk">Дата</span>** (Date): today by default.
+  - The **<span lang="uk">«Знайти»</span>** (Find) submit button.
+- While a search is in progress, the status line reads
+  <span lang="uk">«Шукаємо…»</span> (Searching…), and the venue list has
+  `aria-busy="true"`.
 - Once the response arrives, the view displays only venues matching **both**
-  filters (city and sport), ordered from highest to lowest rating. Selecting
-  "All cities" or "All sports" imposes no restriction. The chosen date does not
-  filter venues: it is passed forward into the booking modal (§3.5).
-- The status line reads "Found: N", where N equals the number of rendered
-  cards. If no venues match, it displays "Nothing found" and an empty list.
+  filters (city and sport), ordered from highest to lowest rating.
+  <span lang="uk">«Усі міста»</span> and <span lang="uk">«Усі види»</span>
+  impose no restriction. The chosen date does not filter venues: it is passed
+  forward into the booking dialog (§3.5).
+- The status line reads <span lang="uk">«Знайдено: N»</span> (Found: N), where
+  N equals the number of rendered cards. If no venues match, it reads
+  <span lang="uk">«Нічого не знайдено»</span> (Nothing found), and the list is
+  empty.
 - The status line is an ARIA live region: screen readers announce updates.
 - If a subsequent search is dispatched before an earlier request resolves, the
   screen must always render the result of the **most recent** search.
@@ -116,9 +135,10 @@ table (§5.6 of the lab).
 ### 3.4. Venue cards
 
 - Each card is an `<article>`: title (`<h3>`), sport type, city, rating, and
-  pricing formatted as "from 1 200 UAH/hour" (thousands separated by spaces).
-- Clicking "Book now" on **any** card opens the booking dialog for that specific
-  venue.
+  a price in the format <span lang="uk">«від 1 200 грн/год»</span>
+  (from 1 200 UAH per hour), with thousands separated by a space.
+- The <span lang="uk">«Забронювати»</span> (Book) button on **any** card on the
+  screen opens the booking dialog for that card's venue.
 
 ### 3.5. Booking dialog
 
@@ -126,23 +146,26 @@ table (§5.6 of the lab).
   (08:00–21:00, hourly intervals), duration (1–3 hours), and total calculated
   price = hourly rate × duration. The total updates immediately when duration
   changes.
-- "Confirm" adds the entry to "My bookings", increments the header counter by 1,
+- <span lang="uk">«Підтвердити»</span> (Confirm) adds the booking to
+  <span lang="uk">«Мої бронювання»</span>, increments the header counter by 1,
   and closes the dialog.
-- "Cancel" and pressing `Esc` close the dialog without saving. Upon closing,
-  focus returns to the card button that opened the dialog.
+- <span lang="uk">«Скасувати»</span> (Cancel) and pressing `Esc` close the
+  dialog without booking. Upon closing, focus returns to the card button that
+  opened the dialog.
 
 ### 3.6. My bookings
 
 - Modal `<dialog>` displaying an itemized list: venue, date, time, duration, and
   total cost.
-- If empty, displays "No bookings yet".
+- If there are no bookings, it reads
+  <span lang="uk">«Бронювань ще немає»</span> (No bookings yet).
 - The counter in the header strictly reflects the number of items in this list.
 - Bookings persist in-memory only until page reload.
 
 ### 3.7. Console
 
-- Across all interactions described in §3.1–3.6, the Console must remain free of
-  runtime errors or unhandled warnings from application code.
+- Across all interactions described in §3.1–3.6, the Console shows no errors or
+  warnings from the application code.
 
 ## 4. What not to do
 
@@ -153,7 +176,7 @@ table (§5.6 of the lab).
   change merely conceals symptoms. A `null` check is appropriate only when
   missing values represent a legitimate, **expected** application state; be
   prepared to justify this during defense.
-- Do not alter delays in `api.js` to circumvent race conditions.
+- Do not change the delays in `api.js` to make a defect stop reproducing.
 - Do not fix code without confirming the defect with concrete evidence. An
   unresolved defect is preferable to speculative changes: every change must be
   substantiated during oral defense.
@@ -161,7 +184,7 @@ table (§5.6 of the lab).
 ## 5. Deployment
 
 Deploy the corrected version to **GitHub Pages or Vercel** — following the same
-procedure as the Lab 4-5 starter ([Lab 4-5 Brief, §7](/en/web-development/labs/lab-4/task/)):
+procedure as the Lab 4-5 starter ([Lab 4-5 assignment, §7](/web-development/labs/lab-4/task/)):
 either in a standalone repository or in a `lab-10/` folder of your shared
 coursework repository. All assets use relative paths, so the app operates from
 both origin roots and repository subfolders.

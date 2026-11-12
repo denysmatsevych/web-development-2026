@@ -52,7 +52,7 @@ After completing this lab, you must be able to:
 ## 3. Lab tasks
 
 1. Work through the research tasks (§4) and conduct experiments in the browser.
-2. Download the [provided Courtly Booking starter project](/en/web-development/labs/lab-10/task/),
+2. Download the [provided Courtly Booking starter project](/web-development/labs/lab-10/task/),
    run it locally, and commit the initial state to Git.
 3. Locate, investigate, and fix at least one defect in each of the three
    scenarios: A — Console and Stack Trace, B — DOM, C — Event Loop (§5).
@@ -65,8 +65,8 @@ After completing this lab, you must be able to:
 > deliberately seeded defects across all three scenarios; their exact number and
 > locations are not disclosed. Your personal Lab 7 repository cannot be used for
 > this assignment: JavaScript there was restricted to the mobile menu, whereas
-> here everyone starts from the identical defect baseline to ensure objective
-> evaluation.
+> here everyone starts from the identical defect baseline, so that results can be
+> compared.
 
 ## 4. Research tasks
 
@@ -213,8 +213,10 @@ Conversely, identify where it fails:
 **Courtly Booking** is a venue catalogue for the Courtly service: search by city
 and sport, date selection, venue cards, booking dialog, and bookings list. How
 the application **must** behave is specified in the
-[brief](/en/web-development/labs/lab-10/task/): any deviation constitutes a
-defect.
+[assignment](/web-development/labs/lab-10/task/): any deviation constitutes a
+defect. The page is in Ukrainian, like the Courtly page in Lab 7: the
+assignment quotes its texts with English translations, and the language itself
+is not a defect.
 
 ```text
         Reproduction
@@ -291,7 +293,7 @@ in its own commit.
 6. Apply a minimal patch at the location of the root cause, rather than where the
    error manifested.
 7. Re-run the scenario. Eliminating the Console error does not necessarily mean
-   the defect is resolved: verify that the application matches the brief.
+   the defect is resolved: verify that the application matches the assignment.
 
 **Mandatory deliverable:** the linked progression:
 
@@ -303,7 +305,7 @@ Console → Stack Trace → paused scope values → origin of value
 ### 5.4. Scenario B — DOM
 
 Find a defect where **the Console shows zero errors**, yet the interface behaves
-contrary to the specification.
+contrary to the assignment.
 
 1. Describe expected vs. actual behavior.
 2. Inspect the element in Elements. Check `id`, `class`, attributes, text
@@ -374,11 +376,11 @@ btn.addEventListener('click', () => {
 ### 5.6. Regression verification
 
 After applying all fixes, verify the **entire** expected behavior from the
-[brief](/en/web-development/labs/lab-10/task/) (§3), not just the areas you
+[assignment](/web-development/labs/lab-10/task/) (§3), not just the areas you
 modified: fixing one defect frequently introduces regressions elsewhere. Record
 results in a table:
 
-| Behavior from brief | Before fixes | After fixes |
+| Behavior from the assignment | Before fixes | After fixes |
 | --- | --- | --- |
 | 3.1 Header and mobile menu | ... | ... |
 | 3.2 Initial state | ... | ... |
@@ -446,7 +448,8 @@ explain every modification, demonstrate how it was verified, and answer question
 while sharing your screen.
 
 The instructor may roll back your patches (`git checkout` of the initial commit)
-and request that you reproduce the debugging process live without AI assistance.
+and ask you to repeat the debugging live without AI assistance, or change the
+conditions of a scenario.
 
 **Sample questions:**
 
@@ -484,15 +487,15 @@ _AI_
 
 ## 8. Grading
 
-This assignment is worth **3 points** (1 point each for research tasks,
+This lab is worth **3 points** (1 point each for research tasks,
 practical implementation, and defense), plus **1 bonus point**.
 
 | Component | Points | Grading criteria |
 | --- | --- | --- |
 | Research tasks (§4) | 1 | 0.25 points for each subsection §4.1–§4.4: 3–5 sentence conclusion and experiment result with explanation (report item 1) |
-| Practical part (§5) | 1 | 0.25 points for each scenario A, B, and C: defect reproduced, report contains all required evidence, and an isolated commit resolves the root cause (for C — also experiment C.2). Remaining 0.25 points — regression table (item 5), live deployment, and an analyzed example of an AI suggestion masking root causes (item 6) |
-| Defense (§7) | 1 | Live debugging without AI: reproducing a scenario defect on the unpatched baseline and identifying its cause in DevTools — up to 0.5 points; two questions from other groups in §7 — 0.25 points each for complete answers |
-| Bonus point | +1 | Either submitted before **21.10.2026** OR completed during class |
+| Practical part (§5) | 1 | 0.25 points for each scenario A, B, and C: defect reproduced, report contains all the evidence from items 3–4, and an isolated commit fixes the root cause, not the symptom (for C — also experiment C.2). Remaining 0.25 points — regression table (item 5), the deployed corrected version, and an analyzed example of an AI suggestion masking root causes (item 6) |
+| Defense (§7) | 1 | Live debugging without AI: reproducing a scenario defect on the unpatched baseline and identifying its cause in DevTools — up to 0.5 points; two questions from different groups in §7 — 0.25 points each for complete answers |
+| Bonus point | +1 | Either submitted by **21.10.2026** OR completed during class |
 
 > **Important!** Without oral defense, the research and practical components
 > combined are capped at **1 point**: defense confirms that you understand the
