@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="uk">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>ShowFinder — офлайн-режим</title>
+    <title>ShowFinder — offline mode</title>
     <link rel="icon" href="data:," />
     <style>
       html,
@@ -32,9 +32,9 @@
       }
     </style>
     <!--
-      Той самий index.html, але запити до TVmaze отримують записані відповіді з check/fixtures/
-      через 0,25–0,9 с (check/net.js). Для заняття, коли TVmaze обмежує запити з однієї адреси
-      (429) або мережі немає. Змінювати цей файл не потрібно.
+      The same index.html, but requests to TVmaze get recorded responses from check/fixtures/
+      after 0.25–0.9 s (check/net.js). For the class session, when TVmaze limits requests from one
+      address (429) or there is no network. You don't need to change this file.
     -->
     <script type="module">
       const frame = document.querySelector('iframe');
@@ -45,9 +45,9 @@
   </head>
   <body>
     <p class="banner">
-      <strong>Офлайн-режим:</strong> відповіді TVmaze записані заздалегідь (кілька пошуків і шість
-      серіалів з епізодами). Для звіту й чек-листа Network потрібен <code>index.html</code>.
+      <strong>Offline mode:</strong> the TVmaze responses are recorded in advance (a few searches and six
+      shows with episodes). The report and the Network checklist need <code>index.html</code>.
     </p>
-    <iframe title="ShowFinder в офлайн-режимі"></iframe>
+    <iframe title="ShowFinder in offline mode"></iframe>
   </body>
 </html>

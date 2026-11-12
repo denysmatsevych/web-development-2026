@@ -1,59 +1,59 @@
 /**
- * Показ даних TVmaze. Наданий модуль: не змінюйте його.
+ * Shows TVmaze data. A provided module: don't change it.
  *
- * Модуль не робить запитів і нічого не знає про завантаження чи помилки: він показує лише
- * ті дані, які йому передали. Запити (src/api.js), стани завантаження, порожнього результату
- * й помилки та обробники подій (src/app.js) — ваша частина роботи.
+ * The module makes no requests and knows nothing about loading or errors: it only shows
+ * the data it is given. The requests (src/api.js), the loading, empty-result and error states,
+ * and the event handlers (src/app.js) are your part of the work.
  *
- * Обидві функції приймають об'єкти у формі відповідей TVmaze API (https://www.tvmaze.com/api):
- * поля, яких немає (`null`), показують як «—» чи «невідомо». Перед показом функції
- * перевіряють аргументи й кидають TypeError з поясненням, якщо форма даних не та.
+ * Both functions take objects shaped like TVmaze API responses (https://www.tvmaze.com/api):
+ * missing fields (`null`) are shown as "—" or "unknown". Before showing anything, the functions
+ * check their arguments and throw a TypeError with an explanation if the data has the wrong shape.
  */
 
 /**
- * @typedef {object} Show серіал — об'єкт `show` з відповіді TVmaze (поля, які показує модуль)
+ * @typedef {object} Show a show: the `show` object from a TVmaze response (the fields the module shows)
  * @property {number} id
  * @property {string} name
- * @property {string} url сторінка серіалу на TVmaze
+ * @property {string} url the show page on TVmaze
  * @property {string[]} genres
- * @property {string | null} premiered дата прем'єри, "2012-04-15"
+ * @property {string | null} premiered premiere date, "2012-04-15"
  * @property {string | null} ended
  * @property {{ average: number | null }} rating
- * @property {{ name: string } | null} network телеканал
- * @property {{ name: string } | null} webChannel стримінг, якщо телеканалу немає
+ * @property {{ name: string } | null} network TV channel
+ * @property {{ name: string } | null} webChannel streaming service, if there is no TV channel
  * @property {{ medium: string } | null} image
- * @property {string | null} summary опис — HTML-розмітка TVmaze (`<p>`, `<b>`, `<i>`)
+ * @property {string | null} summary description: TVmaze HTML markup (`<p>`, `<b>`, `<i>`)
  */
 
 /**
- * @typedef {object} Episode епізод — як у `/shows/:id/episodes`
+ * @typedef {object} Episode an episode, as in `/shows/:id/episodes`
  * @property {number} id
  * @property {string} name
  * @property {number} season
- * @property {number | null} number `null` у спецвипусків
+ * @property {number | null} number `null` for specials
  * @property {string | null} airdate
  */
 
 /**
- * @typedef {object} CastMember актор і роль — як у `/shows/:id/cast`
+ * @typedef {object} CastMember an actor and a role, as in `/shows/:id/cast`
  * @property {{ id: number, name: string }} person
  * @property {{ id: number, name: string }} character
  */
 
 /**
- * Показує серіали карткою-кнопкою кожен, у тому самому порядку, і замінює вміст `container`.
- * Кожна картка — `<li data-id="<id>">` з кнопкою `[data-action="open"]`. Що відбувається
- * після натискання — вирішує ваш код.
+ * Shows the shows as one button card each, in the same order, and replaces the content of `container`.
+ * Each card is an `<li data-id="<id>">` with a `[data-action="open"]` button. What happens
+ * after a click is up to your code.
  *
- * Порожній масив дає порожній список: повідомлення «нічого не знайдено» показуєте ви.
+ * An empty array gives an empty list: you show the "nothing found" message.
  *
- * @param {Element} container зазвичай `#results`
- * @param {readonly Show[]} shows серіали, а не відповідь пошуку цілком
+ * @param {Element} container usually `#results`
+ * @param {readonly Show[]} shows shows, not the whole search response
  */
 export function renderResults(container, shows) {
   requireElement('renderResults', container);
   if (!Array.isArray(shows)) {
-    fail('renderResults', 'shows', 'очікувався масив серіалів', shows);
+    fail('renderResults', 'shows', 'an array of shows', shows);
   }
   shows.forEach((show, index) => requireShow('renderResults', `shows[${index}]`, show));
 
@@ -73,30 +73,30 @@ export function renderResults(container, shows) {
 }
 
 /**
- * Показує сторінку серіалу: назву, дані, опис, епізоди за сезонами й акторів, — і замінює
- * вміст `container`. Заголовок сторінки — `<h2 id="show-title">` з назвою серіалу.
+ * Shows the show page: title, details, description, episodes by season and cast, and replaces
+ * the content of `container`. The page heading is an `<h2 id="show-title">` with the show title.
  *
- * @param {Element} container зазвичай `#details`
+ * @param {Element} container usually `#details`
  * @param {{ show: Show, episodes: readonly Episode[], cast: readonly CastMember[] }} data
  */
 export function renderShow(container, data) {
   requireElement('renderShow', container);
   if (!data || typeof data !== 'object') {
-    fail('renderShow', 'другий аргумент', 'очікувався об\'єкт { show, episodes, cast }', data);
+    fail('renderShow', 'the second argument', 'an object { show, episodes, cast }', data);
   }
   const { show, episodes, cast } = data;
   requireShow('renderShow', 'show', show);
-  const missing = 'Епізоди й актори — окремі дані, а не поля об\'єкта show: див. документацію TVmaze API';
-  if (!Array.isArray(episodes)) fail('renderShow', 'episodes', 'очікувався масив епізодів', episodes, missing);
-  if (!Array.isArray(cast)) fail('renderShow', 'cast', 'очікувався масив акторів', cast, missing);
+  const missing = 'Episodes and cast are separate data, not fields of the show object: see the TVmaze API documentation';
+  if (!Array.isArray(episodes)) fail('renderShow', 'episodes', 'an array of episodes', episodes, missing);
+  if (!Array.isArray(cast)) fail('renderShow', 'cast', 'an array of cast members', cast, missing);
   episodes.forEach((episode, index) => {
     if (!episode || typeof episode.id !== 'number' || typeof episode.season !== 'number') {
-      fail('renderShow', `episodes[${index}]`, 'очікувався епізод з числовими id і season', episode);
+      fail('renderShow', `episodes[${index}]`, 'an episode with a numeric id and season', episode);
     }
   });
   cast.forEach((member, index) => {
     if (!member?.person || !member?.character) {
-      fail('renderShow', `cast[${index}]`, 'очікувався об\'єкт { person, character }', member);
+      fail('renderShow', `cast[${index}]`, 'an object { person, character }', member);
     }
   });
 
@@ -107,22 +107,22 @@ export function renderShow(container, data) {
       title,
       el('p', { class: 'show__meta' }, [meta(show)]),
       el('p', { class: 'show__genres', lang: 'en' }, [genres(show)]),
-      el('p', {}, [el('a', { href: show.url }, ['Сторінка серіалу на TVmaze'])]),
+      el('p', {}, [el('a', { href: show.url }, ['Show page on TVmaze'])]),
     ]),
   ]);
 
   const article = el('article', { class: 'show', 'aria-labelledby': 'show-title' }, [
     head,
     summary(show.summary),
-    el('h3', {}, ['Епізоди']),
+    el('h3', {}, ['Episodes']),
     seasons(episodes),
-    el('h3', {}, ['У ролях']),
+    el('h3', {}, ['Cast']),
     people(cast),
   ]);
   container.replaceChildren(article);
 }
 
-/* ---------------- Частини сторінки ---------------- */
+/* ---------------- Parts of the page ---------------- */
 
 /** @param {Show} show @param {string} className */
 function poster(show, className) {
@@ -130,33 +130,33 @@ function poster(show, className) {
   return el('img', { class: className, src: show.image.medium, alt: '', width: '210', height: '295', loading: 'lazy' });
 }
 
-/** «2012–2017 · HBO · оцінка 6.5». */
+/** "2012–2017 · HBO · rating 6.5". */
 function meta(/** @type {Show} */ show) {
   const from = show.premiered?.slice(0, 4);
   const to = show.ended?.slice(0, 4);
-  const years = !from ? 'рік невідомий' : !to ? `з ${from}` : from === to ? from : `${from}–${to}`;
+  const years = !from ? 'year unknown' : !to ? `since ${from}` : from === to ? from : `${from}–${to}`;
   const channel = show.network?.name ?? show.webChannel?.name ?? '—';
   const rating = show.rating?.average ?? '—';
-  return `${years} · ${channel} · оцінка ${rating}`;
+  return `${years} · ${channel} · rating ${rating}`;
 }
 
 const genres = (/** @type {Show} */ show) => (show.genres?.length ? show.genres.join(', ') : '—');
 
-/** Опис TVmaze — HTML. Його розбирає інертний документ, а на сторінку потрапляє лише текст. */
+/** The TVmaze description is HTML. An inert document parses it, and only the text reaches the page. */
 function summary(/** @type {string | null} */ html) {
   const box = el('div', { class: 'show__summary', lang: 'en' });
   const doc = new DOMParser().parseFromString(html ?? '', 'text/html');
   const paragraphs = [...doc.body.querySelectorAll('p')];
   const blocks = paragraphs.length ? paragraphs : [doc.body];
   const texts = blocks.map((block) => block.textContent?.trim() ?? '').filter(Boolean);
-  if (!texts.length) box.append(el('p', { lang: 'uk' }, ['Опису немає.']));
+  if (!texts.length) box.append(el('p', { lang: 'en' }, ['No description.']));
   for (const text of texts) box.append(el('p', {}, [text]));
   return box;
 }
 
-/** Епізоди за сезонами: кожен сезон — <details data-season>. */
+/** Episodes by season: each season is a <details data-season>. */
 function seasons(/** @type {readonly Episode[]} */ episodes) {
-  if (!episodes.length) return el('p', { class: 'empty' }, ['Епізодів немає.']);
+  if (!episodes.length) return el('p', { class: 'empty' }, ['No episodes.']);
   /** @type {Map<number, Episode[]>} */
   const bySeason = new Map();
   for (const episode of episodes) {
@@ -175,7 +175,7 @@ function seasons(/** @type {readonly Episode[]} */ episodes) {
     );
     wrap.append(
       el('details', { class: 'season', 'data-season': String(season) }, [
-        el('summary', {}, [`Сезон ${season} · ${count(list.length)}`]),
+        el('summary', {}, [`Season ${season} · ${count(list.length)}`]),
         el('ol', { class: 'episodes' }, items),
       ]),
     );
@@ -184,7 +184,7 @@ function seasons(/** @type {readonly Episode[]} */ episodes) {
 }
 
 function people(/** @type {readonly CastMember[]} */ cast) {
-  if (!cast.length) return el('p', { class: 'empty' }, ['Акторів немає.']);
+  if (!cast.length) return el('p', { class: 'empty' }, ['No cast.']);
   return el(
     'ul',
     { class: 'cast' },
@@ -199,32 +199,28 @@ function people(/** @type {readonly CastMember[]} */ cast) {
 }
 
 const pad = (/** @type {number} */ n) => String(n).padStart(2, '0');
-const code = (/** @type {Episode} */ e) => (e.number === null ? `S${pad(e.season)} · спецвипуск` : `S${pad(e.season)}E${pad(e.number)}`);
-const date = (/** @type {string | null} */ iso) => (iso ? iso.split('-').reverse().join('.') : 'дата невідома');
+const code = (/** @type {Episode} */ e) => (e.number === null ? `S${pad(e.season)} · special` : `S${pad(e.season)}E${pad(e.number)}`);
+const date = (/** @type {string | null} */ iso) => (iso ? iso.split('-').reverse().join('.') : 'date unknown');
 
-/** «1 епізод», «3 епізоди», «10 епізодів». */
+/** "1 episode", "10 episodes". */
 function count(/** @type {number} */ n) {
-  const tens = n % 100;
-  const ones = n % 10;
-  if (ones === 1 && tens !== 11) return `${n} епізод`;
-  if (ones >= 2 && ones <= 4 && (tens < 12 || tens > 14)) return `${n} епізоди`;
-  return `${n} епізодів`;
+  return n === 1 ? `${n} episode` : `${n} episodes`;
 }
 
-/* ---------------- Перевірка аргументів ---------------- */
+/* ---------------- Argument checks ---------------- */
 
 function requireElement(/** @type {string} */ fn, /** @type {unknown} */ container) {
   if (!(container instanceof Element)) {
-    fail(fn, 'container', 'очікувався елемент сторінки, наприклад document.querySelector(\'#results\')', container);
+    fail(fn, 'container', 'a page element, for example document.querySelector(\'#results\')', container);
   }
 }
 
 function requireShow(/** @type {string} */ fn, /** @type {string} */ name, /** @type {any} */ show) {
   if (show && typeof show === 'object' && 'show' in show && 'score' in show) {
-    fail(fn, name, 'очікувався серіал', show, 'Це елемент відповіді пошуку { score, show }: серіал — у його полі show');
+    fail(fn, name, 'a show', show, 'This is an item of the search response { score, show }: the show is in its show field');
   }
   if (!show || typeof show.id !== 'number' || typeof show.name !== 'string') {
-    fail(fn, name, 'очікувався серіал з числовим id і назвою name', show);
+    fail(fn, name, 'a show with a numeric id and a name', show);
   }
 }
 
@@ -234,21 +230,21 @@ function requireShow(/** @type {string} */ fn, /** @type {string} */ name, /** @
  * @returns {never}
  */
 function fail(fn, name, expected, value, hint) {
-  throw new TypeError(`${fn}: ${name} — ${expected}, отримано ${describe(value)}.${hint ? ` ${hint}.` : ''}`);
+  throw new TypeError(`${fn}: ${name} must be ${expected}, got ${describe(value)}.${hint ? ` ${hint}.` : ''}`);
 }
 
-/** Коротко: тип і початок значення. */
+/** In short: the type and the start of the value. */
 function describe(/** @type {unknown} */ value) {
   if (value === null || value === undefined) return String(value);
-  if (Array.isArray(value)) return `масив з ${value.length} елементів`;
+  if (Array.isArray(value)) return `an array of ${value.length} items`;
   if (typeof value !== 'object') return `${JSON.stringify(value)} (${typeof value})`;
   if (value instanceof Element) return `<${value.tagName.toLowerCase()}>`;
   const text = JSON.stringify(value) ?? String(value);
-  return `об'єкт ${text.length > 80 ? `${text.slice(0, 80)}…` : text}`;
+  return `an object ${text.length > 80 ? `${text.slice(0, 80)}…` : text}`;
 }
 
 /**
- * Елемент з атрибутами й дітьми; рядки стають текстовими вузлами.
+ * An element with attributes and children; strings become text nodes.
  * @param {string} tag
  * @param {Record<string, string>} [attrs]
  * @param {(Node | string)[]} [children]

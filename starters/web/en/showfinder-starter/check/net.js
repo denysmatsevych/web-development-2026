@@ -1,23 +1,23 @@
-// Підміна fetch для самоперевірки й офлайн-режиму. Змінювати цей файл не потрібно.
+// A replacement fetch for the self-check and the offline mode. You don't need to change this file.
 //
-// Скрипт виконується у вікні застосунку до його модулів і замінює window.fetch. Запити до
-// https://api.tvmaze.com отримують відповіді із записаних відповідей TVmaze (check/fixtures/),
-// тож застосунок працює без мережі й без ліміту запитів. Решту браузер робить як завжди:
+// The script runs in the app window before the app's modules and replaces window.fetch. Requests to
+// https://api.tvmaze.com get answers from the recorded TVmaze responses (check/fixtures/),
+// so the app works without a network and without a rate limit. The rest works as the browser always does:
 //
-// - запит, якому потрібен preflight (метод, крім GET/HEAD/POST, або заголовок поза
-//   CORS-safelisted, як-от Content-Type: application/json), падає так само, як зі справжнім
-//   TVmaze: той відповідає на OPTIONS кодом 405 без заголовків CORS;
-// - запит до іншого домену, що не дозволяє CORS (наприклад, www.tvmaze.com), падає;
-// - mode: 'no-cors' дає непрозору відповідь: status 0, тіла не прочитати;
-// - AbortSignal скасовує запит з AbortError;
-// - відповідь має лише ті заголовки, які браузер показує скрипту для чужого домену.
+// - a request that needs a preflight (a method other than GET/HEAD/POST, or a header outside the
+//   CORS-safelisted ones, such as Content-Type: application/json) fails just as with the real
+//   TVmaze, which answers OPTIONS with 405 and no CORS headers;
+// - a request to another domain that doesn't allow CORS (for example, www.tvmaze.com) fails;
+// - mode: 'no-cors' gives an opaque response: status 0, the body can't be read;
+// - an AbortSignal aborts the request with an AbortError;
+// - a response has only the headers the browser shows a script from another domain.
 //
-// Самоперевірка керує відповідями через window.__net: затримує їх, повертає помилки або
-// обриває з'єднання. В офлайн-режимі (offline.html) відповіді приходять через 0,25–0,9 с.
+// The self-check controls the responses through window.__net: it holds them, returns errors or
+// drops the connection. In the offline mode (offline.html), responses arrive after 0.25–0.9 s.
 //
-// Обидві сторінки відкривають застосунок у srcdoc-фреймі з адресою about:srcdoc. Там
-// history.pushState і replaceState з новою адресою (наприклад, ?q=girls) кидають SecurityError,
-// хоча в index.html працюють, тож скрипт зберігає стан, але адресу не змінює.
+// Both pages open the app in a srcdoc frame whose address is about:srcdoc. There,
+// history.pushState and replaceState with a new address (for example, ?q=girls) throw a SecurityError,
+// although they work in index.html, so the script keeps the state but doesn't change the address.
 (() => {
   const API = 'https://api.tvmaze.com';
   const script = document.currentScript;
@@ -27,15 +27,15 @@
   const realFetch = window.fetch.bind(window);
 
   const net = {
-    /** Кожен запит застосунку: { url, method, headers, mode, credentials, at, state, blocked, signal }. */
+    /** Every request from the app: { url, method, headers, mode, credentials, at, state, blocked, signal }. */
     log: [],
-    /** true — нові запити до API чекають у queue, доки перевірка не відповість на них. */
+    /** true: new API requests wait in queue until the check answers them. */
     hold: false,
-    /** Затримані запити: entry.respond(spec?) відповідає, entry.drop() обриває з'єднання. */
+    /** Held requests: entry.respond(spec?) answers, entry.drop() drops the connection. */
     queue: [],
-    /** Разові відповіді: { match(url) → boolean, spec, times }. Перша відповідна спрацьовує. */
+    /** One-off answers: { match(url) → boolean, spec, times }. The first matching one applies. */
     script: [],
-    /** Затримка автоматичних відповідей, мс. */
+    /** Delay of automatic answers, ms. */
     latency: offline ? [250, 900] : [10, 10],
     ready: null,
     fixtures: null,
@@ -43,7 +43,7 @@
   };
   window.__net = net;
 
-  /* ---------------- history у srcdoc-фреймі ---------------- */
+  /* ---------------- history in a srcdoc frame ---------------- */
 
   for (const name of ['pushState', 'replaceState']) {
     const original = history[name].bind(history);
@@ -63,12 +63,12 @@
     net.fixtures = { search, shows };
   });
 
-  /* ---------------- Відповіді за замовчуванням: записані відповіді TVmaze ---------------- */
+  /* ---------------- Default answers: recorded TVmaze responses ---------------- */
 
   const STATUS = { 200: 'OK', 404: 'Not Found', 405: 'Method Not Allowed', 429: 'Too Many Requests', 500: 'Internal Server Error', 503: 'Service Unavailable' };
   const errorBody = (status) => ({ name: STATUS[status] ?? 'Error', message: '', code: 0, status });
 
-  /** Усі серіали з записаних пошуків — для запитів, яких немає серед записаних. */
+  /** All shows from the recorded searches, for requests that aren't among the recorded ones. */
   function catalogue() {
     const all = new Map();
     for (const results of Object.values(net.fixtures.search.queries)) {
@@ -88,7 +88,7 @@
       .map((show) => ({ score: show.name.toLowerCase() === key ? 1 : 0.6, show }));
   }
 
-  /** Серіал з епізодами й акторами: записаний повністю або з порожніми списками. */
+  /** A show with episodes and cast: recorded in full or with empty lists. */
   function fullShow(id) {
     const recorded = net.fixtures.shows.shows[id];
     if (recorded) return recorded;
@@ -110,7 +110,7 @@
     return [];
   }
 
-  /** Відповідь, яку дав би TVmaze на цей GET. */
+  /** The answer TVmaze would give to this GET. */
   function answer(url) {
     const u = new URL(url);
     const path = u.pathname.replace(/\/+$/, '');
@@ -137,17 +137,17 @@
   }
   net.answer = answer;
 
-  /* ---------------- Відповідь у формі Response ---------------- */
+  /* ---------------- An answer in the form of a Response ---------------- */
 
   /**
-   * spec: { status = 200, body, text, contentType } — JSON-тіло, або текст (наприклад, HTML
-   * сторінки проксі), або { network: true } — з'єднання обірвано.
+   * spec: { status = 200, body, text, contentType }: a JSON body, or text (for example, the HTML
+   * of a proxy page), or { network: true }: the connection is dropped.
    */
   function toResponse(url, spec) {
     const status = spec.status ?? 200;
     const text = spec.text ?? JSON.stringify(spec.body ?? errorBody(status));
     const contentType = spec.contentType ?? (spec.text === undefined ? 'application/json; charset=UTF-8' : 'text/html; charset=UTF-8');
-    // Лише CORS-safelisted заголовки: інших (date, server) браузер скрипту чужого домену не показує.
+    // CORS-safelisted headers only: the browser doesn't show the others (date, server) to a script from another domain.
     const response = new Response(text, {
       status,
       statusText: STATUS[status] ?? '',
@@ -169,7 +169,7 @@
 
   const SIMPLE_TYPES = ['application/x-www-form-urlencoded', 'multipart/form-data', 'text/plain'];
 
-  /** Заголовки запиту, через які браузер надішле preflight (OPTIONS). */
+  /** Request headers that make the browser send a preflight (OPTIONS). */
   function preflightHeaders(headers) {
     const reasons = [];
     headers.forEach((value, name) => {
@@ -221,7 +221,7 @@
     };
     net.log.push(entry);
 
-    // Свої файли (не API) завантажує справжній fetch.
+    // The page's own files (not the API) are loaded by the real fetch.
     if (new URL(url).origin === pageOrigin) {
       entry.state = 'passed';
       return realFetch(input, init);
@@ -260,7 +260,7 @@
 
       const target = new URL(url);
       if (request.mode === 'same-origin') {
-        later(() => failNetwork(`mode: 'same-origin' для іншого домену`));
+        later(() => failNetwork(`mode: 'same-origin' for another domain`));
         return;
       }
       if (request.mode === 'no-cors') {
@@ -270,23 +270,23 @@
       if (target.origin !== API) {
         later(() => {
           corsError(url, `No 'Access-Control-Allow-Origin' header is present on the requested resource.`);
-          failNetwork(`${target.origin} не дозволяє CORS`);
+          failNetwork(`${target.origin} doesn't allow CORS`);
         });
         return;
       }
       const preflight = preflightHeaders(request.headers);
-      if (!['GET', 'HEAD', 'POST'].includes(request.method)) preflight.unshift(`метод ${request.method}`);
+      if (!['GET', 'HEAD', 'POST'].includes(request.method)) preflight.unshift(`method ${request.method}`);
       if (preflight.length) {
         later(() => {
           corsError(url, `Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.`);
-          failNetwork(`preflight (OPTIONS → 405) через ${preflight.join(', ')}`);
+          failNetwork(`preflight (OPTIONS → 405) because of ${preflight.join(', ')}`);
         });
         return;
       }
       if (request.credentials === 'include') {
         later(() => {
           corsError(url, `The value of the 'Access-Control-Allow-Origin' header in the response must not be the wildcard '*' when the request's credentials mode is 'include'.`);
-          failNetwork(`credentials: 'include' з Access-Control-Allow-Origin: *`);
+          failNetwork(`credentials: 'include' with Access-Control-Allow-Origin: *`);
         });
         return;
       }

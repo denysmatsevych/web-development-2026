@@ -1,31 +1,31 @@
-// Завантажує index.html у фрейм і працює із застосунком так, як користувач: вводить текст,
-// надсилає форму, клікає. Код застосунку перевірка не читає — лише DOM, атрибути, тексти й
-// запити, які застосунок надсилає.
+// Loads index.html into a frame and works with the app the way a user does: types text,
+// submits the form, clicks. The check doesn't read the app's code, only the DOM, attributes, texts
+// and the requests the app sends.
 //
-// Сторінка потрапляє у фрейм через srcdoc, щоб до запуску її модулів додати два скрипти:
-// невеликий probe (перехоплює alert(), помилки в Console і XMLHttpRequest) і check/net.js —
-// підміну fetch, яка відповідає на запити до TVmaze записаними відповідями й дає перевірці
-// керувати ними: затримати, повернути помилку, обірвати з'єднання.
+// The page goes into the frame via srcdoc, so that two scripts can be added before its modules run:
+// a small probe (it intercepts alert(), Console errors and XMLHttpRequest) and check/net.js, a
+// replacement fetch that answers requests to TVmaze with recorded responses and lets the check
+// control them: hold them, return an error, drop the connection.
 
 export const sleep = (/** @type {number} */ ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
- * Пробіли й переноси — як один пробіл; без пробілів на краях. Апострофи ’ і ʼ — як ': сторінка ТЗ
- * показує «з’єднання» з типографським апострофом, і текст, скопійований з неї, теж правильний.
+ * Spaces and line breaks count as one space; no spaces at the ends. The apostrophes ’ and ʼ count as ':
+ * the assignment page shows typographic apostrophes, so text copied from it is right too.
  */
 export const norm = (/** @type {string | null | undefined} */ text) =>
   (text ?? '').replace(/\s+/g, ' ').replace(/[’ʼ]/g, "'").trim();
 
 let html = '';
 
-/** Читає index.html один раз на запуск перевірки. */
+/** Reads index.html once per check run. */
 export async function loadSource() {
   const response = await fetch('index.html', { cache: 'no-store' });
   if (!response.ok) throw new Error(`index.html: HTTP ${response.status}`);
   html = await response.text();
 }
 
-// Виконується у фреймі першим, до будь-якого модуля застосунку.
+// Runs first in the frame, before any of the app's modules.
 const PROBE = `(() => {
   const probe = { alerts: [], errors: [], xhr: [], initialStatus: null };
   window.__check = probe;
@@ -44,25 +44,25 @@ const PROBE = `(() => {
   });
 })();`;
 
-// Виконується наприкінці розбору HTML, до модулів: запам'ятовує live region, що є в самому HTML.
+// Runs at the end of HTML parsing, before the modules: remembers the live region that is in the HTML itself.
 const AFTER_PARSE = `window.__check.initialStatus = document.querySelector('#status');`;
 
 /**
- * @typedef {object} Entry запит застосунку (див. check/net.js)
+ * @typedef {object} Entry a request from the app (see check/net.js)
  * @property {string} url
  * @property {string} method
  * @property {Record<string, string>} headers
  * @property {string} mode
  * @property {string} credentials
- * @property {number} at час надсилання, performance.now() фрейму
+ * @property {number} at when it was sent, the frame's performance.now()
  * @property {'pending' | 'answered' | 'failed' | 'blocked' | 'aborted' | 'passed'} state
- * @property {string} blocked чому запит заблоковано як CORS
+ * @property {string} blocked why the request was blocked by CORS
  * @property {AbortSignal} signal
  * @property {(spec?: object) => Promise<void>} respond
  * @property {() => void} drop
  */
 
-/** Відкриває свіжу копію застосунку. Кожна перевірка працює зі своєю копією. */
+/** Opens a fresh copy of the app. Each check works with its own copy. */
 export async function openApp() {
   const head = `<script>${PROBE}<\/script><script src="check/net.js"><\/script>`;
   const doc = html
@@ -70,7 +70,7 @@ export async function openApp() {
     .replace(/<\/body>/i, `<script>${AFTER_PARSE}<\/script></body>`);
 
   const frame = document.createElement('iframe');
-  frame.title = 'Застосунок ShowFinder під час перевірки';
+  frame.title = 'The ShowFinder app under check';
   const app = new App(frame);
   const loaded = new Promise((resolve) => frame.addEventListener('load', resolve, { once: true }));
   frame.addEventListener('load', () => (app.loads += 1));
@@ -107,12 +107,12 @@ export class App {
     return this.win.__net;
   }
 
-  /** Час у фреймі — той самий годинник, що й у записах запитів. */
+  /** Time in the frame: the same clock as in the request entries. */
   now() {
     return this.win.performance.now();
   }
 
-  /** Сторінку перезавантажено або відкрито іншу: стан застосунку втрачено. */
+  /** The page was reloaded or another one was opened: the app state is lost. */
   navigated() {
     return this.loads > 1 || this.frame.contentDocument !== this.doc;
   }
@@ -134,7 +134,7 @@ export class App {
     return /** @type {HTMLInputElement | null} */ (this.$('#search-query'));
   }
 
-  /** Текст live region статусу — того, що є в HTML від початку. */
+  /** The text of the status live region, the one that is in the HTML from the start. */
   status() {
     const initial = this.probe.initialStatus;
     const region = initial?.isConnected ? initial : this.$('#status');
@@ -149,17 +149,17 @@ export class App {
     return this.cards().map((card) => Number(card.dataset.id));
   }
 
-  /** Кнопка картки серіалу в #results. */
+  /** The button of a show card in #results. */
   cardButton(/** @type {number} */ id) {
     return /** @type {HTMLButtonElement | null} */ (this.results?.querySelector(`li[data-id="${id}"] button`) ?? null);
   }
 
-  /** Назва серіалу на сторінці в #details, або ''. */
+  /** The show title on the page in #details, or ''. */
   shownTitle() {
     return norm(this.details?.querySelector('#show-title, h2')?.textContent);
   }
 
-  /** Запити до TVmaze (усі, разом зі скасованими й заблокованими). */
+  /** Requests to TVmaze (all of them, aborted and blocked ones included). */
   api(/** @type {RegExp} */ path = /./) {
     return this.net.log.filter((entry) => {
       const url = new URL(entry.url);
@@ -171,17 +171,17 @@ export class App {
     return this.api(/^\/search\/shows\/?$/);
   }
 
-  /** Запити, що стосуються серіалу id: сам серіал, його епізоди, актори тощо. */
+  /** Requests about show id: the show itself, its episodes, cast and so on. */
   showRequests(/** @type {number} */ id) {
     return this.api(new RegExp(`^/shows/${id}(/|$)`));
   }
 
-  /** Затримані запити, на які ще не відповіли. */
+  /** Held requests that have not been answered yet. */
   held(/** @type {RegExp} */ path = /./) {
     return this.net.queue.filter((entry) => entry.state === 'pending' && path.test(new URL(entry.url).pathname));
   }
 
-  /** Вводить текст у поле пошуку: значення змінюється, подія input спливає. */
+  /** Types text into the search field: the value changes, the input event bubbles. */
   async type(/** @type {string} */ text) {
     const input = this.query;
     if (!input) return false;
@@ -192,7 +192,7 @@ export class App {
     return true;
   }
 
-  /** Enter у полі пошуку: форма надсилається. */
+  /** Enter in the search field: the form is submitted. */
   async submit() {
     const form = /** @type {HTMLFormElement | null} */ (this.$('#search'));
     if (!form) return false;
@@ -201,7 +201,7 @@ export class App {
     return true;
   }
 
-  /** Клік по картці серіалу. */
+  /** A click on a show card. */
   async open(/** @type {number} */ id) {
     const button = this.cardButton(id);
     if (!button) return false;
@@ -211,14 +211,14 @@ export class App {
     return true;
   }
 
-  /** Кнопка «Спробувати ще» в області, якщо її видно. */
+  /** The "Retry" button in the area, if it is visible. */
   retry(/** @type {Element | null} */ region) {
     return /** @type {HTMLButtonElement | null} */ (
-      [...(region?.querySelectorAll('button') ?? [])].find((b) => norm(b.textContent) === 'Спробувати ще' && b.getClientRects().length) ?? null
+      [...(region?.querySelectorAll('button') ?? [])].find((b) => norm(b.textContent) === 'Retry' && b.getClientRects().length) ?? null
     );
   }
 
-  /** Чекає, доки умова стане істинною. */
+  /** Waits until the condition is true. */
   async until(/** @type {() => unknown} */ condition, timeout = 1500) {
     const start = performance.now();
     while (performance.now() - start < timeout) {
@@ -229,8 +229,8 @@ export class App {
   }
 }
 
-/** Чи область зайнята: aria-busy="true". */
+/** Whether the area is busy: aria-busy="true". */
 export const busy = (/** @type {Element | null} */ region) => region?.getAttribute('aria-busy') === 'true';
 
-/** Видимий текст області. */
+/** The visible text of the area. */
 export const text = (/** @type {Element | null} */ region) => norm(/** @type {HTMLElement | null} */ (region)?.innerText ?? region?.textContent);

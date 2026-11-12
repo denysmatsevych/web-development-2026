@@ -1,10 +1,10 @@
 /*
- * Стилі ShowFinder. Готові: змінювати їх для лабораторної не потрібно.
- * Стани областей #results і #details оформлено класами шаблонів з index.html (.state--loading,
- * .state--message, .state--error), а область, що завантажується, — атрибутом [aria-busy="true"].
+ * Styles of ShowFinder. They are ready: you don't need to change them for the lab.
+ * The states of the #results and #details areas are styled by the template classes from index.html
+ * (.state--loading, .state--message, .state--error), and an area that is loading by [aria-busy="true"].
  *
- * Палітра й контраст — як у «Мій список» (ЛР-9): текст 15.1 / 13.8, приглушений текст
- * 5.9 / 7.6, акцент 5.4 / 7.6, помилка 6.0 / 9.7 до 1 у світлій / темній темі.
+ * Palette and contrast as in “My Watchlist” (Lab 9): text 15.1 / 13.8, muted text
+ * 5.9 / 7.6, accent 5.4 / 7.6, error 6.0 / 9.7 to 1 in the light / dark theme.
  */
 :root {
   color-scheme: light dark;
@@ -50,7 +50,7 @@ a {
   outline-offset: 2px;
 }
 
-/* ---------- Header і footer ---------- */
+/* ---------- Header and footer ---------- */
 
 .site-header {
   background: var(--surface);
@@ -81,7 +81,7 @@ a {
   font-size: 0.875rem;
 }
 
-/* ---------- Дві панелі ---------- */
+/* ---------- Two panes ---------- */
 
 .layout {
   display: grid;
@@ -116,7 +116,7 @@ a {
   font-size: 1.125rem;
 }
 
-/* ---------- Пошук ---------- */
+/* ---------- Search ---------- */
 
 .search label {
   display: block;
@@ -164,7 +164,7 @@ input[type='search'] {
   color: var(--muted);
 }
 
-/* ---------- Області #results і #details ---------- */
+/* ---------- The #results and #details areas ---------- */
 
 .region {
   min-height: 6rem;
@@ -231,7 +231,7 @@ input[type='search'] {
   font-weight: 600;
 }
 
-/* ---------- Картки результатів ---------- */
+/* ---------- Result cards ---------- */
 
 .cards {
   display: grid;
@@ -289,7 +289,7 @@ input[type='search'] {
   font-size: 0.875rem;
 }
 
-/* ---------- Сторінка серіалу ---------- */
+/* ---------- Show page ---------- */
 
 .show__head {
   display: flex;
