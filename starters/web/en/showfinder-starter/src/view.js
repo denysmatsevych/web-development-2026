@@ -41,9 +41,9 @@
  */
 
 /**
- * Shows the shows as one button card each, in the same order, and replaces the content of `container`.
- * Each card is an `<li data-id="<id>">` with a `[data-action="open"]` button. What happens
- * after a click is up to your code.
+ * Renders the shows as button cards, one per show, in the same order, and replaces the
+ * content of `container`. Each card is an `<li data-id="<id>">` with a `[data-action="open"]`
+ * button. What happens after a click is up to your code.
  *
  * An empty array gives an empty list: you show the "nothing found" message.
  *
