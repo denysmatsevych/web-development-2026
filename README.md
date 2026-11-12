@@ -157,7 +157,9 @@ images. These live in `starters/<course>/` (listed in the tree above), each
 with its own `README.md` explaining what it's for and which lab it belongs
 to. A new one follows the same pattern: its own directory, named like the zip
 it becomes, its own README, and a line in the tree. `docs/web/build-pack.py`
-packs it. Its English version is part of the lab's translation (see
+packs it; the Courtly asset pack has its own script,
+`docs/web/lab-7/build-pack.py`, which adds the spec and the mockup captures.
+Its English version is part of the lab's translation (see
 **Languages and translations**). Once a starter has one, make every later
 change to its code or assets in both folders and pack both zips: nothing
 copies one into the other.
