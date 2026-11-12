@@ -21,7 +21,7 @@ updated: 2026-10-09
 
 ## 1. Overview
 
-**“My Watchlist”** is a single-page catalog of 30 shows from
+**"My Watchlist"** is a single-page catalog of 30 shows from
 [TVmaze](https://www.tvmaze.com). Users search shows by title and genre, save
 shows to their personal watchlist, view show summaries, and record their own
 ratings and notes. State is kept strictly in-memory: reloading the page resets
@@ -151,8 +151,8 @@ string `'82'`. If invalid arguments are passed, they throw descriptive errors.
 
 ### C3. Filters — `src/filters.js`
 
-1. Title search applies as the user types (the `input` event). Comparison is
-   case-insensitive and ignores boundary whitespace. The status line updates:
+1. Title search applies as the user types (the `input` event). Comparison
+   ignores case and leading or trailing spaces. The status line updates:
    "Found: N of 30" or "Nothing found".
 2. Genre and "Only my watchlist" filters apply immediately on change (`change`
    event). All active filters combine with logical AND; status updates.

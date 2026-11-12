@@ -19,12 +19,12 @@ relying on frontend frameworks: instantiating elements from templates, handling
 user interaction via event delegation, working with forms and modal dialogs, and
 managing focus so the application is fully operable with a keyboard and screen
 reader. Learn to audit AI-generated JavaScript code against specifications and
-real browser behavior, rather than assuming it works because it “looks
-functional.”
+real browser behavior, rather than assuming it works because it "looks
+functional."
 
-**Expected outcome:** the “My Watchlist” application, where every component was
+**Expected outcome:** the "My Watchlist" application, where every component was
 first drafted by an AI agent, then audited against the assignment and fixed by
-hand; a clean “Passed: 33 of 33” in the self-check suite, and a Git
+hand; a clean "Passed: 33 of 33" in the self-check suite, and a Git
 history where each AI draft commit is followed by your corresponding fix commit.
 
 ## 2. Objectives and learning outcomes
@@ -57,7 +57,7 @@ After completing this lab, you must be able to:
    result **before** running it in the browser.
 2. **In class:** download the [My Watchlist starter project](/web-development/labs/lab-9/task/),
    commit it to Git unchanged, and confirm that the self-check initially reports
-   “Passed: 0 of 33” (§5.1).
+   "Passed: 0 of 33" (§5.1).
 3. **In class:** complete Challenges 1–4 (§5.3–5.6): for each challenge, have the
    AI agent write a draft, commit it, audit it against the assignment, and fix
    all problems by hand.
@@ -74,9 +74,9 @@ accessibility requirements — [WCAG 2.2](https://www.w3.org/TR/WCAG22/) and the
 behavior is governed by the [HTML Living Standard](https://html.spec.whatwg.org/multipage/)._
 
 These experiments explore browser behavior rather than application logic: you do
-not need to write fixes for them. The “Where this occurs” note in each
-experiment highlights where this behavior turns into a defect in the “My
-Watchlist” application if overlooked.
+not need to write fixes for them. The "Where this occurs" note in each
+experiment highlights where this behavior turns into a defect in the "My
+Watchlist" application if overlooked.
 
 **Experiment page.** The starter project
 ([watchlist-starter.zip](/en/web/starters/watchlist-starter.zip), the same as in
@@ -97,13 +97,13 @@ Firefox on macOS handle focus differently (assignment, §6).
 **Experiment protocol:**
 
 1. Read the description, **analyze** the snippet, and write down your predicted
-   result — the answer to the “Analyze” prompt.
+   result — the answer to the "Analyze" prompt.
 2. Reload `experiments.html` and paste the snippet into the Console as a whole.
    Reload before each experiment: snippets mutate the DOM.
 3. If any predicted result differed from the actual result, explain where your
    analysis was mistaken.
 
-The questions in the “Where this occurs” sections are for oral defense
+The questions in the "Where this occurs" sections are for oral defense
 preparation and do not need written answers. Compile your results into a
 table — it is part of your report:
 
@@ -677,7 +677,7 @@ These are the exact findings to look for in the AI drafts during §5.
 
 ## 5. Practical part: AI draft → audit → hand-crafted fixes
 
-The **“My Watchlist”** starter project is a catalog of 30 shows from
+The **"My Watchlist"** starter project is a catalog of 30 shows from
 [TVmaze](https://www.tvmaze.com) (the same dataset as in Lab 8). In the completed
 application, users filter shows by title and genre, toggle shows with the "Add
 to list" button, view the "In list: N" counter, open descriptions via "Details",
@@ -695,8 +695,8 @@ hand. Complete the challenges in sequence: each builds on the previous ones.
 **How to verify.** Exact rules for each challenge are in the
 [assignment](/web-development/labs/lab-9/task/), §4. They are numbered:
 C4.2 refers to rule 2 of Challenge 4. The `check.html` page tests these rules in
-the browser and displays them by challenge block: “C1 · Cards”, “C2 · Card
-buttons”, etc. Each rule in a block uses the same number as in the assignment:
+the browser and displays them by challenge block: "C1 · Cards", "C2 · Card
+buttons", etc. Each rule in a block uses the same number as in the assignment:
 ✓ means passing, ✗ means failing, accompanied by an explanation. Run it as often
 as you like: it does not alter project files. What `check.html` cannot verify
 (real keyboard interaction and visible focus outlines) is covered by the
@@ -709,14 +709,14 @@ assignment's manual checklist, §6.
    shared coursework repository. Make your first commit **unchanged**.
 2. Open `index.html` via Live Preview in Chrome or Edge, as in §4: you should
    see the filter form, an empty list, and a clean Console with no errors.
-3. Open `check.html` the same way: it should report “Passed: 0 of 33”. Review
+3. Open `check.html` the same way: it should report "Passed: 0 of 33". Review
    what the automated check runner does not cover.
 4. `check.html`, `check/`, `data/`, and `src/state.js` must remain unchanged in
    every commit.
 
 ### 5.2. Rules for working with an AI agent
 
-- **Research tasks (§4).** Write “My analysis” yourself, without AI assistance
+- **Research tasks (§4).** Write "My analysis" yourself, without AI assistance
   and prior to running code snippets.
 - **Challenges.** Complete each challenge in four steps. The examples below
   illustrate Challenge 2.
@@ -764,9 +764,9 @@ In your report, state the name and version of the agent, model, and date of work
 
 ### 5.3. Challenge 1 — cards
 
-**Expected outcome.** After page load, the “Shows” list displays 30 cards, one
+**Expected outcome.** After page load, the "Shows" list displays 30 cards, one
 for each show in `data/shows.json`, in the original order. Each card displays the
-title, year, genres, TVmaze rating, and two buttons: “Add to list” and “Details”.
+title, year, genres, TVmaze rating, and two buttons: "Add to list" and "Details".
 Above the list, the status line announces how many shows were found. The buttons
 do not need to be functional yet: that is Challenge 2.
 
@@ -782,17 +782,17 @@ and the `#status` live region. On initialization, `main.js` calls
 > Render the shows from data/shows.json in the #results list: title, year,
 > genres, rating, "Add to list" and "Details" buttons.
 
-**Verification:** open `check.html`: all checks in “C1 · Cards” must show ✓.
+**Verification:** open `check.html`: all checks in "C1 · Cards" must show ✓.
 Experiments 1, 2, 4, and 8 are relevant here.
 
 ### 5.4. Challenge 2 — card buttons
 
-**Expected outcome.** “Add to list” adds a show to your watchlist, and a second
+**Expected outcome.** "Add to list" adds a show to your watchlist, and a second
 click removes it. The button reflects state (the icon fills), and the "In list:
-N" counter in the header updates. “Details” opens the show description: the
+N" counter in the header updates. "Details" opens the show description: the
 modal dialog itself is built in Challenge 4; here it is sufficient to call
 `openDetails(id)`. Buttons function identically via mouse and keyboard, as well
-as after every list re-render. After clicking “Add to list”, focus remains on
+as after every list re-render. After clicking "Add to list", focus remains on
 that button, even if the card was re-rendered.
 
 **What is provided.** `toggle(id)` and `watchlist` in `src/state.js`, the
@@ -807,7 +807,7 @@ first list render; `refresh()` re-renders the list.
 > Make "Add to list" add a show to my watchlist, and "Details" open the
 > description.
 
-**Verification:** open `check.html`: all checks in “C2 · Card buttons” must show
+**Verification:** open `check.html`: all checks in "C2 · Card buttons" must show
 ✓. Then complete the C2 rows in the manual checklist
 ([assignment](/web-development/labs/lab-9/task/), §6). Experiments 3–8 and 13 are
 relevant.
@@ -834,25 +834,25 @@ management after card removal in `src/list.js`.
 
 > Add filtering by title and genre and an "only my watchlist" toggle.
 
-**Verification:** open `check.html`: all checks in “C3 · Filters” must show ✓.
+**Verification:** open `check.html`: all checks in "C3 · Filters" must show ✓.
 Then complete the C3 rows in the manual checklist
 ([assignment](/web-development/labs/lab-9/task/), §6). Experiments 9, 12, 13, and
 14 are relevant.
 
 ### 5.6. Challenge 4 — "Details" dialog and note form
 
-**Expected outcome.** “Details” opens a modal window with the show title,
-description, and a link to the TVmaze page. While open, the rest of the page is
-inert. Esc or "Cancel" closes the dialog, returning focus to the button that
-opened it. Descriptions in the data contain TVmaze HTML markup, but must be
-rendered as plain text.
+**Expected outcome.** "Details" opens a modal window with the show title,
+description, and a link to the TVmaze page. While it is open, the rest of the
+page can't be used. Esc or "Cancel" closes the dialog, returning focus to the
+button that opened it. Descriptions in the data contain TVmaze HTML markup, but
+must be rendered as plain text.
 
-Inside the dialog, below the description, is a form: “My rating” (mandatory
-integer from 1 to 10) and “Note” (optional). The form rejects invalid ratings:
+Inside the dialog, below the description, is a form: "My rating" (mandatory
+integer from 1 to 10) and "Note" (optional). The form rejects invalid ratings:
 an error message appears next to the field, and the dialog remains open without
 `alert()`. Upon saving, the dialog closes, the card displays "My rating: 8/10"
 and the note, the status line announces the save, and focus returns to the
-“Details” button on that card. Reopening the dialog displays the saved data for
+"Details" button on that card. Reopening the dialog displays the saved data for
 that specific show.
 
 **What is provided.** `index.html` contains `<dialog id="details">` with
@@ -863,7 +863,7 @@ that specific show.
 card template includes slots for rating and note.
 
 **Code:** `openDetails(id)` and `initDetails(refresh)` in `src/details.js`. The
-“Details” button (Challenge 2) calls `openDetails`, which populates the dialog
+"Details" button (Challenge 2) calls `openDetails`, which populates the dialog
 and form. `initDetails` wires up dialog close buttons and form submission. Card
 rating rendering is handled in `src/render.js`.
 
@@ -872,8 +872,8 @@ rating rendering is handled in `src/render.js`.
 > Make a "Details" dialog with the show description and a validated "my rating
 > and note" form.
 
-**Verification:** open `check.html`: all checks in “C4 · Details dialog and
-note” must show ✓. Then complete the C4 rows in the manual checklist
+**Verification:** open `check.html`: all checks in "C4 · Details dialog and
+note" must show ✓. Then complete the C4 rows in the manual checklist
 ([assignment](/web-development/labs/lab-9/task/), §6). Experiments 2, 8–11, 13, and
 15 are relevant.
 
@@ -917,7 +917,7 @@ The report must contain:
 
 1. the experiment table from §4 (all 15 rows);
 2. the name and version of the AI agent, model, and date of work;
-3. your `check.html` result on the deployed page — “Passed: 33 of 33”;
+3. your `check.html` result on the deployed page — "Passed: 33 of 33";
 4. the assignment's manual checklist: the result of both items on your final
    build;
 5. summary: what the AI implemented correctly without guidance, and what it
@@ -970,7 +970,7 @@ practical implementation, and defense), plus **1 bonus point**.
 | Component | Points | Grading criteria |
 | --- | --- | --- |
 | Research tasks (§4) | 1 | 0.25 points for each subsection §4.1–§4.4: all experiments documented in the table with your prediction and actual result, including explanations for any discrepancies (report item 1) |
-| Practical part (§5) | 1 | Self-checks: “Passed: 33 of 33” in `check.html` on the deployed site — 0.5; 28 to 32 passed — 0.25. Process: `AI draft` and `fixes` commits following §5.7, manual checklist results (item 4), and AI draft summary (item 5): complete and substantive — 0.5; missing one of the three — 0.25 |
+| Practical part (§5) | 1 | Self-checks: "Passed: 33 of 33" in `check.html` on the deployed site — 0.5; 28 to 32 passed — 0.25. Process: `AI draft` and `fixes` commits following §5.7, manual checklist results (item 4), and AI draft summary (item 5): complete and substantive — 0.5; missing one of the three — 0.25 |
 | Defense (§7) | 1 | Audit questions: explaining an AI draft finding and live code modification without AI — up to 0.5; two questions from other groups in §7 — 0.25 for each complete answer |
 | Bonus point | +1 | Either submitted by **19.10.2026** OR completed during class |
 
