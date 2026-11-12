@@ -51,7 +51,8 @@ plan. The plan the lab was built from is
 - **Extra points:** §4.7 in class and §4.8 at home, 1 point each above the 65
   for current work, as ЛР-4's +1. The plan's proposed decisions 7–15 were
   built as proposed.
-- **No `handout:` field yet:** the PDF follows the instructor's review.
+- **The PDF was built after the instructor's first review edit.** It embeds
+  the screenshot from the local `public/` folder.
 
 ## Where the build differs from the plan
 
@@ -115,7 +116,11 @@ Zod 4.6.7, `@hookform/resolvers` 7.0.6, and for §4.8 Formik 2.4.9 and Yup
   `useActionState`'s four, `<form>`'s two) exist;
 - the site: `npm run check` and `npm run build` pass; the labs index lists
   ЛР-6; the handout has no horizontal scroll at 390 px (tables and code
-  blocks scroll inside their boxes), and the screenshot loads.
+  blocks scroll inside their boxes), and the screenshot loads;
+- the PDF: 23 pages with the screenshot, code blocks and tables; no code
+  line wraps (the code box holds 75 characters); the only code block split
+  across pages is §4.7's 52-line `SubscribeForm` listing, which is taller
+  than a page.
 
 Not verified:
 
@@ -128,8 +133,7 @@ Not verified:
   field and the server's reply;
 - the cross-field rule around midnight;
 - Firefox and Safari;
-- the sixth and seventh Vercel projects;
-- the PDF, which follows the instructor's review of the handout.
+- the sixth and seventh Vercel projects.
 
 ## Build
 
@@ -141,5 +145,6 @@ python docs/web/build-handout.py lab-6 react                 # public/uk/react/l
 
 Rebuild the zip after the starter is committed: each entry is dated by the
 file's last commit, and a file with no commit yet keeps its modification
-time. Rebuild the PDF after every handout edit, then add
-`handout: /uk/react/labs/lab-6.pdf` to the handout's frontmatter.
+time. Rebuild the PDF after every handout edit; the handout's `handout:`
+field points to it. Keep code lines within 75 characters, or they wrap in
+the PDF.
