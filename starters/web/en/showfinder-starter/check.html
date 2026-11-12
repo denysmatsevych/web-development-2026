@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Self-check — ShowFinder</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="check/check.css" />
+    <script type="module" src="check/main.js"></script>
+  </head>
+  <body>
+    <header class="intro">
+      <h1>ShowFinder self-check</h1>
+      <p>
+        The check opens <code>index.html</code> in the frame below and works with the app as a
+        user does: it types a query, presses Enter, clicks the cards and “Retry”. It answers the
+        requests to TVmaze itself, with recorded API responses, a delay, an error or a dropped
+        connection, so the real API isn't needed. The check doesn't read the app's code. The number
+        and name of each row is a rule from the assignment.
+      </p>
+      <p class="intro__run">
+        <button id="run" type="button">Check again</button>
+        <span id="summary" role="status">The check has not run: it needs JavaScript.</span>
+      </p>
+      <p class="intro__note">
+        The check takes about a minute: the debounce and 429 rules wait in real time. The page
+        can't see the real TVmaze, a real CORS error or the Network panel: for those, there is a
+        manual checklist in the assignment.
+      </p>
+    </header>
+    <main class="layout">
+      <div id="results" class="results"></div>
+      <section class="stage-wrap" aria-labelledby="stage-title">
+        <h2 id="stage-title">The app under check</h2>
+        <div id="stage" class="stage"></div>
+      </section>
+    </main>
+  </body>
+</html>
