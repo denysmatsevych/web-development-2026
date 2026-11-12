@@ -23,9 +23,9 @@ both in the same sitting. The Web Development course has its own plan in
 ## How the site maps to the plan
 
 The course is registered under the slug `react` with `status: 'published'`
-(see `src/data/courses.ts`), so it is on the public site. As of 2026-11-08,
+(see `src/data/courses.ts`), so it is on the public site. As of 2026-11-12,
 the built parts are Лекція 0, an introductory deck that isn't in the
-programme, the individual assignment, and ЛР 1–5.
+programme, the individual assignment, and ЛР 1–6.
 
 When a lab is built, add a row here, as the Web Development plan does, and put
 its instructor docs in `docs/react/lab-N/` (the README's **Docs** section has
@@ -49,7 +49,8 @@ repositories.
 | ЛР 3 | `/react/labs/lab-3` | Thinking in React, done by hand in class: a starter for `lab-3/` with the whole app in `App`, the component hierarchy from a framed mockup, `MenuItemRow`, `MenuCategory`, `MenuTable` and `SearchBar` extracted without changing the page, the state table, deploy to Vercel; [lab-3/README.md](lab-3/README.md) |
 | ЛР 4 | `/react/labs/lab-4` | useState and useEffect, by hand in class, on ЛР-3's café menu: a starter for `lab-4/`, Thinking in React steps 4–5 in code, the filters saved to `localStorage` by an effect, a data flow diagram, deploy to Vercel; +1 point for moving the state into `FilterableMenuTable` (state colocation); [lab-4/README.md](lab-4/README.md) |
 | ЛР 5 | `/react/labs/lab-5` | events and controlled/uncontrolled components, by hand in class, on a new table booking form: a starter for `lab-5/`, the browser's own form submission first, then `onSubmit` with `FormData`, a controlled comment with a counter, `Ctrl+Enter` on the form, a guests stepper that goes from uncontrolled to controlled, the native reset with `onReset` and a ref, a README table of who owns each value, deploy to Vercel; [lab-5/README.md](lab-5/README.md) |
-| ЛР 6–27 | not built | |
+| ЛР 6 | `/react/labs/lab-6` | complex forms and validation, by hand in class, on ЛР-5's booking form: a starter for `lab-6/` with a phone field and a fake server, a Zod schema checked in the console, React Hook Form (`register`, `Controller`, `useWatch`), error messages with `aria-invalid` and `aria-describedby`, sending through `useActionState` with a pending state and clearing after success, deploy to Vercel; +1 point in class for a newsletter form on `<form action>` and `useFormStatus`, +1 point at home for the same booking form with other libraries and a comparison; [lab-6/README.md](lab-6/README.md) |
+| ЛР 7–27 | not built | |
 
 Лекція 0 reads its topic slides from the **Теми презентацій** table below
 when the site is built. Keep that table's rows in their current shape: the
@@ -326,12 +327,13 @@ Rules stated under the table:
 - Every student defends at least 2 presentations; at most 4 count towards the
   total (20 points). Topics and order are agreed with the teacher.
 
-**ЛР 4's extra point** (the teacher's decision, 2026-11-08, not in the
-programme): its main part gives the usual 1 point, and its §4.7 one more. The
-programme counts 1 point per lab, so with it Part 1 can give 7 points rather
-than 6. The extra point is a bonus above the 65 points for current work
-(settled the same day), so current work can reach 66; no other task gives
-way.
+**Extra points in ЛР 4 and ЛР 6** (the teacher's decisions, not in the
+programme): in each, the main part gives the usual 1 point and the extra
+tasks more. ЛР 4's §4.7 gives 1 (2026-11-08); ЛР 6's §4.7, done in class, and
+§4.8, homework due by the defence, give 1 each (2026-11-12). The programme
+counts 1 point per lab, so with them Part 1 can give 9 points rather than 6.
+Extra points are a bonus above the 65 points for current work (settled
+2026-11-08), so current work can reach 68; no other task gives way.
 
 **Students on an individual plan** take another route, agreed with the
 teacher and not in the programme's table: instead of the labs and module

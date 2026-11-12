@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Experiments — Lab 9</title>
+    <link rel="icon" href="data:," />
+    <style>
+      :root {
+        color-scheme: light dark;
+        font-family: system-ui, sans-serif;
+        line-height: 1.5;
+      }
+      body {
+        max-width: 48rem;
+        margin: 2rem auto;
+        padding: 0 1rem;
+      }
+      section {
+        margin-block: 1rem;
+        padding: 0.75rem 1rem;
+        border: 1px solid;
+        border-radius: 0.5rem;
+      }
+      h2 {
+        margin: 0 0 0.5rem;
+        font-size: 1rem;
+      }
+      .fake {
+        display: inline-block;
+        padding: 0.4rem 0.8rem;
+        border: 1px solid;
+        border-radius: 0.4rem;
+        cursor: pointer;
+      }
+      button svg {
+        width: 1.5rem;
+        height: 1.5rem;
+        vertical-align: middle;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Lab 9 experiments</h1>
+    <p>
+      The code snippets are in §4 of the lab. The number and title of each block below match the
+      number and title of its experiment. Paste each snippet into the Console (DevTools) on this
+      page as a whole. Reload the page before each experiment: the snippets change the DOM. For
+      experiments 13–15, add a <em>Live Expression</em> <code>document.activeElement</code> in
+      the Console.
+    </p>
+
+    <section id="exp-1">
+      <h2>1 · Live and static collections</h2>
+      <ul>
+        <li class="item">First</li>
+        <li class="item">Second</li>
+        <li class="item">Third</li>
+        <li class="item">Fourth</li>
+        <li class="item">Fifth</li>
+        <li class="item">Sixth</li>
+      </ul>
+    </section>
+
+    <section id="exp-2">
+      <h2>2 · Inserting HTML strings four different ways</h2>
+      <p>textContent: <output class="as-text"></output></p>
+      <p>innerHTML: <output class="as-html"></output></p>
+    </section>
+
+    <section id="exp-3">
+      <h2>3 · Values from dataset</h2>
+      <ul>
+        <li data-id="82">Game of Thrones</li>
+      </ul>
+    </section>
+
+    <section id="exp-4">
+      <h2>4 · innerHTML += and event handlers</h2>
+      <button type="button">Button with handler</button>
+    </section>
+
+    <section id="exp-5">
+      <h2>5 · Event propagation phases</h2>
+      <ul>
+        <li><button type="button">Click me</button></li>
+      </ul>
+    </section>
+
+    <section id="exp-6">
+      <h2>6 · target, currentTarget, and this</h2>
+      <button type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z" fill="currentColor" />
+        </svg>
+        Button with icon
+      </button>
+    </section>
+
+    <section id="exp-7">
+      <h2>7 · The same listener attached twice</h2>
+      <button type="button">Counter</button>
+    </section>
+
+    <section id="exp-8">
+      <h2>8 · div vs button</h2>
+      <div class="fake">Div with handler</div>
+      <button type="button">Real button</button>
+    </section>
+
+    <section id="exp-9">
+      <h2>9 · Enter in a form</h2>
+      <form>
+        <label>Search <input name="q" autocomplete="off" /></label>
+        <button>Find</button>
+      </form>
+    </section>
+
+    <section id="exp-10">
+      <h2>10 · value and valueAsNumber</h2>
+      <label>Number <input type="number" /></label>
+    </section>
+
+    <section id="exp-11">
+      <h2>11 · setCustomValidity</h2>
+      <label>Rating from 1 to 10 <input type="number" min="1" max="10" /></label>
+    </section>
+
+    <section id="exp-12">
+      <h2>12 · The reset event</h2>
+      <form>
+        <label>Filter <input name="q" /></label>
+        <button type="reset">Reset</button>
+      </form>
+    </section>
+
+    <section id="exp-13">
+      <h2>13 · Removing a focused element</h2>
+      <button type="button">I will be removed</button>
+    </section>
+
+    <section id="exp-14">
+      <h2>14 · focus() and tabindex</h2>
+      <div>Plain div</div>
+    </section>
+
+    <section id="exp-15">
+      <h2>15 · Modal dialog and focus</h2>
+      <button type="button" class="opener">Open dialog</button>
+      <button type="button" class="outside">Button outside dialog</button>
+      <dialog>
+        <p>Modal dialog</p>
+        <button type="button">Button inside dialog</button>
+      </dialog>
+    </section>
+  </body>
+</html>
