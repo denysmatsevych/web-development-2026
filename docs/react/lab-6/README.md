@@ -86,8 +86,10 @@ Zod 4.6.7, `@hookform/resolvers` 7.0.6, and for §4.8 Formik 2.4.9 and Yup
 1.7.1:
 
 - the versions on npm are unchanged since the plan;
-- the starter: one `npm install` in the root adds the `lab-6` workspace and
-  the three packages; it passes `format:check`, `lint` and `build`;
+- `lab-6.zip` (16 files at the root, LF only, a rebuild is byte-identical)
+  unpacked into a fresh `react-labs/lab-6/`: one `npm install` in the root
+  adds the workspace and the three packages, and the folder passes
+  `format:check`, `lint` and `build`;
 - every stage (the starter, §4.2, §4.3, §4.4, §4.5, §4.7) and the reference
   §4.8 version pass Prettier, ESLint with no problems and the build;
   `watch('comment')` raises `react-hooks/incompatible-library`;
@@ -121,7 +123,7 @@ Not verified:
 - the cross-field rule around midnight;
 - Firefox and Safari;
 - the sixth and seventh Vercel projects;
-- the zip and the PDF, which come after the starter's commit and the review.
+- the PDF, which follows the instructor's review of the handout.
 
 ## Build
 
