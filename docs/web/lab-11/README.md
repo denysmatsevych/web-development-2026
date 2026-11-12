@@ -130,7 +130,7 @@ Back the folder up outside the repo.
 ## Regenerating
 
 ```sh
-node docs/web/lab-11/record-fixtures.mjs                          # check/fixtures/ from the live API
+node docs/web/lab-11/record-fixtures.mjs                          # check/fixtures/ of both starters, from the live API
 python docs/web/build-pack.py starters/web/showfinder-starter     # public/uk/web/starters/showfinder-starter.zip
 python docs/web/build-pack.py starters/web/en/showfinder-starter  # public/en/web/starters/showfinder-starter.zip
 python docs/web/build-handout.py lab-11                           # public/uk/web/labs/lab-11.pdf
