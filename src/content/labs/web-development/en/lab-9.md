@@ -1,7 +1,7 @@
 ---
 number: 9
 title: "Creating interactive DOM and event handling: event delegation, forms, and dynamic UI accessibility"
-summary: "DOM API, events, forms, and focus in the “My Watchlist” app: an AI agent writes an initial draft for each challenge from a brief prompt, while you audit it against the specification and in-browser self-checks and fix it by hand. Event delegation, <template>, modal <dialog>, live regions, and post-render focus management."
+summary: "DOM API, events, forms, and focus in the “My Watchlist” app: an AI agent writes an initial draft for each challenge from a short prompt, while you audit it against the assignment and the in-browser self-check and fix it by hand. Event delegation, <template>, modal <dialog>, live regions, and post-render focus management."
 discipline: "Modern Web Development: HTML, CSS, JS/TS"
 level: "Year 3, Computer Science"
 format: "Code challenges"
@@ -23,8 +23,8 @@ real browser behavior, rather than assuming it works because it “looks
 functional.”
 
 **Expected outcome:** the “My Watchlist” application, where every component was
-first drafted by an AI agent, then audited and fixed by hand against the
-specification; a clean “Passed: 33 of 33” in the self-check suite, and a Git
+first drafted by an AI agent, then audited against the assignment and fixed by
+hand; a clean “Passed: 33 of 33” in the self-check suite, and a Git
 history where each AI draft commit is followed by your corresponding fix commit.
 
 ## 2. Objectives and learning outcomes
@@ -47,21 +47,21 @@ After completing this lab, you must be able to:
   element removal, and modal `<dialog>` interactions.
 - Communicate dynamic state to assistive technologies: `aria-pressed`,
   `aria-invalid`, `aria-describedby`, and live regions (`role="status"`).
-- Audit AI-generated code against specifications, automated self-checks, and
-  DevTools, recording the audit trail in Git.
+- Audit AI-generated code against the assignment, the self-check, and DevTools,
+  recording the audit trail in Git.
 
 ## 3. Lab tasks
 
 1. **At home, before class:** work through the research tasks (§4) and conduct
    the experiments: for each one, analyze the code and write down your expected
    result **before** running it in the browser.
-2. **In class:** download the [My Watchlist starter project](/en/web-development/labs/lab-9/task/),
+2. **In class:** download the [My Watchlist starter project](/web-development/labs/lab-9/task/),
    commit it to Git unchanged, and confirm that the self-check initially reports
    “Passed: 0 of 33” (§5.1).
 3. **In class:** complete Challenges 1–4 (§5.3–5.6): for each challenge, have the
-   AI agent write a draft, commit it, audit it against the specification, and fix
+   AI agent write a draft, commit it, audit it against the assignment, and fix
    all problems by hand.
-4. **At home:** verify the manual checklist from the brief on your final build,
+4. **At home:** go through the assignment's manual checklist on your final build,
    deploy the project to GitHub Pages or Vercel, prepare your report (§6), and
    defend your work (§7).
 
@@ -82,7 +82,7 @@ Watchlist” application if overlooked.
 ([watchlist-starter.zip](/en/web/starters/watchlist-starter.zip), the same as in
 §5) includes `experiments.html`. It contains 15 numbered blocks — one for each
 experiment. The block number and title match the experiment number and title
-below. Each block is an `<section id="exp-N">` element, and the code snippets
+below. Each block is a `<section id="exp-N">` element, and the code snippets
 query their elements within that block: `document.querySelector('#exp-1 …')`.
 Because the HTML for each block is displayed in the description, you can analyze
 the code without opening the page.
@@ -92,7 +92,7 @@ in a browser at the `http://127.0.0.1:…` address reported by Live Preview
 (rather than the built-in VS Code tab), and open DevTools (F12, or
 Cmd+Option+I on macOS) → Console. Use Chrome or Edge: Live Expressions and
 Preserve log are present in their DevTools, and click/Tab events in Safari and
-Firefox on macOS handle focus differently (assignment brief, §6).
+Firefox on macOS handle focus differently (assignment, §6).
 
 **Experiment protocol:**
 
@@ -109,7 +109,7 @@ table — it is part of your report:
 
 | # | What was investigated | My analysis | Actual result | Explanation (if mismatched) |
 | --- | --- | --- | --- | --- |
-| 1 | Live vs. static collections | ... | ... | ... |
+| 1 | Live and static collections | ... | ... | ... |
 
 ### 4.1. DOM API
 
@@ -127,7 +127,7 @@ is found; live vs. static collections; differences between `textContent`,
 
 **Experiments:**
 
-1. **Live vs. static collections.** Block `#exp-1` on `experiments.html`:
+1. **Live and static collections.** Block `#exp-1` on `experiments.html`:
 
    ```html
    <section id="exp-1">
@@ -225,7 +225,7 @@ is found; live vs. static collections; differences between `textContent`,
 
    ```html
    <section id="exp-4">
-     <h2>4 · innerHTML += and handlers</h2>
+     <h2>4 · innerHTML += and event handlers</h2>
      <button type="button">Button with handler</button>
    </section>
    ```
@@ -309,9 +309,9 @@ behaviors of `<button>` compared to a `<div>` with a `click` handler; what
    </section>
    ```
 
-   The `<svg>` is an icon star; `<path>` is its outline. The snippet attaches a
+   The `<svg>` is a star icon; `<path>` is its outline. The snippet attaches a
    regular function handler and an arrow function handler to the button, plus a
-   delegated handler to the block container. Click the colored part of the star,
+   delegated handler to the block container. Click the filled part of the star,
    then the text of the button, then the section heading.
 
    ```js
@@ -342,9 +342,9 @@ behaviors of `<button>` compared to a `<div>` with a `click` handler; what
    </section>
    ```
 
-   The snippet attaches four listeners incrementing `count`: two distinct arrow
-   functions with identical bodies, and twice the same named function `named`.
-   Then it triggers a click programmatically.
+   The snippet attaches four listeners that increment `count`: two arrow
+   functions that look the same, and the same function `named` twice. Then it
+   clicks the button once.
 
    ```js
    const button = document.querySelector('#exp-7 button');
@@ -361,8 +361,8 @@ behaviors of `<button>` compared to a `<div>` with a `click` handler; what
    **Analyze:** what will `count` equal?
 
    **Where this occurs:** attaching event listeners inside a function that
-   re-renders the list (Challenge 2). Explain when the browser registers duplicate
-   handlers and when it discards them.
+   re-renders the list (Challenge 2). Explain when the browser registers the same
+   listener again and when it does not.
 
 8. **`<div>` vs. `<button>`.** Block `#exp-8` on `experiments.html`:
 
@@ -483,7 +483,7 @@ behaviors of `<button>` compared to a `<div>` with a `click` handler; what
     ```js
     const input = document.querySelector('#exp-11 input');
     input.value = '42';
-    if (input.valueAsNumber > 10) input.setCustomValidity('Not greater than 10');
+    if (input.valueAsNumber > 10) input.setCustomValidity('No more than 10');
     input.value = '5';
     [input.validity.valid, input.validity.customError, input.checkValidity(), input.validationMessage];
     ```
@@ -537,7 +537,8 @@ behaviors of `<button>` compared to a `<div>` with a `click` handler; what
 element is removed; how `showModal()` affects the rest of the page and where
 `close()` returns focus; what an accessible name is and how browsers compute it;
 why a live region must already be present in the DOM before its text content
-changes.
+changes. You can hear the announcements only with a screen reader (Narrator,
+NVDA, VoiceOver); this is optional.
 
 For experiments 13–15, create a **Live Expression** in the Console for
 `document.activeElement`: it tracks which element currently has focus.
@@ -567,7 +568,7 @@ For experiments 13–15, create a **Live Expression** in the Console for
     **Analyze:** which two values will the array contain?
 
     **Where this occurs:** the list is re-rendered while focus was on a button of
-    an old card (Challenges 2, 3, and 4). Explain where focus drops and what that
+    an old card (Challenges 2, 3, and 4). Explain where focus goes and what that
     means for a keyboard user.
 
 14. **`focus()` and `tabindex`.** Block `#exp-14` on `experiments.html`:
@@ -647,8 +648,8 @@ For experiments 13–15, create a **Live Expression** in the Console for
     Expressions.
 
     **Where this occurs:** the "Details" dialog and saving a note, after which
-    the card is re-rendered (Challenge 4). Explain how `showModal()` isolates the
-    rest of the document and when the browser automatically restores focus.
+    the card is re-rendered (Challenge 4). Explain what `showModal()` does to the
+    rest of the page and when the browser restores focus on its own.
 
 ### 4.5. AI-generated DOM code
 
@@ -687,27 +688,27 @@ meaning the initial page displays the filter form and an empty list.
 
 **Your task** is to bring the application to full functionality in four steps
 (challenges). Each challenge targets a specific part of the application through
-the same workflow (§5.2): the AI agent writes a draft from a brief prompt, you
-commit it to Git, audit it against the specification, and fix all problems by
+the same workflow (§5.2): the AI agent writes a draft from a short prompt, you
+commit it to Git, audit it against the assignment, and fix all problems by
 hand. Complete the challenges in sequence: each builds on the previous ones.
 
 **How to verify.** Exact rules for each challenge are in the
-[assignment brief](/en/web-development/labs/lab-9/task/), §4. They are numbered:
+[assignment](/web-development/labs/lab-9/task/), §4. They are numbered:
 C4.2 refers to rule 2 of Challenge 4. The `check.html` page tests these rules in
 the browser and displays them by challenge block: “C1 · Cards”, “C2 · Card
-buttons”, etc. Each rule in a block uses the same number as in the brief:
+buttons”, etc. Each rule in a block uses the same number as in the assignment:
 ✓ means passing, ✗ means failing, accompanied by an explanation. Run it as often
 as you like: it does not alter project files. What `check.html` cannot verify
-(real keyboard interaction and visible focus outlines) is covered by the manual
-checklist in the brief, §6.
+(real keyboard interaction and visible focus outlines) is covered by the
+assignment's manual checklist, §6.
 
 ### 5.1. Setup
 
 1. Download [watchlist-starter.zip](/en/web/starters/watchlist-starter.zip) and
    extract it into a **separate repository** or into a `lab-9/` folder in your
    shared coursework repository. Make your first commit **unchanged**.
-2. Open `index.html` via Live Preview in Chrome or Edge: you should see the
-   filter form, an empty list, and a clean Console with no errors.
+2. Open `index.html` via Live Preview in Chrome or Edge, as in §4: you should
+   see the filter form, an empty list, and a clean Console with no errors.
 3. Open `check.html` the same way: it should report “Passed: 0 of 33”. Review
    what the automated check runner does not cover.
 4. `check.html`, `check/`, `data/`, and `src/state.js` must remain unchanged in
@@ -723,7 +724,7 @@ checklist in the brief, §6.
      edit files). Close editor tabs for `check.html` and files in `check/`: many
      agents automatically include open files in their context. Paste **only**
      the short prompt provided in the challenge section, word for word. Do not
-     provide the specification brief, `check.html`, or custom instructions:
+     give the agent the assignment, `check.html`, or clarifications of your own:
      the goal is to observe what the agent produces by default.
   2. **Draft commit.** Without fixing anything, commit everything modified by
      the agent with the commit message `Challenge 2: AI draft`. Commit even if
@@ -733,11 +734,12 @@ checklist in the brief, §6.
      `git restore check.html check data src/state.js`, remove any new files in
      those directories, and document this in your report.
   3. **Audit.** Open `check.html` and navigate to the challenge block. For every
-     ✗, identify which specification rule was violated and why. Review the Git
-     diff of the draft against constraints in §5 of the brief (`innerHTML` with
-     data, timers, `fetch`): `check.html` does not detect all of them. Then
-     verify the items in the manual checklist for this challenge number.
-  4. **Hand-crafted fixes.** The AI may explain error messages or concepts, but
+     ✗, identify which rule of the assignment was broken and why. Review the Git
+     diff of the draft against the assignment's constraints, §5 (`innerHTML` with
+     data, timers, `fetch`): `check.html` does not detect all of them. Then go
+     through the lines of the assignment's manual checklist tagged with this
+     challenge's number.
+  4. **Hand-crafted fixes.** The AI may explain a check, a rule, or an error, but
      **must not write** the fix code. Once all checks in this block and all
      preceding blocks show ✓, commit your fixes in a single commit:
      `Challenge 2: fixes`. If the agent modified code from earlier challenges,
@@ -807,7 +809,7 @@ first list render; `refresh()` re-renders the list.
 
 **Verification:** open `check.html`: all checks in “C2 · Card buttons” must show
 ✓. Then complete the C2 rows in the manual checklist
-([brief](/en/web-development/labs/lab-9/task/), §6). Experiments 3–8 and 13 are
+([assignment](/web-development/labs/lab-9/task/), §6). Experiments 3–8 and 13 are
 relevant.
 
 ### 5.5. Challenge 3 — filters
@@ -834,7 +836,7 @@ management after card removal in `src/list.js`.
 
 **Verification:** open `check.html`: all checks in “C3 · Filters” must show ✓.
 Then complete the C3 rows in the manual checklist
-([brief](/en/web-development/labs/lab-9/task/), §6). Experiments 9, 12, 13, and
+([assignment](/web-development/labs/lab-9/task/), §6). Experiments 9, 12, 13, and
 14 are relevant.
 
 ### 5.6. Challenge 4 — "Details" dialog and note form
@@ -856,7 +858,7 @@ that specific show.
 **What is provided.** `index.html` contains `<dialog id="details">` with
 `#details-title`, `#details-summary`, `#details-link`, and `#note-form`
 (fields `rating` and `note`, error container `#note-rating-error`, "Save" and
-"Cancel" buttons). JavaScript only populates and manages dialog state.
+"Cancel" buttons). JavaScript only fills in and opens the dialog.
 `src/state.js` provides `getShow(id)`, `saveNote()`, and `notes`, while the
 card template includes slots for rating and note.
 
@@ -872,7 +874,7 @@ rating rendering is handled in `src/render.js`.
 
 **Verification:** open `check.html`: all checks in “C4 · Details dialog and
 note” must show ✓. Then complete the C4 rows in the manual checklist
-([brief](/en/web-development/labs/lab-9/task/), §6). Experiments 2, 8–11, 13, and
+([assignment](/web-development/labs/lab-9/task/), §6). Experiments 2, 8–11, 13, and
 15 are relevant.
 
 ### 5.7. Commits
@@ -890,8 +892,8 @@ Viewing `Challenge N: fixes` on GitHub shows the exact diff between the AI
 draft and your corrections. During defense, you will use this diff to explain
 what was missing or incorrect in the AI draft (§7).
 
-After completing Challenge 4, run through the full manual checklist once more on
-your final build and publish the project to GitHub Pages or Vercel
+After completing Challenge 4, go through the assignment's full manual checklist
+once more on your final build and publish the project to GitHub Pages or Vercel
 (instructions in the starter project `README.md`).
 
 ## 6. Report requirements
@@ -916,7 +918,7 @@ The report must contain:
 1. the experiment table from §4 (all 15 rows);
 2. the name and version of the AI agent, model, and date of work;
 3. your `check.html` result on the deployed page — “Passed: 33 of 33”;
-4. the completed manual checklist from the brief for both sections on your final
+4. the assignment's manual checklist: the result of both items on your final
    build;
 5. summary: what the AI implemented correctly without guidance, and what it
    missed in each draft; if the agent modified protected files, note which ones.
@@ -962,7 +964,7 @@ _AI_
 
 ## 8. Grading
 
-This assignment is worth **3 points** (1 point each for research tasks,
+This lab is worth **3 points** (1 point each for research tasks,
 practical implementation, and defense), plus **1 bonus point**.
 
 | Component | Points | Grading criteria |
@@ -970,7 +972,7 @@ practical implementation, and defense), plus **1 bonus point**.
 | Research tasks (§4) | 1 | 0.25 points for each subsection §4.1–§4.4: all experiments documented in the table with your prediction and actual result, including explanations for any discrepancies (report item 1) |
 | Practical part (§5) | 1 | Self-checks: “Passed: 33 of 33” in `check.html` on the deployed site — 0.5; 28 to 32 passed — 0.25. Process: `AI draft` and `fixes` commits following §5.7, manual checklist results (item 4), and AI draft summary (item 5): complete and substantive — 0.5; missing one of the three — 0.25 |
 | Defense (§7) | 1 | Audit questions: explaining an AI draft finding and live code modification without AI — up to 0.5; two questions from other groups in §7 — 0.25 for each complete answer |
-| Bonus point | +1 | Either submitted before **19.10.2026** OR completed during class |
+| Bonus point | +1 | Either submitted by **19.10.2026** OR completed during class |
 
 > **Important!** Without defense, the research and practical components combined
 > are capped at **1 point**: defense confirms that you understand the code you

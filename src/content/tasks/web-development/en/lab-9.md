@@ -1,7 +1,7 @@
 ---
 title: "My Watchlist — application specification"
 summary: "A catalog of 30 TVmaze shows: cards instantiated from a template, personal watchlist, filters, and a 'Details' dialog with user ratings and notes. Numbered rules tested against AI drafts, and the check.html self-check suite. The practical part of Lab 9."
-goal: "Bring the 'My Watchlist' application into full compliance with this specification. Each component is first drafted by an AI agent using a brief prompt from the lab, and you audit the draft against the rules below and fix all issues by hand. Each rule is numbered, and the in-browser check.html test suite verifies it under the same number. The practical part corresponds to section 5 of the lab."
+goal: "Bring the 'My Watchlist' application into full compliance with this specification. Each component is first drafted by an AI agent using a short prompt from the lab, and you audit the draft against the rules below and fix all issues by hand. Each rule is numbered, and the in-browser check.html test suite verifies it under the same number. The practical part corresponds to section 5 of the lab."
 label: "Assignment"
 highlights:
   - "Provided starter project"
