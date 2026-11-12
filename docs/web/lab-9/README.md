@@ -132,15 +132,27 @@ Back the folder up outside the repo.
 ## Regenerating
 
 ```sh
-python docs/web/build-pack.py starters/web/watchlist-starter  # public/uk/web/starters/watchlist-starter.zip
-python docs/web/build-handout.py lab-9                        # public/uk/web/labs/lab-9.pdf
-node docs/web/lab-9/solution/verify.mjs all                   # local only
-node docs/web/lab-9/solution/experiments.mjs                  # local only: §4 answer key
+python docs/web/build-pack.py starters/web/watchlist-starter     # public/uk/web/starters/watchlist-starter.zip
+python docs/web/build-pack.py starters/web/en/watchlist-starter  # public/en/web/starters/watchlist-starter.zip
+python docs/web/build-handout.py lab-9                           # public/uk/web/labs/lab-9.pdf
+python docs/web/build-handout.py lab-9 --lang en                 # public/en/web/labs/lab-9.pdf
+node docs/web/lab-9/solution/verify.mjs all                      # local only
+node docs/web/lab-9/solution/verify.mjs all --lang en            # local only: the English starter
+node docs/web/lab-9/solution/experiments.mjs                     # local only: §4 answer key
+node docs/web/lab-9/solution/experiments.mjs --lang en           # local only: the English one
 ```
+
+The English starter has the same `check/` logic with English texts. The
+solution, the traps and the experiment snippets stay in Ukrainian; with
+`--lang en`, the scripts swap their interface strings for the English ones
+through `solution/en.mjs`, which lists each pair.
 
 The two `node` scripts drive headless Edge; on the course machine Edge starts
 only from PowerShell, outside the agent sandbox. Edit the starter in
-`starters/web/watchlist-starter/`, then rebuild the zip. Re-run `verify.mjs` after any
-change to `check/`, the template, the shell's ids or `state.js`. Re-run
-`experiments.mjs` after changing `experiments.html` or the handout's snippets:
-it also confirms that each snippet appears in the handout word for word.
+`starters/web/watchlist-starter/` and its English copy in
+`starters/web/en/watchlist-starter/`, then rebuild both zips (see the root
+`README.md` → **Per-lab starter kits and asset packs**). Re-run `verify.mjs`
+in both languages after any change to `check/`, the template, the shell's ids
+or `state.js`. Re-run `experiments.mjs` after changing `experiments.html` or
+the handout's snippets: it also confirms that each snippet appears in the
+handout word for word.
