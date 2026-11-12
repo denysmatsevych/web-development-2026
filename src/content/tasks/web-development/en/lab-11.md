@@ -209,8 +209,7 @@ episodes and cast.
 3. While details load, `#details` has `aria-busy="true"` and displays
    "Loading…". The search results list remains visible and its interactive
    buttons remain functional.
-4. Shows already loaded previously render immediately from cache without
-   dispatching a new network request.
+4. A show that was loaded earlier opens without a new request.
 5. Selecting another show while a previous request is still pending ensures only
    the latest selection renders. While pending, `#details` displays
    "Loading…".

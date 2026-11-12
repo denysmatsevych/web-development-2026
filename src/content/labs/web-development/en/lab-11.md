@@ -484,7 +484,7 @@ unprompted:
 - Requesting show metadata, episodes, and cast sequentially, ignoring `embed`;
 - Leaving loading states stuck on error (missing `finally`);
 - Only logging errors to Console or using `alert()`;
-- Treating aborted requests (`AbortError`) as network failures;
+- Treating aborted requests (`AbortError`) as errors;
 - Retrying immediately in infinite loops on 429;
 - Reading response headers that browsers restrict for cross-origin requests;
 - Inventing non-existent endpoints or query parameters;
@@ -555,9 +555,10 @@ recorded fixtures. `check.html` never makes live network requests.
      with `git restore check.html check offline.html src/view.js` and record this
      in your report.
   3. **Audit.** Open `check.html` to inspect the challenge block. For each failing
-     test (✗), identify which rule was violated and reproduce it in `index.html`,
-     gathering DevTools Network proof: status, headers, payload, `(canceled)`,
-     initiator. Also inspect the git diff against constraints in assignment §5.
+     test (✗), identify which rule was violated and why, and reproduce it in
+     `index.html`, gathering DevTools Network proof: status, headers, payload,
+     `(canceled)`, initiator. Also inspect the git diff against constraints in
+     assignment §5.
   4. **Manual fixes.** You may ask the AI to explain a test failure, rule, status,
      or header, but you **must write all fix code yourself**. When all checks in
      the current block and previous blocks display ✓, commit your fixes:
