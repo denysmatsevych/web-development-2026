@@ -30,7 +30,7 @@ git commit -m "feat(ui): add ..."
 git push -u origin feat/my-change
 ```
 
-Keep branches small and scoped to one concern. Rebase or merge from `main` before opening a PR when needed.
+Keep branches small and scoped to one concern. Update the branch from `main` before merging — see **Required before merging** below.
 
 ## Commit conventions
 
@@ -75,7 +75,6 @@ Open a PR only when the change is ready for review.
 
 ### Required before opening a PR
 
-- Ensure the branch is up to date with `main`
 - Confirm the change matches the issue or task scope
 - Run the verification command yourself before pushing — see `AGENTS.md` →
   **Project commands**. PR checks re-run the same thing on GitHub (see
@@ -85,6 +84,16 @@ Open a PR only when the change is ready for review.
 - For an accessibility-relevant change, check it against the relevant WCAG criteria (`docs/agents/design-system.md` → Accessibility)
 - Avoid unrelated edits in the same PR
 - Include screenshots or brief notes for UI changes when useful
+
+### Required before merging
+
+- Update the branch from `main` (**Update branch** on GitHub, or
+  `git merge origin/main`) and wait for the PR checks to pass on the updated
+  branch. A passing check only covers the `main` it ran against, and merging
+  deploys straight to the live site (see `README.md` → **Deploy**). Prefer
+  merging `main` in over rebasing: PRs are squash-merged, so branch history
+  doesn't matter, and a merge needs no force-push and keeps review comments
+  attached to their lines.
 
 ## Review expectations
 
