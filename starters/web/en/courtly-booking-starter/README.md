@@ -7,6 +7,9 @@ a deadline. At first glance the application appears functional, but it contains
 deliberately introduced JavaScript defects — finding, proving, and fixing them
 is the objective of this lab.
 
+The page is in Ukrainian, like the Courtly page in Lab 7. The assignment quotes
+its texts with English translations; leave them as they are.
+
 Task description and expected application behavior:
 <https://denysmatsevych.github.io/web-development-2026/en/web-development/labs/lab-10/> and
 <https://denysmatsevych.github.io/web-development-2026/en/web-development/labs/lab-10/task/>.
