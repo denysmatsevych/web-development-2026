@@ -48,7 +48,7 @@ It is in Ukrainian, and so is your page: copy it as it is, without translating
 it. Venue details and ratings in the mockup are illustrative: you may write
 your own.
 
-**Download:** [courtly-assets.zip](/uk/web/starters/courtly-assets.zip) — `tokens.css`,
+**Download:** [courtly-assets.zip](/en/web/starters/courtly-assets.zip) — `tokens.css`,
 `SPEC.md` (§2–5 of this page), mockup captures, favicon, logo mark,
 8 illustrations, and OG image. All images were designed specifically for this
 assignment and may be published freely.

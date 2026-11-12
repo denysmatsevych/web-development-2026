@@ -18,7 +18,7 @@ sports venues — following the provided mockup. Deploy and publish it on
 - **Mockup, design tokens, and component specifications:**
   [Courtly — mockup and design system](/web-development/labs/lab-7/task/).
 - **Images, `tokens.css`, specification, mockup captures, favicon, OG image:**
-  [courtly-assets.zip](/uk/web/starters/courtly-assets.zip) (≈ 900 KB).
+  [courtly-assets.zip](/en/web/starters/courtly-assets.zip) (≈ 900 KB).
 - **Your own CSS**, without any CSS frameworks or UI component libraries.
   JavaScript is used solely for the mobile menu.
 - **Not required:** backend, API, database, authentication, real search, or
