@@ -93,7 +93,8 @@ starters/           the source of each zip: <course>/<name>/ becomes public/uk/<
    ├─ lab-2/                    configuration, styles and data for writing ЛР-2's components by hand
    ├─ lab-3/                    a working app in one component, for ЛР-3 to split by its component tree
    ├─ lab-4/                    ЛР-3's components plus a filter function, for ЛР-4 to add state and an effect
-   └─ lab-5/                    a booking form with no event handlers, for ЛР-5 to wire up one event at a time
+   ├─ lab-5/                    a booking form with no event handlers, for ЛР-5 to wire up one event at a time
+   └─ lab-6/                    ЛР-5's booking form plus a phone field, a fake server and date helpers, for ЛР-6's schema, form library and Action
 ```
 
 See `docs/agents/design-system.md` for which stylesheet owns what and how
