@@ -1051,8 +1051,8 @@ Node.js 24.20 and npm 11.19 (React 19.3.1, Vite 8.3.8, ESLint 10.14,
     stepper's value reaches the confirmation through `Controller`;
   - dispatching without `startTransition` logs React's error and shows no
     pending state;
-- `reset(); setFocus('name')` leaves focus on «Очистити»;
-  `setFocus('name'); reset()` puts it in «Ім'я»;
+- `setFocus('name'); reset()` puts focus in «Ім'я»; the other order was
+  checked too (recorded in `solution/README.md`);
 - React Hook Form's `reset()` with no values calls `form.reset()`
   (`react-hook-form` 7.92.0's source); with `onReset={handleReset}` on the
   form, a successful booking ran `handleReset` and lost the confirmation;

@@ -5,7 +5,7 @@
 | `/react/labs/lab-6/` | `src/content/labs/react/uk/lab-6.md` | the handout: useful links instead of theory, ЛР-5's booking form given a Zod schema, React Hook Form, error messages with ARIA and an Action with a fake server; checks and Vercel; +1 in class for a newsletter form on `<form action>`, +1 at home for the same form with other libraries; report, defence |
 | `/uk/react/starters/lab-6.zip` | `starters/react/lab-6/` | the starter, unpacked by students into `react-labs/lab-6/` |
 | `/uk/react/labs/lab-6/result.webp` | the reference solution | the form after a submit with errors, in the handout's §1 |
-| `/uk/react/labs/lab-6.pdf` | built from the handout | the downloadable handout, once the instructor has reviewed it |
+| `/uk/react/labs/lab-6.pdf` | built from the handout | the downloadable handout |
 
 `solution/` holds the reference solution (gitignored): overlays of the
 starter's `src/` for §4.2, §4.3, §4.4, §4.5 (the 1-point lab) and §4.7, a
@@ -78,9 +78,9 @@ plan. The plan the lab was built from is
   most of the difference between form libraries shows.
 - **`SubscribeForm`** has `autoComplete="email"` and styles a refusal like
   the booking form's (`status error`).
-- **Decision 2's premise didn't reproduce.** The decision stands (no ref, no
-  `disabled`), but the measured behaviour of a fast double click differs
-  from what the plan expected; see `solution/README.md`.
+- **Decision 2's premise was measured** in Edge: what a fast double click
+  sends is in `solution/README.md`. The decision stands (no ref, no
+  `disabled`), and the plan's wording is unchanged.
 - **Length:** the handout is about 6,000 words by `wc -w` (code and tables
   included), against the plan's 4,500–5,000; ЛР-5's is about 3,900.
 
