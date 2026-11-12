@@ -41,13 +41,14 @@ from that scheme (see Lab 8, §5.1). `npm install` is not needed.
 
 Open `check.html` the same way as `index.html`. The page loads the application
 into an iframe, interacts with it as a user (clicking, typing, submitting
-forms), and displays each rule as ✓ or ✗, with "Passed: N of M" at the bottom.
+forms), and displays each rule of the assignment as ✓ or ✗, with
+"Passed: N of M" at the bottom.
 The check runner never reads your application source code. Each check opens a
 clean copy of the app, so state from one check does not leak into another.
 
 Initially, all checks fail. The message under each ✗ explains what went wrong.
 Synthetic events are untrusted, so real Esc, Tab, and focus order are not seen
-by the automated checker: for those, consult the manual checklist in the brief.
+by the automated checker: for those, use the manual checklist in the assignment.
 
 ## Deployment
 

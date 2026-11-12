@@ -1,13 +1,13 @@
 /**
- * Дані й стан застосунку «Мій список». Наданий модуль: не змінюйте його.
+ * Data and state of the “My Watchlist” app. A provided module: do not change it.
  *
- * Модуль не знає про DOM. Він зберігає стан і повертає дані, а показати їх на сторінці й
- * підключити події — ваша частина роботи (render.js, list.js, filters.js, details.js).
- * Стан живе лише в пам'яті: після перезавантаження сторінки список і нотатки знову порожні.
+ * The module knows nothing about the DOM. It keeps the state and returns data; showing them on
+ * the page and wiring up events is your part of the work (render.js, list.js, filters.js, details.js).
+ * The state lives in memory only: after a page reload, the watchlist and notes are empty again.
  *
- * `watchlist` і `notes` можна читати напряму (`watchlist.has(id)`, `notes.get(id)`), а
- * змінювати — лише через функції нижче: вони перевіряють аргументи й кидають помилку з
- * поясненням, якщо щось не так.
+ * You can read `watchlist` and `notes` directly (`watchlist.has(id)`, `notes.get(id)`), but
+ * change them only through the functions below: they check their arguments and throw an error
+ * with an explanation if something is wrong.
  */
 import data from '../data/shows.json' with { type: 'json' };
 
@@ -15,61 +15,61 @@ import data from '../data/shows.json' with { type: 'json' };
  * @typedef {object} Show
  * @property {number} id
  * @property {string} name
- * @property {number | null} year рік прем'єри
- * @property {number | null} rating середня оцінка глядачів TVmaze
- * @property {number | null} runtime тривалість серії, хв
+ * @property {number | null} year premiere year
+ * @property {number | null} rating average TVmaze viewer rating
+ * @property {number | null} runtime episode length, min
  * @property {string | null} network
- * @property {readonly string[]} genres може бути порожнім
- * @property {string} summary опис — HTML-розмітка TVmaze (`<p>`, `<b>`, `<i>`)
- * @property {string} url сторінка серіалу на TVmaze
+ * @property {readonly string[]} genres may be empty
+ * @property {string} summary description: TVmaze HTML markup (`<p>`, `<b>`, `<i>`)
+ * @property {string} url the show's page on TVmaze
  */
 
 /**
- * @typedef {object} Note моя оцінка й нотатка до серіалу
- * @property {number} rating ціле число від 1 до 10
- * @property {string} text може бути порожнім рядком
+ * @typedef {object} Note my rating and note for a show
+ * @property {number} rating a whole number from 1 to 10
+ * @property {string} text may be an empty string
  */
 
 /**
  * @typedef {object} Filters
- * @property {string} [query] частина назви; регістр і пробіли на початку й у кінці не враховуються
- * @property {string} [genre] точна назва жанру; порожній рядок — усі жанри
- * @property {boolean} [mine] лише серіали з мого списку
+ * @property {string} [query] part of the title; case and leading or trailing spaces are ignored
+ * @property {string} [genre] the exact genre name; an empty string means all genres
+ * @property {boolean} [mine] only the shows in my watchlist
  */
 
-/** Усі серіали в порядку файлу даних. Масив і записи заморожені. @type {readonly Show[]} */
+/** All shows in data file order. The array and its records are frozen. @type {readonly Show[]} */
 export const shows = Object.freeze(
   data.shows.map((show) => Object.freeze({ ...show, genres: Object.freeze([...show.genres]) })),
 );
 
-/** id серіалів у моєму списку. Змінюйте лише через toggle(). @type {ReadonlySet<number>} */
+/** Ids of the shows in my watchlist. Change it only through toggle(). @type {ReadonlySet<number>} */
 export const watchlist = new Set();
 
-/** Мої оцінки й нотатки за id серіалу. Змінюйте лише через saveNote() і removeNote(). @type {ReadonlyMap<number, Note>} */
+/** My ratings and notes by show id. Change them only through saveNote() and removeNote(). @type {ReadonlyMap<number, Note>} */
 export const notes = new Map();
 
 /** @param {unknown} value */
 const describe = (value) => `${JSON.stringify(value) ?? String(value)} (${typeof value})`;
 
 /**
- * Серіал за id. Кидає TypeError, якщо такого серіалу немає: зокрема, якщо id передано рядком,
- * бо '82' і 82 — різні значення.
+ * The show with this id. Throws a TypeError if there is no such show, for example when the id
+ * is passed as a string: '82' and 82 are different values.
  *
  * @param {number} id
  * @returns {Show}
  */
 export function getShow(id) {
   const show = shows.find((item) => item.id === id);
-  if (!show) throw new TypeError(`Немає серіалу з id ${describe(id)}`);
+  if (!show) throw new TypeError(`No show with id ${describe(id)}`);
   return show;
 }
 
 /**
- * Серіали, що відповідають усім заданим фільтрам, у порядку файлу даних. Не задане поле нічого
- * не відкидає, тож visibleShows() повертає всі серіали.
+ * The shows that match every filter given, in data file order. A field that isn't given filters
+ * nothing out, so visibleShows() returns every show.
  *
  * @param {Filters} [filters]
- * @returns {Show[]} новий масив
+ * @returns {Show[]} a new array
  */
 export function visibleShows({ query, genre, mine } = {}) {
   const needle = (query ?? '').trim().toLowerCase();
@@ -82,10 +82,10 @@ export function visibleShows({ query, genre, mine } = {}) {
 }
 
 /**
- * Додає серіал до мого списку, а якщо він уже там — прибирає.
+ * Adds the show to my watchlist, or removes it if it is already there.
  *
  * @param {number} id
- * @returns {boolean} true, якщо після виклику серіал у списку
+ * @returns {boolean} true if the show is in the watchlist after the call
  */
 export function toggle(id) {
   getShow(id);
@@ -98,26 +98,26 @@ export function toggle(id) {
 }
 
 /**
- * Зберігає мою оцінку й нотатку до серіалу, замінюючи попередні.
+ * Saves my rating and note for the show, replacing any previous ones.
  *
  * @param {number} id
- * @param {Note} note `rating` — число (не рядок з поля форми), ціле, від 1 до 10
+ * @param {Note} note `rating` is a number (not the string from the form field), whole, from 1 to 10
  */
 export function saveNote(id, { rating, text }) {
   getShow(id);
-  if (typeof rating !== 'number') throw new TypeError(`Оцінка має бути числом, отримано ${describe(rating)}`);
+  if (typeof rating !== 'number') throw new TypeError(`The rating must be a number, got ${describe(rating)}`);
   if (!Number.isInteger(rating) || rating < 1 || rating > 10) {
-    throw new RangeError(`Оцінка має бути цілим числом від 1 до 10, отримано ${describe(rating)}`);
+    throw new RangeError(`The rating must be a whole number from 1 to 10, got ${describe(rating)}`);
   }
-  if (typeof text !== 'string') throw new TypeError(`Нотатка має бути рядком, отримано ${describe(text)}`);
+  if (typeof text !== 'string') throw new TypeError(`The note must be a string, got ${describe(text)}`);
   notes.set(id, Object.freeze({ rating, text }));
 }
 
 /**
- * Видаляє мою оцінку й нотатку до серіалу.
+ * Removes my rating and note for the show.
  *
  * @param {number} id
- * @returns {boolean} true, якщо нотатка була
+ * @returns {boolean} true if there was a note
  */
 export function removeNote(id) {
   getShow(id);

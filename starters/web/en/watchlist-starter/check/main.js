@@ -1,4 +1,4 @@
-// Запускає перевірки по черзі й показує результат. Змінювати цей файл не потрібно.
+// Runs the checks one by one and shows the result. You don't need to change this file.
 import { Fail, defineChecks, groups } from './checks.js';
 import { fetchedData, loadSource, openApp } from './harness.js';
 
@@ -6,7 +6,7 @@ const results = /** @type {HTMLElement} */ (document.querySelector('#results'));
 const summary = /** @type {HTMLElement} */ (document.querySelector('#summary'));
 const runButton = /** @type {HTMLButtonElement} */ (document.querySelector('#run'));
 
-/** Результати останнього запуску — для інструментів, що читають сторінку. */
+/** Results of the last run, for tools that read the page. */
 /** @type {{ id: string, title: string, ok: boolean, detail: string }[]} */
 let report = [];
 
@@ -14,17 +14,17 @@ async function run() {
   runButton.disabled = true;
   results.replaceChildren();
   report = [];
-  summary.textContent = 'Перевірка триває…';
+  summary.textContent = 'Checking…';
   document.body.dataset.state = 'running';
 
   let checks;
   try {
-    if (location.protocol === 'file:') throw new Error('сторінку відкрито через file://');
+    if (location.protocol === 'file:') throw new Error('the page was opened via file://');
     await loadSource();
     const data = await (await fetch('data/shows.json', { cache: 'no-store' })).json();
     checks = defineChecks(data);
   } catch (error) {
-    summary.textContent = `Перевірку не запущено: ${error instanceof Error ? error.message : error}. Відкрийте check.html через Live Preview (або npx serve .), як і index.html.`;
+    summary.textContent = `The check did not run: ${error instanceof Error ? error.message : error}. Open check.html via Live Preview (or npx serve .), as you do index.html.`;
     document.body.dataset.state = 'error';
     runButton.disabled = false;
     return;
@@ -45,7 +45,7 @@ async function run() {
 
   let passed = 0;
   for (const [index, check] of checks.entries()) {
-    summary.textContent = `Перевірка ${index + 1} з ${checks.length}…`;
+    summary.textContent = `Check ${index + 1} of ${checks.length}…`;
     let ok = true;
     let detail = '';
     /** @type {string[]} */
@@ -54,7 +54,7 @@ async function run() {
       await check.run();
     } catch (error) {
       ok = false;
-      detail = error instanceof Fail ? error.message : `перевірка зупинилася з помилкою: ${error instanceof Error ? error.message : error}`;
+      detail = error instanceof Fail ? error.message : `the check stopped with an error: ${error instanceof Error ? error.message : error}`;
     }
     /** @type {string[]} */
     let requests = [];
@@ -72,13 +72,13 @@ async function run() {
     } catch {
       errors = [];
     }
-    if (!ok && errors.length) detail += ` · Помилка в Console застосунку: ${errors[0]}`;
+    if (!ok && errors.length) detail += ` · Error in the app's Console: ${errors[0]}`;
     if (!ok && check.id !== 'C1.1' && fetchedData(requests)) {
-      detail += ' · Застосунок сам завантажує data/shows.json, тож дані, які перевірка підставляє через src/state.js, до нього не потрапляють (C1.1)';
+      detail += ' · The app loads data/shows.json itself, so the data the check substitutes through src/state.js never reaches it (C1.1)';
     }
-    // Відкладений фокус перевірки фокусу вже пояснюють самі.
+    // The focus checks explain deferred focus themselves.
     if (!ok && deferred.length && !delayedFocus.length) {
-      detail += ` · Застосунок відкладає реакцію на дію через ${deferred[0]}(): перевірка читає результат одразу, а таймерів ТЗ не дозволяє (§5)`;
+      detail += ` · The app defers its response to the action with ${deferred[0]}(): the check reads the result right away, and the assignment does not allow timers (§5)`;
     }
     if (ok) passed += 1;
     report.push({ id: check.id, title: check.title, ok, detail });
@@ -86,11 +86,11 @@ async function run() {
   }
 
   for (const group of lists.values()) {
-    group.heading.textContent = `${group.title} — ${group.passed} з ${group.total}`;
+    group.heading.textContent = `${group.title} — ${group.passed} of ${group.total}`;
   }
-  // Застосунок з останньої перевірки не потрібен: показуємо чисту копію.
+  // The app from the last check is no longer needed: show a clean copy.
   await openApp().catch(() => {});
-  summary.textContent = `Пройдено: ${passed} з ${checks.length}`;
+  summary.textContent = `Passed: ${passed} of ${checks.length}`;
   document.body.dataset.state = passed === checks.length ? 'passed' : 'failed';
   runButton.disabled = false;
 }
@@ -111,7 +111,7 @@ function showResult(group, check, ok, detail) {
   mark.textContent = ok ? '✓' : '✗';
   const label = document.createElement('span');
   label.className = 'visually-hidden';
-  label.textContent = ok ? 'Пройдено: ' : 'Не пройдено: ';
+  label.textContent = ok ? 'Passed: ' : 'Failed: ';
   const id = document.createElement('strong');
   id.textContent = check.id;
   const title = document.createElement('span');

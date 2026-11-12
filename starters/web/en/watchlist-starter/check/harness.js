@@ -1,32 +1,32 @@
-// Завантажує index.html у фрейм і керує застосунком так, як це робить користувач: клікає,
-// вводить текст, надсилає форми. Код застосунку перевірка не читає — лише DOM, атрибути,
-// фокус і те, що застосунок робить у відповідь на дії.
+// Loads index.html into a frame and drives the app the way a user does: it clicks, types and
+// submits forms. The check never reads the app's code, only the DOM, attributes, focus and
+// what the app does in response to actions.
 //
-// Сторінка потрапляє у фрейм через srcdoc, щоб до запуску її модулів додати невеликий скрипт:
-// він рахує обробники подій (addEventListener), перехоплює alert() і помилки в Console,
-// помічає фокус, переведений із таймера, і запити до data/shows.json. Для кількох перевірок
-// той самий index.html отримує інші дані: import map підмінює data/shows.json, а сам файл
-// даних не змінюється.
+// The page goes into the frame through srcdoc, so that a small script can be added before its
+// modules run: it counts event handlers (addEventListener), intercepts alert() and Console
+// errors, and notes focus moved from a timer and requests for data/shows.json. For a few
+// checks, the same index.html gets different data: an import map swaps data/shows.json, and
+// the data file itself is not changed.
 
 export const sleep = (/** @type {number} */ ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-/** Чи серед запитів застосунку є data/shows.json: дані мали б прийти з src/state.js. */
+/** Whether the app's requests include data/shows.json: the data should come from src/state.js. */
 export const fetchedData = (/** @type {readonly string[]} */ requests) =>
   requests.some((url) => /(^|\/)data\/shows\.json(\?|$)/.test(url));
 
-/** Пробіли й переноси — як один пробіл; без пробілів на краях. */
+/** Spaces and line breaks become one space; no spaces at the ends. */
 export const norm = (/** @type {string | null | undefined} */ text) => (text ?? '').replace(/\s+/g, ' ').trim();
 
 let html = '';
 
-/** Читає index.html один раз на запуск перевірки. */
+/** Reads index.html once per check run. */
 export async function loadSource() {
   const response = await fetch('index.html', { cache: 'no-store' });
   if (!response.ok) throw new Error(`index.html: HTTP ${response.status}`);
   html = await response.text();
 }
 
-// Виконується у фреймі першим, до будь-якого модуля застосунку.
+// Runs first in the frame, before any of the app's modules.
 const PROBE = `(() => {
   const registry = new WeakMap();
   const proto = EventTarget.prototype;
@@ -41,7 +41,7 @@ const PROBE = `(() => {
     if (fn) {
       const list = registry.get(this) || [];
       const phase = capture(options);
-      // Браузер ігнорує повторну реєстрацію тієї самої функції — так само рахуємо й ми.
+      // The browser ignores registering the same function again, and so does this count.
       if (!list.some((l) => l.type === type && l.fn === fn && l.capture === phase)) {
         list.push({ type, fn, capture: phase });
         registry.set(this, list);
@@ -60,8 +60,8 @@ const PROBE = `(() => {
   window.alert = (message) => { probe.alerts.push(String(message)); };
   window.confirm = (message) => { probe.alerts.push(String(message)); return false; };
   window.prompt = (message) => { probe.alerts.push(String(message)); return null; };
-  // Перевірка діє зі скрипта, тож мікрозадачі виконуються лише після всіх обробників події:
-  // до того часу inEvent показує, що триває реакція застосунку на дію.
+  // The check acts from a script, so microtasks run only after all of the event's handlers:
+  // until then, inEvent shows that the app is still responding to an action.
   let inEvent = false;
   const afterEvent = window.queueMicrotask.bind(window);
   for (const type of ['click', 'input', 'change', 'submit', 'reset']) {
@@ -70,8 +70,8 @@ const PROBE = `(() => {
       inEvent = true;
     }, true);
   }
-  // Відкладений колбек, що переводить фокус: до нього фокус був деінде, найчастіше на <body>.
-  // Таймер, запущений в обробнику події: реакцію на дію відкладено (наприклад, debounce).
+  // A deferred callback that moves focus: until it runs, focus was elsewhere, usually on <body>.
+  // A timer started in an event handler: the response to the action is deferred (debounce, say).
   for (const name of ['setTimeout', 'setInterval', 'requestAnimationFrame', 'queueMicrotask']) {
     const original = window[name];
     window[name] = function (callback, ...rest) {
@@ -88,7 +88,7 @@ const PROBE = `(() => {
       return original.call(window, wrapped, ...rest);
     };
   }
-  // Запити застосунку: дані мають приходити з src/state.js, а не окремим завантаженням.
+  // The app's requests: the data must come from src/state.js, not from a separate load.
   const request = window.fetch;
   window.fetch = function (input, init) {
     probe.requests.push(String(input instanceof Request ? input.url : input));
@@ -103,14 +103,14 @@ const PROBE = `(() => {
   add.call(window, 'unhandledrejection', (event) => probe.errors.push('Uncaught (in promise) ' + String(event.reason)));
 })();`;
 
-// Виконується наприкінці розбору HTML, до модулів: запам'ятовує live region, що є в самому HTML.
+// Runs at the end of HTML parsing, before the modules: remembers the live region in the HTML itself.
 const AFTER_PARSE = `window.__check.initialStatus = document.querySelector('[role="status"], [aria-live]');`;
 
 /**
- * Відкриває свіжу копію застосунку. Кожна перевірка працює зі своєю копією, тож стан однієї
- * не впливає на іншу.
+ * Opens a fresh copy of the app. Each check works with its own copy, so the state of one
+ * does not affect another.
  *
- * @param {{ data?: unknown }} [options] data — інший вміст data/shows.json
+ * @param {{ data?: unknown }} [options] data: other contents for data/shows.json
  */
 export async function openApp({ data } = {}) {
   let head = `<script>${PROBE}<\/script>`;
@@ -124,7 +124,7 @@ export async function openApp({ data } = {}) {
     .replace(/<\/body>/i, `<script>${AFTER_PARSE}<\/script></body>`);
 
   const frame = document.createElement('iframe');
-  frame.title = 'Застосунок «Мій список» під час перевірки';
+  frame.title = 'The “My Watchlist” app under test';
   const app = new App(frame);
   const loaded = new Promise((resolve) => frame.addEventListener('load', resolve, { once: true }));
   frame.addEventListener('load', () => (app.loads += 1));
@@ -156,12 +156,12 @@ export class App {
     return this.win.__check;
   }
 
-  /** Чи застосунок сам завантажував data/shows.json (fetch або XMLHttpRequest). */
+  /** Whether the app loaded data/shows.json itself (fetch or XMLHttpRequest). */
   fetchedData() {
     return fetchedData(this.probe.requests);
   }
 
-  /** Сторінку перезавантажено або відкрито іншу: стан застосунку втрачено. */
+  /** The page was reloaded or another one opened: the app state is lost. */
   navigated() {
     return this.loads > 1 || this.frame.contentDocument !== this.doc;
   }
@@ -197,7 +197,7 @@ export class App {
   }
 
   /**
-   * Поле форми за name.
+   * A form field by name.
    * @param {string} formSelector
    * @param {string} name
    */
@@ -206,7 +206,7 @@ export class App {
     return /** @type {any} */ (form?.elements.namedItem(name) ?? null);
   }
 
-  /** Текст live region статусу. */
+  /** Text of the status live region. */
   status() {
     const initial = this.probe.initialStatus;
     const region = initial?.isConnected ? initial : this.$('#status');
@@ -221,13 +221,13 @@ export class App {
     return this.doc.activeElement;
   }
 
-  /** Кількість обробників події на елементі: addEventListener і властивість on<type>. */
+  /** Number of handlers for an event on the element: addEventListener and the on<type> property. */
   listeners(/** @type {EventTarget} */ target, /** @type {string} */ type) {
     const registered = (this.probe.registry.get(target) ?? []).filter((l) => l.type === type).length;
     return registered + (/** @type {any} */ (target)[`on${type}`] ? 1 : 0);
   }
 
-  /** Як клавіатура: фокус на кнопку, потім Enter (клік по самій кнопці). */
+  /** Like a keyboard: focus on the button, then Enter (a click on the button itself). */
   async press(/** @type {HTMLElement | null} */ element) {
     if (!element) return false;
     element.focus();
@@ -237,8 +237,8 @@ export class App {
   }
 
   /**
-   * Як миша: клік у центр іконки. Подію отримує той елемент, який браузер знаходить у цій
-   * точці (elementFromPoint), — зазвичай <svg> або <path>, а не сама кнопка.
+   * Like a mouse: a click in the centre of the icon. The event goes to the element the browser
+   * finds at that point (elementFromPoint), usually <svg> or <path>, not the button itself.
    */
   async clickIcon(/** @type {HTMLElement | null} */ button) {
     const icon = button?.querySelector('svg');
@@ -255,7 +255,7 @@ export class App {
     return target;
   }
 
-  /** Вводить текст у поле: значення змінюється, подія input спливає. */
+  /** Types text into a field: the value changes, and an input event bubbles. */
   async type(/** @type {HTMLInputElement | HTMLTextAreaElement | null} */ input, /** @type {string} */ text) {
     if (!input) return false;
     input.focus();
@@ -265,7 +265,7 @@ export class App {
     return true;
   }
 
-  /** Обирає варіант у <select>: як і браузер, надсилає input і change. */
+  /** Picks an option in a <select>: like the browser, it sends input and change. */
   async choose(/** @type {HTMLSelectElement | null} */ select, /** @type {string} */ value) {
     if (!select) return false;
     select.focus();
@@ -276,7 +276,7 @@ export class App {
     return true;
   }
 
-  /** Надсилає форму, як Enter у полі або кнопка submit. */
+  /** Submits the form, like Enter in a field or a submit button. */
   async submit(/** @type {HTMLFormElement | null} */ form, /** @type {HTMLElement | null} */ submitter = null) {
     if (!form) return false;
     if (submitter) {
@@ -289,7 +289,7 @@ export class App {
     return true;
   }
 
-  /** Esc у модальному діалозі: requestClose() робить те саме, що й клавіша. */
+  /** Esc in a modal dialog: requestClose() does the same as the key. */
   async escape(/** @type {HTMLDialogElement | null} */ dialog) {
     if (!dialog) return;
     if (typeof dialog.requestClose === 'function') dialog.requestClose();
@@ -297,7 +297,7 @@ export class App {
     await sleep(20);
   }
 
-  /** Кнопка в контейнері за видимим текстом. */
+  /** A button in the container, by its visible text. */
   buttonByText(/** @type {Element | null} */ root, /** @type {string} */ text) {
     return /** @type {HTMLElement | null} */ (
       [...(root?.querySelectorAll('button') ?? [])].find((button) => norm(button.textContent) === text) ?? null
@@ -305,20 +305,20 @@ export class App {
   }
 }
 
-/** Чи елемент «візуально прихований» (клас visually-hidden): рамка 1×1 px або менша. */
+/** Whether the element is “visually hidden” (the visually-hidden class): a box of 1×1 px or less. */
 function visuallyHidden(/** @type {Element} */ element) {
   const box = element.getBoundingClientRect();
   return box.width <= 1 && box.height <= 1;
 }
 
-/** Чи елемент виключено з дерева доступності: hidden, display: none, aria-hidden. */
+/** Whether the element is excluded from the accessibility tree: hidden, display: none, aria-hidden. */
 function excluded(/** @type {Element} */ element) {
   if (element.getAttribute('aria-hidden') === 'true') return true;
   if (/** @type {HTMLElement} */ (element).hidden) return true;
   return element.ownerDocument.defaultView?.getComputedStyle(element).display === 'none';
 }
 
-/** Текст, який бачить користувач: без прихованих і візуально прихованих частин. */
+/** The text a user sees: without hidden and visually hidden parts. */
 export function visibleLabel(/** @type {Element} */ element) {
   let text = '';
   for (const node of element.childNodes) {
@@ -330,7 +330,7 @@ export function visibleLabel(/** @type {Element} */ element) {
   return norm(text);
 }
 
-/** Текст з усіх вузлів, що потрапляють у дерево доступності (зокрема visually-hidden). */
+/** Text from all nodes that are in the accessibility tree (visually hidden ones included). */
 function accessibleText(/** @type {Element} */ element) {
   let text = '';
   for (const node of element.childNodes) {
@@ -343,8 +343,8 @@ function accessibleText(/** @type {Element} */ element) {
 }
 
 /**
- * Спрощене обчислення accessible name (як у панелі Accessibility): aria-labelledby, потім
- * aria-label, потім вміст елемента. Для кнопок і діалогів цього застосунку його достатньо.
+ * A simplified accessible name computation (as in the Accessibility pane): aria-labelledby, then
+ * aria-label, then the element's content. It is enough for this app's buttons and dialogs.
  */
 export function accessibleName(/** @type {Element | null} */ element) {
   if (!element) return '';
@@ -364,9 +364,9 @@ export function accessibleName(/** @type {Element | null} */ element) {
   return norm(accessibleText(element));
 }
 
-/** Короткий опис елемента для повідомлення: <button data-action="toggle">. */
+/** A short description of an element for a message: <button data-action="toggle">. */
 export function describe(/** @type {Element | null | undefined} */ element) {
-  if (!element) return 'нічого';
+  if (!element) return 'nothing';
   if (element === element.ownerDocument.body) return '<body>';
   const attrs = ['id', 'data-action', 'data-id', 'class']
     .filter((name) => element.hasAttribute(name))

@@ -1,36 +1,36 @@
 <!doctype html>
-<html lang="uk">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Самоперевірка — Мій список</title>
+    <title>Self-check — My Watchlist</title>
     <link rel="icon" href="data:," />
     <link rel="stylesheet" href="check/check.css" />
     <script type="module" src="check/main.js"></script>
   </head>
   <body>
     <header class="intro">
-      <h1>Самоперевірка «Мій список»</h1>
+      <h1>My Watchlist self-check</h1>
       <p>
-        Перевірка відкриває <code>index.html</code> у фреймі нижче й працює із застосунком як
-        користувач: клікає, вводить текст, надсилає форми. Потім вона перевіряє, що бачить
-        користувач і що отримують допоміжні технології. Код застосунку перевірка не читає. Номер і
-        назва кожного рядка — правило з ТЗ.
+        The check opens <code>index.html</code> in the frame below and works with the app the way
+        a user does: it clicks, types and submits forms. Then it checks what the user sees and what
+        assistive technologies receive. The check never reads the app's code. The number and title
+        of each row are a rule from the assignment.
       </p>
       <p class="intro__run">
-        <button id="run" type="button">Перевірити ще раз</button>
-        <span id="summary" role="status">Перевірка не запускалася: потрібен JavaScript.</span>
+        <button id="run" type="button">Run again</button>
+        <span id="summary" role="status">The check has not run: JavaScript is required.</span>
       </p>
       <p class="intro__note">
-        Не перемикайте вкладку, поки триває перевірка: у фоновій вкладці браузер не переводить
-        фокус, і перевірки фокусу впадуть. Справжні Esc, Tab і порядок фокусу сторінка
-        перевірити не може (синтетичні події не довірені): для них є ручний чек-лист у ТЗ.
+        Don't switch tabs while the check is running: in a background tab the browser doesn't move
+        focus, and the focus checks fail. This page can't check real Esc, Tab and focus order
+        (synthetic events are not trusted): the manual checklist in the assignment covers them.
       </p>
     </header>
     <main class="layout">
       <div id="results" class="results"></div>
       <section class="stage-wrap" aria-labelledby="stage-title">
-        <h2 id="stage-title">Застосунок під час перевірки</h2>
+        <h2 id="stage-title">The app under test</h2>
         <div id="stage" class="stage"></div>
       </section>
     </main>

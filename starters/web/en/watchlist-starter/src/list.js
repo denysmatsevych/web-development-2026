@@ -1,9 +1,9 @@
 /**
- * C2. Підключає кнопки карток у списку #results: «До списку» додає серіал до мого списку або
- * прибирає з нього, «Детальніше» відкриває діалог (openDetails з details.js). main.js викликає
- * цю функцію один раз, після першого показу списку. Специфікація — ТЗ, C2.
+ * C2. Wires up the card buttons in the #results list: “Add to list” adds the show to my watchlist
+ * or removes it, “Details” opens the dialog (openDetails from details.js). main.js calls this
+ * function once, after the list is first rendered. See the assignment, C2.
  *
- * @param {() => void} refresh перемальовує список для поточних фільтрів
+ * @param {() => void} refresh re-renders the list for the current filters
  */
 export function initList(refresh) {
   // TODO C2

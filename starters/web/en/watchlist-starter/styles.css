@@ -1,11 +1,11 @@
 /*
- * Стилі «Мій список». Готові: змінювати їх для лабораторної не потрібно.
- * Стан кнопки «До списку» показує [aria-pressed="true"], поле з помилкою — [aria-invalid="true"]:
- * оформлення залежить від атрибутів, які встановлює ваш JavaScript.
+ * Styles of “My Watchlist”. They are ready: you don't need to change them for the lab.
+ * The state of the “Add to list” button is shown by [aria-pressed="true"], a field with an error by
+ * [aria-invalid="true"]: the styling depends on the attributes your JavaScript sets.
  *
- * Контраст (WCAG 1.4.3), світла / темна тема, на фоні сторінки й картки: текст 15.1 / 13.8,
- * приглушений текст 5.9 / 7.6, акцент 5.4 / 7.6, помилка 6.0 / 9.7, текст на кнопці
- * з акцентним фоном 5.9 / 8.5 до 1.
+ * Contrast (WCAG 1.4.3), light / dark theme, on the page and card backgrounds: text 15.1 / 13.8,
+ * muted text 5.9 / 7.6, accent 5.4 / 7.6, error 6.0 / 9.7, text on an accent-background
+ * button 5.9 / 8.5 to 1.
  */
 :root {
   color-scheme: light dark;
@@ -83,7 +83,7 @@ a {
   font-weight: 600;
 }
 
-/* ---------- Форми й кнопки ---------- */
+/* ---------- Forms and buttons ---------- */
 
 .filters {
   display: flex;
@@ -213,7 +213,7 @@ textarea {
   outline-offset: 2px;
 }
 
-/* ---------- Список ---------- */
+/* ---------- List ---------- */
 
 .results-heading {
   margin: 1.5rem 0 0;
@@ -276,7 +276,7 @@ textarea {
   padding-inline: 0.65rem;
 }
 
-/* ---------- Діалог ---------- */
+/* ---------- Dialog ---------- */
 
 .details {
   width: min(40rem, 100% - 2rem);
