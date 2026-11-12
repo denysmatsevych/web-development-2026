@@ -60,6 +60,9 @@ body = brief.split("---", 2)[2]
 spec = body[body.index("## 2. Design tokens"):].strip()
 # Root-relative site links do not resolve outside the site.
 spec = re.sub(r"\]\((/[^)]*)\)", lambda m: f"]({SITE}{m.group(1)})", spec)
+# `<span lang>` marks Ukrainian quotes for screen readers on the English page;
+# in a plain-text copy it is only noise.
+spec = re.sub(r'<span lang="[a-z]+">(.*?)</span>', r"\1", spec)
 
 with tempfile.TemporaryDirectory() as tmp:
     stage = pathlib.Path(tmp) / "courtly-assets"
