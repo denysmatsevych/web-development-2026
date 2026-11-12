@@ -1,7 +1,7 @@
 ---
 title: "JS Basics — function specification"
 summary: "Five pure functions processing TVmaze data — normalization, filtering, sorting, genre statistics, and closures — with provided node --test tests. The practical part of Lab 8."
-goal: "Implement the functions in src/ of the JS Basics starter project so that all provided tests pass, without changing the tests or input data. Below describes what each function must do: each test verifies one of these rules. The practical part corresponds to section 5 of the lab."
+goal: "Implement the functions in src/ of the JS Basics starter project so that all provided tests pass, without changing the tests or input data. The sections below describe what each function must do: each test verifies one of these rules. The practical part corresponds to section 5 of the lab."
 label: "Assignment"
 highlights:
   - "Provided starter project"
@@ -40,7 +40,7 @@ outside themselves.
 ## 2. Project structure
 
 **Download:** [js-basics-starter.zip](/en/web/starters/js-basics-starter.zip)
-(≈ 16 KB). Extract the archive into a separate repository or into a `lab-8/`
+(≈ 14 KB). Extract the archive into a separate repository or into a `lab-8/`
 folder in your shared coursework repository.
 
 ```text
@@ -117,7 +117,7 @@ Transforms a TVmaze record (§3.1) into a Show object (§3.2).
 1. The result has **exactly** seven properties: `id`, `name`, `year`, `rating`,
    `runtime`, `network`, and `genres`. Other record properties (`url`,
    `language`, etc.) must not be present.
-2. `year` — premier year as a **number**: `"2013-02-01"` → `2013`. If
+2. `year` — premiere year as a **number**: `"2013-02-01"` → `2013`. If
    `premiered` is `null` or missing — `null`.
 3. `rating` — value of `rating.average`. A rating of `0` is a valid score, not
    an absence of score. If `rating.average` is `null`, or if `rating` is `null`
@@ -136,7 +136,7 @@ Transforms a TVmaze record (§3.1) into a Show object (§3.2).
 
 1. `query` — keeps shows whose names contain this string. Case-insensitive;
    leading and trailing whitespace in `query` is ignored.
-2. `genre` — keeps shows that include this exact genre (exact match).
+2. `genre` — keeps shows that have this genre among their genres (exact match).
 3. `minRating` — keeps shows with a rating **≥** `minRating`. Shows without a
    rating (`rating: null`) are excluded.
 4. A filter option is considered **unset** if the property is missing or `null`;

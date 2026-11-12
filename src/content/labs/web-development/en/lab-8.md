@@ -49,7 +49,7 @@ After completing this lab, you must be able to:
 1. Work through the research tasks (§4) and run the experiments: for each one,
    record your own prediction and the AI agent's prediction **before** running
    the code.
-2. Download the [JS Basics starter project](/en/web-development/labs/lab-8/task/), commit it to
+2. Download the [JS Basics starter project](/web-development/labs/lab-8/task/), commit it to
    Git unchanged, and verify that the tests fail (§5.1).
 3. Implement the functions for Challenges 1–5 so that all tests pass
    (§5.3–5.7) — with one commit per challenge.
@@ -140,8 +140,8 @@ the chain breaks; why `NaN` is not equal to itself.
 **Investigate:** how block scope differs from function scope; what exactly is
 hoisted for `var`, `let`/`const`, and function declarations; what the TDZ is;
 why `const` does not make an object immutable; what a closure is and what it
-retains — the value of a variable at creation time or the variable reference
-itself; how many separate variables are created by `for (let i …)` versus
+retains — the value of a variable at creation time or the variable itself; how
+many separate variables are created by `for (let i …)` versus
 `for (var i …)`.
 
 **Experiments:**
@@ -266,7 +266,7 @@ over HTTP(S).
     ```
 
     _Problem:_ a function is moved to the end of a module and rewritten as an
-    arrow function — and earlier code that calls it throws a `ReferenceError`.
+    arrow function — and earlier code that calls it fails.
 
 15. On the starter project page opened via Live Preview (§5.1), temporarily add
     to the end of `main.js` the lines `var fromModule = 'module';` and
@@ -282,7 +282,7 @@ over HTTP(S).
 The **JS Basics** starter project consists of five modules in `src/` with function
 stubs, test suites in `test/`, and 30 shows from [TVmaze](https://www.tvmaze.com)
 in `data/shows.json`. What each function must do is described in the
-[assignment brief](/en/web-development/labs/lab-8/task/); tests check these exact rules,
+[assignment brief](/web-development/labs/lab-8/task/); tests check these exact rules,
 and each test's name is the rule it verifies. Complete the challenges in order:
 C2–C4 operate on the output of C1.
 
@@ -291,7 +291,7 @@ C2–C4 operate on the output of C1.
 1. Download [js-basics-starter.zip](/en/web/starters/js-basics-starter.zip) and
    extract it into a **separate repository** or into a `lab-8/` folder in your
    shared coursework repository. Make your first commit **unchanged** — all
-   diffs during oral defense are reviewed against it.
+   diffs at the defense are reviewed against it.
 2. In the project root, run `node --test`. All tests should fail with
    `Error: Not implemented`. No installation is needed: `node:test` and
    `node:assert` are built into Node.js.
@@ -320,7 +320,7 @@ Example prompt:
 > my function. Do not write the fixed code: identify the JavaScript rule I likely
 > overlooked, and suggest how to verify it in the Console.
 
-During oral defense, you will modify a function live, without AI (§7). In your
+At the defense, you will modify a function live, without AI (§7). In your
 report, state the name and version of the agent, model, and date of work.
 
 ### 5.3. Challenge 1 — `normalizeShow`
@@ -391,7 +391,7 @@ The report must contain:
 
 Defense involves an oral interview discussing your practical implementation.
 Functions must be written by you: AI was allowed to explain, but not to write
-code. You will modify code live during defense without AI and answer questions
+code. You will modify code live during the defense without AI and answer questions
 while sharing your screen.
 
 **Sample questions:**
@@ -411,8 +411,8 @@ _Types and coercion_
 
 _Scope and closures_
 
-- Predict without running the loop of closures using `var`, then using `let`.
-  Explain the difference.
+- Without running it, predict the result of the closure loop with `var`, then
+  with `let`. Explain the difference.
 - What does `createCounter` remember, and why do two counter instances not
   interfere with each other?
 
@@ -430,7 +430,7 @@ _AI_
 
 ## 8. Grading
 
-This assignment is worth **3 points** (1 point each for research tasks,
+This lab is worth **3 points** (1 point each for research tasks,
 practical implementation, and defense), plus **1 bonus point**.
 
 | Component | Points | Grading criteria |
@@ -438,7 +438,7 @@ practical implementation, and defense), plus **1 bonus point**.
 | Research tasks (§4) | 1 | 0.25 points for each subsection §4.1–§4.4: all experiments recorded in the table with both predictions and an explanation of how to avoid the problem, plus a subsection conclusion (report item 1); §4.4 also includes the `file://` explanation from §5.1 (item 3) |
 | Practical part (§5) | 1 | Tests: `node --test` passes completely after the final commit — 0.5; passes completely for at least three challenges — 0.25. Commits and report: separate commit for each challenge, published live page, and documented trap for each challenge (item 5) — 0.5; missing one of the three — 0.25 |
 | Defense (§7) | 1 | Live modification of your function without AI and explaining which tests it affects — up to 0.5; two questions from other groups in §7 — 0.25 for each complete answer |
-| Bonus point | +1 | Either submitted before **09.10.2026** OR completed during class |
+| Bonus point | +1 | Either submitted by **09.10.2026** OR completed during class |
 
 Tests run against the original `test/` files from the starter project: if
 modified, original files are used for grading.
