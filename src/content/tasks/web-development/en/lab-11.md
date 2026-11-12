@@ -9,11 +9,11 @@ highlights:
   - "check.html and Network checklist"
   - "Bonus until October 22, 2026"
 acceptance:
-  - "First commit: pristine starter project without changes; second commit: «API notes» with API.md"
-  - "For each challenge: commit «Challenge N: AI draft» with the raw AI output, followed by «Challenge N: fixes» with manual fixes; if a draft passes its block immediately without regressions, the fixes commit is omitted"
-  - "Before Challenge 3: commit «Agent rules» with AGENTS.md: up to 40 lines, written in your own words"
+  - "First commit: pristine starter project without changes; second commit: 'API notes' with API.md"
+  - "For each challenge: commit 'Challenge N: AI draft' with the raw AI output, followed by 'Challenge N: fixes' with manual fixes; if a draft passes its block immediately without regressions, the fixes commit is omitted"
+  - "Before Challenge 3: commit 'Agent rules' with AGENTS.md: up to 40 lines, written in your own words"
   - "check.html, check/, offline.html, and src/view.js remain unmodified across all commits"
-  - "check.html on the deployed site (GitHub Pages or Vercel) displays «Passed: 24 of 24»"
+  - "check.html on the deployed site (GitHub Pages or Vercel) displays 'Passed: 24 of 24'"
   - "Network checklist (§6) verified on the final release against live TVmaze, screenshots included in report"
   - "Only native fetch and only https://api.tvmaze.com: no libraries, CORS proxies, or alert()"
   - "Fixes written by hand: AI explains, but does not write fixes"
@@ -32,7 +32,7 @@ its initial state.
 HTML, CSS, UI state templates, and view rendering modules are already
 provided. Your responsibility covers API communication and application
 behavior: when to dispatch requests, what to show while network responses are
-pending, and how to handle each HTTP status code and network failure.
+pending, and how to react to every response and every failure.
 
 > The self-check suite is this assignment compiled into code: each check item
 > in `check.html` corresponds to a numbered rule in §4. If you spot an apparent
@@ -77,7 +77,7 @@ contract elements.
 | `form#search` | Contains input `name="query"` (`#search-query`) and submit button "Search" |
 | `#status` | Search status line with `role="status"`, present in initial HTML; only text content updates |
 | `#results` | Search results container: cards, loading state, informational message, or error |
-| `#details` | Show details container; initial placeholder: "Select a show from search results." |
+| `#details` | Show details container; initial placeholder: "Select a show from the search results." |
 | `template#state-loading` | "Loading…" with spinner |
 | `template#state-message` | Informational message: empty results, "Show not found" |
 | `template#state-error` | Error view: message in `.state__text` and button `[data-action="retry"]` "Retry" |
@@ -115,10 +115,10 @@ inputs. Your code handles state messages (§3.4).
 | --- | --- | --- |
 | Loading | `#results` or `#details` | "Loading…" (`#state-loading` template), container marked with `aria-busy="true"`; search status line displays "Loading…" |
 | Results | `#results` | Cards rendered by `renderResults`, status line "Found: N" |
-| Empty results | `#results` | "Nothing found for query \"<query>\"", status line repeats this text |
+| Empty results | `#results` | `Nothing found for query "<query>"`, status line repeats this text |
 | Show not found | `#details` | "Show not found" |
 | Network failure | Relevant container | "No connection to TVmaze." and "Retry" |
-| TVmaze error | Relevant container | "Failed to fetch data from TVmaze." and "Retry" |
+| TVmaze error | Relevant container | "Could not get data from TVmaze." and "Retry" |
 | Rate limited (429) | Relevant container | While waiting: loading state, search status line "Too many requests to TVmaze, retrying…"; after second failure: "Too many requests to TVmaze." and "Retry" |
 
 For search errors, the `#status` line displays the exact same error text as
@@ -169,8 +169,9 @@ container shows "Loading…". Once received, shows appear along with status
 6. While the request is in flight, `#results` has `aria-busy="true"` and displays
    "Loading…"; `#status` displays "Loading…". Once resolved, `aria-busy="true"`
    is removed.
-7. An empty result set (`200 []`) is not an error: display "Nothing found for
-   query \"<query>\"" in `#results` and in `#status`, without a "Retry" button.
+7. An empty result set (`200 []`) is not an error: display
+   `Nothing found for query "<query>"` in `#results` and in `#status`, without a
+   "Retry" button.
 8. A stale response must never overwrite a newer response, regardless of arrival
    order. While a newer request is pending, `#results` remains in the "Loading…"
    state.
@@ -201,8 +202,8 @@ episodes and cast.
 
 1. Clicking a show card renders that show in `#details` via `renderShow`:
    title, seasonal episodes, and cast.
-2. All show details are fetched immediately: either a single request with
-   `embed` parameters or parallel requests — never sequentially chained. Use
+2. All the page data is requested at once: either a single request with
+   `embed` or several parallel requests, never one after another. Use
    only documented TVmaze endpoints; do not fetch episodes or actors
    individually.
 3. While details load, `#details` has `aria-busy="true"` and displays
@@ -232,8 +233,9 @@ context.
   limits, CORS) and project constraints discovered during the C1–C2 audits
   (e.g. headers policy, cancellation). Do not paste the full specification:
   guidelines should reflect your insights from `API.md` and audit testing.
-- **Commit:** Commit separately with message `Agent rules`. Verify your agent
-  loads the file before starting Challenge 3.
+- **Commit:** Commit separately with message `Agent rules`. Before Challenge 3,
+  make sure the agent sees the file: most agents show the attached rules in the
+  request context.
 
 ### C3. Error handling
 
@@ -248,7 +250,7 @@ automatically; the user can retry via "Retry".
 
 **AI agent prompt** (with `AGENTS.md` active in your project):
 
-> Add error handling and automatic retry for all requests. Do not open or modify
+> Add error handling and retries for all requests. Do not open or modify
 > check.html, the check/ directory, or offline.html.
 
 **Rules:**
@@ -256,7 +258,7 @@ automatically; the user can retry via "Retry".
 1. HTTP error responses are not data: `4xx` and `5xx` responses must never be
    rendered as show results or "Nothing found".
 2. `404` for a show displays "Show not found" in `#details`.
-3. `5xx` responses or non-JSON payloads display "Failed to fetch data from
+3. `5xx` responses or non-JSON payloads display "Could not get data from
    TVmaze." and "Retry" in the active container; for search, also in `#status`.
 4. Network failure (`fetch` promise rejected) displays "No connection to
    TVmaze." and "Retry"; for search, also in `#status`.
@@ -291,8 +293,7 @@ Network panel. Refer to Experiments 1, 2, 4, 6, and 7 from the lab handout.
 - Data reaches the DOM exclusively via `renderResults` and `renderShow`.
 - Do not use `alert()`, `confirm()`, or `prompt()`.
 - You write all bug fixes. The AI agent drafts initial code per challenge
-  prompts (§4) and may answer architectural questions (§5.2 of the lab
-  handout).
+  prompts (§4) and may explain (§5.2 of the lab handout).
 
 ## 6. Network checklist
 

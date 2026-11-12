@@ -5,12 +5,12 @@ summary: "Integrate the TVmaze API into the ShowFinder application: an AI agent 
 discipline: "Modern Web Development: HTML, CSS, JS/TS"
 level: "Year 3, Computer Science"
 format: "Code challenges"
-duration: "2 academic hours (self-study: 3 hours)"
+duration: "2 academic hours (independent work — 3 hours)"
 updated: 2026-10-18
 handout: /en/web/labs/lab-11.pdf
 ---
 
-> **Deadline:** October 22, 2026.
+> **Deadline:** 22.10.2026.
 
 ## 1. Aim
 
@@ -38,9 +38,8 @@ After completing this lab, you must be able to:
   `return` from `return await`.
 - Abort outdated requests using `AbortController` and distinguish cancellations
   from runtime errors.
-- Explain HTTP status codes 200, 301, 404, 429, and 5xx, along with their UI
-  implications; inspect `Content-Type` and `Cache-Control` headers and leverage
-  browser HTTP caching.
+- Explain HTTP status codes 200, 301, 404, 429, and 5xx and what each means for
+  the UI; the `Content-Type` and `Cache-Control` headers; the browser HTTP cache.
 - Explain CORS: what the browser blocks, when preflight requests are triggered,
   and why CORS errors cannot be resolved client-side.
 - Inspect network traffic using DevTools Network: status, headers, payload,
@@ -54,10 +53,10 @@ After completing this lab, you must be able to:
 
 1. Carry out the research tasks (§4), conduct the experiments, and compile
    the `API.md` notes (§4.5).
-2. Download the [ShowFinder starter project](/en/web-development/labs/lab-11/task/),
+2. Download the [ShowFinder starter project](/web-development/labs/lab-11/task/),
    commit it to Git unchanged, and confirm the self-check reports "Passed: 0 of 24"
    (§5.1).
-3. Complete the [assignment](/en/web-development/labs/lab-11/task/), §4:
+3. Complete the [assignment](/web-development/labs/lab-11/task/), §4:
    Challenges 1–2, the `AGENTS.md` rules file, and Challenge 3. For each
    challenge, prompt the AI agent for a draft, commit it, audit against the
    assignment, and fix defects by hand (§5).
@@ -161,8 +160,8 @@ what the calling code receives.
    ```
 
    **Analyze:** what will each `console.log` output? Why does the second
-   `json()` call fail to return data? What error occurs on HTML, and why does
-   `<` appear in the message?
+   `json()` call fail to return data? What error does the HTML produce, and what
+   does the `<` character have to do with it?
 
    **Where this occurs:** Challenge 3. Proxies, captive Wi-Fi portals, or server
    error pages return HTML with status 200. Furthermore, consuming the body for
@@ -191,9 +190,9 @@ what the calling code receives.
    console.log('Promise.all:', Math.round(performance.now() - start), 'ms');
    ```
 
-   **Analyze:** what will `forEach:` and `after 2s:` output? Which approach is
-   faster and roughly by what factor? How do these requests appear in the
-   Network Waterfall column?
+   **Analyze:** what will `forEach:` and `after 2s:` output? Which of the last
+   two approaches is faster, and roughly by what factor? How do these requests
+   appear in the Network Waterfall column?
 
    **Where this occurs:** show details page (Challenge 2). Fetching episodes and
    cast sequentially adds cumulative delays. With `forEach` and `async`, loading
@@ -506,7 +505,7 @@ state templates, and `src/view.js` rendering logic are already implemented.
 Only `src/api.js` (TVmaze API calls) and `src/app.js` (application state and
 flows) require implementation.
 
-**All practical tasks are in the [assignment](/en/web-development/labs/lab-11/task/), §4:**
+**All practical tasks are in the [assignment](/web-development/labs/lab-11/task/), §4:**
 three sequential challenges, each with an AI prompt and numbered rules, with the
 `AGENTS.md` rules file created between Challenges 2 and 3. Keep the assignment open
 throughout. This section outlines your workflow: setup, AI interaction loop, and
@@ -525,16 +524,17 @@ DevTools Network behavior are verified via the Network checklist in the assignme
    extract it into a **separate repository** or into `lab-11/` of your shared
    coursework repository. Make the initial commit **without modifications**.
 2. Add your completed `API.md` from §4.5 in a second commit: `API notes`.
-3. Open `index.html` via Live Preview in Chrome or Edge: verify the search form,
-   empty results area, placeholder "Select a show from search results.", and
-   clean Console.
+3. Open `index.html` via Live Preview in Chrome or Edge, as in §4: verify the
+   search form, empty results area, placeholder "Select a show from the search
+   results.", and clean Console.
 4. Open `check.html` similarly: confirm it reports "Passed: 0 of 24". Note the
    behaviors the automated suite does not cover.
 5. Files `check.html`, `check/`, `offline.html`, and `src/view.js` must remain
    unmodified across all commits.
 
-**Classroom rate limits:** Because an entire classroom shares one public IP,
-TVmaze may trigger 429 rate limits. If Network shows 429 status codes, switch to
+**Classroom rate limits:** The entire classroom goes online from one public IP
+address, and TVmaze guarantees only 20 requests per 10 seconds per address. If
+Network shows 429 status codes, switch to
 `offline.html` until rate limits reset: it runs the identical app against
 recorded fixtures. `check.html` never makes live network requests.
 
@@ -568,7 +568,7 @@ recorded fixtures. `check.html` never makes live network requests.
   your report. Agents often over-implement (e.g. handling errors in Challenge 1).
   Treat this as part of the draft and audit it within its respective challenge.
 
-Example explanation prompt (chat / plan mode without code editing):
+Example explanation prompt (ask / plan mode, without code editing):
 
 > Explain why this test is failing. Here are the check name and failure message,
 > the Network request details, and my code. Do not write the fix: identify the
@@ -590,7 +590,8 @@ Required Git history:
 
 If an AI draft passes cleanly without defects, omit the corresponding `fixes`
 commit (§5.2). On GitHub, each `fixes` commit demonstrates what you altered in
-the AI draft. You will walk through these diffs during defense (§8).
+the AI draft. At the defense, you use it to explain what was wrong in the draft
+(questions on your own code, §8).
 
 After finishing Challenge 3, complete the Network checklist on your final
 release and deploy to GitHub Pages or Vercel (see instructions in starter
@@ -617,7 +618,7 @@ The report must contain:
 1. Experiments table from §4 (all 13 experiments);
 2. Links to `API.md` and `AGENTS.md` in the repository;
 3. AI agent name, version, model, and session date;
-4. Screenshot of `check.html` on the deployed site showing "Passed: 24 of 24";
+4. The `check.html` result on the deployed site: "Passed: 24 of 24";
 5. Completed Network checklist (N1–N6) with screenshots;
 6. Summary of work: brief breakdown of each challenge, issues diagnosed in AI
    drafts, and fixes applied; note any protected files reverted if touched by the
@@ -685,7 +686,7 @@ _HTTP and REST_
 - How does `fetch` handle HTTP 301 redirects and how can client code detect
   them?
 - What is resource embedding in REST APIs? When is a single call with `embed`
-  preferable to multiple requests?
+  preferable to multiple separate requests, and when is it not?
 
 _Caching_
 
@@ -732,7 +733,7 @@ _API documentation_
 - Where did TVmaze documentation diverge from live API behavior, and how did you
   discover it?
 - How do you handle nullable fields in response schemas?
-- What is rate limiting and how does it dictate frontend architecture?
+- What is rate limiting and how does it affect client code?
 
 _AI assistants in software engineering_
 
@@ -749,9 +750,9 @@ and oral defense), plus **1 bonus point** for timely submission.
 | Component | Points | Criteria |
 | --- | --- | --- |
 | Research (§4) | 1 | 0.25 pts per subsection §4.1–§4.3: all experiments recorded in table with personal analysis and actual Console/Network findings, plus explanations where predictions differed (Report item 1). 0.25 pts for `API.md` (§4.5): all rows verified against live requests with URLs documented |
-| Practical part (§5) | 1 | Self-check: "Passed: 24 of 24" in `check.html` on deployed site — 0.5 pts; 20 to 23 — 0.25 pts. Workflow: commits per §5.3, `AGENTS.md`, and Network checklist (Report item 5): all complete — 0.5 pts; missing one item — 0.25 pts |
+| Practical part (§5) | 1 | Self-check: "Passed: 24 of 24" in `check.html` on deployed site — 0.5 pts; 20 to 23 — 0.25 pts. Workflow: commits per §5.3, `AGENTS.md`, and Network checklist (Report item 5): all present and substantive — 0.5 pts; one of the three missing — 0.25 pts |
 | Oral defense (§7) | 1 | Questions on your code — up to 0.5 pts; two questions from different groups in §7 — 0.25 pts each for complete answers |
-| Bonus point | +1 | Submission email sent on or before **October 22, 2026** |
+| Bonus point | +1 | Submission email sent on or before **22.10.2026** |
 
 > **Important!** Without completing the oral defense, combined research and
 > practical points are capped at **1 point**: the defense confirms you understand
