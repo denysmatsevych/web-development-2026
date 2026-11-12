@@ -62,6 +62,12 @@ plan. The plan the lab was built from is
 - **§4.2's schema listing sits outside the numbered steps.** Inside a list
   Prettier formats a code block narrower than the file, and the listing
   would differ from what students' editors produce on save.
+- **Every code line fits the PDF's code box, 75 characters,** so none wraps
+  in print: the schema's comment message is «Коментар — до 200 символів»,
+  its object-level `refine` takes `data`, the function `useActionState`
+  returns is `dispatch` (react.dev's examples use the same name), the
+  action's comment is reworded, and §4.5's main listing sits outside the
+  numbered steps.
 - **`onValid(data)`, not `onValid(booking)`:** in §4.3 a `booking` parameter
   would shadow the `booking` state.
 - **§4.8 runs `npm install` before swapping libraries.** On a workspace npm

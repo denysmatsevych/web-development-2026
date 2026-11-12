@@ -106,10 +106,10 @@ React Hook Form, показувати доступні повідомлення 
 Форма та сама, що наприкінці ЛР-5. Що в ній нового, перелічено в
 `lab-6/README.md`: поле «Телефон», порожні абзаци для повідомлень про помилки,
 імітований сервер. У ЛР-5 значення полів читав `FormData`, а перевіряв їх лише
-браузер (`required`). Тепер правила переїдуть у схему, значення — у бібліотеку
-форм, а дані підуть на сервер. Після кожного кроку перевіряйте сторінку в
-браузері, консоль і вкладку **Components ⚛**. Файли зберігайте як у ЛР-1
-(`Ctrl+S`): Prettier відформатує їх під час збереження.
+браузер (наприклад, `required`). Тепер правила переїдуть у схему, значення — у
+бібліотеку форм, а дані підуть на сервер. Після кожного кроку перевіряйте
+сторінку в браузері, консоль і вкладку **Components ⚛**. Файли зберігайте як у
+ЛР-1 (`Ctrl+S`): Prettier відформатує їх під час збереження.
 
 ### 4.1. Стартовий проєкт
 
@@ -204,9 +204,9 @@ export const bookingSchema = z
       .int()
       .min(1, 'Щонайменше 1 гість')
       .max(8, 'Не більше 8 гостей'),
-    comment: z.string().trim().max(200, 'Коментар — не довше за 200 символів'),
+    comment: z.string().trim().max(200, 'Коментар — до 200 символів'),
   })
-  .refine((booking) => booking.date !== today() || booking.time > nowTime(), {
+  .refine((data) => data.date !== today() || data.time > nowTime(), {
     error: 'Цей час сьогодні вже минув',
     path: ['time'],
   })
@@ -601,43 +601,43 @@ React Hook Form. Правил на цьому кроці ще немає: сто
    Видаліть стан `booking`: відповідь сервера зберігатиме `useActionState`, а
    текст підтвердження складає сервер. Під `useWatch` додайте:
 
-   ```jsx
-   const [result, dispatchBooking, isPending] = useActionState(bookTable, null)
+```jsx
+const [result, dispatch, isPending] = useActionState(bookTable, null)
 
-   // Дія для useActionState: null — сигнал «Очистити», інакше надсилаємо
-   // бронювання на сервер, після успіху очищаємо форму й повертаємо відповідь.
-   async function bookTable(previousResult, booking) {
-     if (booking === null) return null
-     const response = await sendBooking(booking)
-     if (response.ok) startTransition(() => reset())
-     return response
-   }
-   ```
+// Дія для useActionState: null — сигнал «Очистити»; інакше надсилаємо
+// бронювання, після успіху очищаємо форму й повертаємо відповідь.
+async function bookTable(previousResult, booking) {
+  if (booking === null) return null
+  const response = await sendBooking(booking)
+  if (response.ok) startTransition(() => reset())
+  return response
+}
+```
 
-   - `useActionState(дія, початковий стан)` повертає три значення: результат
-     останнього виклику дії (`null`, поки викликів не було), функцію, що
-     запускає дію, і `isPending` — `true`, поки дія виконується;
-   - дія отримує попередній результат і те, що передали в `dispatchBooking`;
-     що вона поверне, те й стане новим `result`. Відповідь сервера має вигляд
-     `{ ok, message }`;
-   - `bookTable` оголошено всередині компонента, бо їй потрібна `reset` з
-     `useForm`;
-   - `reset()` після `await` знову загорнуто в `startTransition`: оновлення
-     стану після `await` уже не належить до транзиції дії;
-   - `null` замість бронювання — домовленість цієї форми, так «Очистити»
-     скидатиме відповідь сервера (крок 4). Окремої функції для скидання
-     `useActionState` не має.
+- `useActionState(дія, початковий стан)` повертає три значення: результат
+  останнього виклику дії (`null`, поки викликів не було), функцію, що запускає
+  дію, і `isPending` — `true`, поки дія виконується;
+- дія отримує попередній результат і те, що передали в `dispatch`; що
+  вона поверне, те й стане новим `result`. Відповідь сервера має вигляд
+  `{ ok, message }`;
+- `bookTable` оголошено всередині компонента, бо їй потрібна `reset` з
+  `useForm`;
+- `reset()` після `await` знову загорнуто в `startTransition`: оновлення стану
+  після `await` уже не належить до транзиції дії;
+- `null` замість бронювання — домовленість цієї форми, так «Очистити»
+  скидатиме відповідь сервера (крок 4). Окремої функції для скидання
+  `useActionState` не має.
 
 2. **Запуск.** Замініть `onValid`:
 
    ```jsx
    function onValid(data) {
      if (isPending) return
-     startTransition(() => dispatchBooking(data))
+     startTransition(() => dispatch(data))
    }
    ```
 
-   - `dispatchBooking` викликають у `startTransition`: так React знає, що це
+   - `dispatch` викликають у `startTransition`: так React знає, що це
      дія, і показує стан очікування. Форма й далі має
      `onSubmit={handleSubmit(onValid)}`, а не `action`: спершу дані перевіряє
      React Hook Form, і в дію йдуть лише правильні, тож транзицію ви
@@ -671,11 +671,11 @@ React Hook Form. Правил на цьому кроці ще немає: сто
 4. **Скидання відповіді.** У `handleReset` замініть `setBooking(null)` на:
 
    ```jsx
-   startTransition(() => dispatchBooking(null))
+   startTransition(() => dispatch(null))
    ```
 
 5. **Без транзиції.** Тимчасово замініть в `onValid`
-   `startTransition(() => dispatchBooking(data))` на `dispatchBooking(data)` і
+   `startTransition(() => dispatch(data))` на `dispatch(data)` і
    надішліть форму: кнопка не показує «Надсилаємо…», а в консолі помилка
    React «An async function with useActionState was called outside of a
    transition. This is likely not what you intended (for example, isPending
