@@ -1,6 +1,7 @@
 /**
  * Lab 12-13 — records the TVmaze responses that showfinder-ts-starter's tests serve
- * (check/fixtures/). Run from the repo root; it needs network access:
+ * (check/fixtures/), into the Ukrainian starter and its English copy alike. Run from the repo
+ * root; it needs network access:
  *
  *   node docs/web/lab-12/record-fixtures.mjs
  *
@@ -19,7 +20,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 const API = 'https://api.tvmaze.com';
-const OUT = 'starters/web/showfinder-ts-starter/check/fixtures';
+const OUT = ['starters/web/showfinder-ts-starter/check/fixtures', 'starters/web/en/showfinder-ts-starter/check/fixtures'];
 
 /** `girls` and `law & order` are the tests' own; `kitchen` and `pilot` bring the nulls. */
 const QUERIES = ['girls', 'law & order', 'kitchen', 'pilot'];
@@ -63,11 +64,13 @@ for (const id of SHOWS) {
   console.log(`show ${id} ${show.name}`);
 }
 
-mkdirSync(OUT, { recursive: true });
 const write = (name, data) => {
-  const file = path.join(OUT, name);
-  writeFileSync(file, `${JSON.stringify(data, null, 1)}\n`);
-  console.log(`${file}  ${(JSON.stringify(data).length / 1024).toFixed(0)} KB`);
+  for (const dir of OUT) {
+    mkdirSync(dir, { recursive: true });
+    const file = path.join(dir, name);
+    writeFileSync(file, `${JSON.stringify(data, null, 1)}\n`);
+    console.log(`${file}  ${(JSON.stringify(data).length / 1024).toFixed(0)} KB`);
+  }
 };
 write('search.json', { ...meta(`Responses of GET /search/shows?q=… for the queries below. ${kept}`), queries: searches });
 write('shows.json', { ...meta(`Responses of GET /shows/:id for the ids below. ${kept}`), shows });
