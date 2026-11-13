@@ -72,7 +72,8 @@ the inferred `any` passes) and to the TypeScript after it.
 
 ## The fixtures
 
-`starters/web/showfinder-ts-starter/check/fixtures/` comes from
+`starters/web/showfinder-ts-starter/check/fixtures/` and the identical copy in
+the English starter come from
 `docs/web/lab-12/record-fixtures.mjs` (public: it holds no answers), recorded from
 the live API on 2026-10-15: four searches (`girls`, `law & order`, `kitchen`,
 `pilot`) and three shows (139, 41734, 45962). They are chosen so that every
@@ -94,6 +95,7 @@ only the fields the app uses. Each file states its source, licence (CC BY-SA
   the solution, every trap and every alternative;
 - `smoke.mjs` + `cdp.mjs` — the built solution in headless Edge against the
   live API;
+- `en.mjs` — the Ukrainian → English string pairs for `--lang en`;
 - `answer-key.md` — the §4 answers and the seeded-defect map;
 - `calibration.md` — what agents did with the T4 prompt.
 
@@ -102,13 +104,25 @@ Back the folder up outside the repo.
 ## Regenerating
 
 ```sh
-node docs/web/lab-12/record-fixtures.mjs                          # check/fixtures/ from the live API
-python docs/web/build-pack.py starters/web/showfinder-ts-starter  # public/uk/web/starters/showfinder-ts-starter.zip
-python docs/web/build-handout.py lab-12                           # public/uk/web/labs/lab-12.pdf
-node docs/web/lab-12/solution/verify.mjs                          # local only
+node docs/web/lab-12/record-fixtures.mjs                             # check/fixtures/ of both starters, from the live API
+python docs/web/build-pack.py starters/web/showfinder-ts-starter     # public/uk/web/starters/showfinder-ts-starter.zip
+python docs/web/build-pack.py starters/web/en/showfinder-ts-starter  # public/en/web/starters/showfinder-ts-starter.zip
+python docs/web/build-handout.py lab-12                              # public/uk/web/labs/lab-12.pdf
+python docs/web/build-handout.py lab-12 --lang en                    # public/en/web/labs/lab-12.pdf
+node docs/web/lab-12/solution/verify.mjs                             # local only
+node docs/web/lab-12/solution/verify.mjs --lang en                   # local only: the English starter
 ```
 
-Re-run `verify.mjs` after any change to `check/`, the fixtures, the
-JavaScript modules or the brief's texts. `smoke.mjs` drives headless Edge,
-which on the course machine starts only from PowerShell, outside the agent
-sandbox. Rebuild the zip after committing: its entries are dated by Git.
+The English starter in `starters/web/en/showfinder-ts-starter/` has the same
+code and `check/` logic with English texts; only `check/run.js` words its
+summary with English plurals. The solution, the naive migration and the traps
+stay in Ukrainian; with `--lang en`, `verify.mjs` swaps their interface
+strings for the English ones through `solution/en.mjs`, which lists each
+pair. Edit both starters together and rebuild both zips (see the root
+`README.md` → **Per-lab starter kits and asset packs**).
+
+Re-run `verify.mjs` in both languages after any change to `check/`, the
+fixtures, the JavaScript modules or the brief's texts. `smoke.mjs` drives
+headless Edge, which on the course machine starts only from PowerShell,
+outside the agent sandbox. Rebuild the zips after committing: their entries
+are dated by Git.

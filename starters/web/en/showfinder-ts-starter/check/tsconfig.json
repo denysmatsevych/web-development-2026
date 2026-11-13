@@ -1,0 +1,11 @@
+{
+  // Configuration for npm run typecheck: src/ together with check/*.check.ts type checks,
+  // without emitting files. Do not modify it.
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "rootDir": "..",
+    "resolveJsonModule": true
+  },
+  "include": ["../src", "./*.ts"]
+}

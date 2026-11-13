@@ -1,0 +1,30 @@
+{
+  // Compiler configuration for src/. Provided file: do not modify it
+  // (except temporarily during experiment E2 of the lab). Assignment rule T4.2 verifies it is unchanged.
+  "compilerOptions": {
+    // All strict checks: null and undefined, implicit any, unknown in catch, etc.
+    "strict": true,
+    // While .js files remain in src/ (prior to T4 migration), tsc compiles them into dist/ as well.
+    // It does not check their types: it only typechecks .ts files.
+    "allowJs": true,
+    // Target JavaScript version emitted by compiler and built-in API types known to it.
+    "target": "es2023",
+    "lib": ["es2023", "dom", "dom.iterable"],
+    // ES modules supported by both browsers and Node.
+    "module": "nodenext",
+    // tsc reads src/ and outputs JavaScript for the browser into dist/.
+    "rootDir": "src",
+    "outDir": "dist",
+    "sourceMap": true,
+    // import './api.ts' in src/ becomes import './api.js' in dist/.
+    "rewriteRelativeImportExtensions": true,
+    // Types are imported via import type: nothing remains of them after compilation.
+    "verbatimModuleSyntax": true,
+    // Only syntax that can be erased (no enum, namespace, or parameter properties):
+    // ensures Node tests execute the same src/*.ts files that tsc compiles.
+    "erasableSyntaxOnly": true,
+    // No global types from node_modules/@types.
+    "types": []
+  },
+  "include": ["src"]
+}
