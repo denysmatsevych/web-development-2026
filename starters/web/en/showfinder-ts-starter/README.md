@@ -64,9 +64,9 @@ node --test check/2-api.test.js   # tests for a single task
 
 Initially, almost everything fails: this is normal. The name of each test and the
 comment next to each type check in `check/types.check.ts` begin with the
-assignment rule number (T2.4 is the fourth rule of task T2). The assignment is
-complete when `npm run check` finishes with the line "Types: no errors" and all
-tests pass.
+assignment rule number (T2.4 is the fourth rule of task T2). Your work is done
+when `npm run check` finishes with the line "Types: no errors" and all tests
+pass.
 
 While the T4 modules remain in JavaScript, the tests execute them directly.
 Consequently, several T4 tests fail even before migration: the legacy JavaScript
@@ -78,11 +78,11 @@ responses are recorded in `check/fixtures/`.
 ## Editor setup
 
 VS Code and WebStorm highlight type errors using their own TypeScript version,
-whereas `npm run typecheck` uses TypeScript from `node_modules/`. For this
+whereas `npm run typecheck` uses TypeScript 7 from `node_modules/`. For this
 project, they report the same errors. If any discrepancy arises, `npm run check`
 is the source of truth.
 
-## Submission
+## Publishing
 
 You do not need to publish the application: the instructor runs `npm run check`
 in your repository. The `node_modules/` and `dist/` directories are not committed

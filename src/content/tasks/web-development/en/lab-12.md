@@ -1,7 +1,7 @@
 ---
 title: "ShowFinder: from JavaScript to TypeScript — specification"
 summary: "All practical tasks for Lab 12-13: the ShowFinder app powered by the TVmaze API migrates from JavaScript to TypeScript. Types, requests, and states by hand (T1–T3), the remaining modules migrated by an AI agent using the T4 prompt, with migration verified via npm run check and in the browser."
-goal: "Migrate ShowFinder to TypeScript according to this assignment: npm run check reports \"Types: no errors\" and all tests pass, src/ contains no any or type assertions, and the app works with the real TVmaze API. Tasks are in §4, completed in order: write T1–T3 by hand, have an AI agent migrate the remaining modules in T4, and verify and fix the migration. Workflow and commit conventions are in section 5 of the lab."
+goal: "Migrate ShowFinder to TypeScript according to this assignment: npm run check reports 'Types: no errors' and all tests pass, src/ contains no any or type assertions, and the app works with the real TVmaze API. Tasks are in §4, completed in order: write T1–T3 by hand, have an AI agent migrate the remaining modules in T4, and verify and fix the migration. Workflow and commit conventions are in section 5 of the lab."
 label: "Assignment"
 highlights:
   - "TypeScript, strict"
@@ -367,11 +367,13 @@ final implementation and include a screenshot for each step in your report.
    "Shows found: N", and the Network tab shows a request to
    `/search/shows` with status 200.
 2. **B2 · Empty fields.** Search for "kitchen". The card for Harlem's Kitchen
-   renders without a poster (gray placeholder) and shows the string "year unknown · rating —". The Console displays no errors.
-3. **B3 · Show page.** Click a card: the show page opens, and the status bar
+   renders without a poster (gray placeholder) and shows the string
+   "year unknown · rating —". The Console displays no errors.
+3. **B3 · Show page.** Click a card: the show page opens, and the status line
    displays `Show: <title>`. Focus moves to the show's heading: the Console
    confirms this via `document.activeElement`.
 4. **B4 · Offline mode.** DevTools → Network → Throttling — **Offline**.
-   Searching for a show you haven't queried yet displays "Network unavailable. Check your connection.", and the Console has no `Uncaught` errors. (The
+   Searching for a show you haven't queried yet displays "Network unavailable.
+   Check your connection.", and the Console has no `Uncaught` errors. (The
    browser may serve a repeated query from cache: TVmaze allows 1-hour caching.)
    Switch back to **No throttling**: subsequent searches find shows normally.

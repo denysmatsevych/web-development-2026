@@ -13,8 +13,8 @@ handout: /en/web/labs/lab-12.pdf
 
 > **Deadline:** 22.10.2026.
 
-Lab 12 and Lab 13 are combined into a single assignment — Lab 12-13: both work
-with the same application.
+Lab 12 and Lab 13 are combined into a single lab — Lab 12-13: both work with
+the same application.
 
 ## 1. Aim
 
@@ -238,7 +238,7 @@ in-browser checklist (§6).
    and `tsconfig.json`, must remain identical to the starter project after every
    task.
 
-### 5.2. Working with an AI agent
+### 5.2. Rules for working with an AI agent
 
 - **Research (§4).** Write "My prediction" yourself, without an AI agent and
   before running the experiment.
@@ -367,7 +367,7 @@ _any, unknown, and type assertions_
   does `any` come from in code when nobody explicitly wrote it?
 - What does the compiler verify in `value as Show`, and what does it ignore? Why
   is `'abc' as number` an error, while `'abc' as unknown as number` is not?
-- What does `!` assert after an expression? How does `element!.focus()` differ
+- What does `!` after an expression promise? How does `element!.focus()` differ
   from `element?.focus()`?
 - How does `document.querySelector<HTMLFormElement>('#search')` differ from
   `document.querySelector('form')`? Why is the former also a type assertion?
@@ -416,7 +416,7 @@ _AI-assisted migration from JavaScript_
 
 ## 8. Grading
 
-This assignment spans two curriculum slots — Lab 12 and Lab 13 — and is worth
+This lab takes two curriculum slots — Lab 12 and Lab 13 — so it is worth
 **4 points** across three components, plus **1 bonus point** for timely
 submission.
 
