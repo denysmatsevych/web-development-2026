@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Self-check — My Watchlist</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="check/check.css" />
+    <script type="module" src="check/main.js"></script>
+  </head>
+  <body>
+    <header class="intro">
+      <h1>My Watchlist self-check</h1>
+      <p>
+        The check opens <code>index.html</code> in the frame below and works with the app the way
+        a user does: it clicks, types and submits forms. Then it checks what the user sees and what
+        assistive technologies receive. The check never reads the app's code. The number and title
+        of each row are a rule from the assignment.
+      </p>
+      <p class="intro__run">
+        <button id="run" type="button">Run again</button>
+        <span id="summary" role="status">The check has not run: JavaScript is required.</span>
+      </p>
+      <p class="intro__note">
+        Don't switch tabs while the check is running: in a background tab the browser doesn't move
+        focus, and the focus checks fail. This page can't check real Esc, Tab and focus order
+        (synthetic events are not trusted): the manual checklist in the assignment covers them.
+      </p>
+    </header>
+    <main class="layout">
+      <div id="results" class="results"></div>
+      <section class="stage-wrap" aria-labelledby="stage-title">
+        <h2 id="stage-title">The app under test</h2>
+        <div id="stage" class="stage"></div>
+      </section>
+    </main>
+  </body>
+</html>

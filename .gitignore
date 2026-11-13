@@ -21,6 +21,10 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 
+# Python bytecode cache (written whenever a Python script is imported)
+__pycache__/
+*.pyc
+
 # Lab 7 — reference mockup source (instructor-only; see docs/web/lab-7/README.md)
 docs/web/lab-7/mockup/
 
@@ -59,3 +63,6 @@ docs/react/lab-4/solution/
 
 # React Lab 5 — reference solution and screenshot script (instructor-only: it solves every task)
 docs/react/lab-5/solution/
+
+# React Lab 6 — reference solution and screenshot script (instructor-only: it solves every task)
+docs/react/lab-6/solution/

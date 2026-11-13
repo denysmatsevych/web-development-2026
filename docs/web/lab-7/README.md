@@ -43,8 +43,14 @@ handout.
 node docs/web/lab-7/generate-assets.mjs   # starters/web/courtly-assets/img/*.webp (deterministic)
 node docs/web/lab-7/render-mockup.mjs     # public/uk/web/labs/lab-7/*.webp + og-image.jpg + src/data/courtly-mockup.json (Edge, network)
 python docs/web/lab-7/build-pack.py        # public/uk/web/starters/courtly-assets.zip (+ SPEC.md, mockup/)
+python docs/web/lab-7/build-pack.py --lang en  # public/en/web/starters/courtly-assets.zip
 python docs/web/build-handout.py lab-7    # public/uk/web/labs/lab-7.pdf
+python docs/web/build-handout.py lab-7 --lang en  # public/en/web/labs/lab-7.pdf
 ```
+
+The English pack has its own copy of the assets in `starters/web/en/courtly-assets/`
+(see README.md → **Per-lab starter kits and asset packs**), but the same Ukrainian
+captures: the English handout asks for the page in Ukrainian, as the mockup shows it.
 
 Order matters: render the captures before building the pack, since the pack
 copies them. `src/data/courtly-mockup.json` records where each section starts
