@@ -519,7 +519,8 @@ challenges, given tests, all in class, one app, AI explains only).
 13. **The accordion is §4.8, ungraded,** as the programme's self-study item.
 14. **HOC against hook is a defence group, not a challenge.** A fifth
     challenge would push the lab past an hour.
-15. **No extra points,** as in ЛР-7.
+15. **No extra points, and ЛР-7's rule for a challenge not finished in
+    class,** as in ЛР-7 (its decision 10).
 16. **The sections keep their `<h2>` inside the panels,** so heading
     navigation still works for screen-reader users. The tab label repeats the
     heading, which the APG allows.

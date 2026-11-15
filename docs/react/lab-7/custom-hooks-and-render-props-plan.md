@@ -525,7 +525,8 @@ challenge points to it.
 A numbered list, one line each: §4.1 starter; C1–C5 (§4.3–4.7) with their
 pattern in brackets; §4.8 checks and Vercel. Then the notes: «Усі завдання
 виконуються на занятті (орієнтовно 65 хвилин) і разом оцінюються в 1 бал
-після захисту.» The AI note points to §4.2.
+після захисту.» One line on a challenge not finished in class, as decision 10
+settles it. The AI note points to §4.2.
 
 ### §4. Хід виконання
 
@@ -748,7 +749,14 @@ Windows 11 with Node.js 24.20.0 and npm 11.19.0: React 19.3.1, Vite 8.3.8,
     class, checked on GitHub **Activity**. A missed class is made up under
     the course rules. The risk is higher than with listings, since challenge
     times vary more; the dry run and the cuts under **Timing** are the
-    safeguard.
+    safeguard for the group, but not for one student who runs out of time.
+    As drafted, §7's 41 of 41 gives that student 0 for the whole lab, and
+    the course has no partial points. Proposed: they push what passes by the
+    end of class and finish the remaining challenges the way a missed class
+    is made up, under the same push-time check, then defend as usual. The
+    alternative is to grade only C1–C4 for that student (cut 4 under
+    **Timing**, for one person): simpler, but it rewards stopping early.
+    §3 and §7 state whichever rule is chosen.
 11. **Readings:** patterns.dev for the patterns, react.dev for the mechanics,
     Dan Abramov's article for the history of the split; refine.dev isn't
     linked (see **The readings**).
