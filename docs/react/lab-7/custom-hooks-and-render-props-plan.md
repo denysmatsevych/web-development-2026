@@ -530,8 +530,9 @@ challenge points to it.
 A numbered list, one line each: §4.1 starter; C1–C5 (§4.3–4.7) with their
 pattern in brackets; §4.8 checks and Vercel. Then the notes: «Усі завдання
 виконуються на занятті (орієнтовно 65 хвилин) і разом оцінюються в 1 бал
-після захисту.» One line on a challenge not finished in class, as decision 10
-settles it. The AI note points to §4.2.
+після захисту.» One line on a challenge not finished in class (decision 10):
+push what passes, and finish the rest the way a missed class is made up. The
+AI note points to §4.2.
 
 ### §4. Хід виконання
 
@@ -637,7 +638,7 @@ The handout's §6 will be the full list (ЛР-6 has about 40); the answers go in
 | Розумний і простий | `TimerView` без стану й ефектів показує чотири стани таймера; `BrewTimer` визначає статус і рендерить `TimerView` |
 | Render prop | `ShowMore` викликає `children` як функцію; ним користується `ReviewList` |
 | GitHub | коміт стартового проєкту й по одному коміту на кожен challenge |
-| На занятті | усі коміти відправлено на занятті (час `git push` видно в **Activity**) |
+| На занятті | усі коміти відправлено на занятті (час `git push` видно в **Activity**); challenges, не завершені на занятті, — на відпрацюванні, як пропущене заняття |
 | Vercel | проєкт з Root Directory `lab-7`; адреса показує сторінку з останнього коміту `main` |
 | AI | §4.2 дотримано; у звіті вказано, як використовувався AI |
 | Звіт | усі пункти §5 |
@@ -739,7 +740,8 @@ Windows 11 with Node.js 24.20.0 and npm 11.19.0: React 19.3.1, Vite 8.3.8,
 6. **ЛР-7 also covers Container/Presentational and conditional rendering.**
    Both go into one challenge, C2, on the timer (see **The challenges**).
 
-**Proposed, for the instructor to confirm or change:**
+**Proposed, for the instructor to confirm or change** (except 10, settled on
+2026-11-15 during the PR #73 review):
 
 7. **Five challenges in this order:** C2's split before C3's hook, so the
    hook visibly takes over the container. The other order (hook first, then
@@ -752,18 +754,18 @@ Windows 11 with Node.js 24.20.0 and npm 11.19.0: React 19.3.1, Vite 8.3.8,
 9. **No extra points.** The programme gives 1 point per lab, the whole lab is
    in class, and the time is now a little over an hour. A stronger student
    can do §4.9, ungraded.
-10. **The in-class rule stays strict, as in ЛР-2–6:** every commit pushed in
-    class, checked on GitHub **Activity**. A missed class is made up under
-    the course rules. The risk is higher than with listings, since challenge
-    times vary more; the dry run and the cuts under **Timing** are the
-    safeguard for the group, but not for one student who runs out of time.
-    As drafted, §7's 41 of 41 gives that student 0 for the whole lab, and
-    the course has no partial points. Proposed: they push what passes by the
-    end of class and finish the remaining challenges the way a missed class
-    is made up, under the same push-time check, then defend as usual. The
-    alternative is to grade only C1–C4 for that student (cut 4 under
-    **Timing**, for one person): simpler, but it rewards stopping early.
-    §3 and §7 state whichever rule is chosen.
+10. **Settled by the instructor on 2026-11-15: the in-class rule stays
+    strict, as in ЛР-2–6,** with a make-up for unfinished challenges. Every
+    commit is pushed in class, checked on GitHub **Activity**, and a missed
+    class is made up under the course rules. The risk is higher than with
+    listings, since challenge times vary more; the dry run and the cuts under
+    **Timing** are the safeguard for the group, but not for one student who
+    runs out of time, and the course has no partial points. That student
+    pushes what passes by the end of class and finishes the remaining
+    challenges the way a missed class is made up, under the same push-time
+    check, then defends as usual. §3 and §7 state the rule. Rejected: grading
+    only C1–C4 for that student (cut 4 under **Timing**, for one person),
+    which is simpler but rewards stopping early.
 11. **Readings:** patterns.dev for the patterns, react.dev for the mechanics,
     Dan Abramov's article for the history of the split; refine.dev isn't
     linked (see **The readings**).
