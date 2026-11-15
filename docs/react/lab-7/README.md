@@ -125,6 +125,9 @@ jsdom 31.0.1, `@testing-library/react` 16.3.3, `@testing-library/user-event`
   scroll;
 - the readings and the handout's other links return 200, and the react.dev
   anchors the handout links exist; Medium refuses automated requests (403);
+  of the linked `uk.react.dev` pages only Conditional Rendering is translated
+  («Умовний рендеринг»), so §2 says so and §4.4 links its sections by their
+  Ukrainian headings;
 - the site: `npm run check` and `npm run build` pass; the labs index lists
   ЛР-7; the handout has no horizontal scroll at 390 px, and both images
   load.

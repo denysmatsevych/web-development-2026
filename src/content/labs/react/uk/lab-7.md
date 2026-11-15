@@ -36,8 +36,9 @@ prop, обираючи спосіб під задачу; навчитися пр
 ## 2. Корисні посилання
 
 Теоретичної частини в цій роботі немає. Перед заняттям прочитайте сторінки за
-посиланнями 1–3 і 5. Решту відкривайте, коли до них відсилає challenge. Усі
-сторінки англійською: адреси `uk.react.dev` теж відкривають англійський текст.
+посиланнями 1–3 і 5. Решту відкривайте, коли до них відсилає challenge.
+Сторінка 6 — українською; решта — англійською, зокрема й інші адреси
+`uk.react.dev`: їх ще не перекладено.
 
 1. patterns.dev: [Hooks Pattern](https://www.patterns.dev/react/hooks-pattern) —
    власні хуки, правила хуків і як хуки замінили класові компоненти
@@ -53,7 +54,7 @@ prop, обираючи спосіб під задачу; навчитися пр
 5. [Reusing Logic with Custom Hooks](https://uk.react.dev/learn/reusing-logic-with-custom-hooks) —
    як виносити логіку у власний хук і чому хуки ділять логіку, а не стан
    (§4.3, §4.5).
-6. [Conditional Rendering](https://uk.react.dev/learn/conditional-rendering) —
+6. [Умовний рендеринг](https://uk.react.dev/learn/conditional-rendering) —
    `if`, `? :`, `&&` і `null` у JSX (§4.4).
 7. [Preserving and Resetting State](https://uk.react.dev/learn/preserving-and-resetting-state) —
    коли React зберігає елемент і його стан, а коли створює новий
@@ -248,8 +249,8 @@ prop, обираючи спосіб під задачу; навчитися пр
   бо це JSON. Якщо до цього ви вже вибирали помел, тепер сторінка покаже
   «Зерно»: старе значення `filter` — не JSON.
 - **Components ⚛** → `FavoriteButton`: серед хуків — `LocalStorage`, а в
-  ньому `State` і `Effect`. React DevTools показує власні хуки без префікса
-  `use`.
+  ньому хуки, які він викликає: `State`, а якщо значення записує ефект, то
+  й `Effect`. React DevTools показує власні хуки без префікса `use`.
 - Експеримент, без коміту: перейменуйте функцію в `useLocalStorage.js` на
   `localStorageState` і подивіться на помилку ESLint у редакторі (або
   `npm run lint`). Прочитайте її й поверніть назву.
@@ -326,10 +327,10 @@ prop, обираючи спосіб під задачу; навчитися пр
 **Коміт:** `feat: split the timer into a container and TimerView`.
 **Довідка:** [Container/Presentational Pattern](https://www.patterns.dev/react/presentational-container-pattern),
 [Presentational and Container Components](https://medium.com/@dan_abramov/7ca2f9a7c7d0),
-[Conditionally returning nothing with null](https://uk.react.dev/learn/conditional-rendering#conditionally-returning-nothing-with-null),
-[Conditional (ternary) operator](https://uk.react.dev/learn/conditional-rendering#conditional-ternary-operator--),
-[Logical AND operator](https://uk.react.dev/learn/conditional-rendering#logical-and-operator-),
-[Conditionally assigning JSX to a variable](https://uk.react.dev/learn/conditional-rendering#conditionally-assigning-jsx-to-a-variable),
+[Умовне повернення нічого за допомогою `null`](https://uk.react.dev/learn/conditional-rendering#conditionally-returning-nothing-with-null),
+[Умовний (тернарний) оператор (`? :`)](https://uk.react.dev/learn/conditional-rendering#conditional-ternary-operator--),
+[Логічний оператор AND (`&&`)](https://uk.react.dev/learn/conditional-rendering#logical-and-operator-),
+[Умовне присвоєння JSX змінній](https://uk.react.dev/learn/conditional-rendering#conditionally-assigning-jsx-to-a-variable),
 [Same component at the same position preserves state](https://uk.react.dev/learn/preserving-and-resetting-state#same-component-at-the-same-position-preserves-state),
 [`role="status"`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/status_role),
 [`role="timer"`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/timer_role).
