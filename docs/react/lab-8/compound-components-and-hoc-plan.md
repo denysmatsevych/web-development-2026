@@ -107,13 +107,20 @@ three sections sit in accessible tabs under the product card.
 
 ### ЛР-7's answers in ЛР-8's starter
 
-The starter contains ЛР-7's solution, so publishing the ЛР-8 zip publishes
-ЛР-7's answers. ЛР-6 avoided the problem because ЛР-5's handout printed all
-its code; ЛР-7's handout doesn't. What limits the damage:
+The starter contains ЛР-7's solution, so publishing ЛР-8 publishes ЛР-7's
+answers. ЛР-6 avoided the problem because ЛР-5's handout printed all its
+code; ЛР-7's handout doesn't. Publishing here means more than the zip:
+`starters/react/lab-8/` is source code in a public repository, so pushing
+`feat/react-lab-8` or opening its PR, even as a draft, shows ЛР-7's reference
+solution file by file. What limits the damage:
 
+- the branch stays local, with no push and no PR, until the last group's
+  ЛР-7 class. The instructor reviews it on the local dev server before then,
+  and the push, the PR, CI and the merge fit between that class and the first
+  ЛР-8 class;
 - ЛР-7 is done entirely in class and graded by push times on GitHub
-  **Activity**, so ЛР-7's code is in before the ЛР-8 zip exists, if the zip is
-  published after the last group's ЛР-7 class;
+  **Activity**, so ЛР-7's code is in before ЛР-8 is public. The exception is a
+  student who finishes ЛР-7 at a make-up afterwards (ЛР-7's decision 10);
 - the ЛР-7 defence includes a live change without AI.
 
 The alternative, a ЛР-8 starter without ЛР-7's hooks and views, would need
@@ -431,7 +438,9 @@ As in ЛР-7, for `lab-8`: the starter and its zip, the handout,
 the line was added with this plan), `docs/react/lab-8/README.md`, the course
 plan row (with the note on context before ЛР-12), and the root README tree.
 Branch `feat/react-lab-8`, from `main` after ЛР-7 is merged, since the
-starter is built from ЛР-7's final starter and reference solution.
+starter is built from ЛР-7's final starter and reference solution. The branch
+stays local until the last group's ЛР-7 class (see **ЛР-7's answers in ЛР-8's
+starter**).
 
 ## Verification
 
@@ -488,7 +497,8 @@ challenges, given tests, all in class, one app, AI explains only).
 **Proposed, for the instructor to confirm or change:**
 
 7. **ЛР-8's starter is ЛР-7's reference solution,** published after the last
-   group's ЛР-7 class (see **ЛР-7's answers in ЛР-8's starter**).
+   group's ЛР-7 class: the zip and the branch alike, so `feat/react-lab-8`
+   isn't pushed before then (see **ЛР-7's answers in ЛР-8's starter**).
 8. **No `CartProvider`.** A provider for the cart, read by the header and
    `ProductCard`, would show children and context on global state, but that
    is ЛР-12's topic («Глобальний стан за допомогою Context API»). `Tabs`
