@@ -33,11 +33,11 @@ From [../course-plan.md](../course-plan.md), row 2.2:
 **Two topics beyond the row.** Container/Presentational is in Lecture 3's
 list (row 2.1) but in no lab's, and conditional rendering is in no row at
 all. The instructor added both to this lab on 2026-11-15. Conditional
-rendering isn't new to students. ЛР-2 showed a `Badge` with `&&`, and ЛР-3
-added «— немає» with `&&`. ЛР-7 goes further: a component with four states,
-`if` with a variable and the ternary next to `&&`, react.dev's pitfall of a
-number on the left of `&&`, and an element that keeps its focus because it
-stays at the same position in the tree.
+rendering isn't new to students. ЛР-3 added «— немає» with `&&`, and ЛР-2's
+optional task showed a `Badge` with it. ЛР-7 goes further: a component with
+four states, `if` with a variable and the ternary next to `&&`, react.dev's
+pitfall of a number on the left of `&&`, and an element that keeps its focus
+because it stays at the same position in the tree.
 
 What earlier labs left for this one:
 
@@ -163,9 +163,11 @@ button and analytics (see its plan).
 
 Students do C1 → C5 in order and make one commit per challenge, as soon as
 that challenge's tests pass. Nothing in `tests/` changes in any commit. Each
-challenge in the handout has the Web ЛР-9 parts: **Що має вийти**, **Що вже
-є**, **Код** (the files to touch), **Перевірка** (`npm test -- c1` and what to
-look at in the browser), and **Довідка**.
+challenge in the handout has Web ЛР-9's parts without «Запит для
+AI-агента», since AI doesn't write the code here, plus a **Довідка**: **Що
+має вийти**, **Що вже є**, **Код** (the files to touch), **Перевірка**
+(`npm test -- c1` and what to look at in the browser), and **Довідка** (the
+links for that challenge).
 
 The rules below are the test names, which are written as the rules they
 check, in Ukrainian, as in Web ЛР-8. The tests ship in the starter, so listing
@@ -177,7 +179,8 @@ them here gives nothing away.
 Both components now get their state from `useLocalStorage(key, initialValue)`
 in `src/hooks/useLocalStorage.js`, which returns `[value, setValue]` like
 `useState`. Values are stored as JSON, and a value the old code left behind
-(the plain string `filter`) doesn't break the page.
+(the plain string `filter`) gives way to the initial value instead of
+breaking the page.
 
 **Що вже є.** The stub with its API in a JSDoc comment; `FavoriteButton` and
 `GrindPicker` with ЛР-4's pattern; the key names (`favorite:<id>`, `grind`).
@@ -194,7 +197,8 @@ in `src/hooks/useLocalStorage.js`, which returns `[value, setValue]` like
 - `GrindPicker` бере стан з `useLocalStorage`;
 - ♡ лишається натиснутим після перезавантаження;
 - помел зберігається після перезавантаження;
-- помел, збережений старим кодом без JSON, не ламає сторінку.
+- помел, збережений старим кодом без JSON, замінюється на «Зерно», а
+  сторінка не падає.
 
 The two reload tests pass in the starter too. They guard the behaviour while
 the code moves.
@@ -421,8 +425,9 @@ longer than 65 minutes, the cuts in order are:
 
 1. drop C5's grid design and keep only the hook (`ShowMore` rebuilt on
    `useShowMore`, `RelatedProducts` stays on `ShowMore`);
-2. give the status table's `paused` row as optional (`Продовжити` folds into
-   «Старт»), which removes two tests;
+2. give the status table's `paused` row as optional («Продовжити» folds into
+   «Старт»): C2's `paused` test goes and the focus test loses its `paused`
+   step, so the lab has 40 tests and the count in §1, §5 and §7 changes;
 3. add a hint to C3 that names the three things a timer effect must handle,
    without code;
 4. make C5 ungraded (§4.9) and grade C1–C4.
@@ -562,7 +567,9 @@ its commit:
 **4.9. Самостійна робота (не оцінюється).** The programme's «Створення
 власних хуків»: make two ♡ for the same product stay in sync, on one page and
 across browser tabs, with `useSyncExternalStore` and the `storage` event.
-This needs a second ♡ somewhere (for example, in the page header). Links:
+The handout adds one hint: `storage` fires only in the other tabs, so the tab
+that writes has to notify its own subscribers. This needs a second ♡
+somewhere (for example, in the page header). Links:
 react.dev `useSyncExternalStore` → `#subscribing-to-a-browser-api`. No tests,
 no grade; it prepares an answer for the defence's «logic, not state» group.
 

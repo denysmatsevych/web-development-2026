@@ -186,10 +186,10 @@ fails it (checked); which other wrong `Tabs` fail it is recorded in
 **Що має вийти.** The APG's Tabs pattern with automatic activation. Roles and
 states: a `tablist` with a name, `tab`s with `aria-selected` and
 `aria-controls`, `tabpanel`s with `aria-labelledby`, ids that stay unique with
-two `Tabs` on one page. Keyboard: Tab enters the list on the selected tab and
-the next Tab goes to the panel, then past the tabs; → and ← move to the next
-or previous tab and select it, wrapping at the ends; Home and End go to the
-first and last tab. Automatic activation fits here because the panels are
+two `Tabs` on one page. Keyboard: Tab enters the list on the selected tab,
+skipping the others, and the next Tab goes to the panel; → and ← move to the
+next or previous tab and select it, wrapping at the ends; Home and End go to
+the first and last tab. Automatic activation fits here because the panels are
 already on the page, which is when the APG recommends it.
 
 **Tests** (`tests/c2-tabs-a11y.test.jsx`, 10):
