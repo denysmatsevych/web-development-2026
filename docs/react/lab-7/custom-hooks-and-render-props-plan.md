@@ -7,9 +7,12 @@ doesn't write the code. On 2026-11-15 they added the Container/Presentational
 pattern (smart and dumb components) and conditional rendering, which became
 C2 (see **Decisions**). A prototype of the starter, the tests and a reference
 solution was built and checked both days; it lives in the gitignored
-`solution/` folder next to this file. Nothing is built in the site yet. Once
-the lab is built, the lasting facts move to this folder's `README.md`, and
-this file stays as the plan.
+`solution/` folder next to this file. The lab was built on 2026-11-15 on
+branch `feat/react-lab-7`, Ukrainian only, with decisions 7–9 and 11–15 as
+proposed. The PDF was built after the instructor's review. The lasting
+facts, what was verified and where the build differs from this plan are in
+this folder's [README.md](README.md); this file stays as the plan the lab was
+built from.
 
 The companion plan for ЛР-8 is
 [../lab-8/compound-components-and-hoc-plan.md](../lab-8/compound-components-and-hoc-plan.md).
