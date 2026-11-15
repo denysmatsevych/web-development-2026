@@ -296,9 +296,9 @@ Checked with the same versions as ЛР-7:
    Way's article defends. A data-injecting HOC (`withUser`, `connect`) is the
    historical kind that hooks replaced, and it's a defence question, not a
    challenge.
-4. **The bug comes from real code.** C4's defect is how a developer would
-   write it: the event name depends on the status, so the wrapper ends up
-   inside the component.
+4. **The bug comes from real code.** C4's defect is one a developer would
+   plausibly write while adding analytics, not a planted typo. What it is and
+   why it happens are in `solution/README.md`.
 
 ## Timing
 
