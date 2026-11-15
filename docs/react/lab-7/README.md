@@ -86,6 +86,11 @@ jsdom 31.0.1, `@testing-library/react` 16.3.3, `@testing-library/user-event`
   starter's ranges and Prettier above;
 - adding `lab-7/` to a workspace with `lab-6/` and running `npm install` in
   the root installs the test tools; `node_modules` is about 136 MB;
+- `lab-7.zip` (31 files at the root, LF only, a rebuild is byte-identical)
+  unpacked into a fresh `react-labs/lab-7/` next to `lab-6/`: one
+  `npm install` in the root adds the workspace and the test tools, and the
+  folder passes `format:check` and `build`, shows the one lint warning and
+  fails 39 of 41 tests;
 - every stage (the starter, then C1–C5 applied in order) passes Prettier and
   the build; ESLint shows the starter's one warning until C3 and nothing
   after; the tests pass 2, 11, 20, 30, 35 and 41 of 41, each failure with a
