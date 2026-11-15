@@ -23,9 +23,9 @@ both in the same sitting. The Web Development course has its own plan in
 ## How the site maps to the plan
 
 The course is registered under the slug `react` with `status: 'published'`
-(see `src/data/courses.ts`), so it is on the public site. As of 2026-11-12,
+(see `src/data/courses.ts`), so it is on the public site. As of 2026-11-15,
 the built parts are Лекція 0, an introductory deck that isn't in the
-programme, the individual assignment, and ЛР 1–6.
+programme, the individual assignment, and ЛР 1–7.
 
 When a lab is built, add a row here, as the Web Development plan does, and put
 its instructor docs in `docs/react/lab-N/` (the README's **Docs** section has
@@ -39,6 +39,11 @@ has students add `lab-N/` and import a new Vercel project rather than create
 a repository. ЛР 20 (Next.js) and the final project (ЛР 21–27) get their own
 repositories.
 
+**From ЛР 7 the labs are code challenges.** ЛР 2–6 printed the code for
+students to type by hand; ЛР 7 and ЛР 8 give a starter with stubs and Vitest
+tests, and each challenge is done when its tests pass. The reasons and the
+rules are in [lab-7/custom-hooks-and-render-props-plan.md](lab-7/custom-hooks-and-render-props-plan.md).
+
 | Plan | Site | Note |
 | --- | --- | --- |
 | — | `/react/lectures/lecture-0` | Лекція 0: the course on one diagram, grading, course rules and every presentation topic |
@@ -50,7 +55,8 @@ repositories.
 | ЛР 4 | `/react/labs/lab-4` | useState and useEffect, by hand in class, on ЛР-3's café menu: a starter for `lab-4/`, Thinking in React steps 4–5 in code, the filters saved to `localStorage` by an effect, a data flow diagram, deploy to Vercel; +1 point for moving the state into `FilterableMenuTable` (state colocation); [lab-4/README.md](lab-4/README.md) |
 | ЛР 5 | `/react/labs/lab-5` | events and controlled/uncontrolled components, by hand in class, on a new table booking form: a starter for `lab-5/`, the browser's own form submission first, then `onSubmit` with `FormData`, a controlled comment with a counter, `Ctrl+Enter` on the form, a guests stepper that goes from uncontrolled to controlled, the native reset with `onReset` and a ref, a README table of who owns each value, deploy to Vercel; [lab-5/README.md](lab-5/README.md) |
 | ЛР 6 | `/react/labs/lab-6` | complex forms and validation, by hand in class, on ЛР-5's booking form: a starter for `lab-6/` with a phone field and a fake server, a Zod schema checked in the console, React Hook Form (`register`, `Controller`, `useWatch`), error messages with `aria-invalid` and `aria-describedby`, sending through `useActionState` with a pending state and clearing after success, deploy to Vercel; +1 point in class for a newsletter form on `<form action>` and `useFormStatus`, +1 point at home for the same booking form with other libraries and a comparison; [lab-6/README.md](lab-6/README.md) |
-| ЛР 7–27 | not built | |
+| ЛР 7 | `/react/labs/lab-7` | custom hooks, Container/Presentational, conditional rendering and render props as five code challenges with given Vitest tests, all in class, on a new coffee-bean product page: a starter for `lab-7/` with stubs, `useLocalStorage` from ЛР-4's duplicated code, a hooks-free `TimerView` with four states under a `BrewTimer` container, `useCountdown` with a seeded effect bug, `ShowMore` with a render prop, the same logic as `useShowMore` for a grid layout, deploy to Vercel; [lab-7/README.md](lab-7/README.md) |
+| ЛР 8–27 | not built | |
 
 Лекція 0 reads its topic slides from the **Теми презентацій** table below
 when the site is built. Keep that table's rows in their current shape: the
@@ -366,6 +372,10 @@ lecture when the decks are written:
   Lecture 2 fits, next to state.
 - **React Hook Form and Zod (ЛР 6).** Lecture 2 has React 19's Actions
   (`useActionState`) but not the form libraries.
+- **Conditional rendering and Container/Presentational (ЛР 7).** Row 2.2
+  names custom hooks and render props only. Container/Presentational is in
+  Lecture 3's list; conditional rendering is in no lecture, though ЛР 2–3
+  already use `&&`. Lecture 1 or 2 fits conditional rendering.
 
 Presentation topics П4.2, П2.6 and П2.8 cover these, but a topic may go
 unpicked, so the lectures should still introduce them.
