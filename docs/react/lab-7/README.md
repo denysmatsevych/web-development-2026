@@ -3,6 +3,7 @@
 | Route | Source | What it is |
 | --- | --- | --- |
 | `/react/labs/lab-7/` | `src/content/labs/react/uk/lab-7.md` | the handout: useful links instead of theory, five code challenges on a coffee-bean product page (§4.3 `useLocalStorage`, §4.4 `TimerView` under a `BrewTimer` container, §4.5 `useCountdown`, §4.6 `ShowMore` with a render prop, §4.7 `useShowMore` for a grid layout), the AI rules, checks and Vercel, an ungraded `useSyncExternalStore` exercise; report, defence |
+| `/uk/react/labs/lab-7.pdf` | built from the handout | the downloadable handout |
 | `/uk/react/starters/lab-7.zip` | `starters/react/lab-7/` | the starter with stubs and the given tests, unpacked by students into `react-labs/lab-7/` |
 | `/uk/react/labs/lab-7/result.webp` | the reference solution | the finished page, in the handout's §1 |
 | `/uk/react/labs/lab-7/grid.webp` | the reference solution | «Схожі товари» in the new grid design, in §4.7 |
@@ -130,7 +131,11 @@ jsdom 31.0.1, `@testing-library/react` 16.3.3, `@testing-library/user-event`
   Ukrainian headings;
 - the site: `npm run check` and `npm run build` pass; the labs index lists
   ЛР-7; the handout has no horizontal scroll at 390 px, and both images
-  load.
+  load;
+- the PDF, built after the instructor's review: 15 pages with both
+  screenshots, code blocks and tables; no code line wraps (the code box
+  holds 75 characters), and the tables split across pages repeat their
+  header.
 
 Not verified:
 
@@ -141,8 +146,7 @@ Not verified:
 - a screen reader (NVDA or Narrator) announcing «Готово! Час пити каву.»;
 - Firefox and Safari;
 - the seventh Vercel project;
-- that Dan Abramov's Medium article opens without an account;
-- the PDF, which follows the instructor's review of the handout.
+- that Dan Abramov's Medium article opens without an account.
 
 ## Build
 

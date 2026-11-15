@@ -9,7 +9,7 @@ C2 (see **Decisions**). A prototype of the starter, the tests and a reference
 solution was built and checked both days; it lives in the gitignored
 `solution/` folder next to this file. The lab was built on 2026-11-15 on
 branch `feat/react-lab-7`, Ukrainian only, with decisions 7–9 and 11–15 as
-proposed. The PDF follows the instructor's review of the handout. The lasting
+proposed. The PDF was built after the instructor's review. The lasting
 facts, what was verified and where the build differs from this plan are in
 this folder's [README.md](README.md); this file stays as the plan the lab was
 built from.
