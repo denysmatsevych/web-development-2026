@@ -4,8 +4,8 @@
  * Використання, як у useState:
  *   const [value, setValue] = useLocalStorage('grind', 'beans')
  *
- * Вимоги — у тестах tests/c1-use-local-storage.test.jsx.
+ * Вимоги — у тестах tests/useLocalStorage.test.jsx.
  */
 export function useLocalStorage(/* key, initialValue */) {
-  throw new Error('Not implemented: useLocalStorage (C1)')
+  throw new Error('Not implemented: useLocalStorage')
 }

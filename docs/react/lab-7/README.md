@@ -2,15 +2,16 @@
 
 | Route | Source | What it is |
 | --- | --- | --- |
-| `/react/labs/lab-7/` | `src/content/labs/react/uk/lab-7.md` | the handout: useful links instead of theory, five code challenges on a coffee-bean product page (C1 `useLocalStorage`, C2 `TimerView` under a `BrewTimer` container, C3 `useCountdown`, C4 `ShowMore` with a render prop, C5 `useShowMore` for a grid layout), the AI rules, checks and Vercel, an ungraded `useSyncExternalStore` exercise; report, defence |
+| `/react/labs/lab-7/` | `src/content/labs/react/uk/lab-7.md` | the handout: useful links instead of theory, five code challenges on a coffee-bean product page (§4.3 `useLocalStorage`, §4.4 `TimerView` under a `BrewTimer` container, §4.5 `useCountdown`, §4.6 `ShowMore` with a render prop, §4.7 `useShowMore` for a grid layout), the AI rules, checks and Vercel, an ungraded `useSyncExternalStore` exercise; report, defence |
 | `/uk/react/starters/lab-7.zip` | `starters/react/lab-7/` | the starter with stubs and the given tests, unpacked by students into `react-labs/lab-7/` |
 | `/uk/react/labs/lab-7/result.webp` | the reference solution | the finished page, in the handout's §1 |
-| `/uk/react/labs/lab-7/grid.webp` | the reference solution | «Схожі товари» in the new grid design, in C5 |
+| `/uk/react/labs/lab-7/grid.webp` | the reference solution | «Схожі товари» in the new grid design, in §4.7 |
 
-`solution/` holds the instructor's material (gitignored): `stages/c1`–`c5`,
-each holding only the files its challenge changes, copied over the starter's
-`src/` in order (all five give the reference solution); the 2026-11-14
-`prototype/` with the wrong `TimerView` variants; `shots.mjs`, which checks
+`solution/` holds the instructor's material (gitignored): `stages/`, one
+folder per challenge in the handout's order, each holding only the files its
+challenge changes, copied over the starter's `src/` in order (all five give
+the reference solution); the 2026-11-14 `prototype/` with the wrong
+`TimerView` variants; `shots.mjs`, which checks
 the stages in headless Edge and takes both screenshots; and a `README.md`
 with the seeded defects in the starter's timer, which test catches which
 mistake, the pitfalls, the browser results and the defence answers. The
@@ -32,11 +33,13 @@ is [custom-hooks-and-render-props-plan.md](custom-hooks-and-render-props-plan.md
   the student.
 - **Every challenge starts from something wrong on the page:** two copies of
   ЛР-4's `localStorage` code, timer buttons that ignore the state, a seeded
-  timer, two copies of «Показати ще», a design change. Two C1 tests pass in
-  the starter on purpose: they guard the behaviour while C1 moves the code.
-- **C2 before C3,** so the hook visibly takes over the container's job, which
-  is how Container/Presentational changed after hooks (Dan Abramov's 2019
-  note). C2's tests don't depend on the timer working.
+  timer, two copies of «Показати ще», a design change. Two `useLocalStorage`
+  tests pass in the starter on purpose: they guard the behaviour while the
+  code moves into the hook.
+- **`TimerView` (§4.4) before `useCountdown` (§4.5),** so the hook visibly
+  takes over the container's job, which is how Container/Presentational
+  changed after hooks (Dan Abramov's 2019 note). `TimerView.test.jsx`
+  doesn't depend on the timer working.
 - **One app for ЛР-7 and ЛР-8.** ЛР-8's starter is this lab's reference
   solution, so its source must not reach GitHub before the last ЛР-7 class
   (the repository is public); see the ЛР-8 plan.
@@ -53,19 +56,27 @@ is [custom-hooks-and-render-props-plan.md](custom-hooks-and-render-props-plan.md
 - **`src/data.js` writes every review and product as a multi-line object.**
   The prototype's one-line objects were over Prettier's width, and Prettier
   alone breaks only some of them.
-- **One test gained an assertion.** C2's «після «Старт» передає статус
-  running» first checks that `TimerView` was called, so in the starter it
-  fails with the same message as its neighbour instead of a `TypeError` on
-  `mock.lastCall`. The test count and names are unchanged.
+- **No C1–C5 labels** (the instructor's decision, 2026-11-15, after the
+  review). The plan numbers the challenges C1–C5; the handout names each by
+  its section (§4.3–§4.7) and what it builds. Test files are named after the
+  hook or component they test (`tests/useLocalStorage.test.jsx`),
+  `npm test -- tests/useLocalStorage` runs one of them (`tests/ShowMore`
+  doesn't match `useShowMore`, in bash and PowerShell), and commits have no
+  scope, as in ЛР-2–6.
+- **One test gained an assertion.** «після «Старт» передає статус running»
+  in `TimerView.test.jsx` first checks that `TimerView` was called, so in the
+  starter it fails with the same message as its neighbour instead of a
+  `TypeError` on `mock.lastCall`. The test count and names are unchanged.
 - **§6 has a question about focus after «Скинути»,** added after the browser
   check; the reason is in `solution/README.md`. The status table, which the
   tests encode, is unchanged.
-- **C3's Довідка links react.dev's `#challenges`** and names «Fix an interval
+- **§4.5's Довідка links react.dev's `#challenges`** and names «Fix an interval
   that fires twice»: the challenge's own anchor exists only after its tab is
   opened.
 - **§4.9 asks for a separate hook (`useSyncedLocalStorage`) on a separate
-  branch,** so C1's tests and the graded history stay as they are.
-- **The C1 check names the hook `LocalStorage` in React DevTools:** DevTools
+  branch,** so the `useLocalStorage` tests and the graded history stay as
+  they are.
+- **§4.3's check names the hook `LocalStorage` in React DevTools:** DevTools
   shows a custom hook's name without `use`. That follows the naming rule in
   React's hook inspection and react.dev's `useDebugValue` page; the panel
   itself wasn't opened.
@@ -91,12 +102,12 @@ jsdom 31.0.1, `@testing-library/react` 16.3.3, `@testing-library/user-event`
   `npm install` in the root adds the workspace and the test tools, and the
   folder passes `format:check` and `build`, shows the one lint warning and
   fails 39 of 41 tests;
-- every stage (the starter, then C1–C5 applied in order) passes Prettier and
-  the build; ESLint shows the starter's one warning until C3 and nothing
-  after; the tests pass 2, 11, 20, 30, 35 and 41 of 41, each failure with a
-  readable message; the full run takes about 2 seconds;
+- every stage (the starter, then the five challenges applied in order)
+  passes Prettier and the build; ESLint shows the starter's one warning until
+  §4.5 and nothing after; the tests pass 2, 11, 20, 30, 35 and 41 of 41,
+  each failure with a readable message; the full run takes about 2 seconds;
 - each wrong `TimerView` in `solution/prototype/wrong-variants/`, and one
-  with a single `useId()` call, fails exactly one C2 test;
+  with a single `useId()` call, fails exactly one `TimerView.test.jsx` test;
 - in Edge headless on Vite dev servers (`solution/shots.mjs`): each stage
   behaves as its «Що має вийти» says, including keyboard focus and the
   `:focus-visible` outline, with nothing in the console; the starter's
@@ -111,8 +122,8 @@ jsdom 31.0.1, `@testing-library/react` 16.3.3, `@testing-library/user-event`
 
 Not verified:
 
-- a timed dry run (target: C1–C5 in about 55 minutes plus setup; cuts in the
-  plan's **Timing**);
+- a timed dry run (target: the five challenges in about 55 minutes plus
+  setup; cuts in the plan's **Timing**);
 - the React DevTools 8 panel itself (custom hook names, `TimerView` with no
   hooks section);
 - a screen reader (NVDA or Narrator) announcing «Готово! Час пити каву.»;
@@ -136,6 +147,6 @@ field points to it. Keep code lines within 75 characters, or they wrap in
 the PDF.
 
 To check the stages again: copy the starter into a `react-labs` workspace,
-copy `solution/stages/c1/src` … `c5/src` over its `src/` in order, and run
+copy each `solution/stages/*/src` over its `src/` in order, and run
 `npx vitest run`, `npm run lint`, `npm run format:check` and `npm run build`
 after each; `solution/shots.mjs` has the browser checks.

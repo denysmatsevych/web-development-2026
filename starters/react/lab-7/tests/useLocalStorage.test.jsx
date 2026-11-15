@@ -7,7 +7,7 @@ import GrindPicker from '../src/components/GrindPicker.jsx'
 
 vi.mock('../src/hooks/useLocalStorage.js', { spy: true })
 
-describe('C1 · useLocalStorage', () => {
+describe('useLocalStorage', () => {
   it('без збереженого значення повертає початкове', () => {
     const { result } = renderHook(() => useLocalStorage('test', 'beans'))
     expect(result.current[0]).toBe('beans')
@@ -49,7 +49,7 @@ describe('C1 · useLocalStorage', () => {
   })
 })
 
-describe('C1 · компоненти на useLocalStorage', () => {
+describe('компоненти на useLocalStorage', () => {
   it('FavoriteButton бере стан з useLocalStorage', () => {
     render(<FavoriteButton productId="kenya" name="Кенія" />)
     expect(useLocalStorage).toHaveBeenCalled()

@@ -3,8 +3,8 @@
    .brew-timer, .time, .timer-controls, .reviews, .review-list,
    .review-author, .show-more, .related, .related-list, .related-card) уже
    стоять у розмітці компонентів. Ще два — для розмітки, яку ви напишете:
-   .timer-done — абзац для повідомлення «Готово!» (C2), .related-more —
-   остання клітинка сітки «Схожі товари» з кнопкою (C5). */
+   .timer-done — абзац для повідомлення «Готово!», .related-more —
+   остання клітинка сітки «Схожі товари» з кнопкою. */
 
 :root {
   font-family: Inter, system-ui, 'Segoe UI', Roboto, sans-serif;
@@ -309,7 +309,7 @@ input:focus-visible {
   font-size: 1.125rem;
 }
 
-/* Остання клітинка сітки (C5): кнопка займає всю клітинку */
+/* Остання клітинка сітки «Схожі товари»: кнопка займає всю клітинку */
 
 .related-more {
   display: grid;

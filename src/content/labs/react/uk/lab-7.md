@@ -40,28 +40,31 @@ prop, обираючи спосіб під задачу; навчитися пр
 сторінки англійською: адреси `uk.react.dev` теж відкривають англійський текст.
 
 1. patterns.dev: [Hooks Pattern](https://www.patterns.dev/react/hooks-pattern) —
-   власні хуки, правила хуків і як хуки замінили класові компоненти (C1, C3).
+   власні хуки, правила хуків і як хуки замінили класові компоненти
+   (§4.3, §4.5).
 2. patterns.dev: [Container/Presentational Pattern](https://www.patterns.dev/react/presentational-container-pattern) —
-   розумний і простий компоненти, а потім той самий поділ із хуком (C2, C3).
+   розумний і простий компоненти, а потім той самий поділ із хуком
+   (§4.4, §4.5).
 3. patterns.dev: [Render Props Pattern](https://www.patterns.dev/react/render-props-pattern) —
-   функція як `children`, і де хуки замінюють render props (C4, C5).
+   функція як `children`, і де хуки замінюють render props (§4.6, §4.7).
 4. Dan Abramov: [Presentational and Container Components](https://medium.com/@dan_abramov/7ca2f9a7c7d0) (2015) —
    стаття, що дала патерну назву. Прочитайте примітку 2019 року на її початку
-   (C2).
+   (§4.4).
 5. [Reusing Logic with Custom Hooks](https://uk.react.dev/learn/reusing-logic-with-custom-hooks) —
-   як виносити логіку у власний хук і чому хуки ділять логіку, а не стан (C1,
-   C3).
+   як виносити логіку у власний хук і чому хуки ділять логіку, а не стан
+   (§4.3, §4.5).
 6. [Conditional Rendering](https://uk.react.dev/learn/conditional-rendering) —
-   `if`, `? :`, `&&` і `null` у JSX (C2).
+   `if`, `? :`, `&&` і `null` у JSX (§4.4).
 7. [Preserving and Resetting State](https://uk.react.dev/learn/preserving-and-resetting-state) —
-   коли React зберігає елемент і його стан, а коли створює новий (C2, C4).
+   коли React зберігає елемент і його стан, а коли створює новий
+   (§4.4, §4.6).
 8. [Synchronizing with Effects](https://uk.react.dev/learn/synchronizing-with-effects) —
-   ефект, очищення і чому в режимі розробки ефект запускається двічі (C3).
+   ефект, очищення і чому в режимі розробки ефект запускається двічі (§4.5).
 9. [`useState`](https://uk.react.dev/reference/react/useState) — функція-оновлювач
-   (C3).
-10. [Rules of Hooks](https://uk.react.dev/reference/rules/rules-of-hooks) (C1).
+   (§4.5).
+10. [Rules of Hooks](https://uk.react.dev/reference/rules/rules-of-hooks) (§4.3).
 11. [`cloneElement`: Alternatives](https://uk.react.dev/reference/react/cloneElement#alternatives) —
-    ті самі дані через render prop і через власний хук (C4, C5).
+    ті самі дані через render prop і через власний хук (§4.6, §4.7).
 12. Developer Way: [React component as prop: the right way™](https://www.developerway.com/posts/react-component-as-prop-the-right-way) —
     за бажанням: функція в пропсі, яка отримує стан компонента.
 13. Testing Library: [About Queries](https://testing-library.com/docs/queries/about) —
@@ -75,11 +78,11 @@ prop, обираючи спосіб під задачу; навчитися пр
 
 1. Додати в репозиторій `react-labs` теку `lab-7/` зі стартового проєкту й
    запустити тести (§4.1).
-2. C1: власний хук `useLocalStorage` замість двох копій коду (§4.3).
-3. C2: розумний і простий компоненти таймера, умовний рендеринг (§4.4).
-4. C3: хук `useCountdown` з ефектом і очищенням (§4.5).
-5. C4: компонент `ShowMore` з render prop (§4.6).
-6. C5: та сама логіка як хук `useShowMore` (§4.7).
+2. Власний хук `useLocalStorage` замість двох копій коду (§4.3).
+3. Розумний і простий компоненти таймера, умовний рендеринг (§4.4).
+4. Хук `useCountdown` з ефектом і очищенням (§4.5).
+5. Компонент `ShowMore` з render prop (§4.6).
+6. Та сама логіка як хук `useShowMore` (§4.7).
 7. Перевірки, GitHub і Vercel (§4.8), звіт (§5).
 
 **Усі завдання виконуються на занятті (орієнтовно 65 хвилин) і разом
@@ -140,20 +143,23 @@ prop, обираючи спосіб під задачу; навчитися пр
    файлу він запускає тести знову. Зараз 39 з 41 тесту падають, більшість — з
    повідомленням `Not implemented`: заготовки ще порожні. Два тести проходять:
    вони перевіряють те, що вже працює (♡ і помел зберігаються після
-   перезавантаження), і стежать, щоб під час C1 це не зламалося.
+   перезавантаження), і стежать, щоб це не зламалося, коли код переїде в
+   хук (§4.3).
 
-   Як читати результат: файл тестів — це challenge
-   (`c1-use-local-storage.test.jsx` — C1), назва тесту — правило, яке він
-   перевіряє («FavoriteButton бере стан з useLocalStorage»), а під назвою —
-   що тест очікував і що отримав. Повідомлення
+   Як читати результат: файл тестів названо за хуком чи компонентом, який
+   ви напишете (`useLocalStorage.test.jsx` — §4.3), назва тесту — правило,
+   яке він перевіряє («FavoriteButton бере стан з useLocalStorage»), а під
+   назвою — що тест очікував і що отримав. Повідомлення
    `expected "vi.fn()" to be called at least once` означає, що тест стежить
    за хуком чи компонентом, а його ніхто не викликав. Стежить
    `vi.mock(…, { spy: true })` на початку файлу тестів: модуль працює як
    завжди, а тест бачить, хто й з якими аргументами його викликав.
 
    Щоб бачити лише тести одного challenge, зупиніть Vitest клавішею `q` і
-   запустіть `npm test -- c1` (або `c2`…`c5`). Команди git виконуйте в
-   третьому терміналі, у корені репозиторію.
+   запустіть його з початком шляху до файлу тестів:
+   `npm test -- tests/useLocalStorage`. Команда для кожного challenge — у
+   його «Перевірці». Команди git виконуйте в третьому терміналі, у корені
+   репозиторію.
 
 6. Що вже є в проєкті:
 
@@ -164,15 +170,15 @@ prop, обираючи спосіб під задачу; навчитися пр
    | `src/components/BrewGuide.jsx`, `BrewTimer.jsx`                     | розділ «Як заварити» і таймер: стан, ефект і розмітка разом                                                     |
    | `src/components/ReviewList.jsx`, `RelatedProducts.jsx`              | відгуки й схожі товари, кожен зі своєю кнопкою «Показати ще»                                                    |
    | `src/components/ProductCard.jsx`                                    | картка товару                                                                                                   |
-   | `src/components/TimerView.jsx`, `ShowMore.jsx`                      | заготовки компонентів для C2 і C4                                                                               |
-   | `src/hooks/useLocalStorage.js`, `useCountdown.js`, `useShowMore.js` | заготовки хуків для C1, C3 і C5                                                                                 |
+   | `src/components/TimerView.jsx`, `ShowMore.jsx`                      | заготовки компонентів (§4.4, §4.6)                                                                              |
+   | `src/hooks/useLocalStorage.js`, `useCountdown.js`, `useShowMore.js` | заготовки хуків (§4.3, §4.5, §4.7)                                                                              |
    | `src/data.js`, `src/formatTime.js`                                  | товар, помели, способи заварювання, 10 відгуків, 7 схожих товарів; `formatTime(180)` повертає `'3:00'`          |
    | `src/index.css`                                                     | усі стилі сторінки, зокрема для повідомлення «Готово!» (`.timer-done`) і кнопки в сітці (`.related-more`)       |
    | `tests/`                                                            | тести Vitest, по файлу на challenge, і `setup.js`, який очищає сторінку й `localStorage` після кожного тесту    |
    | `package.json`, `vite.config.js`                                    | скрипт `test` і блок `test` у налаштуваннях Vite: тести виконуються в jsdom, браузерному середовищі для Node.js |
 
 7. `npm run lint` у теці `lab-7/` показує одне попередження, у
-   `BrewTimer.jsx`. Не виправляйте його зараз: це частина C3.
+   `BrewTimer.jsx`. Не виправляйте його зараз: це частина §4.5.
 8. Зробіть коміт у корені репозиторію: так до нього потрапить і
    `package-lock.json`.
 
@@ -204,7 +210,7 @@ prop, обираючи спосіб під задачу; навчитися пр
 На захисті ви зміните свій код наживо, без AI (§6). У звіті вкажіть, чи
 використовували AI, а якщо так — інструмент, модель і дату.
 
-### 4.3. C1. Власний хук `useLocalStorage`
+### 4.3. Власний хук `useLocalStorage`
 
 `FavoriteButton` і `GrindPicker` зберігають своє значення в `localStorage`
 тим самим кодом, що й фільтри в ЛР-4 (§4.4): `useState` з функцією-
@@ -236,10 +242,10 @@ prop, обираючи спосіб під задачу; навчитися пр
 
 **Перевірка.**
 
-- `npm test -- c1`: 11 тестів з 11.
+- `npm test -- tests/useLocalStorage`: 11 тестів з 11.
 - DevTools → **Application** → **Local Storage** → `http://localhost:5173`:
   виберіть «Для фільтра», і значення `grind` стане `"filter"` — з лапками,
-  бо це JSON. Якщо до C1 ви вже вибирали помел, після C1 сторінка покаже
+  бо це JSON. Якщо до цього ви вже вибирали помел, тепер сторінка покаже
   «Зерно»: старе значення `filter` — не JSON.
 - **Components ⚛** → `FavoriteButton`: серед хуків — `LocalStorage`, а в
   ньому `State` і `Effect`. React DevTools показує власні хуки без префікса
@@ -248,7 +254,7 @@ prop, обираючи спосіб під задачу; навчитися пр
   `localStorageState` і подивіться на помилку ESLint у редакторі (або
   `npm run lint`). Прочитайте її й поверніть назву.
 
-**Коміт:** `refactor(C1): extract the useLocalStorage hook` (`refactor`, бо
+**Коміт:** `refactor: extract the useLocalStorage hook` (`refactor`, бо
 сторінка не змінилася).
 **Довідка:** [Extracting your own custom Hook](https://uk.react.dev/learn/reusing-logic-with-custom-hooks#extracting-your-own-custom-hook-from-a-component),
 [Hook names always start with use](https://uk.react.dev/learn/reusing-logic-with-custom-hooks#hook-names-always-start-with-use),
@@ -256,12 +262,12 @@ prop, обираючи спосіб під задачу; навчитися пр
 [Rules of Hooks](https://uk.react.dev/reference/rules/rules-of-hooks),
 [`JSON.parse`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse).
 
-### 4.4. C2. Розумний і простий компоненти таймера
+### 4.4. Розумний і простий компоненти таймера
 
 `BrewTimer` показує «Старт», «Пауза» і «Скинути» завжди, хоч би що робив
 таймер. До того ж логіку таймера (стан, ефект) і розмітку змішано в одному
-компоненті. Таймер ще й рахує неправильно, але це C3: тести C2 від цього не
-залежать.
+компоненті. Таймер ще й рахує неправильно, але це ви виправите в §4.5:
+тести цього завдання від того не залежать.
 
 Класичний спосіб розділити логіку й відображення — **розумний і простий
 компоненти** (Container/Presentational, «smart and dumb components»).
@@ -305,19 +311,19 @@ prop, обираючи спосіб під задачу; навчитися пр
 
 **Перевірка.**
 
-- `npm test -- c2`: 9 тестів з 9. Перший тест викликає `TimerView` як
-  звичайну функцію, поза рендерингом React. Це вдається лише компонентові без
-  хуків.
+- `npm test -- tests/TimerView`: 9 тестів з 9. Перший тест викликає
+  `TimerView` як звичайну функцію, поза рендерингом React. Це вдається лише
+  компонентові без хуків.
 - У браузері кожен таймер спершу показує лише «Старт»; після «Старт» —
   «Пауза» і «Скинути», після «Пауза» — «Продовжити» і «Скинути». Час поки
-  рахується неправильно: це C3.
+  рахується неправильно: це §4.5.
 - Клавіатурою: клавішею Tab дійдіть до «Старт» таймера «Пуровер V60» і
   натисніть Enter, потім ще раз Enter. Таймер на паузі, а рамка фокусу весь
   час на першій кнопці.
 - **Components ⚛** → `TimerView`: пропси є, а розділу хуків немає.
-- Попередження ESLint у `BrewTimer.jsx` лишається до C3.
+- Попередження ESLint у `BrewTimer.jsx` лишається до §4.5.
 
-**Коміт:** `feat(C2): split the timer into a container and TimerView`.
+**Коміт:** `feat: split the timer into a container and TimerView`.
 **Довідка:** [Container/Presentational Pattern](https://www.patterns.dev/react/presentational-container-pattern),
 [Presentational and Container Components](https://medium.com/@dan_abramov/7ca2f9a7c7d0),
 [Conditionally returning nothing with null](https://uk.react.dev/learn/conditional-rendering#conditionally-returning-nothing-with-null),
@@ -328,9 +334,9 @@ prop, обираючи спосіб під задачу; навчитися пр
 [`role="status"`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/status_role),
 [`role="timer"`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/timer_role).
 
-### 4.5. C3. Хук `useCountdown`: ефект, очищення і пошук помилок
+### 4.5. Хук `useCountdown`: ефект, очищення і пошук помилок
 
-Запустіть таймер і подивіться, що відбувається. Логіка відліку, яка після C2
+Запустіть таймер і подивіться, що відбувається. Логіка відліку, яка після §4.4
 живе в `BrewTimer`, має кілька помилок. Знайти їх допоможуть браузер, тести й
 попередження ESLint. Виправлена логіка переїде у власний хук: так хук бере на
 себе роботу розумного компонента.
@@ -352,14 +358,14 @@ prop, обираючи спосіб під задачу; навчитися пр
   попереджень.
 
 **Що вже є.** Заготовка `src/hooks/useCountdown.js` з описом API в
-коментарі; `BrewTimer` після C2 з відліком усередині; `formatTime`.
+коментарі; `BrewTimer` з §4.4 з відліком усередині; `formatTime`.
 
 **Код:** `src/hooks/useCountdown.js`, `src/components/BrewTimer.jsx`.
 
 **Перевірка.**
 
-- `npm test -- c3`: 10 тестів з 10. Тести C3 використовують фальшиві
-  таймери Vitest: `vi.useFakeTimers()` підміняє `setInterval`, а
+- `npm test -- tests/useCountdown`: 10 тестів з 10. Ці тести використовують
+  фальшиві таймери Vitest: `vi.useFakeTimers()` підміняє `setInterval`, а
   `vi.advanceTimersByTime(3000)` «перемотує» час на три секунди одразу, тож
   тест трихвилинного таймера триває мілісекунди. Тест «після демонтажу
   компонента не лишає таймерів» рахує незавершені таймери через
@@ -370,7 +376,7 @@ prop, обираючи спосіб під задачу; навчитися пр
   поверніть.
 - **Components ⚛** → `BrewTimer`: серед хуків — `Countdown`.
 
-**Коміт:** `fix(C3): move the countdown into useCountdown`.
+**Коміт:** `fix: move the countdown into useCountdown`.
 **Довідка:** [Step 3: Add cleanup if needed](https://uk.react.dev/learn/synchronizing-with-effects#step-3-add-cleanup-if-needed),
 [How to handle the Effect firing twice in development](https://uk.react.dev/learn/synchronizing-with-effects#how-to-handle-the-effect-firing-twice-in-development),
 завдання «Fix an interval that fires twice» у розділі [Challenges](https://uk.react.dev/learn/synchronizing-with-effects#challenges),
@@ -378,7 +384,7 @@ prop, обираючи спосіб під задачу; навчитися пр
 [When to use custom Hooks](https://uk.react.dev/learn/reusing-logic-with-custom-hooks#when-to-use-custom-hooks),
 [Vitest: Timers](https://vitest.dev/guide/mocking/timers).
 
-### 4.6. C4. Компонент `ShowMore` з render prop
+### 4.6. Компонент `ShowMore` з render prop
 
 `ReviewList` і `RelatedProducts` однаково рахують, скільки елементів
 показати, і рендерять однакову кнопку «Показати ще». Розкрийте всі відгуки:
@@ -416,19 +422,19 @@ prop, обираючи спосіб під задачу; навчитися пр
 
 **Перевірка.**
 
-- `npm test -- c4`: 5 тестів з 5. «Схожі товари» в C4 тести не перевіряють:
-  C5 змінить їх ще раз.
+- `npm test -- tests/ShowMore`: 5 тестів з 5. «Схожі товари» тут тести не
+  перевіряють: §4.7 змінить їх ще раз.
 - У браузері розкрийте відгуки клавішею Enter до кінця й згорніть: фокус
   увесь час на кнопці. «Схожі товари» поводяться так само, по 4.
 - **Components ⚛** → `ReviewList` → `ShowMore`: пропси `items`, `step` і
   `children`, який є функцією.
 
-**Коміт:** `refactor(C4): share the show-more logic through a render prop`.
+**Коміт:** `refactor: share the show-more logic through a render prop`.
 **Довідка:** [Render Props Pattern](https://www.patterns.dev/react/render-props-pattern),
 [Passing data with a render prop](https://uk.react.dev/reference/react/cloneElement#passing-data-with-a-render-prop),
 [Same component at the same position preserves state](https://uk.react.dev/learn/preserving-and-resetting-state#same-component-at-the-same-position-preserves-state).
 
-### 4.7. C5. Та сама логіка як хук `useShowMore`
+### 4.7. Та сама логіка як хук `useShowMore`
 
 Новий дизайн «Схожих товарів»: кнопка має стати останньою клітинкою сітки
 товарів, а не рядком під нею. «Відгуки» не змінюються.
@@ -447,7 +453,7 @@ prop, обираючи спосіб під задачу; навчитися пр
 - `ShowMore` тепер побудований на `useShowMore`, а `RelatedProducts`
   використовує хук напряму.
 
-**Що вже є.** Заготовка `src/hooks/useShowMore.js`; `ShowMore` з C4; стилі
+**Що вже є.** Заготовка `src/hooks/useShowMore.js`; `ShowMore` з §4.6; стилі
 `.related-more`.
 
 **Код:** `src/hooks/useShowMore.js`, `src/components/ShowMore.jsx`,
@@ -455,12 +461,13 @@ prop, обираючи спосіб під задачу; навчитися пр
 
 **Перевірка.**
 
-- `npm test -- c5`: 6 тестів з 6; `npx vitest run`: 41 тест з 41.
+- `npm test -- tests/useShowMore`: 6 тестів з 6; `npx vitest run`: 41 тест
+  з 41.
 - У браузері кнопка — остання клітинка сітки і на всю ширину вікна, і на
   вузькому екрані (DevTools → **Toggle device toolbar**, ширина 390 px).
-  «Відгуки» працюють як після C4.
+  «Відгуки» працюють як після §4.6.
 
-**Коміт:** `feat(C5): put the related products button into the grid`.
+**Коміт:** `feat: put the related products button into the grid`.
 **Довідка:** [Render Props Pattern](https://www.patterns.dev/react/render-props-pattern),
 [Extracting logic into a custom Hook](https://uk.react.dev/reference/react/cloneElement#extracting-logic-into-a-custom-hook),
 [Reusing Logic with Custom Hooks](https://uk.react.dev/learn/reusing-logic-with-custom-hooks).
@@ -486,11 +493,11 @@ prop, обираючи спосіб під задачу; навчитися пр
    `git push`. Історія комітів роботи:
 
    1. `chore: add lab 7 starter`;
-   2. `refactor(C1): extract the useLocalStorage hook`;
-   3. `feat(C2): split the timer into a container and TimerView`;
-   4. `fix(C3): move the countdown into useCountdown`;
-   5. `refactor(C4): share the show-more logic through a render prop`;
-   6. `feat(C5): put the related products button into the grid`.
+   2. `refactor: extract the useLocalStorage hook`;
+   3. `feat: split the timer into a container and TimerView`;
+   4. `fix: move the countdown into useCountdown`;
+   5. `refactor: share the show-more logic through a render prop`;
+   6. `feat: put the related products button into the grid`.
 
 3. На [vercel.com](https://vercel.com) → **Add New → Project** ще раз
    імпортуйте `react-labs`: це буде ще один проєкт з того самого репозиторію.
@@ -513,8 +520,8 @@ prop, обираючи спосіб під задачу; навчитися пр
 Тема самостійної роботи за програмою — «Створення власних хуків». Додайте на
 сторінку другу ♡ того самого товару, наприклад біля ціни: другий
 `FavoriteButton` з тим самим `productId`. Натисніть одну: друга не
-зміниться до перезавантаження. Чому — пояснює тест C1 «два компоненти з одним
-хуком мають кожен свій стан».
+зміниться до перезавантаження. Чому — пояснює тест «два компоненти з одним
+хуком мають кожен свій стан» у `useLocalStorage.test.jsx`.
 
 Напишіть хук `useSyncedLocalStorage` з тим самим API, щоб усі ♡ одного товару
 змінювалися разом — на сторінці й в інших вкладках браузера. Знадобиться
@@ -593,7 +600,8 @@ _Розумні й прості компоненти_
   `TimerView`?
 - Як тест перевіряє, що в `TimerView` немає хуків? Чому виклик компонента як
   звичайної функції падає, якщо в ньому є хук?
-- Що лишилося в `BrewTimer` після C3? Чи потрібен він ще?
+- Що лишилося в `BrewTimer`, коли відлік переїхав у `useCountdown`? Чи
+  потрібен він ще?
 - Чому Ден Абрамов 2019 року перестав радити ділити компоненти так? Де цей
   поділ і далі корисний?
 
@@ -656,7 +664,8 @@ _Доступність_
 _Тести_
 
 - Що доводить тест «два компоненти з одним хуком мають кожен свій стан»?
-- Чому тести на збереження ♡ і помелу проходили ще до C1? Навіщо вони тоді?
+- Чому тести на збереження ♡ і помелу проходили ще до `useLocalStorage`?
+  Навіщо вони тоді?
 - Що роблять `renderHook`, `vi.useFakeTimers()` і `vi.advanceTimersByTime()`?
 - Як тест бачить, що `FavoriteButton` використовує `useLocalStorage`?
 - Чому тести шукають кнопки за роллю й назвою

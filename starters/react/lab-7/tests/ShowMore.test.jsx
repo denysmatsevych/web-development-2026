@@ -25,7 +25,7 @@ function renderNumbers(items = numbers, step = 3) {
   return renderList
 }
 
-describe('C4 · ShowMore з render prop', () => {
+describe('ShowMore з render prop', () => {
   it('викликає children як функцію з першими step елементами', () => {
     const renderList = renderNumbers()
     expect(renderList).toHaveBeenLastCalledWith([1, 2, 3])

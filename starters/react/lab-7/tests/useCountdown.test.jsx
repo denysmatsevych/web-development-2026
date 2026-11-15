@@ -18,7 +18,7 @@ function tick(seconds) {
   act(() => vi.advanceTimersByTime(seconds * 1000))
 }
 
-describe('C3 · useCountdown', () => {
+describe('useCountdown', () => {
   beforeEach(() => {
     vi.useFakeTimers()
   })
@@ -83,7 +83,7 @@ describe('C3 · useCountdown', () => {
   })
 })
 
-describe('C3 · BrewTimer на useCountdown', () => {
+describe('BrewTimer на useCountdown', () => {
   beforeEach(() => {
     vi.useFakeTimers()
   })

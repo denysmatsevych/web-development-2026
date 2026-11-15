@@ -19,7 +19,7 @@ function buttonNames() {
   return screen.getAllByRole('button').map((button) => button.textContent)
 }
 
-describe('C2 · TimerView: простий компонент', () => {
+describe('TimerView: простий компонент', () => {
   it('не має власного стану й ефектів: це функція від props', () => {
     expect(() => TimerView(view('idle', 180).props)).not.toThrow()
   })
@@ -80,7 +80,7 @@ describe('C2 · TimerView: простий компонент', () => {
   })
 })
 
-describe('C2 · BrewTimer: розумний компонент', () => {
+describe('BrewTimer: розумний компонент', () => {
   beforeEach(() => {
     vi.useFakeTimers()
   })

@@ -12,8 +12,8 @@
  *     onReset={…}
  *   />
  *
- * Вимоги — у тестах tests/c2-timer-view.test.jsx.
+ * Вимоги — у тестах tests/TimerView.test.jsx.
  */
 export default function TimerView() {
-  throw new Error('Not implemented: TimerView (C2)')
+  throw new Error('Not implemented: TimerView')
 }

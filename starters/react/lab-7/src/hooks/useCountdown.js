@@ -4,8 +4,8 @@
  * Використання:
  *   const { secondsLeft, isRunning, start, pause, reset } = useCountdown(180)
  *
- * Вимоги — у тестах tests/c3-use-countdown.test.jsx.
+ * Вимоги — у тестах tests/useCountdown.test.jsx.
  */
 export function useCountdown(/* totalSeconds */) {
-  throw new Error('Not implemented: useCountdown (C3)')
+  throw new Error('Not implemented: useCountdown')
 }

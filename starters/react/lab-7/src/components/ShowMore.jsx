@@ -6,8 +6,8 @@
  *     {(visibleItems) => <ul>…</ul>}
  *   </ShowMore>
  *
- * Вимоги — у тестах tests/c4-show-more.test.jsx.
+ * Вимоги — у тестах tests/ShowMore.test.jsx.
  */
 export default function ShowMore() {
-  throw new Error('Not implemented: ShowMore (C4)')
+  throw new Error('Not implemented: ShowMore')
 }

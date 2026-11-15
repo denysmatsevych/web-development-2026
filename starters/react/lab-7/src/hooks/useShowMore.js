@@ -4,8 +4,8 @@
  * Використання:
  *   const { visibleItems, hiddenCount, showMore, collapse } = useShowMore(items, 4)
  *
- * Вимоги — у тестах tests/c5-use-show-more.test.jsx.
+ * Вимоги — у тестах tests/useShowMore.test.jsx.
  */
 export function useShowMore(/* items, step */) {
-  throw new Error('Not implemented: useShowMore (C5)')
+  throw new Error('Not implemented: useShowMore')
 }

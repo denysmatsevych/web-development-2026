@@ -10,7 +10,7 @@ vi.mock('../src/hooks/useShowMore.js', { spy: true })
 
 const numbers = Array.from({ length: 10 }, (_, i) => i + 1)
 
-describe('C5 · useShowMore', () => {
+describe('useShowMore', () => {
   it('спочатку видно step елементів', () => {
     const { result } = renderHook(() => useShowMore(numbers, 4))
     expect(result.current.visibleItems).toEqual([1, 2, 3, 4])
@@ -39,7 +39,7 @@ describe('C5 · useShowMore', () => {
   })
 })
 
-describe('C5 · «Схожі товари» на useShowMore', () => {
+describe('«Схожі товари» на useShowMore', () => {
   it('RelatedProducts бере логіку з useShowMore', () => {
     render(<RelatedProducts products={related} />)
     expect(useShowMore).toHaveBeenCalledWith(related, 4)
