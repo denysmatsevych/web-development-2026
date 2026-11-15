@@ -63,10 +63,18 @@ is [custom-hooks-and-render-props-plan.md](custom-hooks-and-render-props-plan.md
   `npm test -- tests/useLocalStorage` runs one of them (`tests/ShowMore`
   doesn't match `useShowMore`, in bash and PowerShell), and commits have no
   scope, as in ЛР-2–6.
-- **One test gained an assertion.** «після «Старт» передає статус running»
-  in `TimerView.test.jsx` first checks that `TimerView` was called, so in the
-  starter it fails with the same message as its neighbour instead of a
-  `TypeError` on `mock.lastCall`. The test count and names are unchanged.
+- **Three tests are stricter than the prototype's;** names and the count are
+  unchanged:
+  - «після «Старт» передає статус running» first checks that `TimerView`
+    was called, so in the starter it fails with the same message as its
+    neighbour instead of a `TypeError` on `mock.lastCall`;
+  - «два компоненти з одним хуком мають кожен свій стан» gives both hooks
+    the same key and checks that the first one changed. With two keys, a hook
+    whose state is shared between callers passed it, and §4.9 and §6 lean on
+    this test;
+  - «область role="status" є від початку…» also rerenders `running` and
+    `paused` and checks that the same region stays empty. Before, a
+    `TimerView` that showed «Готово!» in those statuses passed every test.
 - **§6 has a question about focus after «Скинути»,** added after the browser
   check; the reason is in `solution/README.md`. The status table, which the
   tests encode, is unchanged.
@@ -107,7 +115,8 @@ jsdom 31.0.1, `@testing-library/react` 16.3.3, `@testing-library/user-event`
   §4.5 and nothing after; the tests pass 2, 11, 20, 30, 35 and 41 of 41,
   each failure with a readable message; the full run takes about 2 seconds;
 - each wrong `TimerView` in `solution/prototype/wrong-variants/`, and one
-  with a single `useId()` call, fails exactly one `TimerView.test.jsx` test;
+  with a single `useId()` call, fails exactly one `TimerView.test.jsx` test
+  (rechecked after the stricter tests above);
 - in Edge headless on Vite dev servers (`solution/shots.mjs`): each stage
   behaves as its «Що має вийти» says, including keyboard focus and the
   `:focus-visible` outline, with nothing in the console; the starter's

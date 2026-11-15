@@ -65,8 +65,14 @@ describe('TimerView: простий компонент', () => {
   })
 
   it('область role="status" є від початку, а повідомлення — лише в done', () => {
-    render(<TimerView {...view('idle', 180).props} />)
-    expect(screen.getByRole('status')).toHaveTextContent('')
+    const { rerender } = render(<TimerView {...view('idle', 180).props} />)
+    const region = screen.getByRole('status')
+    expect(region).toHaveTextContent('')
+    for (const status of ['running', 'paused']) {
+      rerender(<TimerView {...view(status).props} />)
+      expect(screen.getByRole('status')).toBe(region)
+      expect(region).toHaveTextContent('')
+    }
   })
 
   it('перша кнопка не втрачає фокус, коли змінюється статус', () => {

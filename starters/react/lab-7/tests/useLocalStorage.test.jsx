@@ -42,9 +42,10 @@ describe('useLocalStorage', () => {
   })
 
   it('два компоненти з одним хуком мають кожен свій стан', () => {
-    const first = renderHook(() => useLocalStorage('a', 0))
-    const second = renderHook(() => useLocalStorage('b', 0))
+    const first = renderHook(() => useLocalStorage('test', 0))
+    const second = renderHook(() => useLocalStorage('test', 0))
     act(() => first.result.current[1](7))
+    expect(first.result.current[0]).toBe(7)
     expect(second.result.current[0]).toBe(0)
   })
 })
