@@ -58,7 +58,7 @@ rules are in [lab-7/custom-hooks-and-render-props-plan.md](lab-7/custom-hooks-an
 | ЛР 7 | `/react/labs/lab-7` | custom hooks, Container/Presentational, conditional rendering and render props as five code challenges with given Vitest tests, all in class, on a new coffee-bean product page: a starter for `lab-7/` with stubs, `useLocalStorage` from ЛР-4's duplicated code, a hooks-free `TimerView` with four states under a `BrewTimer` container, `useCountdown` with a seeded effect bug, `ShowMore` with a render prop, the same logic as `useShowMore` for a grid layout, deploy to Vercel; [lab-7/README.md](lab-7/README.md) |
 | ЛР 8 | `/react/labs/lab-8` | children as a prop, compound components and HOCs as four code challenges with given Vitest tests, all in class, on ЛР-7's coffee-bean page: a starter for `lab-8/` built on ЛР-7's reference solution, a compound `Tabs` that takes its content as `children` and shares its state through context, the same tabs made accessible by the ARIA APG Tabs pattern (roles, `useId`, arrow keys), a `withAnalytics` HOC, a seeded timer button that the HOC breaks, deploy to Vercel; [lab-8/README.md](lab-8/README.md) |
 | ЛР 9 | not built | |
-| ЛР 10 | `/react/labs/lab-10` | folder structures and Feature-Sliced Design, all in class, on ЛР-8's page grown into a three-page coffee shop with a hash router: a starter for `lab-10/` organised by file type, the same app moved by route, by feature (bulletproof-react), to FSD and with the cart as a local package (`@coffee/cart`, after Nadia Makarevich), 12 given app-level Vitest tests through `#app`, dependency-cruiser and Steiger checking each structure's rules, the same change measured in every structure, a structure chosen for seven projects, deploy to Vercel; [lab-10/README.md](lab-10/README.md) |
+| ЛР 10 | `/react/labs/lab-10` | folder structures and Feature-Sliced Design, all in class, on ЛР-8's page grown into a three-page coffee shop with a hash router: a starter for `lab-10/` organised by file type, the same app moved by route, by feature (bulletproof-react) and to FSD, 12 given app-level Vitest tests through `#app`, dependency-cruiser and Steiger checking each structure's rules, the same change measured in every structure, a structure chosen for seven projects, deploy to Vercel; +1 point in class for moving the cart into a local package (`@coffee/cart`, after Nadia Makarevich); [lab-10/README.md](lab-10/README.md) |
 | ЛР 11–27 | not built | |
 
 Лекція 0 reads its topic slides from the **Теми презентацій** table below
@@ -336,13 +336,15 @@ Rules stated under the table:
 - Every student defends at least 2 presentations; at most 4 count towards the
   total (20 points). Topics and order are agreed with the teacher.
 
-**Extra points in ЛР 4 and ЛР 6** (the teacher's decisions, not in the
-programme): in each, the main part gives the usual 1 point and the extra
+**Extra points in ЛР 4, ЛР 6 and ЛР 10** (the teacher's decisions, not in
+the programme): in each, the main part gives the usual 1 point and the extra
 tasks more. ЛР 4's §4.7 gives 1 (2026-11-08); ЛР 6's §4.7, done in class, and
-§4.8, homework due by the defence, give 1 each (2026-11-12). The programme
-counts 1 point per lab, so with them Part 1 can give 9 points rather than 6.
+§4.8, homework due by the defence, give 1 each (2026-11-12); ЛР 10's §4.9,
+the cart as a local package, done in class once the main part is pushed,
+gives 1 (2026-11-18). The programme counts 1 point per lab, so with them
+Part 1 can give 9 points rather than 6, and Part 2 one more than its labs.
 Extra points are a bonus above the 65 points for current work (settled
-2026-11-08), so current work can reach 68; no other task gives way.
+2026-11-08), so current work can reach 69; no other task gives way.
 
 **Students on an individual plan** take another route, agreed with the
 teacher and not in the programme's table: instead of the labs and module

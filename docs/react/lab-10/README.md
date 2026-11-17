@@ -1,21 +1,21 @@
 # Lab 10 — Folder structure and Feature-Sliced Design
 
-| Route                               | Source                                | What it is                                                                                                                                                                                                                                                                                                                                                                                      |
-| ----------------------------------- | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `/react/labs/lab-10/`               | `src/content/labs/react/uk/lab-10.md` | the handout: useful links instead of theory, one app moved through five folder structures (§4.3 by file type, §4.4 by route, §4.5 feature folders after bulletproof-react, §4.6 Feature-Sliced Design, §4.7 the cart as a local package after Nadia Makarevich), the same two measurements in each, §4.8 a structure chosen for seven projects, the AI rule, checks and Vercel; report, defence |
-| `/uk/react/starters/lab-10.zip`     | `starters/react/lab-10/`              | the starter, unpacked by students into `react-labs/lab-10/`                                                                                                                                                                                                                                                                                                                                     |
-| `/uk/react/labs/lab-10/result.webp` | the reference solution                | the catalogue with «Кошик (3)» in the header, in the handout's §1; it shows no folder tree, since the tree is the answer                                                                                                                                                                                                                                                                        |
+| Route                               | Source                                | What it is                                                                                                                                                                                                                                                                                                                                                                                                      |
+| ----------------------------------- | ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/react/labs/lab-10/`               | `src/content/labs/react/uk/lab-10.md` | the handout: useful links instead of theory, one app moved through four folder structures (§4.3 by file type, §4.4 by route, §4.5 feature folders after bulletproof-react, §4.6 Feature-Sliced Design), the same two measurements in each, §4.7 a structure chosen for seven projects, the AI rule, §4.8 checks and Vercel; §4.9, +1 point: the cart as a local package after Nadia Makarevich; report, defence |
+| `/uk/react/starters/lab-10.zip`     | `starters/react/lab-10/`              | the starter, unpacked by students into `react-labs/lab-10/`                                                                                                                                                                                                                                                                                                                                                     |
+| `/uk/react/labs/lab-10/result.webp` | the reference solution                | the catalogue with «Кошик (3)» in the header, in the handout's §1; it shows no folder tree, since the tree is the answer                                                                                                                                                                                                                                                                                        |
 
 No PDF yet: it is built after the instructor's review, and the handout's
 `handout:` field is added with it.
 
 `solution/` holds the instructor's material (gitignored): `stages/`, one
 folder per structure step, each a full copy of `src/`, `package.json` and
-`index.html` (and `packages/` for §4.7) as the reference left them;
+`index.html` (and `packages/` for §4.9) as the reference left them;
 `shots.mjs`, which checks the starter and the last stage in headless Edge
 and takes the screenshot; and a `README.md` with the seeded coupling, the
 reference's measurements, the FSD/Makarevich comparison, the notes on
-§4.8's projects and the defence answers. The repository is public and the
+§4.7's projects and the defence answers. The repository is public and the
 defence asks for those, so they stay in `solution/`, not in this README or
 the plan. The plan the lab was built from is
 [folder-structure-and-fsd-plan.md](folder-structure-and-fsd-plan.md).
@@ -30,7 +30,7 @@ stays local until the last group's ЛР-8 class, as `feat/react-lab-8` did for
 ## Why it looks like this
 
 - **Five structures, one commit each, same app** (the instructor's
-  decisions 1–4, 2026-11-17).
+  decisions 1–4, 2026-11-17), the fifth for an extra point (below).
 - **The tests import only `#app`** (`imports` in `package.json`), and
   `tests/setup.js` imports nothing from `src/`: it clears `localStorage`
   (the cart store re-reads it on every `getSnapshot`) and resets
@@ -43,6 +43,18 @@ stays local until the last group's ЛР-8 class, as `feat/react-lab-8` did for
 
 ## Where the build differs from the plan
 
+- **The cart package is optional, for +1 point** (the instructor's
+  decision, 2026-11-18). As in ЛР-4 and ЛР-6, the extra task comes after
+  the main part's checks and push, so it moved from §4.7 to §4.9: «Що
+  обрати» is now §4.7 and the checks §4.8. Students start it in class only
+  once §4.1–4.8 are on GitHub, and it counts only if pushed in class. The
+  main part's history is six commits; the package adds a seventh. §7 has a
+  table for each point, §5 asks whether §4.9 was done, and §6's questions
+  on building `@coffee/cart` are asked only of those who did it; the
+  questions on packages as a structure stay for everyone, since «Що
+  обрати» still offers packages and the article is read before §4.7. The
+  practical part is about 55 minutes by the plan's estimates, about 8 more
+  for §4.9. `STRUCTURES.md` keeps the «Пакет» row and says it is for §4.9.
 - **`check:deps` uses `--output-type err-long`,** so each violation prints
   its rule's Ukrainian comment under it, not only the rule's name.
 - **No `graph` script** (the plan's optional Mermaid graph). A collapse
@@ -106,9 +118,9 @@ workspace: React 19.3.1, Vite 8.3.8, Vitest 5.1.0, jsdom 31.0.1, ESLint
 - «Прибрати відгуки» (`git add -A`, deletions, the three readings,
   `git restore src`) in every stage, in Git Bash; afterwards the build
   passes and `git status` shows only the staged moves;
-- §4.7: `"file:./packages/cart"` and `npm install` at the root link the
+- §4.9: `"file:./packages/cart"` and `npm install` at the root link the
   package with the root `package.json` unchanged; a deep import by name fails
-  in `vite build` and Vitest with the message §4.7 quotes; a relative path
+  in `vite build` and Vitest with the message §4.9 quotes; a relative path
   builds and `check:deps` reports it;
 - in Edge headless on Vite dev servers (`solution/shots.mjs`): the starter
   and the last stage behave the same: catalogue, ♡, «Додати в кошик» and the
@@ -131,8 +143,8 @@ workspace: React 19.3.1, Vite 8.3.8, Vitest 5.1.0, jsdom 31.0.1, ESLint
 
 Not verified:
 
-- a timed dry run (target: §4.3–§4.8 in about 55 minutes plus setup; cuts
-  in the plan's **Timing**);
+- a timed dry run (target: §4.1–§4.8 in about 55 minutes, §4.9 in about
+  8 more; cuts in the plan's **Timing**, where cut 3 is now built in);
 - VS Code's and WebStorm's import updates when `.jsx` files move without a
   `jsconfig.json`, including the CSS import in `main.jsx` (the reference
   stages were moved by a script that rewrites relative imports the same
@@ -157,6 +169,6 @@ wrap when the PDF is built.
 
 To check the stages again: copy the starter into a `react-labs` workspace,
 replace `src/`, `package.json` and `index.html` with a stage's copies (and
-add `packages/` for §4.7, then `npm install` at the root), and run
+add `packages/` for §4.9, then `npm install` at the root), and run
 `npx vitest run`, `npm run lint`, `npm run format:check`,
 `npm run check:deps`, `npm run check:fsd` (from 4.6) and `npm run build`.

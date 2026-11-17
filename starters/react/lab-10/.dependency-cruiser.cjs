@@ -1,4 +1,4 @@
-// Правила структур §4.3–§4.7 для dependency-cruiser: npm run check:deps.
+// Правила структур §4.3–§4.6 і §4.9 для dependency-cruiser: npm run check:deps.
 // Правило перевіряє лише теки, які вже є: поки теки routes/ немає, правило
 // про маршрути нічого не знаходить. Тому один файл служить для всіх
 // структур. Не змінюйте цей файл: це умова задачі, як і tests/.
@@ -53,7 +53,7 @@ module.exports = {
     {
       name: 'packages-are-independent',
       severity: 'error',
-      comment: 'Пакет не імпортує застосунок (§4.7).',
+      comment: 'Пакет не імпортує застосунок (§4.9).',
       from: { path: '^packages/' },
       to: { path: '^src/' },
     },
@@ -61,7 +61,7 @@ module.exports = {
       name: 'no-deep-imports-into-packages',
       severity: 'error',
       comment:
-        'Застосунок імпортує пакет лише за назвою (@coffee/cart), а не шляхом до файлу всередині пакета (§4.7).',
+        'Застосунок імпортує пакет лише за назвою (@coffee/cart), а не шляхом до файлу всередині пакета (§4.9).',
       from: { path: '^src/' },
       to: { path: '^packages/', pathNot: '^packages/[^/]+/index\\.js$' },
     },
