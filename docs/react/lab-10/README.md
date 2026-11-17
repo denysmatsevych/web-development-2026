@@ -43,6 +43,16 @@ stays local until the last group's ЛР-8 class, as `feat/react-lab-8` did for
 
 ## Where the build differs from the plan
 
+- **«Що обрати» (§4.7) is spelled out** (the instructor found the first
+  version unclear, 2026-11-18): the section states its purpose, lists the
+  five structures and the seven projects itself, names what to look at in a
+  project (size, what pages share, people, lifetime, apps sharing code) and
+  what counts as evidence, and shows one worked row on a project outside the
+  list plus one non-answer. Evidence may also be something that happened in
+  a step (a checker's message, a file with no obvious place), not only a
+  number or a rule as the plan has it, and «Чому» is one or two sentences.
+  `STRUCTURES.md` keeps short project names and points to §4.7, so the
+  descriptions live in one place.
 - **The cart package is optional, for +1 point** (the instructor's
   decision, 2026-11-18). As in ЛР-4 and ЛР-6, the extra task comes after
   the main part's checks and push, so it moved from §4.7 to §4.9: «Що
