@@ -23,9 +23,9 @@ both in the same sitting. The Web Development course has its own plan in
 ## How the site maps to the plan
 
 The course is registered under the slug `react` with `status: 'published'`
-(see `src/data/courses.ts`), so it is on the public site. As of 2026-11-15,
+(see `src/data/courses.ts`), so it is on the public site. As of 2026-11-17,
 the built parts are Лекція 0, an introductory deck that isn't in the
-programme, the individual assignment, and ЛР 1–7.
+programme, the individual assignment, and ЛР 1–8.
 
 When a lab is built, add a row here, as the Web Development plan does, and put
 its instructor docs in `docs/react/lab-N/` (the README's **Docs** section has
@@ -56,7 +56,8 @@ rules are in [lab-7/custom-hooks-and-render-props-plan.md](lab-7/custom-hooks-an
 | ЛР 5 | `/react/labs/lab-5` | events and controlled/uncontrolled components, by hand in class, on a new table booking form: a starter for `lab-5/`, the browser's own form submission first, then `onSubmit` with `FormData`, a controlled comment with a counter, `Ctrl+Enter` on the form, a guests stepper that goes from uncontrolled to controlled, the native reset with `onReset` and a ref, a README table of who owns each value, deploy to Vercel; [lab-5/README.md](lab-5/README.md) |
 | ЛР 6 | `/react/labs/lab-6` | complex forms and validation, by hand in class, on ЛР-5's booking form: a starter for `lab-6/` with a phone field and a fake server, a Zod schema checked in the console, React Hook Form (`register`, `Controller`, `useWatch`), error messages with `aria-invalid` and `aria-describedby`, sending through `useActionState` with a pending state and clearing after success, deploy to Vercel; +1 point in class for a newsletter form on `<form action>` and `useFormStatus`, +1 point at home for the same booking form with other libraries and a comparison; [lab-6/README.md](lab-6/README.md) |
 | ЛР 7 | `/react/labs/lab-7` | custom hooks, Container/Presentational, conditional rendering and render props as five code challenges with given Vitest tests, all in class, on a new coffee-bean product page: a starter for `lab-7/` with stubs, `useLocalStorage` from ЛР-4's duplicated code, a hooks-free `TimerView` with four states under a `BrewTimer` container, `useCountdown` with a seeded effect bug, `ShowMore` with a render prop, the same logic as `useShowMore` for a grid layout, deploy to Vercel; [lab-7/README.md](lab-7/README.md) |
-| ЛР 8–27 | not built | |
+| ЛР 8 | `/react/labs/lab-8` | children as a prop, compound components and HOCs as four code challenges with given Vitest tests, all in class, on ЛР-7's coffee-bean page: a starter for `lab-8/` built on ЛР-7's reference solution, a compound `Tabs` that takes its content as `children` and shares its state through context, the same tabs made accessible by the ARIA APG Tabs pattern (roles, `useId`, arrow keys), a `withAnalytics` HOC, a seeded timer button that the HOC breaks, deploy to Vercel; an ungraded accordion; [lab-8/README.md](lab-8/README.md) |
+| ЛР 9–27 | not built | |
 
 Лекція 0 reads its topic slides from the **Теми презентацій** table below
 when the site is built. Keep that table's rows in their current shape: the
@@ -376,6 +377,12 @@ lecture when the decks are written:
   names custom hooks and render props only. Container/Presentational is in
   Lecture 3's list; conditional rendering is in no lecture, though ЛР 2–3
   already use `&&`. Lecture 1 or 2 fits conditional rendering.
+- **Context (ЛР 8).** ЛР 8's compound `Tabs` share their state through
+  `createContext` and `use`, before Lecture 4 (row 2.5) and ЛР 12 (row 2.8)
+  cover Context API. ЛР 8 uses context only as the private channel between
+  `Tabs` and its parts; global state, prop drilling and the cost of
+  re-renders stay with Lecture 4 and ЛР 12. Lecture 3 should introduce
+  context together with compound components.
 
 Presentation topics П4.2, П2.6 and П2.8 cover these, but a topic may go
 unpicked, so the lectures should still introduce them.

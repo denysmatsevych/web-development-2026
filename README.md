@@ -95,7 +95,8 @@ starters/           the source of each zip: <course>/<name>/ becomes public/uk/<
    ├─ lab-4/                    ЛР-3's components plus a filter function, for ЛР-4 to add state and an effect
    ├─ lab-5/                    a booking form with no event handlers, for ЛР-5 to wire up one event at a time
    ├─ lab-6/                    ЛР-5's booking form plus a phone field, a fake server and date helpers, for ЛР-6's schema, form library and Action
-   └─ lab-7/                    a coffee-bean product page with duplicated and seeded-buggy code, stubs and given Vitest tests, for ЛР-7's code challenges
+   ├─ lab-7/                    a coffee-bean product page with duplicated and seeded-buggy code, stubs and given Vitest tests, for ЛР-7's code challenges
+   └─ lab-8/                    ЛР-7's reference solution plus first-attempt tabs, a cart button, analytics and stubs with given Vitest tests, for ЛР-8's code challenges
 ```
 
 See `docs/agents/design-system.md` for which stylesheet owns what and how
