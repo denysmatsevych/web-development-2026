@@ -9,6 +9,11 @@ import ProductCard from '../src/components/ProductCard.jsx'
 import { product } from '../src/data.js'
 
 vi.mock('../src/analytics.js')
+vi.mock('../src/hoc/withAnalytics.jsx', { spy: true })
+
+// Виклики withAnalytics, зроблені під час імпорту модулів, ще до тестів:
+// після кожного тесту setup.js очищає записані виклики.
+const callsOnImport = [...withAnalytics.mock.calls]
 
 const TrackedButton = withAnalytics(Button, 'test_event')
 
@@ -63,7 +68,7 @@ describe('withAnalytics', () => {
     expect(ref.current).toBe(button)
   })
 
-  it('«Додати в кошик» надсилає add_to_cart з id товару', async () => {
+  it('«Додати в кошик» надсилає add_to_cart з id товару через withAnalytics', async () => {
     const user = userEvent.setup()
     render(<ProductCard product={product} />)
     await user.click(screen.getByRole('button', { name: 'Додати в кошик' }))
@@ -71,5 +76,7 @@ describe('withAnalytics', () => {
       productId: product.id,
     })
     expect(screen.getByRole('status')).toHaveTextContent('У кошику: 1')
+    const calls = [...callsOnImport, ...withAnalytics.mock.calls]
+    expect(calls.map(([, event]) => event)).toContain('add_to_cart')
   })
 })

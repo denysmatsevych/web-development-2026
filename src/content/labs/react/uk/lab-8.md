@@ -375,8 +375,9 @@ component), як `<select>` і `<option>` в HTML.
 - Новий компонент має `displayName` `withAnalytics(Button)`. З такою назвою
   React згадує його в повідомленнях про помилки, а React DevTools показує
   його як `Button` з позначкою `withAnalytics`.
-- «Додати в кошик» у `ProductCard` надсилає подію `add_to_cart` з даними
-  `{ productId }`, а «У кошику: N» рахує, як раніше.
+- «Додати в кошик» у `ProductCard` проходить через `withAnalytics` і надсилає
+  подію `add_to_cart` з даними `{ productId }`, а «У кошику: N» рахує, як
+  раніше.
 
 **Що вже є.** Заготовка `src/hoc/withAnalytics.jsx` з прикладом у коментарі:
 поки вона повертає `Component` без змін; `Button`; `track`; кнопка «Додати в
