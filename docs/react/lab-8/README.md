@@ -116,7 +116,14 @@ workspace: React 19.3.1, Vite 8.3.8, `@vitejs/plugin-react` 6.3.0, ESLint
   translated, so §2 says so; patterns.dev's Compound page has the `div`
   toggle §2 warns about;
 - no code line in the handout is over 75 characters, so the PDF won't wrap
-  one.
+  one;
+- `lab-8.zip` (35 files at the root, LF only, a rebuild is byte-identical)
+  unpacked into a fresh `react-labs/lab-8/` next to `lab-7/` from
+  `lab-7.zip`: one `npm install` in the root adds both workspaces
+  (`node_modules` about 132 MB), and the folder passes `format:check` and
+  `build`, shows the one lint error and passes 4 of 27 tests;
+- the site: `npm run check` and `npm run build` pass; the labs index lists
+  ЛР-8; the handout has no horizontal scroll at 390 px, and the image loads.
 
 Not verified:
 
@@ -126,9 +133,7 @@ Not verified:
   `withAnalytics(Button)` in **Components** (§4.5);
 - a screen reader (Narrator, NVDA or VoiceOver) on the tabs (§4.4);
 - Firefox and Safari;
-- the eighth Vercel project;
-- the zip unpacked into a workspace next to `lab-7/` (recorded below once
-  the zip is built).
+- the eighth Vercel project.
 
 ## Build
 
