@@ -7,8 +7,10 @@ with ЛР-7, and AI that explains but doesn't write code. On 2026-11-15 the
 instructor added the children-as-prop pattern, which became C1's theme (see
 **Decisions**). A prototype of the starter, the tests and a reference
 solution was built and checked both days; it lives in the gitignored
-`solution/` folder next to this file. Nothing is built in the site yet. Once
-the lab is built, the lasting facts move to this folder's `README.md`.
+`solution/` folder next to this file. The lab was built on 2026-11-17. What
+was built, what was verified and where the build differs from this plan are
+in this folder's [README.md](README.md); this file stays as the plan the lab
+was built from.
 
 The shared parts are described once, in ЛР-7's plan,
 [../lab-7/custom-hooks-and-render-props-plan.md](../lab-7/custom-hooks-and-render-props-plan.md):
