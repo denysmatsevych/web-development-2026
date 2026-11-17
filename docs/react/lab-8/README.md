@@ -13,7 +13,7 @@ folder per challenge in the handout's order, each holding only the files its
 challenge changes, copied over the starter's `src/` in order (`4.3-tabs` also
 deletes `ProductTabs.jsx`; all four give the reference solution);
 `wrong-variants/`, plausible mistakes and the tests that catch them;
-`shots.mjs`, which checks three stages in headless Edge and takes the
+`alternatives/`, a valid design the tests accept; `shots.mjs`, which checks three stages in headless Edge and takes the
 screenshot; the 2026-11-14 `prototype/`; and a `README.md` with the seeded
 defect, the results per stage and per variant, and the defence answers. The
 repository is public and the defence asks for those, so they stay in
@@ -60,22 +60,36 @@ class. The plan's **ЛР-7's answers in ЛР-8's starter** has the reasoning.
   `tests/TimerView.test.jsx` (§4.6); `npm test -- tests/Tabs.children` runs
   one of them and `npm test -- tests/Tabs` runs both `Tabs` files. Students'
   commits have no scope, and the stub errors are `Not implemented: Tabs`.
-- **Three tests are stricter or more exact than the prototype's;** names and
-  the count are unchanged:
+- **28 tests, not 27, and four of the prototype's are changed** so that
+  each checks what its name says:
   - «клік по Tabs.Tab показує його панель і ховає іншу» and ««Заварювання»,
     «Відгуки (10)» і «Схожі товари» перемикають вміст» count a panel that
-    isn't on the page as hidden, so each checks what its name says; that
-    hidden panels must stay mounted is left to the tests named after it;
+    isn't on the page as hidden; that hidden panels must stay mounted is left
+    to the tests named after it;
   - the page test now clicks all three tabs, not one;
   - «Home і End обирають першу й останню вкладки» also checks that Home
-    selects.
-  As a result the starter passes four tests, not three: the page test passes
-  with `ProductTabs` and guards the behaviour while the tabs move into
-  `Tabs`. §4.1 lists all four and why they pass.
-- **§4.3's DevTools check uses the Profiler, not Highlight updates.**
-  Highlight updates outlines a component's own DOM nodes, so it can't tell a
-  wrapper that rendered from the content inside it; the Profiler lists each
-  component per commit. Not checked in the real panel (below).
+    selects;
+  - «перемикання вкладок не рендерить вміст панелей знову» counts from the
+    second round of switches, so a `Tabs` that mounts a panel's content on
+    its first visit and keeps it afterwards passes (found in the review,
+    2026-11-17);
+  - the new «подію timer_control надсилає кнопка, обгорнута withAnalytics»
+    records `withAnalytics` calls made at import and during render. Without
+    it, a `TimerView` that called `track` in its own `onClick` passed every
+    test and lint (found in the review, 2026-11-17).
+
+  The starter passes four tests, not three: the page test passes with
+  `ProductTabs` and guards the behaviour while the tabs move into `Tabs`.
+  §4.1 lists all four and why they pass.
+- **§4.3's DevTools check uses the Profiler, not Highlight updates;** the
+  reason is in `solution/README.md`. Not checked in the real panel (below).
+- **§4.3's commit is `feat`, not the plan's `refactor`:** the timer no longer
+  resets, so the page's behaviour changes.
+- **§4.5 describes the HOC in React DevTools as `Button` with a
+  `withAnalytics` badge,** not as `withAnalytics(Button)` as the plan does.
+  DevTools 8 splits a display name of the form `hoc(Name)` into the name and
+  badges (`parseElementDisplayNameFromBackend` in `react-devtools-core`
+  8.0.0). The test still checks the `displayName` string.
 - **§4.3 hints at the `hidden` attribute.** Vitest doesn't load
   `src/index.css`, so a panel hidden by a CSS class looks hidden in the
   browser but not in the tests.
@@ -100,10 +114,11 @@ workspace: React 19.3.1, Vite 8.3.8, `@vitejs/plugin-react` 6.3.0, ESLint
   workspace root installs the same tools;
 - every stage (the starter, then the four challenges applied in order) passes
   Prettier and the build; ESLint shows the starter's one error until §4.6 and
-  nothing after; the tests pass 4, 10, 20, 24 and 27 of 27, each failure with
+  nothing after; the tests pass 4, 10, 20, 24 and 28 of 28, each failure with
   a readable message; the full run takes about 2 seconds;
-- each wrong variant in `solution/wrong-variants/` fails the tests or the
-  lint recorded in `solution/README.md`;
+- each wrong variant in `solution/wrong-variants/` fails at least one test
+  or the lint, as recorded in `solution/README.md`, and the design in
+  `solution/alternatives/` passes both;
 - in Edge headless on Vite dev servers (`solution/shots.mjs`): the starter's
   `ProductTabs` and the stage after §4.5 behave as §4.3 and §4.6 describe;
   the reference solution keeps a running timer across tab switches, has the
@@ -121,7 +136,8 @@ workspace: React 19.3.1, Vite 8.3.8, `@vitejs/plugin-react` 6.3.0, ESLint
   unpacked into a fresh `react-labs/lab-8/` next to `lab-7/` from
   `lab-7.zip`: one `npm install` in the root adds both workspaces
   (`node_modules` about 132 MB), and the folder passes `format:check` and
-  `build`, shows the one lint error and passes 4 of 27 tests;
+  `build`, shows the one lint error and passes 4 of 28 tests (rechecked
+  after the review's test changes);
 - the site: `npm run check` and `npm run build` pass; the labs index lists
   ЛР-8; the handout has no horizontal scroll at 390 px, and the image loads.
 
@@ -129,8 +145,9 @@ Not verified:
 
 - a timed dry run (target: the four challenges in about 50 minutes plus
   setup; cuts in the plan's **Timing**);
-- the React DevTools 8 panels: the Profiler on a tab switch (§4.3), and
-  `withAnalytics(Button)` in **Components** (§4.5);
+- the React DevTools 8 panels: the Profiler on a tab switch (§4.3), and the
+  `withAnalytics` badge in **Components** (§4.5; read from DevTools' source,
+  not seen in the panel);
 - a screen reader (Narrator, NVDA or VoiceOver) on the tabs (§4.4);
 - Firefox and Safari;
 - the eighth Vercel project.
