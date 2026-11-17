@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 import Tabs from '../src/components/Tabs.jsx'
@@ -111,7 +111,7 @@ describe('Tabs: клавіатура за ARIA APG', () => {
     expect(tab('Перша')).toHaveFocus()
   })
 
-  it('Home і End обирають першу й останню вкладки', async () => {
+  it('Home і End обирають першу й останню вкладки й не прокручують сторінку', async () => {
     const user = userEvent.setup()
     render(<Example />)
     await focusFirstTab(user)
@@ -121,6 +121,18 @@ describe('Tabs: клавіатура за ARIA APG', () => {
     await user.keyboard('{Home}')
     expect(tab('Перша')).toHaveFocus()
     expect(tab('Перша')).toHaveAttribute('aria-selected', 'true')
+    // fireEvent повертає false, якщо обробник скасував дію браузера за
+    // замовчуванням: для Home і End це прокручування сторінки.
+    const end = { key: 'End', code: 'End' }
+    const home = { key: 'Home', code: 'Home' }
+    expect(
+      fireEvent.keyDown(tab('Перша'), end),
+      'End прокрутив би сторінку донизу',
+    ).toBe(false)
+    expect(
+      fireEvent.keyDown(tab('Третя 3'), home),
+      'Home прокрутив би сторінку догори',
+    ).toBe(false)
   })
 
   it('після вибору стрілкою Tab веде до панелі нової вкладки', async () => {
