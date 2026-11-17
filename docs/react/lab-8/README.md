@@ -2,7 +2,7 @@
 
 | Route | Source | What it is |
 | --- | --- | --- |
-| `/react/labs/lab-8/` | `src/content/labs/react/uk/lab-8.md` | the handout: useful links instead of theory, four code challenges on ЛР-7's coffee-bean page (§4.3 a compound `Tabs` that takes its content as `children` and shares its state through context, §4.4 the ARIA APG Tabs pattern, §4.5 a `withAnalytics` HOC, §4.6 a timer button that the HOC breaks), the AI rules, checks and Vercel, an ungraded accordion; report, defence |
+| `/react/labs/lab-8/` | `src/content/labs/react/uk/lab-8.md` | the handout: useful links instead of theory, four code challenges on ЛР-7's coffee-bean page (§4.3 a compound `Tabs` that takes its content as `children` and shares its state through context, §4.4 the ARIA APG Tabs pattern, §4.5 a `withAnalytics` HOC, §4.6 a timer button that the HOC breaks), the AI rule, checks and Vercel; report, defence |
 | `/uk/react/starters/lab-8.zip` | `starters/react/lab-8/` | the starter with stubs and the given tests, unpacked by students into `react-labs/lab-8/` |
 | `/uk/react/labs/lab-8/result.webp` | the reference solution | the finished page with «Відгуки (10)» selected from the keyboard, in the handout's §1 |
 
@@ -49,7 +49,8 @@ class. The plan's **ЛР-7's answers in ЛР-8's starter** has the reasoning.
   §4.1 says so; §7 requires a clean lint.
 - **Context is the private channel between `Tabs` and its parts.** Global
   state stays with Lecture 4 and ЛР-12, so there is no `CartProvider`.
-- The plan's proposed decisions 7–17 were built as proposed.
+- The plan's proposed decisions 7–17 were built as proposed, except 13 (see
+  below).
 
 ## Where the build differs from the plan
 
@@ -97,9 +98,12 @@ class. The plan's **ЛР-7's answers in ЛР-8's starter** has the reasoning.
   so the empty status line doesn't add a blank row to the card.
 - **The tab list gets smaller padding at 480 px and below,** so the three
   tabs fit in one row at 390 px.
-- **§4.8 asks for the accordion on a separate branch** (`lab-8-accordion`),
-  as ЛР-7's §4.9 did, so the graded history stays as it is.
-- **Length:** about 4,300 words by `wc -w`, a little under ЛР-7's.
+- **No ungraded accordion,** though the plan has one as §4.8 (decision 13):
+  the instructor dropped it on 2026-11-17, so the handout ends with §4.7.
+- **§4.2 keeps only the rule that AI explains and doesn't write code** (the
+  instructor's decision, 2026-11-17): no requirement to turn off AI
+  autocomplete and no example prompt, unlike ЛР-7.
+- **Length:** about 4,200 words by `wc -w`, a little under ЛР-7's.
 
 ## Verified on 2026-11-17
 
