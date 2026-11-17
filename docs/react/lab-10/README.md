@@ -1,10 +1,10 @@
 # Lab 10 — Folder structure and Feature-Sliced Design
 
-| Route                               | Source                                | What it is                                                                                                                                                                                                                                                                                                                                                                                                     |
-| ----------------------------------- | ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `/react/labs/lab-10/`               | `src/content/labs/react/uk/lab-10.md` | the handout: useful links instead of theory, one app moved through four folder structures (§4.3 by file type, §4.4 by route, §4.5 feature folders after bulletproof-react, §4.6 Feature-Sliced Design), the same two measurements in each, §4.7 a structure chosen for five projects, the AI rule, §4.8 checks and Vercel; §4.9, +1 point: the cart as a local package after Nadia Makarevich; report, defence |
-| `/uk/react/starters/lab-10.zip`     | `starters/react/lab-10/`              | the starter, unpacked by students into `react-labs/lab-10/`                                                                                                                                                                                                                                                                                                                                                    |
-| `/uk/react/labs/lab-10/result.webp` | the reference solution                | the catalogue with «Кошик (3)» in the header, in the handout's §1; it shows no folder tree, since the tree is the answer                                                                                                                                                                                                                                                                                       |
+| Route                               | Source                                | What it is                                                                                                                                                                                                                                                                                                                                                                                                        |
+| ----------------------------------- | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/react/labs/lab-10/`               | `src/content/labs/react/uk/lab-10.md` | the handout: useful links instead of theory, one app moved through four folder structures (§4.3 by file type, §4.4 by route, §4.5 feature folders after bulletproof-react, §4.6 Feature-Sliced Design), where the cart lives counted in each, §4.7 a structure chosen for five projects, the AI rule, §4.8 checks and Vercel; §4.9, +1 point: the cart as a local package after Nadia Makarevich; report, defence |
+| `/uk/react/starters/lab-10.zip`     | `starters/react/lab-10/`              | the starter, unpacked by students into `react-labs/lab-10/`                                                                                                                                                                                                                                                                                                                                                       |
+| `/uk/react/labs/lab-10/result.webp` | the reference solution                | the catalogue with «Кошик (3)» in the header, in the handout's §1; it shows no folder tree, since the tree is the answer                                                                                                                                                                                                                                                                                          |
 
 No PDF yet: it is built after the instructor's review, and the handout's
 `handout:` field is added with it.
@@ -96,7 +96,20 @@ stays local until the last group's ЛР-8 class, as `feat/react-lab-8` did for
   a student's §4.10 aliases would go into this file. The starter and the
   4.6 and 4.7 stages, re-run with it, pass every check, and Steiger still
   reports a forbidden import.
-- **§4.2 holds the measuring procedure and one explicit rule:** code doesn't
+- **One measurement, not two** (the instructor's decision after the
+  review, 2026-11-18). «Прибрати відгуки» (stage the moves, delete the
+  reviews, read `git diff --stat`, `--dirstat` and the dead-file warnings,
+  `git restore src`) is gone: once §4.7 stopped asking for evidence from the
+  lab, its numbers fed nothing, they separated the structures little (see
+  `solution/README.md`), and it was the step most likely to go wrong in
+  class. «Де живе кошик» stays, and students now write down the folders as
+  well as their number, since the kind of folder changes between structures
+  more than the count does. `STRUCTURES.md`'s first table is now «Де живе
+  кошик», and §6's question on dead files that an `index.js` still
+  re-exports went with the step. `not-reachable-from-main` stays in
+  `.dependency-cruiser.cjs` as a warning for a file a move leaves behind.
+  The minutes saved go to §4.7.
+- **§4.2 holds the measurement and one explicit rule:** code doesn't
   change, only import paths, unless a structure's rule can't be met by any
   move; then the student changes the component, not the rule, and says so in
   the report. The plan implied this; without it students wouldn't know the
@@ -144,12 +157,9 @@ workspace: React 19.3.1, Vite 8.3.8, Vitest 5.1.0, jsdom 31.0.1, ESLint
 - each rule fires on a deliberate violation: `routes-are-independent`,
   `shared-stays-shared`, `app-on-top`, `features-are-independent`,
   `packages-are-independent`, `no-deep-imports-into-packages`, and
-  `not-reachable-from-main` for a file left behind by «Прибрати відгуки»;
+  `not-reachable-from-main` for a file nothing imports any more;
   Steiger's `forbidden-imports`, `insignificant-slice`, `public-api` and
   `no-public-api-sidestep` with the messages §4.6 quotes;
-- «Прибрати відгуки» (`git add -A`, deletions, the three readings,
-  `git restore src`) in every stage, in Git Bash; afterwards the build
-  passes and `git status` shows only the staged moves;
 - §4.9: `"file:./packages/cart"` and `npm install` at the root link the
   package with the root `package.json` unchanged; a deep import by name fails
   in `vite build` and Vitest with the message §4.9 quotes; a relative path
@@ -166,9 +176,6 @@ workspace: React 19.3.1, Vite 8.3.8, Vitest 5.1.0, jsdom 31.0.1, ESLint
   `lab-7/` and `lab-8/` from their zips: one `npm install` in the root adds
   all three workspaces (`node_modules` about 175 MB), and the folder passes
   12 of 12 tests, lint, `format:check`, `check:deps` and `build`;
-- the by-type «Прибрати відгуки» sequence in Windows PowerShell 5.1 on that
-  folder: the same three readings as in Git Bash, `git diff --dirstat=files,0`
-  unquoted, and `git restore src` leaves only the staged state;
 - the site: `npm run check` and `npm run build` pass; the labs index lists
   ЛР-10; the handout has no horizontal scroll at 390 px or 1000 px, and the
   image loads.
