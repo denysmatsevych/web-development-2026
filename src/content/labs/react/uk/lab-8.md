@@ -372,9 +372,10 @@ component), як `<select>` і `<option>` в HTML.
   DOM.
 - Решта props і `ref` доходять до обгорнутого компонента. У React 19 `ref` —
   звичайний проп функціонального компонента, тож `forwardRef` не потрібен.
-- Новий компонент має `displayName` `withAnalytics(Button)`. З такою назвою
-  React згадує його в повідомленнях про помилки, а React DevTools показує
-  його як `Button` з позначкою `withAnalytics`.
+- Новий компонент має `displayName` з назвою обгорнутого компонента в
+  дужках: `withAnalytics(Button)` для `Button`. З такою назвою React згадує
+  його в повідомленнях про помилки, а React DevTools показує
+  `withAnalytics(Button)` як `Button` з позначкою `withAnalytics`.
 - «Додати в кошик» у `ProductCard` проходить через `withAnalytics` і надсилає
   подію `add_to_cart` з даними `{ productId }`, а «У кошику: N» рахує, як
   раніше.

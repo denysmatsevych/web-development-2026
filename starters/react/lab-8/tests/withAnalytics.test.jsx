@@ -17,10 +17,17 @@ const callsOnImport = [...withAnalytics.mock.calls]
 
 const TrackedButton = withAnalytics(Button, 'test_event')
 
+function Link(props) {
+  return <a {...props} />
+}
+
 describe('withAnalytics', () => {
-  it('повертає новий компонент з назвою withAnalytics(Button)', () => {
+  it('повертає новий компонент з назвою withAnalytics(назва обгорнутого)', () => {
     expect(TrackedButton).not.toBe(Button)
     expect(TrackedButton.displayName).toBe('withAnalytics(Button)')
+    expect(withAnalytics(Link, 'test_event').displayName).toBe(
+      'withAnalytics(Link)',
+    )
   })
 
   it('під час кліку надсилає подію й викликає onClick', async () => {
