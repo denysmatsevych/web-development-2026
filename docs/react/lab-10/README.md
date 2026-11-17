@@ -43,7 +43,7 @@ stays local until the last group's ЛР-8 class, as `feat/react-lab-8` did for
 
 ## Where the build differs from the plan
 
-- **«Що обрати» (§4.7) is spelled out** (the instructor found the first
+- **«Вибір структури для проєкту» (§4.7, formerly «Що обрати») is spelled out** (the instructor found the first
   version unclear, 2026-11-18): the section states its purpose, lists the
   five structures and the projects itself, names what to look at in a
   project (size, what pages share, people, lifetime, apps sharing code) and
@@ -54,7 +54,7 @@ stays local until the last group's ЛР-8 class, as `feat/react-lab-8` did for
   found that unclear too and had it removed (2026-11-18).
   `STRUCTURES.md` keeps short project names and points to §4.7, so the
   descriptions live in one place.
-- **Five projects in «Що обрати», not seven** (the instructor's decision,
+- **Five projects in §4.7, not seven** (the instructor's decision,
   2026-11-18). The student's own final project is out: no one has a topic
   for ЛР 21–27 yet, so the plan's link to the final project's first stage
   is gone. The coffee-shop landing is out too, since §4.7's worked example
