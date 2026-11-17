@@ -47,10 +47,11 @@ stays local until the last group's ЛР-8 class, as `feat/react-lab-8` did for
   version unclear, 2026-11-18): the section states its purpose, lists the
   five structures and the projects itself, names what to look at in a
   project (size, what pages share, people, lifetime, apps sharing code) and
-  what counts as evidence, and shows one worked row on a project outside the
-  list plus one non-answer. Evidence may also be something that happened in
-  a step (a checker's message, a file with no obvious place), not only a
-  number or a rule as the plan has it, and «Чому» is one or two sentences.
+  shows one worked row on a project outside the list plus one non-answer.
+  «Чому» is one or two sentences: what matters in the project and why the
+  structure fits it. The plan's requirement to cite a number or a rule is
+  gone: a first rewrite asked for evidence from the lab, and the instructor
+  found that unclear too and had it removed (2026-11-18).
   `STRUCTURES.md` keeps short project names and points to §4.7, so the
   descriptions live in one place.
 - **Five projects in «Що обрати», not seven** (the instructor's decision,
