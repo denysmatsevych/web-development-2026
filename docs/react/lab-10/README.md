@@ -118,15 +118,26 @@ workspace: React 19.3.1, Vite 8.3.8, Vitest 5.1.0, jsdom 31.0.1, ESLint
 - the handout's links return 200; bulletproof-react's page still says what
   §4.5 quotes; profy.dev still doesn't resolve, so it stays out.
 
+- `lab-10.zip` (LF only) unpacked into a fresh `react-labs/lab-10/` next to
+  `lab-7/` and `lab-8/` from their zips: one `npm install` in the root adds
+  all three workspaces (`node_modules` about 175 MB), and the folder passes
+  12 of 12 tests, lint, `format:check`, `check:deps` and `build`;
+- the by-type «Прибрати відгуки» sequence in Windows PowerShell 5.1 on that
+  folder: the same three readings as in Git Bash, `git diff --dirstat=files,0`
+  unquoted, and `git restore src` leaves only the staged state;
+- the site: `npm run check` and `npm run build` pass; the labs index lists
+  ЛР-10; the handout has no horizontal scroll at 390 px or 1000 px, and the
+  image loads.
+
 Not verified:
 
 - a timed dry run (target: §4.3–§4.8 in about 55 minutes plus setup; cuts
   in the plan's **Timing**);
 - VS Code's and WebStorm's import updates when `.jsx` files move without a
-  `jsconfig.json`, including the CSS import in `main.jsx`;
-- the measuring commands in Windows PowerShell;
-- `npm install` in a `react-labs` with ЛР-1–8 present, and the zip unpacked
-  there;
+  `jsconfig.json`, including the CSS import in `main.jsx` (the reference
+  stages were moved by a script that rewrites relative imports the same
+  way);
+- `npm install` with all of ЛР-1–6 present as well;
 - Vercel building `lab-10` with the `file:` package;
 - §4.10's aliases (the planning prototype showed the `jsconfig.json` trap,
   not a working setup).
