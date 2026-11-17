@@ -3,10 +3,9 @@
 | Route | Source | What it is |
 | --- | --- | --- |
 | `/react/labs/lab-8/` | `src/content/labs/react/uk/lab-8.md` | the handout: useful links instead of theory, four code challenges on ЛР-7's coffee-bean page (§4.3 a compound `Tabs` that takes its content as `children` and shares its state through context, §4.4 the ARIA APG Tabs pattern, §4.5 a `withAnalytics` HOC, §4.6 a timer button that the HOC breaks), the AI rule, checks and Vercel; report, defence |
+| `/uk/react/labs/lab-8.pdf` | built from the handout | the downloadable handout |
 | `/uk/react/starters/lab-8.zip` | `starters/react/lab-8/` | the starter with stubs and the given tests, unpacked by students into `react-labs/lab-8/` |
 | `/uk/react/labs/lab-8/result.webp` | the reference solution | the finished page with «Відгуки (10)» selected from the keyboard, in the handout's §1 |
-
-No PDF yet: it is built after the instructor's review, as for ЛР-7.
 
 `solution/` holds the instructor's material (gitignored): `stages/`, one
 folder per challenge in the handout's order, each holding only the files its
@@ -157,7 +156,12 @@ workspace: React 19.3.1, Vite 8.3.8, `@vitejs/plugin-react` 6.3.0, ESLint
   after both reviews' test changes, as were the stages and the wrong
   variants);
 - the site: `npm run check` and `npm run build` pass; the labs index lists
-  ЛР-8; the handout has no horizontal scroll at 390 px, and the image loads.
+  ЛР-8; the handout has no horizontal scroll at 390 px, and the image loads;
+- the PDF, built after the instructor's review and both code reviews: 14
+  pages with the screenshot, code blocks and tables; every code line sits
+  whole on one line (the code box holds 75 characters), no line runs past
+  the right margin, and §4.1's table, split across pages, repeats its
+  header.
 
 Not verified:
 
@@ -175,14 +179,14 @@ Not verified:
 ```bash
 git add starters/react/lab-8                                 # the script packs tracked files only
 python docs/web/build-pack.py starters/react/lab-8           # public/uk/react/starters/lab-8.zip
-python docs/web/build-handout.py lab-8 react                 # public/uk/react/labs/lab-8.pdf, from PowerShell, after review
+python docs/web/build-handout.py lab-8 react                 # public/uk/react/labs/lab-8.pdf, from PowerShell
 ```
 
 Rebuild the zip after the starter is committed: each entry is dated by the
 file's last commit, and a file with no commit yet keeps its modification
-time. Once the PDF exists, add `handout: /uk/react/labs/lab-8.pdf` to the
-handout's frontmatter and rebuild the PDF after every handout edit. Keep
-code lines within 75 characters, or they wrap in the PDF.
+time. Rebuild the PDF after every handout edit; the handout's `handout:`
+field points to it. Keep code lines within 75 characters, or they wrap in
+the PDF.
 
 To check the stages again: copy the starter into a `react-labs` workspace,
 copy each `solution/stages/*/src` over its `src/` in order (deleting
