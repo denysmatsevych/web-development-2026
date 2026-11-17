@@ -228,7 +228,8 @@ HOC шкодить.
 отримав у пропсі `children`. Тепер обгортка має власний стан: `Tabs` пам'ятає,
 яку вкладку обрано, а вміст вкладок створює `App` і передає між тегами.
 Частини `Tabs` (вкладка, панель) теж мають знати, яку вкладку обрано, але
-пропсом цього не передати: їх створює не `Tabs`, а `App`. Тут допоможе
+`Tabs` не може передати їм це пропсом напряму: їх створює не `Tabs`, а `App`.
+Тут допоможе
 **контекст**: `Tabs` надає свій стан через `<TabsContext value={…}>`, а
 частини читають його через `use(TabsContext)`. Компонент із частинами, які
 працюють разом і ділять спільний стан, називають **складеним** (compound
@@ -288,8 +289,10 @@ component), як `<select>` і `<option>` в HTML.
   рендерилося в `ProductTabs`. Що саме змінилося й чому, вас запитають на
   захисті.
 
-**Коміт:** `refactor: pass the tab content to Tabs as children`.
+**Коміт:** `feat: pass the tab content to Tabs as children` (`feat`, а не
+`refactor`: таймер більше не скидається).
 **Довідка:** [Передача JSX як children](https://uk.react.dev/learn/passing-props-to-a-component#passing-jsx-as-children),
+[State is tied to a position in the render tree](https://uk.react.dev/learn/preserving-and-resetting-state#state-is-tied-to-a-position-in-the-tree),
 [The Children Prop Pattern in React](https://www.craftvalue.io/blog/react-children-prop-pattern),
 [Step 1: Create the context](https://uk.react.dev/learn/passing-data-deeply-with-context#step-1-create-the-context),
 [Step 2: Use the context](https://uk.react.dev/learn/passing-data-deeply-with-context#step-2-use-the-context),
@@ -380,8 +383,9 @@ component), як `<select>` і `<option>` в HTML.
   DOM.
 - Решта props і `ref` доходять до обгорнутого компонента. У React 19 `ref` —
   звичайний проп функціонального компонента, тож `forwardRef` не потрібен.
-- React DevTools показує новий компонент як `withAnalytics(Button)`: для
-  цього в нього є `displayName`.
+- Новий компонент має `displayName` `withAnalytics(Button)`. З такою назвою
+  React згадує його в повідомленнях про помилки, а React DevTools показує
+  його як `Button` з позначкою `withAnalytics`.
 - «Додати в кошик» у `ProductCard` надсилає подію `add_to_cart` з даними
   `{ productId }`, а «У кошику: N» рахує, як раніше.
 
@@ -399,15 +403,16 @@ component), як `<select>` і `<option>` в HTML.
 - У браузері відкрийте DevTools → **Console** і натисніть «Додати в кошик»:
   з'явиться рядок `[analytics] add_to_cart {productId: 'ethiopia-yirgacheffe'}`,
   а в картці — «У кошику: 1».
-- **Components ⚛**: `ProductCard` → `withAnalytics(Button)` → `Button`.
-- Якщо після цього завдання `npx vitest run` покаже, що впав тест з
-  `TimerView.test.jsx`, не виправляйте його зараз: це §4.6.
+- **Components ⚛** → `ProductCard`: усередині — `Button` з позначкою
+  `withAnalytics`, а в ньому — `Button` без позначки, обгорнутий компонент.
+- Тести з `TimerView.test.jsx` після цього завдання падають, зокрема й той,
+  що досі проходив. Не виправляйте їх зараз: це §4.6.
 
 **Коміт:** `feat: track clicks with the withAnalytics HOC`.
 **Довідка:** [HOC Pattern](https://www.patterns.dev/react/hoc-pattern),
 [Higher-Order Components in React Hooks era](https://www.developerway.com/posts/higher-order-components-in-react-hooks-era),
 [`ref` as a prop](https://react.dev/blog/2024/12/05/react-19#ref-as-a-prop),
-[Vitest: `vi.mock`](https://vitest.dev/api/vi).
+[Vitest: `vi.mock`](https://vitest.dev/api/vi#vi-mock).
 
 ### 4.6. Кнопка таймера, яка втрачає фокус
 
@@ -472,7 +477,7 @@ component), як `<select>` і `<option>` в HTML.
    `git push`. Історія комітів роботи:
 
    1. `chore: add lab 8 starter`;
-   2. `refactor: pass the tab content to Tabs as children`;
+   2. `feat: pass the tab content to Tabs as children`;
    3. `feat: make the tabs accessible`;
    4. `feat: track clicks with the withAnalytics HOC`;
    5. `fix: keep the timer button focused`.

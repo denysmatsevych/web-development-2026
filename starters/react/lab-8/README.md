@@ -27,9 +27,9 @@ code challenges ви зробите вкладки складеним компо
 - заготовки з описом API в коментарі: `src/components/Tabs.jsx` кидає
   помилку `Not implemented`, а `src/hoc/withAnalytics.jsx` поки повертає
   компонент без змін;
-- тести Vitest і React Testing Library в `tests/`: файл на компонент чи
-  HOC, який ви напишете. Тестів ЛР-7 тут немає. Файли в `tests/` не
-  змінюйте;
+- тести Vitest і React Testing Library в `tests/`, по файлу на challenge:
+  `withAnalytics.test.jsx` перевіряє `withAnalytics` і кнопку «Додати в
+  кошик». Тестів ЛР-7 тут немає. Файли в `tests/` не змінюйте;
 - `npm run lint` показує одну помилку. Її ви виправите в останньому
   challenge;
 - стилі всієї сторінки в `src/index.css`, зокрема для вкладок.
