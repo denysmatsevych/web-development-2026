@@ -1,9 +1,15 @@
 import { act, render, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { track } from '../src/analytics.js'
+import { withAnalytics } from '../src/hoc/withAnalytics.jsx'
 import BrewTimer from '../src/components/BrewTimer.jsx'
 
 vi.mock('../src/analytics.js')
+vi.mock('../src/hoc/withAnalytics.jsx', { spy: true })
+
+// Виклики withAnalytics, зроблені під час імпорту модулів, ще до тестів:
+// після кожного тесту setup.js очищає записані виклики.
+const callsOnImport = [...withAnalytics.mock.calls]
 
 const v60 = { id: 'v60', name: 'V60', recipe: '15 г', seconds: 180 }
 
@@ -39,5 +45,11 @@ describe('TimerView: перша кнопка з аналітикою', () => {
       method: 'v60',
       action: 'pause',
     })
+  })
+
+  it('подію timer_control надсилає кнопка, обгорнута withAnalytics', () => {
+    render(<BrewTimer method={v60} />)
+    const calls = [...callsOnImport, ...withAnalytics.mock.calls]
+    expect(calls.map(([, event]) => event)).toContain('timer_control')
   })
 })
