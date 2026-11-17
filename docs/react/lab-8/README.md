@@ -61,23 +61,36 @@ class. The plan's **ЛР-7's answers in ЛР-8's starter** has the reasoning.
   `tests/TimerView.test.jsx` (§4.6); `npm test -- tests/Tabs.children` runs
   one of them and `npm test -- tests/Tabs` runs both `Tabs` files. Students'
   commits have no scope, and the stub errors are `Not implemented: Tabs`.
-- **28 tests, not 27, and four of the prototype's are changed** so that
-  each checks what its name says:
+- **28 tests, not 27, and seven of the prototype's are changed** so that
+  each checks what its name says (the reviews of 2026-11-17 found the
+  changes marked «review»):
   - «клік по Tabs.Tab показує його панель і ховає іншу» and ««Заварювання»,
     «Відгуки (10)» і «Схожі товари» перемикають вміст» count a panel that
     isn't on the page as hidden; that hidden panels must stay mounted is left
     to the tests named after it;
   - the page test now clicks all three tabs, not one;
-  - «Home і End обирають першу й останню вкладки» also checks that Home
-    selects;
+  - «Home і End обирають першу й останню вкладки й не прокручують сторінку»
+    also checks that Home selects, and that both keys cancel the browser's
+    default action. Without that, End also scrolled the page to the bottom in
+    Edge; jsdom doesn't scroll, so the test reads `fireEvent`'s return
+    value, and §4.4 now asks that the keys don't scroll the page (review);
   - «перемикання вкладок не рендерить вміст панелей знову» counts from the
     second round of switches, so a `Tabs` that mounts a panel's content on
-    its first visit and keeps it afterwards passes (found in the review,
-    2026-11-17);
+    its first visit and keeps it afterwards passes (review);
+  - «Tabs.Tab і Tabs.Panel поза <Tabs> кидають зрозумілу помилку» also
+    renders `Tabs.Panel`, which §4.3 already required to throw (review);
+  - «повертає новий компонент з назвою withAnalytics(назва обгорнутого)»
+    also wraps a `Link`, so a `displayName` hard-coded to
+    `'withAnalytics(Button)'` fails; §4.5 says the name in brackets is the
+    wrapped component's (review);
+  - ««Додати в кошик» надсилає add_to_cart з id товару через withAnalytics»
+    also records `withAnalytics` calls, as the `TimerView` test below does.
+    Without it, a `ProductCard` that called `track` itself passed every test
+    and lint (review);
   - the new «подію timer_control надсилає кнопка, обгорнута withAnalytics»
     records `withAnalytics` calls made at import and during render. Without
     it, a `TimerView` that called `track` in its own `onClick` passed every
-    test and lint (found in the review, 2026-11-17).
+    test and lint (review).
 
   The starter passes four tests, not three: the page test passes with
   `ProductTabs` and guards the behaviour while the tabs move into `Tabs`.
@@ -141,7 +154,8 @@ workspace: React 19.3.1, Vite 8.3.8, `@vitejs/plugin-react` 6.3.0, ESLint
   `lab-7.zip`: one `npm install` in the root adds both workspaces
   (`node_modules` about 132 MB), and the folder passes `format:check` and
   `build`, shows the one lint error and passes 4 of 28 tests (rechecked
-  after the review's test changes);
+  after both reviews' test changes, as were the stages and the wrong
+  variants);
 - the site: `npm run check` and `npm run build` pass; the labs index lists
   ЛР-8; the handout has no horizontal scroll at 390 px, and the image loads.
 
