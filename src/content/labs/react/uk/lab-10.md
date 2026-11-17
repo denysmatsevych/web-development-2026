@@ -7,6 +7,7 @@ level: "3 курс, спеціальність «Комп'ютерні наук�
 format: "Індивідуально"
 duration: "2 академічні години (практична частина — близько 55 хвилин; самостійна робота — 2 години)"
 updated: 2026-11-18
+handout: /uk/react/labs/lab-10.pdf
 ---
 
 > **Примітка щодо актуальності.** Документ підготовлено станом на 18 листопада
@@ -662,7 +663,7 @@ exported under the conditions …`. Те саме покаже Vitest. Поті�
 У листі вкажіть теку лабораторної на GitHub і адресу застосунку на Vercel:
 
 ```
-GitHub repository: https://github.com/<username>/react-labs/tree/main/lab-10
+GitHub repository: https://github.com/<user>/react-labs/tree/main/lab-10
 Vercel: https://<project>.vercel.app/
 ```
 

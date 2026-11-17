@@ -3,11 +3,9 @@
 | Route                               | Source                                | What it is                                                                                                                                                                                                                                                                                                                                                                                                        |
 | ----------------------------------- | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `/react/labs/lab-10/`               | `src/content/labs/react/uk/lab-10.md` | the handout: useful links instead of theory, one app moved through four folder structures (§4.3 by file type, §4.4 by route, §4.5 feature folders after bulletproof-react, §4.6 Feature-Sliced Design), where the cart lives counted in each, §4.7 a structure chosen for five projects, the AI rule, §4.8 checks and Vercel; §4.9, +1 point: the cart as a local package after Nadia Makarevich; report, defence |
+| `/uk/react/labs/lab-10.pdf`         | built from the handout                | the downloadable handout                                                                                                                                                                                                                                                                                                                                                                                          |
 | `/uk/react/starters/lab-10.zip`     | `starters/react/lab-10/`              | the starter, unpacked by students into `react-labs/lab-10/`                                                                                                                                                                                                                                                                                                                                                       |
 | `/uk/react/labs/lab-10/result.webp` | the reference solution                | the catalogue with «Кошик (3)» in the header, in the handout's §1; it shows no folder tree, since the tree is the answer                                                                                                                                                                                                                                                                                          |
-
-No PDF yet: it is built after the instructor's review, and the handout's
-`handout:` field is added with it.
 
 `solution/` holds the instructor's material (gitignored): `stages/`, one
 folder per structure step, each a full copy of `src/`, `package.json` and
@@ -178,7 +176,11 @@ workspace: React 19.3.1, Vite 8.3.8, Vitest 5.1.0, jsdom 31.0.1, ESLint
   12 of 12 tests, lint, `format:check`, `check:deps` and `build`;
 - the site: `npm run check` and `npm run build` pass; the labs index lists
   ЛР-10; the handout has no horizontal scroll at 390 px or 1000 px, and the
-  image loads.
+  image loads;
+- the PDF, built on 2026-11-18 after both code reviews: 17 pages with the
+  screenshot, code blocks and tables; every code line sits whole on one
+  line, no text runs past the right margin, and §7's two tables end on the
+  last page.
 
 Not verified:
 
@@ -199,13 +201,15 @@ Not verified:
 ```bash
 git add starters/react/lab-10                                # the script packs tracked files only
 python docs/web/build-pack.py starters/react/lab-10          # public/uk/react/starters/lab-10.zip
-python docs/web/build-handout.py lab-10 react                # after the review: public/uk/react/labs/lab-10.pdf, from PowerShell
+python docs/web/build-handout.py lab-10 react                # public/uk/react/labs/lab-10.pdf, from PowerShell
 ```
 
 Rebuild the zip after the starter is committed: each entry is dated by the
-file's last commit. In the handout, §5's `GitHub repository:` line is 76
-characters, one over what the PDF's code box holds; shorten it or accept the
-wrap when the PDF is built.
+file's last commit. Rebuild the PDF after every handout edit; the handout's
+`handout:` field points to it. Keep code lines within 75 characters, or they
+wrap in the PDF, and a URL wraps at its hyphen: with `<username>`, §5's
+`GitHub repository:` line for a two-digit lab is 76 characters and broke as
+«…/main/lab-» + «10», so ЛР-10 writes `<user>` (72).
 
 To check the stages again: copy the starter into a `react-labs` workspace,
 replace `src/`, `package.json` and `index.html` with a stage's copies (and
