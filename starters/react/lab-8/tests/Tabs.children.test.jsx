@@ -127,11 +127,12 @@ describe('вкладки на сторінці товару', () => {
 
   it('перемикання вкладок не рендерить вміст панелей знову', () => {
     render(<App />)
+    const names = ['Відгуки (10)', 'Схожі товари', 'Заварювання']
+    // Перше коло: кожна вкладка показується вперше. Рахуємо з другого кола.
+    names.forEach((name) => act(() => tabButton(name).click()))
     const reviewRenders = ReviewList.mock.calls.length
     const brewRenders = BrewGuide.mock.calls.length
-    act(() => tabButton('Відгуки (10)').click())
-    act(() => tabButton('Схожі товари').click())
-    act(() => tabButton('Заварювання').click())
+    names.forEach((name) => act(() => tabButton(name).click()))
     expect(ReviewList.mock.calls.length).toBe(reviewRenders)
     expect(BrewGuide.mock.calls.length).toBe(brewRenders)
   })
