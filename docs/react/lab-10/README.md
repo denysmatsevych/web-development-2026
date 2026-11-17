@@ -82,6 +82,20 @@ stays local until the last group's ЛР-8 class, as `feat/react-lab-8` did for
 - **The VS Code setting is `js/ts.updateImportsOnFileMove.enabled`,** as
   VS Code's refactoring page names it today, not the plan's
   `javascript.updateImportsOnFileMove.enabled`.
+- **The starter has a `jsconfig.json`** (`include`: `src` and `packages`,
+  no `paths`), added after the review on 2026-11-18. Without it VS Code
+  keeps loose `.jsx` files in an inferred project made of the open files and
+  their imports. A file moved in the explorer is opened, but its importers
+  aren't in that project unless some open tab reaches them, so their imports
+  stay old. Run through VS Code's bundled TypeScript the way VS Code calls
+  it after a move (open the moved file, then `getEditsForFileRename`):
+  `components/Button.jsx` → `shared/ui/` updated 0 of 2 importers with
+  nothing else open, and the folder `hooks/` → `shared/hooks/` 0 of 10;
+  with `App.jsx` open, or with the `jsconfig.json`, all of them. Steiger
+  doesn't read `jsconfig.json`, so without `paths` it changes nothing there;
+  a student's §4.10 aliases would go into this file. The starter and the
+  4.6 and 4.7 stages, re-run with it, pass every check, and Steiger still
+  reports a forbidden import.
 - **§4.2 holds the measuring procedure and one explicit rule:** code doesn't
   change, only import paths, unless a structure's rule can't be met by any
   move; then the student changes the component, not the rule, and says so in
@@ -163,10 +177,11 @@ Not verified:
 
 - a timed dry run (target: §4.1–§4.8 in about 55 minutes, §4.9 in about
   8 more; cuts in the plan's **Timing**, where cut 3 is now built in);
-- VS Code's and WebStorm's import updates when `.jsx` files move without a
-  `jsconfig.json`, including the CSS import in `main.jsx` (the reference
-  stages were moved by a script that rewrites relative imports the same
-  way);
+- VS Code's import updates in the editor itself, with the `jsconfig.json`:
+  close all tabs, drag a file and a folder, and check a closed importer
+  and the CSS import in `main.jsx` (only the TypeScript server was run, see
+  above; the reference stages were moved by a script that rewrites relative
+  imports the same way); WebStorm's **Refactor → Move**;
 - `npm install` with all of ЛР-1–6 present as well;
 - Vercel building `lab-10` with the `file:` package;
 - §4.10's aliases (the planning prototype showed the `jsconfig.json` trap,
