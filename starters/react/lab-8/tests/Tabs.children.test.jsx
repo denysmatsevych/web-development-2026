@@ -84,9 +84,10 @@ describe('Tabs: вміст через children, стан через контек
     expect(screen.getByText('Лічильник 1')).toBeInTheDocument()
   })
 
-  it('Tabs.Tab поза <Tabs> кидає зрозумілу помилку', () => {
+  it('Tabs.Tab і Tabs.Panel поза <Tabs> кидають зрозумілу помилку', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {})
     expect(() => render(<Tabs.Tab value="x">X</Tabs.Tab>)).toThrow(/<Tabs>/)
+    expect(() => render(<Tabs.Panel value="x">X</Tabs.Panel>)).toThrow(/<Tabs>/)
   })
 
   it('з Tabs.jsx експортується лише Tabs', () => {
