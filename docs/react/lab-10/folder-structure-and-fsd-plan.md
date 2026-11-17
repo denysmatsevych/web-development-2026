@@ -75,7 +75,7 @@ student's decision.
 
 | § | Structure | Sources | Top-level folders in `src/` | Rule | Checked by |
 | --- | --- | --- | --- | --- | --- |
-| 4.3 | By file type (the starter) | React FAQ «Grouping by file type»; Wieruch, step 4; Comeau | `components/`, `hooks/`, `hoc/`, `store/`, `utils/`, `data/`, `pages/` | none: any file may import any | tests |
+| 4.3 | By file type (the starter) | React FAQ «Grouping by file type»; Wieruch, step 4; Comeau | `components/`, `hooks/`, `hoc/`, `store/`, `utils/`, `data/`, `pages/` | none of its own: any file may import any. §4.5's rule for shared folders already covers `components/`, `hooks/` and `utils/`, which share its names; the starter breaks none of it | tests |
 | 4.4 | By route | React FAQ «Grouping by features or routes»; Next.js «Split project files by feature or route»; Dodds, colocation | `app/`, `routes/<route>/`, `shared/` | a route folder doesn't import another route folder; code that two routes use goes to `shared/`; `shared/` imports neither `routes/` nor `app/` | tests, dependency-cruiser |
 | 4.5 | Feature folders | bulletproof-react; Wieruch, step 5 | `app/` (route components in `app/routes/`), `features/<feature>/`, shared `components/`, `hooks/`, `lib/`, `stores/`, `utils/` | features don't import each other; imports flow shared → features → app; no `index.js` barrels, as bulletproof-react now advises | tests, dependency-cruiser |
 | 4.6 | Feature-Sliced Design v2.1 | feature-sliced.design | the layers the app needs: `app/`, `pages/`, `widgets/`, `features/`, `entities/`, `shared/`; slices; segments `ui/`, `model/`, `api/`, `lib/`, `config/` | a layer imports only from layers strictly below; no imports between slices of one layer; other slices are imported only through their `index.js`; a slice that only one place uses shouldn't be a slice | tests, Steiger, dependency-cruiser |
@@ -177,31 +177,40 @@ A header on every page links to the catalogue and shows «Кошик (N)».
   rule on Vercel.
 - **A cart store.** A module with `subscribe`/`getSnapshot` read through
   `useSyncExternalStore` and kept in `localStorage`, plus a `useCart()`
-  hook. It isn't Context, which is ЛР-12's topic. A cart line keeps the
-  bean's name and price from the moment it was added, and the cart's
-  components use plain `<button>` elements. So the cart's files import only
-  React and each other, and §4.7 can move them into a package without a
-  redesign.
+  hook. It isn't Context, which is ЛР-12's topic. `getSnapshot` reads
+  `localStorage` on every call and returns the same array while the stored
+  string is unchanged. That is what lets `tests/setup.js` empty the cart
+  between tests by clearing `localStorage`, without importing the store,
+  which moves in every step.
+- **The cart's core is free of the app.** The store, `useCart` and
+  `CartLine` import only React and each other: a line keeps the bean's name
+  and price from the moment it was added, and its «−», «+» and «Видалити» are
+  plain `<button>` elements. The rest of the cart touches the app:
+  «Додати в кошик» is `withAnalytics(Button, 'add_to_cart')`, as in ЛР-8;
+  the cart page's empty state links to the catalogue through `Link`; the
+  counter sits in the header. §4.7 turns that boundary into a decision.
 
 **Reuse on purpose.** Steiger's `insignificant-slice` rule rejects a slice
 that only one other slice uses (see **Verification**). An app where nothing
 is shared would make FSD's layers pointless, so these parts are used in two
 or more places: ♡ (catalogue cards, the product card, related products),
 «Додати в кошик» (catalogue cards, the product card), the bean card
-(catalogue, related products), the cart (header, cart page, both buttons),
+(catalogue, related products), the cart (the header, the cart page and
+«Додати в кошик» on two pages),
 `Button`, `Tabs`, `useLocalStorage` and `useShowMore`. The brew guide and its
 timers, the reviews, the grind picker and the cart lines are each used in one
 place. Together they create the decisions each structure forces, which the
 handout leaves to the students (see each step's **Рішення**).
 
-**One coupling a by-type app would plausibly have:** `BeanCard` imports
-`FavoriteButton` and `AddToCartButton` itself. Nothing complains until a
-structure forbids that import. The handout doesn't point it out; the
-checker does.
+**One seeded coupling.** The starter has one import that a by-type app
+would plausibly have and that a later structure forbids. Nothing complains
+until then. The handout doesn't point it out; the checker does. What it is
+and its fix are in `solution/README.md`.
 
 **ЛР-8's answers in the starter.** The shop contains ЛР-8's reference
 solution: compound `Tabs` with context, the APG keyboard, `withAnalytics`
-and the fixed timer button. As with ЛР-8 (its decision 7), the branch and the
+on «Додати в кошик» and the timer buttons, and ЛР-8 §4.6's fix for the
+timer button's focus. As with ЛР-8 (its decision 7), the branch and the
 zip stay local until the last group's ЛР-8 class.
 
 **Size:** about 37 files in `src/`. ЛР-8's unit tests don't come along: they
@@ -228,17 +237,33 @@ student updates one line, `imports["#app"]` in `package.json`, and when
 ### Measuring a change
 
 Each step ends with the same two measurements, recorded as one row of the
-table in `lab-10/STRUCTURES.md`:
+table in `lab-10/STRUCTURES.md`. The row goes into the step's commit, so the
+measuring happens before the commit, on staged moves:
 
-1. **«Прибрати відгуки».** Delete everything that only the reviews use, fix
-   imports until `npm run build` passes, then read three numbers:
-   `git diff --stat` (files changed), `git diff --dirstat=files,0` (folders
-   touched) and `npm run check:deps` (dead files left behind, the
-   `not-reachable-from-main` warnings). Then `git restore src` brings
-   everything back. The tests aren't run here: the reviews tests fail by
-   design.
+1. **«Прибрати відгуки».** First `git add -A`, which stages the step's
+   moves. Then delete everything that only the reviews use, fix imports
+   until `npm run build` passes, and read three numbers: `git diff --stat`
+   (files changed), `git diff --dirstat=files,0` (folders touched) and
+   `npm run check:deps` (dead files left behind, the
+   `not-reachable-from-main` warnings). Then `git restore src` brings back
+   the staged structure. The tests aren't run here: the reviews tests fail
+   by design.
 2. **«Де живе кошик».** How many folders hold the cart's code: the store,
-   the hook, the two buttons, the lines, the page, the header's counter.
+   `useCart`, `AddToCartButton`, `CartLine`, the cart page and the header's
+   counter.
+
+Then the student fills in the row, runs `git add -A` again and commits.
+The `git add -A` before measuring isn't optional: `git diff` doesn't see
+untracked files, so unstaged moves count as deletions, and `git restore src`
+then brings the old files back next to the moved ones (checked).
+
+**A bias the handout names.** `not-reachable-from-main` follows re-exports,
+so a file that an `index.js` still re-exports counts as reachable even when
+nothing uses it (checked with dependency-cruiser 18.8.0). In §4.6, where
+every slice has an `index.js`, a dead file behind one goes unreported, and a
+student who leaves that `index.js` alone also changes fewer files. §4.6's
+measurement says so and asks the student to read the slices' `index.js`
+files after the deletion; §6 asks about it.
 
 The numbers depend on each student's decisions, so the handout gives none;
 the reference's are in `solution/README.md`. The commands work in
@@ -247,8 +272,8 @@ PowerShell and in Git Bash.
 ### §4.3. За типом файлів: the starter
 
 **Що має вийти.** No moves. Students read the tree, run every check (12
-tests pass; `check:deps` has no errors, since its rules don't match any
-folder yet), take both measurements and commit the first row:
+tests pass; `check:deps` has no errors, since the starter breaks none of its
+rules), take both measurements and commit the first row:
 `docs: measure the by-type structure`.
 
 **Рішення** (observe only): which `components/` serve one page; where
@@ -273,11 +298,10 @@ sub-folders a feature needs (`components/`, `hooks/`, `stores/`, `utils/`),
 and the shared folders. No `index.js` files: imports point at files. Commit
 `refactor: group files by feature`.
 
-**Рішення:** what counts as a feature; what to do when a feature's
-component shows another feature's button. The checker reports it, and the
-fix is a small code change, not a move: about 3 minutes, and the only code
-change in the lab. Also: whether `ShowMore` and `useShowMore` are shared or
-belong to a feature.
+**Рішення:** what counts as a feature; what to do when the checker reports
+an import between features (the seeded coupling, about 3 minutes; see
+**The app**); whether `ShowMore` and `useShowMore` are shared or belong to
+a feature.
 
 ### §4.6. Feature-Sliced Design
 
@@ -293,11 +317,18 @@ Students will meet these Steiger rules: `fsd/forbidden-imports`,
 its rule's page, so §4.6's **Довідка** only says to read that page first.
 
 **Рішення:** entity, feature or widget; what stays inside a page; where the
-header's counter goes; how many layers the cart now spans.
+header's counter goes; how many layers the cart now spans; after
+«Прибрати відгуки», what the slices' `index.js` files still export (see
+**Measuring a change**).
 
 ### §4.7. Пакет за Makarevich
 
-**Що має вийти.** The cart leaves `src/` for `lab-10/packages/cart/`:
+**Що має вийти.** The cart moves from `src/` into `lab-10/packages/cart/`
+as far as the package's rule allows: the package doesn't import the app.
+Its core (the store, `useCart`, `CartLine`) moves as it is. The parts that
+use the app's `Button`, `withAnalytics` or `Link` either stay in `src/` and
+use the package, or get what they need from the app as props or `children`.
+The package:
 
 - `package.json`: `"name": "@coffee/cart"`, `"private": true`,
   `"type": "module"`, `"exports": { ".": "./index.js" }`;
@@ -310,15 +341,18 @@ header's counter goes; how many layers the cart now spans.
   redeploy.
 
 The app imports `@coffee/cart`. Steiger and `check:deps` still pass. Commit
-`refactor: move the cart into a workspace package`. Only «Де живе кошик» is
-measured again.
+`refactor: move the cart into a local package`. Only «Де живе кошик» is
+measured again. The package is a `file:` dependency inside the `lab-10`
+workspace, not a workspace of its own, since the root's `workspaces` stay
+`lab-*`.
 
 **An experiment that isn't committed:** import a file inside the package by
 name (`@coffee/cart/ui/…`), read the error from `vite build` and Vitest
 (`"./ui/…" is not exported under the conditions …`), then try a relative path
 into the package. It builds, and `check:deps` reports it.
 
-**Рішення:** what the public API exports; which layer the store belongs to;
+**Рішення:** which parts of the cart stay in the app and how they use the
+package; what the public API exports; which layer the store belongs to;
 whether the package's `ui/` follows the direct-children rule.
 
 ### §4.8. Що обрати
@@ -350,8 +384,10 @@ this lab to the final project's first stage.
 
 **Tests** (Vitest + React Testing Library; three files, 12 tests). They
 import only `#app`, a subpath import in `lab-10/package.json`, so moving
-files never breaks them; moving `App` means updating that one mapping. All
-12 pass in the starter and after every step:
+files never breaks them; moving `App` means updating that one mapping.
+`tests/setup.js` imports nothing from `src/` either: after each test it
+clears `localStorage`, which also empties the cart (see **The app**), and
+resets `location.hash`. All 12 pass in the starter and after every step:
 
 - `tests/catalog.test.jsx`: каталог показує всі 8 сортів з цінами; ♡ у
   картці лишається натиснутим після перезавантаження; «Додати в кошик»
@@ -374,7 +410,7 @@ serves every step.
 | `no-circular` | error | import cycles |
 | `routes-are-independent` | error | `src/routes/X/`, `src/pages/X/` or `src/app/routes/X/` importing another `X` of the same folder |
 | `features-are-independent` | error | `src/features/X/` importing another feature |
-| `shared-stays-shared` | error | `shared/`, `components/`, `hooks/`, `lib/`, `stores/`, `utils/` or `data/` importing `app/`, `routes/`, `pages/`, `widgets/`, `features/` or `entities/` |
+| `shared-stays-shared` | error | the shared folders of §4.4–§4.6 (`shared/`, `components/`, `hooks/`, `lib/`, `stores/`, `utils/`) importing `app/`, `routes/`, `pages/`, `widgets/`, `features/` or `entities/` |
 | `app-on-top` | error | anything outside `src/app/` importing from it |
 | `packages-are-independent` | error | `packages/` importing `src/` |
 | `no-deep-imports-into-packages` | error | `src/` importing a package's file other than its `index.js` by path |
@@ -528,7 +564,10 @@ AI note pointing to §4.2.
 - **4.2. Правила роботи з AI і переміщення файлів.** ЛР-7's rule, adapted:
   AI may explain a concept or a checker's message, but doesn't decide where
   files go and doesn't move them, and agents are off. The editor setting for
-  updating imports; `git diff -M --stat` shows moves as renames.
+  updating imports; after `git add -A`, `git diff --cached --stat` shows
+  moves as renames (`src/{components => shared}/…`). Unstaged, a moved file
+  shows only as a deletion, since `git diff` doesn't see untracked files
+  (checked).
 - **4.3–4.8.** As under **The steps**.
 - **4.9. Перевірки, GitHub і Vercel.** All checks; `git push`; a new
   Vercel project `react-lab-10` with Root Directory `lab-10`. The history is
@@ -570,7 +609,8 @@ its readings:
   shouldn't import each other.
 - **«Теки за функціональністю»:** what a feature is; why features don't
   import each other and how pages compose them; shared → features → app;
-  barrel files and tree shaking.
+  barrel files and tree shaking; why a barrel hides a dead file from a
+  dependency graph.
 - **«FSD»:** layers, slices, segments; the import rule; the public API and
   side-stepping it; why an entity can't import a feature; `@x`;
   `insignificant-slice` and «not everything needs to be a feature»; when FSD
@@ -584,7 +624,8 @@ its readings:
   message.
 - **«Вибір»:** the answers in «Що обрати», defended; how to migrate a
   growing project (type → feature → FSD); how to restructure safely (tests
-  first, editor refactoring, small commits, `git diff -M`).
+  first, editor refactoring, small commits, renames in
+  `git diff --cached --stat`).
 
 The handout's §6 will be the full list; the answers go in
 `solution/README.md`.
@@ -635,7 +676,7 @@ local until the last group's ЛР-8 class.
 
 **Checked while writing this plan (2026-11-17)** on a prototype: a
 `react-labs` root with npm workspaces, a `lab-10` app with a few FSD slices
-and a workspace package, on Windows 11 with Node.js 24.20.0 and npm 11.19.0.
+and a local package, on Windows 11 with Node.js 24.20.0 and npm 11.19.0.
 Versions: React 19.3.1, Vite 8.3.8, `@vitejs/plugin-react` 6.3.0, Vitest 5.1.0,
 jsdom 31.0.1, React Testing Library 16.3.3, ESLint 10.15.0 with ЛР-8's
 config (`eslint-plugin-react-refresh` 0.5.7), Steiger 0.10.0,
@@ -674,6 +715,17 @@ config (`eslint-plugin-react-refresh` 0.5.7), Steiger 0.10.0,
 - **jsdom:** clicking `<a href="#/cart">` leaves `location.hash` empty;
   assigning `location.hash` fires `hashchange`, and a
   `useSyncExternalStore` subscriber re-renders.
+- **dependency-cruiser and barrels:** a file that only an `index.js`
+  re-exports counts as reachable, so the `reachable: false` rule doesn't
+  flag it; only a file that nothing imports gets the warning.
+- **Git:** unstaged moves show in `git diff --stat` as deletions, and
+  `git restore src` then brings the old files back next to the moved ones;
+  after `git add -A`, `git diff --cached --stat` shows the renames.
+  `git diff --dirstat=files,0` runs unquoted in Windows PowerShell 5.1 and
+  lists each folder that directly holds a change.
+- **Vercel** (its monorepo docs): a lockfile change redeploys only the
+  projects whose dependencies it affects, so §4.7's `npm install` doesn't
+  redeploy the other labs.
 
 **To check during the build:**
 
@@ -686,8 +738,13 @@ config (`eslint-plugin-react-refresh` 0.5.7), Steiger 0.10.0,
   55 minutes plus setup, with the editor's import updates for `.jsx` files
   (no `jsconfig.json`); otherwise apply the cuts under **Timing**;
 - WebStorm's **Move** on the same files;
-- the «Прибрати відгуки» commands in PowerShell and Git Bash, and that
-  `git restore src` undoes the deletions;
+- the whole «Прибрати відгуки» sequence (`git add -A`, the deletions, the
+  three readings, `git restore src`) after a real step's moves, in
+  PowerShell and Git Bash;
+- the starter's tests in random order (`npx vitest run --sequence.shuffle`),
+  to prove that `setup.js` resets the cart and the route;
+- §4.7 in the reference: what moves into the package and what stays in the
+  app, with Steiger's `insignificant-slice` on what stays;
 - `npm install` in an existing `react-labs` (ЛР-1–8 present) adds `lab-10`
   and links `@coffee/cart`; Vercel builds `lab-10` with the `file:` package
   and doesn't run the tests;
@@ -733,11 +790,15 @@ comes right after ЛР-8.
    `jsconfig.json` aliases. Aliases are §4.10.
 9. **No `index.js` in §4.5, `index.js` per slice in §4.6,** as each source
    says. The contrast is a defence question.
-10. **The cart is the package.** The starter keeps it dependency-free, so the
-    move needs no redesign, and the header, two buttons and a page all use
-    it, which makes «Де живе кошик» worth measuring. The brew guide was the other candidate,
-    but it depends on `Button` and `withAnalytics` in `shared/`, so it would
-    need a second package or a redesign.
+10. **The cart is the package.** Its core (store, `useCart`, `CartLine`)
+    imports only React, so it moves without a redesign. The header, two
+    pages and «Додати в кошик» use it, which makes «Де живе кошик» worth
+    measuring. The parts that touch the app (`withAnalytics` on
+    «Додати в кошик», as in ЛР-8, and the empty state's `Link`) make the
+    package's boundary a real decision instead of a copy. The brew guide was
+    the other candidate, but only one tab uses it, and its view depends on
+    `Button` and `withAnalytics` as well: a package there would show the
+    cost without the reuse.
 11. **AI explains, doesn't place or move files,** and agents are off. Where
     a file goes is the skill being practised.
 12. **Everything in class, 1 point, and ЛР-7's rule for unfinished work**
