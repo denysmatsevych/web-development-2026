@@ -10,12 +10,12 @@ shop with a hash router. The alternative is tried on one package in class.
 ЛР-8.
 
 The tools were checked on a small prototype the same day (see
-**Verification**). The starter itself isn't prototyped yet. Instructor-only
-material lives in the gitignored `solution/` folder next to this file: the
-comparison of FSD and Makarevich's structure, and notes for the defence and
-for §4.8's project choices. When the lab is built, the lasting facts move to
-this folder's `README.md`, and this file stays as the plan the lab was built
-from.
+**Verification**). Instructor-only material lives in the gitignored
+`solution/` folder next to this file: the comparison of FSD and Makarevich's
+structure, and notes for the defence and for §4.8's project choices. The lab
+was built on 2026-11-17. What was built, what was verified and where the
+build differs from this plan are in this folder's [README.md](README.md);
+this file stays as the plan the lab was built from.
 
 The challenge format, the test tooling and the AI rule come from ЛР-7. Its
 plan, [../lab-7/custom-hooks-and-render-props-plan.md](../lab-7/custom-hooks-and-render-props-plan.md),
