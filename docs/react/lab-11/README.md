@@ -124,7 +124,14 @@ workspace: React 19.3.1, Vite 8.3.8, `@vitejs/plugin-react` 6.3.0, ESLint
   needs no argument are in the pages' text; of the linked `uk.react.dev`
   pages only «Оновлення масивів у стані» is translated, as §2 says;
 - no code line in the handout is over 75 characters, so the PDF won't wrap
-  one.
+  one;
+- `lab-11.zip` (35 files at the root, LF only, a rebuild is byte-identical)
+  unpacked into a fresh `react-labs/lab-11/` next to `lab-10/` from
+  `lab-10.zip`: one `npm install` in the root adds both workspaces
+  (`node_modules` about 175 MB), and the folder passes `format:check`, lint
+  and `build` and 4 of 40 tests;
+- the site: `npm run check` and `npm run build` pass; the labs index lists
+  ЛР-11, and the page links the zip and the image under the base path.
 
 Not verified:
 
