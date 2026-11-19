@@ -1,0 +1,156 @@
+# Lab 11 — useReducer and complex state
+
+| Route | Source | What it is |
+| --- | --- | --- |
+| `/react/labs/lab-11/` | `src/content/labs/react/uk/lab-11.md` | the handout: useful links instead of theory, four code challenges on a barista's order queue (§4.3 the order form moved to the student's own `draftReducer`, §4.4 a colleague's queue reducer made pure, §4.5 the queue's state normalized into `byId` and `ids`, §4.6 undo and redo through `withUndo`), the AI rule, checks and Vercel, +1 point for the form's reducer with Immer (§4.8), ungraded reducer design (§4.9); report, defence |
+| `/uk/react/starters/lab-11.zip` | `starters/react/lab-11/` | the starter with stubs and the given tests, unpacked by students into `react-labs/lab-11/` |
+| `/uk/react/labs/lab-11/result.webp` | the reference solution | the page with a draft in the form, orders in all four columns and «Скасувати дію» enabled, in the handout's §1 |
+
+There is no PDF yet: it is built after the instructor's review, and the
+handout gets its `handout:` field then.
+
+`solution/` holds the instructor's material (gitignored): `stages/`, one
+folder per challenge in the handout's order (`4.3-draft-reducer`,
+`4.4-pure-queue`, `4.5-normalized`, `4.6-with-undo`, `4.8-immer`), each
+holding only the files its challenge changes, copied over the starter's
+`src/` in order (`4.8-immer` also has the `package.json` that
+`npm install immer -w lab-11` leaves); `wrong-variants/`, plausible mistakes,
+built from the stages by `make-wrong-variants.py` (one, `4.5-synced-copy`,
+written by hand); `shots.mjs`, which checks the starter in development and in
+a production build and the reference solution in headless Edge, and takes the
+screenshot; the 2026-11-19 `prototype/`; and a `README.md` with the seeded
+defects, the results per stage and per variant, and the defence answers. The
+repository is public and the defence asks for those, so they stay in
+`solution/`, not in this README or the plan. The plan the lab was built from
+is [use-reducer-and-complex-state-plan.md](use-reducer-and-complex-state-plan.md);
+the parts it shares with ЛР-7 are in
+[../lab-7/custom-hooks-and-render-props-plan.md](../lab-7/custom-hooks-and-render-props-plan.md).
+
+## The starter publishes no earlier answers
+
+`starters/react/lab-11/` is a new app, so `feat/react-lab-11` can be pushed
+and reviewed at any time. ЛР-12 reuses this app, and its starter will contain
+ЛР-11's reference solution: `feat/react-lab-12` stays local until the last
+group's ЛР-11 class.
+
+## Why it looks like this
+
+- **Code challenges with given tests,** as in ЛР-7, all in class, with an
+  optional +1 task once the main part is pushed, as in ЛР-10 (the
+  instructor's decisions 1–4, 2026-11-19).
+- **Two reducers.** Students write the form's; the queue's is a colleague's
+  with seeded defects that show only under `<StrictMode>`, so §4.4 is a bug
+  hunt that compares `npm run dev` with `npm run preview`.
+- **Every page test renders in `<StrictMode>`,** as `src/main.jsx` does
+  (`renderStrict` in `tests/page.jsx`), and every reducer test, `withUndo`'s
+  included, freezes its input (`tests/deepFreeze.js`). ESLint can't help:
+  the `react-hooks` rules don't analyse a reducer, so the starter lints clean
+  and §4.4 says so.
+- **Selectors are the queue's API,** so §4.5 changes the state's shape while
+  the components and the earlier tests stay as they are.
+- **ЛР-12 reuses the app.** The queue's state and `dispatch` stay in `App`
+  and reach the cards, «Деталі» and the history buttons as props; the form's
+  draft stays in `OrderComposer`.
+- The plan's decisions 1–22, all settled on 2026-11-19, were built as
+  settled; the details below are the build's.
+
+## Where the build differs from the plan
+
+- **40 tests in eight files:** `draftReducer.test.js` (9) and
+  `OrderComposer.test.jsx` (3) for §4.3, `queueReducer.test.js` (4) and
+  `OrderBoard.test.jsx` (3) for §4.4, `queueState.test.js` (7) and
+  `OrderDetails.test.jsx` (3) for §4.5, `withUndo.test.js` (8) and
+  `HistoryButtons.test.jsx` (3) for §4.6. Two helpers sit beside them:
+  `page.jsx` (`renderStrict` and finders for cards, columns and the form) and
+  `deepFreeze.js`. `npm test -- tests/draftReducer tests/OrderComposer` runs
+  one challenge's two files.
+- **The starter passes 4 of 40,** and §4.1 names them: «Надіслати бариста»
+  adds the order to «Нові», `selectColumn` returns a column in order, and the
+  two number rules in `queueReducer.test.js`. They guard what already works
+  while the code changes.
+- **§4.3's component test also spies on `react`** (`vi.mock('react',
+  { spy: true })`), so it checks that `useReducer` receives `draftReducer`,
+  not only that `draftReducer` runs.
+- **`withUndo`'s unit tests call `withUndo` inside each test,** not at
+  import, so the stub fails test by test instead of failing the file.
+- **§4.3 and §4.5 commit as `fix`, not the plan's `refactor`:** «Разом»
+  becomes right in §4.3, and renaming and «Деталі» become right in §4.5.
+- **The card's checkboxes are enabled only in «Готуються», and «Готово» only
+  once every drink is ticked,** so ticking a drink matters on the page; the
+  plan didn't say.
+- **`OrderDetails` moves focus to its heading when an order opens,** so the
+  panel is seen on a phone, where it sits above the board.
+- **`menu.js` also exports `defaultMilk(drink)` and `describeItem(item)`;**
+  the cards and «Деталі» show a drink as «Лате L · вівсяне молоко · ваніль».
+- **§4.2 keeps only the rule that AI explains and doesn't write code,** as
+  ЛР-8 and ЛР-10 do.
+- **§4.9 asks for the stop-list's design in `lab-11/STOP-LIST.md` on a
+  separate branch,** so `main` stays as graded.
+- **Length:** about 4,900 words by `wc -w`, between ЛР-7's and ЛР-10's.
+
+## Verified on 2026-11-20
+
+On Windows 11 with Node.js 24.20 and npm 11.19, in a scratch `react-labs`
+workspace: React 19.3.1, Vite 8.3.8, `@vitejs/plugin-react` 6.3.0, ESLint
+10.15.0, `eslint-plugin-react-hooks` 7.1.1, `eslint-plugin-react-refresh`
+0.5.8, Prettier 3.9.10, Vitest 5.1.1, jsdom 31.0.1, `@testing-library/react`
+16.3.3, `@testing-library/user-event` 14.6.13, `@testing-library/jest-dom`
+7.0.1, Immer 11.2.10:
+
+- `package.json` is ЛР-10's without dependency-cruiser, Steiger and the
+  `#app` import; a fresh `npm install` in the workspace root installs the
+  tools;
+- every stage (the starter, then the four challenges applied in order) passes
+  ESLint with no problems, Prettier and the build; the tests pass 4, 15, 20,
+  29 and 40 of 40, each failure with a readable message and no React
+  warnings in the output; the full run takes about 3 seconds;
+- `npm install immer -w lab-11` from the workspace root adds `immer` to
+  `lab-11/package.json`, and the Immer stage passes 40 of 40, ESLint,
+  Prettier and the build;
+- each wrong variant in `solution/wrong-variants/` fails at least one test
+  or the lint, as recorded in `solution/README.md`;
+- §4.4's experiment: with `renderStrict` rendering without `<StrictMode>`,
+  the board's three page tests pass on the starter;
+- in Edge headless (`solution/shots.mjs`): the starter on a Vite dev server
+  and the same starter on `vite preview` differ as §4.4 describes, and the
+  rename and «Деталі» problems §4.5 starts from show in both; the reference
+  solution passes the same walk, empties «Деталі» when the opened order is
+  cancelled and brings it back on undo, and has a visible focus ring on the
+  card buttons; no horizontal scroll at 1280, 1000 or 390 px, with the board
+  in four, two and one columns; the console stays clean;
+- the handout's links return 200; its anchors exist on the pages; the two
+  quotes (react.dev's «Avoid duplication in state», Redux's reducer
+  enhancer) and react.dev's advice to pass `null` to an initializer that
+  needs no argument are in the pages' text; of the linked `uk.react.dev`
+  pages only «Оновлення масивів у стані» is translated, as §2 says;
+- no code line in the handout is over 75 characters, so the PDF won't wrap
+  one.
+
+Not verified:
+
+- a timed dry run (target: the four challenges in about 52 minutes plus
+  setup, §4.8 in about 8; cuts in the plan's **Timing**);
+- the React DevTools 8 panels: the `Reducer` hooks that §4.3, §4.5 and §4.6
+  tell students to look for under **Перевірка**;
+- a screen reader on the board and «Деталі»;
+- Firefox and Safari;
+- the Vercel project.
+
+## Build
+
+```bash
+git add starters/react/lab-11                                # the script packs tracked files only
+python docs/web/build-pack.py starters/react/lab-11          # public/uk/react/starters/lab-11.zip
+python docs/web/build-handout.py lab-11 react                # public/uk/react/labs/lab-11.pdf, from PowerShell
+```
+
+Rebuild the zip after the starter is committed: each entry is dated by the
+file's last commit, and a file with no commit yet keeps its modification
+time. Rebuild the PDF after every handout edit, once it exists. Keep code
+lines within 75 characters, or they wrap in the PDF.
+
+To check the stages again: copy the starter into a `react-labs` workspace,
+copy each `solution/stages/*/src` over its `src/` in order, and run
+`npx vitest run`, `npm run lint`, `npm run format:check` and `npm run build`
+after each; for `4.8-immer`, run `npm install immer -w lab-11` first.
+`solution/shots.mjs` has the browser checks.
