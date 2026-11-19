@@ -1,11 +1,13 @@
 # Plan: React ЛР-11 «Управління станом: useReducer для роботи зі складними структурами даних»
 
-Status: proposed on 2026-11-19. That day the instructor settled the shape
+Status: settled on 2026-11-19. That day the instructor settled the shape
 (decisions 1–4 under **Decisions**): a new screen in the café world, a
 barista's order queue; ЛР-12 reuses the app; besides moving state into a
 reducer and making a reducer pure, the lab covers normalization, undo and
 redo through a higher-order reducer, and Immer; the format is ЛР-7's code
-challenges with an optional +1 task. A prototype of the reducers and the
+challenges with an optional +1 task. After the plan's review the same day,
+the instructor confirmed the proposed decisions 5–17 and added 18–22 from
+the review's changes. A prototype of the reducers and the
 kinds of tests the lab needs was built and checked the same day (see
 **Verification**). It lives in the gitignored `solution/` folder next to
 this file, with the instructor's notes on the seeded defects. The lab is not
@@ -828,7 +830,7 @@ them.
    class, AI explains only, 1 point; plus one optional task for 1 more
    point, started in class once the main part is pushed, as in ЛР-10.
 
-**Proposed, for the instructor to confirm or change:**
+**Proposed in this plan and confirmed by the instructor on 2026-11-19:**
 
 5. **Two reducers:** students write the form's (§4.3); the queue's is
    given with seeded defects (§4.4), then normalized (§4.5) and wrapped
@@ -870,3 +872,21 @@ them.
     them, Redux Toolkit and Zustand (Lecture 4's presentations), async
     actions and data fetching (Part 3), memoized selectors (ЛР-15), and
     TypeScript's discriminated unions for actions (ЛР-19, П8.2).
+
+**Added after the review and confirmed by the instructor on 2026-11-19:**
+
+18. **The queue's state is built in `useReducer`'s initializer:**
+    `useReducer(queueReducer, null, () => createInitialState(loadOrders()))`,
+    so the orders are built when `App` mounts, not on every render (see
+    **Data**). §6 asks why.
+19. **«Деталі» are empty while the opened order is gone** (cancelled, or its
+    placement undone) and come back if an undo returns it. The given
+    `OrderDetails` renders nothing for a missing order and keys the name
+    field on the order and the name; one §4.5 test covers it.
+20. **`emptyDraft` is deep-frozen in the stub,** so a form reducer that
+    mutates it throws at the first click instead of carrying drinks into
+    the next test.
+21. **The draft's name is `customerName`,** a string, so it isn't confused
+    with an order's `customer` object.
+22. **Each drink has a default milk in `menu.js`:** «без молока» for
+    Еспресо and Американо, «звичайне» for the rest; `drink_added` uses it.
