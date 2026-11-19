@@ -322,7 +322,10 @@ gets the shape the handout gives:
 every render);
 the reducer's cases and the two
 selectors move to it; `App` keeps the opened order's id, not a copy, and
-reads the order through `selectOrder`. Items stay inside their order.
+reads the order through `selectOrder`. Items stay inside their order. The
+names follow Redux's **Normalizing State Shape** for `byId` and Redux
+Toolkit's `createEntityAdapter` for `ids`; Redux's page says `allIds`, and
+the handout says so in one line.
 
 **Що вже є.** The pure nested reducer from §4.4; the rename bug and the
 stale «Деталі» in the page. The handout's intro names both symptoms and
@@ -517,13 +520,20 @@ These are estimates; the timed dry run decides. If the lab takes longer than
    (`#my-reducer-or-initializer-function-runs-twice`) to §4.4's **Довідка**.
    It explains one of the defects with an example, so it is a hint, not a
    reading;
-4. make §4.6 the +1 task and Immer ungraded (§4.9).
+4. make §4.6 the +1 task, done after §4.7's checks as §4.8 is now, and
+   Immer an ungraded extra next to §4.9's stop-list.
+
+§4.5 is the tightest estimate: the prototype's normalized reducer is 86
+lines against the nested one's 66, and students also write
+`createInitialState`, two selectors and `App`'s id. The dry run times it on
+its own; if §4.5 alone runs past 14 minutes, cut 2 comes first.
 
 ## Starter: `starters/react/lab-11/` → `/uk/react/starters/lab-11.zip`
 
 Packed like ЛР-10's: `python docs/web/build-pack.py starters/react/lab-11`
 after the starter is committed. Configs are ЛР-10's without
-dependency-cruiser and Steiger.
+dependency-cruiser and Steiger, and `jsconfig.json` includes `src` only
+(ЛР-10's also lists `packages`, which this lab doesn't have).
 
 ```text
 starters/react/lab-11/
@@ -640,15 +650,15 @@ readings:
   interaction; what goes in the payload; why ids come with the action;
   what a reducer should do with an unknown action.
 - **«Чисті ред'юсери»:** what pure means; why React calls a reducer twice in
-  development and which result it keeps; what each defect in §4.4 did and
+  development and what it does with the two results; what each defect in §4.4 did and
   why only in development; why ESLint said nothing; where side effects go.
 - **«Іммутабельність»:** why React needs a new object (`Object.is`); copying
   the path to a nested change; structural sharing; what the deep-frozen and
   `toBe` tests prove; why `structuredClone` of the whole state isn't the
   fix.
 - **«Структура стану»:** react.dev's five principles, with an example of
-  each from the lab; «Разом» as derived state; why the next order number is
-  state.
+  each from the lab; «Разом» as derived state; where the next order number
+  belongs, and why.
 - **«Нормалізація»:** `byId` and `ids`, and why `ids` is an array; what
   stays nested and why; selectors as the boundary between the shape and the
   page; why a selector that builds new objects is fine here and when it
@@ -733,7 +743,10 @@ Testing Library 16.3.3, user-event 14.6.10, ESLint 10 with ЛР-10's config
 and `eslint-plugin-react-hooks` 7.1.1, Immer 11.2.10. The prototype has a
 seeded queue reducer, the pure nested reference, the normalized reference,
 `withUndo`, the form reducer in spread and Immer versions, and a minimal
-board; 44 probe tests pass.
+board; 44 probes run without errors. The StrictMode, frozen-input and
+same-input probes log what each variant does rather than assert it, so the
+findings below come from reading those logs; the lab's tests will assert
+them.
 
 - **StrictMode in Vitest:** a component rendered inside `<StrictMode>` in
   jsdom gets React's development behaviour: the reducer runs twice per
@@ -821,8 +834,10 @@ board; 44 probe tests pass.
    given with seeded defects (§4.4), then normalized (§4.5) and wrapped
    (§4.6). A student-written queue reducer couldn't carry seeded defects,
    and a given form reducer would leave §4.3 nothing to write.
-6. **Immer is the +1,** on the form's reducer, the one with the deepest
-   updates, through `immer`'s curried `produce`, not `use-immer`'s
+6. **Immer is the +1,** on the form's reducer: it is the student's own,
+   its tests already check frozen input and shared objects, and no later
+   challenge changes it, while the queue's reducer is rewritten in §4.5 and
+   wrapped in §4.6. Through `immer`'s curried `produce`, not `use-immer`'s
    `useImmerReducer`, so the reducer keeps the contract the tests call.
    Undo was the other candidate for the +1; it stays in the main part,
    since §4.4's purity pays off there.
