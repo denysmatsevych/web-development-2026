@@ -76,10 +76,11 @@ Immer is the +1 task (§4.8): the same form reducer written with `produce`,
 with the same tests passing. A reducer as a state machine (allowed status
 transitions) was offered and not chosen (decision 3); it is out of scope.
 
-**ЛР-12 continues this app** (decision 2). In ЛР-11 both reducers live in
-`App`, and their state and `dispatch` reach the cards, the details and the
-history buttons as props. ЛР-12's plan decides how that changes; ЛР-11
-doesn't use context, even where react.dev's next page would.
+**ЛР-12 continues this app** (decision 2). In ЛР-11 the queue's reducer
+lives in `App`, and its state and `dispatch` reach the cards, the details
+and the history buttons as props; the form's draft stays in `OrderComposer`,
+the only component that reads it. ЛР-12's plan decides how that changes;
+ЛР-11 doesn't use context, even where react.dev's next page would.
 
 ### The readings
 
@@ -94,7 +95,7 @@ pages in English, but **Updating Arrays in State** in Ukrainian («Оновле�
 | react.dev: [Extracting State Logic into a Reducer](https://uk.react.dev/learn/extracting-state-logic-into-a-reducer) | current | before class. `#consolidate-state-logic-with-a-reducer` (the three steps), `#writing-reducers-well` (pure; «Each action describes a single user interaction, even if that leads to multiple changes in the data»), `#comparing-usestate-and-usereducer`, `#writing-concise-reducers-with-immer` (§4.3, §4.8) |
 | react.dev: [Choosing the State Structure](https://uk.react.dev/learn/choosing-the-state-structure) | current | before class. The five principles; `#avoid-redundant-state` (§4.3), `#avoid-duplication-in-state` and `#avoid-deeply-nested-state` (§4.5) |
 | react.dev: [Updating Arrays in State](https://uk.react.dev/learn/updating-arrays-in-state) | current | `#updating-objects-inside-arrays`: copying the path to a changed object (§4.3, §4.4) |
-| react.dev: [`useReducer`](https://uk.react.dev/reference/react/useReducer) | current | `#avoiding-recreating-the-initial-state` (the `init` argument, §4.3, §4.5); the troubleshooting section only as a hint (see **Timing**, cut 3) |
+| react.dev: [`useReducer`](https://uk.react.dev/reference/react/useReducer) | current | `#avoiding-recreating-the-initial-state` (the initializer, with `null` when it needs no argument: the starter's `App`, §4.5, §4.6); the troubleshooting section only as a hint (see **Timing**, cut 3) |
 | react.dev: [`<StrictMode>`](https://uk.react.dev/reference/react/StrictMode) | current | `#fixing-bugs-found-by-double-rendering-in-development`: which functions React calls twice in development, reducers included (§4.4) |
 | Redux: [Style Guide](https://redux.js.org/style-guide/) | current | the rules with their priority: `#do-not-mutate-state` and `#reducers-must-not-have-side-effects` (Essential; §4.4), `#model-actions-as-events-not-setters` (§4.3), `#normalize-complex-nestedrelational-state` (§4.5). The rules hold for `useReducer` as they do for Redux |
 | Redux: [Normalizing State Shape](https://redux.js.org/usage/structuring-reducers/normalizing-state-shape) | current | `byId`, `allIds`, references by id, why nesting hurts (§4.5) |
@@ -150,9 +151,14 @@ on every load. No `localStorage` either, so nothing about saved state gets
 in the way of the reducers.
 
 `orders.js` exports a function, `loadOrders()`, that builds a new nested
-array on every call, and `App` passes it to `useReducer` as the data for
-`init`. A module-level array would be shared by every render in a test
-file, so a reducer that mutates its state would carry one test's changes
+array on every call. `App` calls it inside `useReducer`'s initializer:
+`useReducer(queueReducer, null, () => createInitialState(loadOrders()))`,
+with `null` as the argument, as react.dev does for an initializer that needs
+none. The orders are then built when `App` mounts, not on every render;
+`useReducer(queueReducer, loadOrders(), createInitialState)` would build six
+orders on every render and throw them away, which is what
+`#avoiding-recreating-the-initial-state` warns about. A module-level array
+would be shared by every render in a test file, so a reducer that mutates its state would carry one test's changes
 into the next and make failures depend on test order. That happened in the
 prototype until each test re-imported the modules.
 
@@ -161,7 +167,7 @@ prototype until each test re-imported the modules.
 | Reducer | Starter | Challenge |
 | --- | --- | --- |
 | the form's draft: `{ customer, items: [{ id, drink, size, milk, syrups }] }` | not there yet: `OrderComposer` keeps the draft in several `useState` | §4.3 writes `draftReducer`; §4.8 (+1) rewrites it with Immer |
-| the queue: orders with their customers and items | `App` already calls `useReducer(queueReducer, loadOrders(), createInitialState)`; the reducer is a colleague's, with seeded defects | §4.4 makes it pure, §4.5 normalizes its state, §4.6 wraps it in `withUndo` |
+| the queue: orders with their customers and items | `App` already calls `useReducer(queueReducer, null, () => createInitialState(loadOrders()))`; the reducer is a colleague's, with seeded defects | §4.4 makes it pure, §4.5 normalizes its state, §4.6 wraps it in `withUndo` |
 
 The queue's actions are part of the starter's API, named as events in the
 reducer's JSDoc: `order_placed`, `item_toggled`, `order_advanced` (the
@@ -296,8 +302,9 @@ gets the shape the handout gives:
 }
 ```
 
-`createInitialState(orders)` turns the nested data into this shape (it is
-`useReducer`'s `init`, so it runs when `App` mounts, not on every render);
+`createInitialState(orders)` turns the nested data into this shape
+(`useReducer`'s initializer calls it, so it runs when `App` mounts, not on
+every render);
 the reducer's cases and the two
 selectors move to it; `App` keeps the opened order's id, not a copy, and
 reads the order through `selectOrder`. Items stay inside their order.
@@ -346,8 +353,9 @@ touch a draft being typed.
 `src/model/withUndo.js` exports `withUndo(reducer, limit = 20)`, which
 returns a reducer over `{ past, present, future }`, handles `undo` and
 `redo`, and passes every other action to `reducer`; and
-`createHistory(present)`. `App` uses `withUndo(queueReducer)` and reads the
-queue from `present`. An action after which the inner reducer returns the
+`createHistory(present)`. `App` uses `withUndo(queueReducer)`, its
+initializer wraps the queue's first state in `createHistory`, and it reads
+the queue from `present`. An action after which the inner reducer returns the
 same state isn't recorded.
 
 **Що вже є.** The stub with the API in JSDoc; `HistoryButtons` (given,
@@ -513,7 +521,7 @@ starters/react/lab-11/
 ```
 
 `tests/setup.js` is ЛР-7's (jest-dom, `cleanup`, mocks restored). Each
-render of `App` starts from a fresh `loadOrders()`, so tests need no reset.
+mount of `App` starts from a fresh `loadOrders()`, so tests need no reset.
 
 ## Handout: `src/content/labs/react/uk/lab-11.md`
 
@@ -619,7 +627,8 @@ readings:
   stops being fine; Redux Toolkit's `{ ids, entities }`; when normalizing is
   more than a state needs.
 - **«Ініціалізація»:** `useReducer(reducer, arg, init)`; passing `init`, not
-  its result; what StrictMode does with `init`.
+  its result; why `App` passes `null` and a function rather than
+  `loadOrders()`; what StrictMode does with `init`.
 - **«Ред'юсер вищого порядку»:** `past`, `present`, `future`; why an action
   that changed nothing isn't recorded; why the form and the opened order
   stay out of history; `withUndo` against ЛР-8's `withAnalytics`; why the
@@ -762,8 +771,9 @@ board; 44 probe tests pass.
 1. **The app is a barista's order queue,** «Черга замовлень»: a form for a
    new order with a nested draft, and a four-column queue of orders with
    their customers and drinks.
-2. **ЛР-12 reuses this app.** ЛР-11 leaves the state and `dispatch` in
-   `App` and passes them as props; ЛР-12 decides how to share them.
+2. **ЛР-12 reuses this app.** ЛР-11 leaves the queue's state and
+   `dispatch` in `App` and passes them as props, and the form's draft in
+   `OrderComposer`; ЛР-12 decides how to share them.
 3. **Topics:** besides moving state into a reducer and making a reducer
    pure, normalization (`byId` + `ids`), undo and redo through a
    higher-order reducer, and Immer. A reducer as a state machine was offered
