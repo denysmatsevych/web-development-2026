@@ -139,11 +139,17 @@ counter: one page where a barista takes orders and works through them.
   for the next step («Почати», «Готово», «Видати»), «Скасувати замовлення»
   in the first two columns, and «Деталі».
 - **«Деталі»:** the opened order with its drinks, and the guest's name in a
-  field with «Зберегти», for a barista who misheard it.
+  field with «Зберегти», for a barista who misheard it. While the opened
+  order isn't in the queue (cancelled, or its placement undone), the panel
+  is empty, and it comes back if an undo returns the order: the given
+  `OrderDetails` renders nothing for `order === undefined`. The field starts
+  from the guest's current name whenever that changes (the given component
+  keys it on the order and the name), so an undone rename shows there too.
 - **«Скасувати дію» and «Повторити дію»** above the queue, from §4.6.
 
 **Data.** `src/data/menu.js`: the drinks, sizes, milks and syrups with their
-prices, and `priceOf(item)`. `src/data/orders.js`: six orders, № 41–46,
+prices, each drink's default milk («без молока» for Еспресо and Американо,
+«звичайне» for the rest), and `priceOf(item)`. `src/data/orders.js`: six orders, № 41–46,
 spread over the four columns, **nested** as a server would send them: each
 order holds its customer (`{ id, name }`) and its items. One customer, Оля,
 has two orders. No server and no network: the queue starts from this data
@@ -166,7 +172,7 @@ prototype until each test re-imported the modules.
 
 | Reducer | Starter | Challenge |
 | --- | --- | --- |
-| the form's draft: `{ customer, items: [{ id, drink, size, milk, syrups }] }` | not there yet: `OrderComposer` keeps the draft in several `useState` | §4.3 writes `draftReducer`; §4.8 (+1) rewrites it with Immer |
+| the form's draft: `{ customerName, items: [{ id, drink, size, milk, syrups }] }` (a name, so it isn't confused with an order's `customer` object) | not there yet: `OrderComposer` keeps the draft in several `useState` | §4.3 writes `draftReducer`; §4.8 (+1) rewrites it with Immer |
 | the queue: orders with their customers and items | `App` already calls `useReducer(queueReducer, null, () => createInitialState(loadOrders()))`; the reducer is a colleague's, with seeded defects | §4.4 makes it pure, §4.5 normalizes its state, §4.6 wraps it in `withUndo` |
 
 The queue's actions are part of the starter's API, named as events in the
@@ -217,16 +223,22 @@ computed from the draft during render with `priceOf`, not stored. Sending
 the order calls `onPlace` with the order and then clears the form with
 `draft_cleared`.
 
-**Що вже є.** The stub `src/model/draftReducer.js` with `emptyDraft` and the
-seven actions in JSDoc (type and payload); `OrderComposer` on `useState`;
-`menu.js` with `priceOf`. The handout's intro shows two handlers from the
+**Що вже є.** The stub `src/model/draftReducer.js` with `emptyDraft`,
+deep-frozen, and the seven actions in JSDoc (type and payload);
+`OrderComposer` on `useState`; `menu.js` with `priceOf`. `emptyDraft` is
+`useReducer`'s initial state and what `draft_cleared` returns, so a reducer
+that pushed into its `items` would change the shared object and carry drinks
+into the next test, as a module-level array of orders would (see **Data**);
+frozen, it throws at the first click instead. Immer accepts frozen input, so
+§4.8 isn't affected. The handout's intro shows two handlers from the
 starter next to two actions, to contrast "set the items to…" with "the
 barista chose size L" (react.dev's step 1).
 
 **Tests** (`tests/draftReducer.test.js` and `tests/OrderComposer.test.jsx`,
 about 12):
 
-- `drink_added` додає напій розміру M зі звичайним молоком і без сиропів;
+- `drink_added` додає напій розміру M з типовим для нього молоком з меню і
+  без сиропів;
 - `size_chosen` і `milk_chosen` змінюють лише свій напій;
 - `syrup_toggled` додає сироп, а повторно — прибирає;
 - `item_removed` прибирає напій; `customer_changed` змінює ім'я;
@@ -262,8 +274,8 @@ linter. The defects, their symptoms and their causes are in
 `solution/README.md`; the handout lists only the expected behaviour.
 
 **Tests** (`tests/queueReducer.test.js` and `tests/OrderBoard.test.jsx`,
-about 7; the page tests render `<App />` inside `<StrictMode>`, as
-`main.jsx` does):
+about 7; the page tests render `<App />` inside `<StrictMode>`, as every
+page test does; see **What the tests check**):
 
 - не змінює стан, який отримав, за жодної дії;
 - той самий стан і та сама дія дають той самий результат;
@@ -274,18 +286,21 @@ about 7; the page tests render `<App />` inside `<StrictMode>`, as
 - скасування прибирає лише одне замовлення.
 
 The page tests fail on the seeded reducer only because of `<StrictMode>`:
-without it, the same clicks pass (checked on the prototype). The first two
-unit tests fail on it in any mode; the two about numbers guard against a
-fix that breaks numbering. Which tests pass on the starter is fixed during
-the build. §4.3's tests don't assert order numbers, so the seeded defects
-can't make them fail. That's the challenge's lesson, and the
-handout's **Перевірка** asks students to see it once by removing
-`<StrictMode>` from a test locally and putting it back.
+without it, the same clicks pass (checked on the prototype). That's the
+challenge's lesson, and the handout's **Перевірка** asks students to see it
+once: take `<StrictMode>` out of the tests' render helper, run the tests,
+and put it back with `git restore tests/`, since no commit may change
+`tests/`. The first two unit tests call the reducer directly, so they fail
+on it with or without StrictMode; the two about numbers guard against a fix
+that breaks numbering. Which tests pass on the starter is fixed during the
+build. §4.3's page tests render in StrictMode too, but they don't assert
+order numbers, so the seeded defects can't make them fail.
 
 ### §4.5. Normalized state: one customer, many orders
 
 **Що має вийти.** Renaming Оля in «Деталі» renames her on both orders, and
-«Деталі» always shows the order as it is on the board. The queue's state
+«Деталі» always shows the order as it is on the board, or nothing once it
+is cancelled. The queue's state
 gets the shape the handout gives:
 
 ```js
@@ -318,7 +333,7 @@ goes in `order_placed`; what `order_cancelled` leaves in `customers`; why
 items aren't normalized too.
 
 **Tests** (`tests/queueState.test.js` and `tests/OrderDetails.test.jsx`,
-about 9):
+about 10):
 
 - `createInitialState` кладе замовлення в `orders.byId`, а їхній порядок —
   в `orders.ids`;
@@ -332,7 +347,12 @@ about 9):
 - `selectColumn` повертає замовлення колонки в порядку надходження, разом із
   гостем;
 - перейменування гостя в «Деталях» змінює ім'я на всіх його замовленнях;
-- «Деталі» показують зміни, зроблені на дошці.
+- «Деталі» показують зміни, зроблені на дошці;
+- «Деталі» порожні, коли відкрите замовлення скасовано.
+
+On the starter, the copy in `App`'s `useState` stays on screen after a
+cancel; reading the order through `selectOrder` empties the panel, because
+the given `OrderDetails` renders nothing for a missing order.
 
 The shape tests read named paths only (`orders.byId`, `orders.ids`,
 `customers.byId`, `customers.ids`, `customerId`), so other keys are the
@@ -356,7 +376,9 @@ returns a reducer over `{ past, present, future }`, handles `undo` and
 `createHistory(present)`. `App` uses `withUndo(queueReducer)`, its
 initializer wraps the queue's first state in `createHistory`, and it reads
 the queue from `present`. An action after which the inner reducer returns the
-same state isn't recorded.
+same state isn't recorded. The reducer `withUndo` returns is pure, like the
+queue's: it doesn't change the history it gets, so in `npm run dev` each
+step is recorded once.
 
 **Що вже є.** The stub with the API in JSDoc; `HistoryButtons` (given,
 props `canUndo`, `canRedo`, `onUndo`, `onRedo`), not yet on the page.
@@ -365,9 +387,10 @@ props `canUndo`, `canRedo`, `onUndo`, `onRedo`), not yet on the page.
 history and what stays out (the opened order, the form).
 
 **Tests** (`tests/withUndo.test.js` on a toy counter reducer, and
-`tests/HistoryButtons.test.jsx` on the page; about 10):
+`tests/HistoryButtons.test.jsx` on the page; about 11):
 
 - `createHistory` починає з порожніх `past` і `future`;
+- не змінює історію, яку отримав, ні для дії, ні для `undo` чи `redo`;
 - дія потрапляє в історію, `undo` повертає попередній стан;
 - `redo` повторює скасовану дію;
 - нова дія після `undo` очищає `future`;
@@ -419,10 +442,14 @@ defence topic, and the question of who needs the stop-list leads to ЛР-12.
 ### What the tests check, and what they don't
 
 - **Reducers as plain functions:** called directly, with deep-frozen
-  inputs, and compared by value (`toEqual`) or by identity (`toBe`) where
-  structural sharing or a no-op is the rule.
-- **The page through roles and names,** as in ЛР-7; §4.4's page tests in
-  `<StrictMode>`.
+  inputs (`withUndo`'s history included), and compared by value (`toEqual`)
+  or by identity (`toBe`) where structural sharing or a no-op is the rule.
+- **The page through roles and names,** as in ЛР-7, always inside
+  `<StrictMode>`, as `main.jsx` renders it: one helper in `tests/` wraps
+  every render. A reducer that mutates its state, or a `withUndo` that
+  mutates its history, then shows its symptom in the tests as it does in
+  `npm run dev`. Earlier labs' tests didn't use StrictMode; this lab is the
+  first where it changes a result.
 - **That a component uses the reducer,** with `vi.mock(path, { spy: true })`
   (§4.3).
 - **The shape only where it is the requirement** (§4.5), and only on named
@@ -517,7 +544,8 @@ starters/react/lab-11/
 │   │   └── withUndo.js         stub (§4.6)
 │   └── components/        OrderComposer (on useState), DraftItem, OrderBoard, OrderColumn,
 │                          OrderCard, OrderDetails, HistoryButtons
-└── tests/                 setup.js and the files named under each challenge
+└── tests/                 setup.js, the <StrictMode> render helper and the files
+                           named under each challenge
 ```
 
 `tests/setup.js` is ЛР-7's (jest-dom, `cleanup`, mocks restored). Each
@@ -756,6 +784,11 @@ board; 44 probe tests pass.
   on the card buttons; the screenshot;
 - which handler in the starter's form loses «Разом», so the symptom shows
   within the first few clicks;
+- the given `OrderDetails` with an order that is gone (cancelled with the
+  panel open; its `order_placed` undone, then redone) and the name field
+  after an undone rename;
+- §4.3's page tests through the StrictMode helper on the seeded queue
+  reducer: they pass, as **§4.4** says;
 - the timed dry run as a student, without AI: §4.3–§4.6 in about 52 minutes
   plus setup, and §4.8 in about 8; otherwise the cuts under **Timing**;
 - the zip stores LF and passes `format:check` after unpacking; `npm install`
@@ -801,9 +834,11 @@ board; 44 probe tests pass.
    items inside the order. Other keys are the student's.
 9. **Selectors as the queue's API,** given in the starter and rewritten in
    §4.5, so earlier tests survive the change of shape.
-10. **§4.4's page tests render in `<StrictMode>`,** as `main.jsx` does;
-    the reducer tests use deep-frozen inputs. No other tool catches the
-    defects (see **ESLint in this lab**).
+10. **Every page test renders in `<StrictMode>`,** as `main.jsx` does,
+    through one helper in `tests/`; the reducer tests, `withUndo`'s
+    included, use deep-frozen inputs. No other tool catches the defects
+    (see **ESLint in this lab**), and §4.6's history gets the same checks
+    as §4.4's reducer.
 11. **The opened order and the form stay out of history;** the history
     keeps 20 steps; `undo` and `redo` are the history actions' names, as in
     Redux's page; no `Ctrl+Z`.
