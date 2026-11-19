@@ -1,19 +1,19 @@
 # Plan: React ЛР-11 «Управління станом: useReducer для роботи зі складними структурами даних»
 
-Status: settled on 2026-11-19. That day the instructor settled the shape
+Status: settled on 2026-11-19. That day the instructor chose the shape
 (decisions 1–4 under **Decisions**): a new screen in the café world, a
 barista's order queue; ЛР-12 reuses the app; besides moving state into a
 reducer and making a reducer pure, the lab covers normalization, undo and
 redo through a higher-order reducer, and Immer; the format is ЛР-7's code
 challenges with an optional +1 task. After the plan's review the same day,
 the instructor confirmed the proposed decisions 5–17 and added 18–22 from
-the review's changes. A prototype of the reducers and the
-kinds of tests the lab needs was built and checked the same day (see
-**Verification**). It lives in the gitignored `solution/` folder next to
-this file, with the instructor's notes on the seeded defects. The lab is not
-built yet. Once it is, what was built, what was verified and where the
-build differs from this plan go into this folder's `README.md`, and this
-file stays as the plan the lab was built from.
+the review's changes. A prototype of the reducers and the kinds of tests
+the lab needs was built and checked the same day (see **Verification**).
+It lives in the gitignored `solution/` folder next to this file, with the
+instructor's notes on the seeded defects. The lab is not built yet. Once
+it is, what was built, what was verified and where the build differs from
+this plan go into this folder's `README.md`, and this file stays as the
+plan the lab was built from.
 
 The challenge format, the test tooling and the AI rule come from ЛР-7. Its
 plan, [../lab-7/custom-hooks-and-render-props-plan.md](../lab-7/custom-hooks-and-render-props-plan.md),
@@ -144,19 +144,20 @@ counter: one page where a barista takes orders and works through them.
   field with «Зберегти», for a barista who misheard it. While the opened
   order isn't in the queue (cancelled, or its placement undone), the panel
   is empty, and it comes back if an undo returns the order: the given
-  `OrderDetails` renders nothing for `order === undefined`. The field starts
-  from the guest's current name whenever that changes (the given component
-  keys it on the order and the name), so an undone rename shows there too.
+  `OrderDetails` renders nothing when it gets no order (`null` or
+  `undefined`). The field starts from the guest's current name whenever
+  that changes (the given component keys it on the order and the name), so
+  an undone rename shows there too.
 - **«Скасувати дію» and «Повторити дію»** above the queue, from §4.6.
 
 **Data.** `src/data/menu.js`: the drinks, sizes, milks and syrups with their
 prices, each drink's default milk («без молока» for Еспресо and Американо,
-«звичайне» for the rest), and `priceOf(item)`. `src/data/orders.js`: six orders, № 41–46,
-spread over the four columns, **nested** as a server would send them: each
-order holds its customer (`{ id, name }`) and its items. One customer, Оля,
-has two orders. No server and no network: the queue starts from this data
-on every load. No `localStorage` either, so nothing about saved state gets
-in the way of the reducers.
+«звичайне» for the rest), and `priceOf(item)`. `src/data/orders.js`: six
+orders, № 41–46, spread over the four columns, **nested** as a server would
+send them: each order holds its customer (`{ id, name }`) and its items.
+One customer, Оля, has two orders. No server and no network: the queue
+starts from this data on every load. No `localStorage` either, so nothing
+about saved state gets in the way of the reducers.
 
 `orders.js` exports a function, `loadOrders()`, that builds a new nested
 array on every call. `App` calls it inside `useReducer`'s initializer:
@@ -166,9 +167,10 @@ none. The orders are then built when `App` mounts, not on every render;
 `useReducer(queueReducer, loadOrders(), createInitialState)` would build six
 orders on every render and throw them away, which is what
 `#avoiding-recreating-the-initial-state` warns about. A module-level array
-would be shared by every render in a test file, so a reducer that mutates its state would carry one test's changes
-into the next and make failures depend on test order. That happened in the
-prototype until each test re-imported the modules.
+would be shared by every render in a test file, so a reducer that mutates
+its state would carry one test's changes into the next and make failures
+depend on test order. That happened in the prototype until each test
+re-imported the modules.
 
 **Two reducers,** which is what makes the lab more than one refactor:
 
@@ -302,8 +304,7 @@ order numbers, so the seeded defects can't make them fail.
 
 **Що має вийти.** Renaming Оля in «Деталі» renames her on both orders, and
 «Деталі» always shows the order as it is on the board, or nothing once it
-is cancelled. The queue's state
-gets the shape the handout gives:
+is cancelled. The queue's state gets the shape the handout gives:
 
 ```js
 {
@@ -321,13 +322,12 @@ gets the shape the handout gives:
 
 `createInitialState(orders)` turns the nested data into this shape
 (`useReducer`'s initializer calls it, so it runs when `App` mounts, not on
-every render);
-the reducer's cases and the two
-selectors move to it; `App` keeps the opened order's id, not a copy, and
-reads the order through `selectOrder`. Items stay inside their order. The
-names follow Redux's **Normalizing State Shape** for `byId` and Redux
-Toolkit's `createEntityAdapter` for `ids`; Redux's page says `allIds`, and
-the handout says so in one line.
+every render); the reducer's cases and the two selectors move to it; `App`
+keeps the opened order's id, not a copy, and reads the order through
+`selectOrder`. Items stay inside their order. The names follow Redux's
+**Normalizing State Shape** for `byId` and Redux Toolkit's
+`createEntityAdapter` for `ids`; Redux's page says `allIds`, and the
+handout says so in one line.
 
 **Що вже є.** The pure nested reducer from §4.4; the rename bug and the
 stale «Деталі» in the page. The handout's intro names both symptoms and
@@ -525,10 +525,10 @@ These are estimates; the timed dry run decides. If the lab takes longer than
 4. make §4.6 the +1 task, done after §4.7's checks as §4.8 is now, and
    Immer an ungraded extra next to §4.9's stop-list.
 
-§4.5 is the tightest estimate: the prototype's normalized reducer is 86
-lines against the nested one's 66, and students also write
-`createInitialState`, two selectors and `App`'s id. The dry run times it on
-its own; if §4.5 alone runs past 14 minutes, cut 2 comes first.
+§4.5 is the tightest estimate: in the prototype, the queue's module grows
+from 66 lines nested to 86 normalized, `createInitialState` and the two
+selectors included, and `App` changes to keep an id. The dry run times it
+on its own; if §4.5 alone runs past 14 minutes, cut 2 comes first.
 
 ## Starter: `starters/react/lab-11/` → `/uk/react/starters/lab-11.zip`
 
@@ -549,7 +549,7 @@ starters/react/lab-11/
 │   ├── main.jsx           <StrictMode>, as always
 │   ├── App.jsx            useReducer(queueReducer, …); the opened order as a copy in useState
 │   ├── index.css
-│   ├── data/              menu.js (prices, priceOf), orders.js (loadOrders(): six nested orders)
+│   ├── data/              menu.js (prices, default milk, priceOf), orders.js (loadOrders(): six nested orders)
 │   ├── model/
 │   │   ├── draftReducer.js     stub (§4.3)
 │   │   ├── queueReducer.js     the colleague's reducer and the two selectors (§4.4, §4.5)
@@ -652,8 +652,9 @@ readings:
   interaction; what goes in the payload; why ids come with the action;
   what a reducer should do with an unknown action.
 - **«Чисті ред'юсери»:** what pure means; why React calls a reducer twice in
-  development and what it does with the two results; what each defect in §4.4 did and
-  why only in development; why ESLint said nothing; where side effects go.
+  development and what it does with the two results; what each defect in
+  §4.4 did and why only in development; why ESLint said nothing; where side
+  effects go.
 - **«Іммутабельність»:** why React needs a new object (`Object.is`); copying
   the path to a nested change; structural sharing; what the deep-frozen and
   `toBe` tests prove; why `structuredClone` of the whole state isn't the
@@ -881,8 +882,9 @@ them.
     **Data**). §6 asks why.
 19. **«Деталі» are empty while the opened order is gone** (cancelled, or its
     placement undone) and come back if an undo returns it. The given
-    `OrderDetails` renders nothing for a missing order and keys the name
-    field on the order and the name; one §4.5 test covers it.
+    `OrderDetails` renders nothing when it gets no order and keys the name
+    field on the order and the name. One §4.5 test covers a cancelled
+    order; the build checks an undone placement.
 20. **`emptyDraft` is deep-frozen in the stub,** so a form reducer that
     mutates it throws at the first click instead of carrying drinks into
     the next test.
