@@ -2,7 +2,7 @@
 
 | Route | Source | What it is |
 | --- | --- | --- |
-| `/react/labs/lab-11/` | `src/content/labs/react/uk/lab-11.md` | the handout: useful links instead of theory, four code challenges on a barista's order queue (§4.3 the order form moved to the student's own `draftReducer`, §4.4 a colleague's queue reducer made pure, §4.5 the queue's state normalized into `byId` and `ids`, §4.6 undo and redo through `withUndo`), the AI rule, checks and Vercel, +1 point for the form's reducer with Immer (§4.8), ungraded reducer design (§4.9); report, defence |
+| `/react/labs/lab-11/` | `src/content/labs/react/uk/lab-11.md` | the handout: useful links instead of theory, four code challenges on a barista's order queue (§4.3 the order form moved to the student's own `draftReducer`, §4.4 a colleague's queue reducer made pure, §4.5 the queue's state normalized into `byId` and `ids`, §4.6 undo and redo through `withUndo`), the AI rule, checks and Vercel, +1 point for the form's reducer with Immer (§4.8); report, defence |
 | `/uk/react/starters/lab-11.zip` | `starters/react/lab-11/` | the starter with stubs and the given tests, unpacked by students into `react-labs/lab-11/` |
 | `/uk/react/labs/lab-11/result.webp` | the reference solution | the page with a draft in the form, orders in all four columns and «Скасувати дію» enabled, in the handout's §1 |
 
@@ -84,9 +84,11 @@ group's ЛР-11 class.
   the cards and «Деталі» show a drink as «Лате L · вівсяне молоко · ваніль».
 - **§4.2 keeps only the rule that AI explains and doesn't write code,** as
   ЛР-8 and ЛР-10 do.
-- **§4.9 asks for the stop-list's design in `lab-11/STOP-LIST.md` on a
-  separate branch,** so `main` stays as graded.
-- **Length:** about 4,900 words by `wc -w`, between ЛР-7's and ЛР-10's.
+- **No ungraded stop-list design,** though the plan has one as §4.9
+  (decision 14): the instructor dropped it on 2026-11-20, so the handout ends
+  with §4.8. §6's question about components that only pass `dispatch` on
+  moved into «Структура стану».
+- **Length:** about 4,700 words by `wc -w`, between ЛР-7's and ЛР-10's.
 
 ## Verified on 2026-11-20
 
