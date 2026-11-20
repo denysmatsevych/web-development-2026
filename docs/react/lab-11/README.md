@@ -3,11 +3,9 @@
 | Route | Source | What it is |
 | --- | --- | --- |
 | `/react/labs/lab-11/` | `src/content/labs/react/uk/lab-11.md` | the handout: useful links instead of theory, four code challenges on a barista's order queue (§4.3 the order form moved to the student's own `draftReducer`, §4.4 a colleague's queue reducer made pure, §4.5 the queue's state normalized into `byId` and `ids`, §4.6 undo and redo through `withUndo`), the AI rule, checks and Vercel, +1 point for the form's reducer with Immer (§4.8); report, defence |
+| `/uk/react/labs/lab-11.pdf` | built from the handout | the downloadable handout |
 | `/uk/react/starters/lab-11.zip` | `starters/react/lab-11/` | the starter with stubs and the given tests, unpacked by students into `react-labs/lab-11/` |
 | `/uk/react/labs/lab-11/result.webp` | the reference solution | the page with a draft in the form, orders in all four columns and «Скасувати дію» enabled, in the handout's §1 |
-
-There is no PDF yet: it is built after the instructor's review, and the
-handout gets its `handout:` field then.
 
 `solution/` holds the instructor's material (gitignored): `stages/`, one
 folder per challenge in the handout's order (`4.3-draft-reducer`,
@@ -133,7 +131,14 @@ workspace: React 19.3.1, Vite 8.3.8, `@vitejs/plugin-react` 6.3.0, ESLint
   (`node_modules` about 175 MB), and the folder passes `format:check`, lint
   and `build` and 4 of 40 tests;
 - the site: `npm run check` and `npm run build` pass; the labs index lists
-  ЛР-11, and the page links the zip and the image under the base path.
+  ЛР-11, and the page links the zip and the image under the base path;
+- the PDF, built on 2026-11-20 after §4.9 was dropped: 16 pages with the
+  screenshot, code blocks and tables; all 35 code lines sit whole on one
+  line, no text runs past the right margin, and the tables that cross a
+  page (§4.1's file list, §7's first table) repeat their header row. The
+  screenshot is taller than wide, so the PDF's 3.8-inch height cap prints it
+  about 7.8 cm wide (ЛР-8's and ЛР-10's, about 13 cm); it stays sharp when
+  zoomed.
 
 Not verified:
 
@@ -155,8 +160,9 @@ python docs/web/build-handout.py lab-11 react                # public/uk/react/l
 
 Rebuild the zip after the starter is committed: each entry is dated by the
 file's last commit, and a file with no commit yet keeps its modification
-time. Rebuild the PDF after every handout edit, once it exists. Keep code
-lines within 75 characters, or they wrap in the PDF.
+time. Rebuild the PDF after every handout edit; the handout's `handout:`
+field points to it. Keep code lines within 75 characters, or they wrap in
+the PDF.
 
 To check the stages again: copy the starter into a `react-labs` workspace,
 copy each `solution/stages/*/src` over its `src/` in order, and run
