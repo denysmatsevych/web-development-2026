@@ -116,7 +116,8 @@ group's ЛР-11 class.
   open with the problem, not with what Оля or the barista did. §4.4 explains
   `<StrictMode>`'s double call and lists what makes a reducer pure, without
   saying which result React keeps (§6 asks it). Normalization «означає
-  зберігати…», a full sentence.
+  зберігати…», a full sentence. The report's item 4 asks to compare the two
+  reducers «коротко», with no sentence count.
 - **Length:** about 5,090 words by `wc -w` since 2026-11-22 (4,700
   before), between ЛР-7's and ЛР-10's.
 
