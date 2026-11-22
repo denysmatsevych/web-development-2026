@@ -110,8 +110,14 @@ group's ЛР-11 class.
   форми», which read as the order form's state. §4.3 opens with plain
   definitions of a reducer and an action, shows the `useReducer` line that
   gives `dispatch`, and the size handler before and after, instead of the
-  instructor's «too hard» `(стан, дія) => новий стан` paragraph.
-- **Length:** about 5,030 words by `wc -w` since 2026-11-22 (4,700
+  instructor's «too hard» `(стан, дія) => новий стан` paragraph. The
+  handout and the starter no longer tell a story: the queue reducer is
+  «наданий», not a colleague's who «каже, усе працює», and §4.5 and §4.6
+  open with the problem, not with what Оля or the barista did. §4.4 explains
+  `<StrictMode>`'s double call and lists what makes a reducer pure, without
+  saying which result React keeps (§6 asks it). Normalization «означає
+  зберігати…», a full sentence.
+- **Length:** about 5,090 words by `wc -w` since 2026-11-22 (4,700
   before), between ЛР-7's and ЛР-10's.
 
 ## Verified on 2026-11-20
@@ -185,7 +191,9 @@ workspace: React 19.3.1, Vite 8.3.8, `@vitejs/plugin-react` 6.3.0, ESLint
   day with the screenshot retaken at 1280 px (1280 × 906, the board in four
   columns, one drink in the draft and a ticked drink instead of a moved card,
   so the page is wider than tall): it prints 13.6 cm wide instead of 7.8 cm,
-  as wide as ЛР-8's and ЛР-10's; still 16 pages.
+  as wide as ЛР-8's and ЛР-10's; still 16 pages. After §4.3's definitions
+  and §4.4's list the PDF has 17 pages; the last holds only the end of §7's
+  Immer table under its repeated header row.
 
 Not verified:
 
