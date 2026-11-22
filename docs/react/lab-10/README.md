@@ -1,11 +1,11 @@
 # Lab 10 — Folder structure and Feature-Sliced Design
 
-| Route                               | Source                                | What it is                                                                                                                                                                                                                                                                                                                                                                                                        |
-| ----------------------------------- | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `/react/labs/lab-10/`               | `src/content/labs/react/uk/lab-10.md` | the handout: useful links instead of theory, one app moved through four folder structures (§4.3 by file type, §4.4 by route, §4.5 feature folders after bulletproof-react, §4.6 Feature-Sliced Design), where the cart lives counted in each, §4.7 a structure chosen for five projects, the AI rule, §4.8 checks and Vercel; §4.9, +1 point: the cart as a local package after Nadia Makarevich; report, defence |
-| `/uk/react/labs/lab-10.pdf`         | built from the handout                | the downloadable handout                                                                                                                                                                                                                                                                                                                                                                                          |
-| `/uk/react/starters/lab-10.zip`     | `starters/react/lab-10/`              | the starter, unpacked by students into `react-labs/lab-10/`                                                                                                                                                                                                                                                                                                                                                       |
-| `/uk/react/labs/lab-10/result.webp` | the reference solution                | the catalogue with «Кошик (3)» in the header, in the handout's §1; it shows no folder tree, since the tree is the answer                                                                                                                                                                                                                                                                                          |
+| Route                               | Source                                | What it is                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| ----------------------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `/react/labs/lab-10/`               | `src/content/labs/react/uk/lab-10.md` | the handout: useful links instead of theory, one app moved through four folder structures (§4.3 by file type, §4.4 by route, §4.5 feature folders after bulletproof-react, §4.6 Feature-Sliced Design), where the cart lives counted in each, §4.7 a structure chosen for five projects (after class, with the report), the AI rule, §4.8 checks and Vercel; §4.9, +1 point: the cart as a local package after Nadia Makarevich; report, defence |
+| `/uk/react/labs/lab-10.pdf`         | built from the handout                | the downloadable handout                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `/uk/react/starters/lab-10.zip`     | `starters/react/lab-10/`              | the starter, unpacked by students into `react-labs/lab-10/`                                                                                                                                                                                                                                                                                                                                                                                      |
+| `/uk/react/labs/lab-10/result.webp` | the reference solution                | the catalogue with «Кошик (3)» in the header, in the handout's §1; it shows no folder tree, since the tree is the answer                                                                                                                                                                                                                                                                                                                         |
 
 `solution/` holds the instructor's material (gitignored): `stages/`, one
 folder per structure step, each a full copy of `src/`, `package.json` and
@@ -63,14 +63,23 @@ stays local until the last group's ЛР-8 class, as `feat/react-lab-8` did for
   decision, 2026-11-18). As in ЛР-4 and ЛР-6, the extra task comes after
   the main part's checks and push, so it moved from §4.7 to §4.9: «Що
   обрати» is now §4.7 and the checks §4.8. Students start it in class only
-  once §4.1–4.8 are on GitHub, and it counts only if pushed in class. The
-  main part's history is six commits; the package adds a seventh. §7 has a
+  once the main part's in-class steps are on GitHub, and it counts only if
+  pushed in class. The main part's history is six commits; the package adds
+  a seventh. §7 has a
   table for each point, §5 asks whether §4.9 was done, and §6's questions
   on building `@coffee/cart` are asked only of those who did it; the
   questions on packages as a structure stay for everyone, since «Що
   обрати» still offers packages and the article is read before §4.7. The
-  practical part is about 55 minutes by the plan's estimates, about 8 more
-  for §4.9. `STRUCTURES.md` keeps the «Пакет» row and says it is for §4.9.
+  in-class part is about 50 minutes by the plan's estimates (below), about
+  8 more for §4.9. `STRUCTURES.md` keeps the «Пакет» row and says it is for
+  §4.9.
+- **§4.7 is done after class, with the report** (the instructor's
+  decision, 2026-11-22: the plan's **Timing** cut 1). It keeps its number
+  and its place, because the starter's `STRUCTURES.md` points to §4.7 and
+  `.dependency-cruiser.cjs` to §4.9, and students already have the starter.
+  §4.7 opens by telling students to skip to §4.8 in class; §3, §4.8's
+  commit list, §5 and §7 say the §4.7 commit comes last, after class and
+  before the report. The in-class estimate drops from 55 to 50 minutes.
 - **`check:deps` uses `--output-type err-long`,** so each violation prints
   its rule's Ukrainian comment under it, not only the rule's name.
 - **No `graph` script** (the plan's optional Mermaid graph). A collapse
@@ -201,8 +210,9 @@ workspace: React 19.3.1, Vite 8.3.8, Vitest 5.1.0, jsdom 31.0.1, ESLint
 
 Not verified:
 
-- a timed dry run (target: §4.1–§4.8 in about 55 minutes, §4.9 in about
-  8 more; cuts in the plan's **Timing**, where cut 3 is now built in);
+- a timed dry run (target: §4.1–§4.8 without §4.7 in about 50 minutes,
+  §4.9 in about 8 more; cuts in the plan's **Timing**, where cuts 1 and 3
+  are now built in);
 - VS Code's import updates in the editor itself, with the `jsconfig.json`:
   close all tabs, drag a file and a folder, and check a closed importer
   and the CSS import in `main.jsx` (only the TypeScript server was run, see
