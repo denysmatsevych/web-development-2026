@@ -44,7 +44,7 @@ stays local until the last group's ЛР-8 class, as `feat/react-lab-8` did for
 - **«Вибір структури для проєкту» (§4.7, formerly «Що обрати») is spelled out** (the instructor found the first
   version unclear, 2026-11-18): the section states its purpose, lists the
   structures and the projects itself, names what to look at in a
-  project (size, what pages share, people, lifetime, apps sharing code) and
+  project (size, what pages share, people, lifetime) and
   shows one worked row on a project outside the list plus one non-answer.
   «Чому» is one or two sentences: what matters in the project and why the
   structure fits it. The plan's requirement to cite a number or a rule is
@@ -59,6 +59,18 @@ stays local until the last group's ЛР-8 class, as `feat/react-lab-8` did for
   (a one-page invitation) nearly answers it. The hackathon prototype stays,
   now with a team, a screen count and a chance to grow, and the list runs
   from the smallest project to the largest.
+- **The projects are a table, and project 5 changed** (the instructor's
+  decisions, 2026-11-22). Students found the one-line descriptions too
+  thin to choose from, so each project now has a column for what the
+  choice depends on: pages, what they share, who works on it, how long it
+  lives. The admin's screens now share business parts (orders on three
+  screens, stock on two) rather than only a button and a table, so it no
+  longer duplicates the blog. Project 5, three apps in one repository, was
+  written for the package option, which §4.7 no longer offers; it is now
+  a four-year-old equipment tracker organised by file type that can only
+  be moved in parts. Its short name in `STRUCTURES.md` is «Облік
+  обладнання», and §4.7 tells students with the old starter to rename
+  row 5. §1's aim no longer lists packages, which are the +1 task only.
 - **The cart package is optional, for +1 point** (the instructor's
   decision, 2026-11-18). As in ЛР-4 and ЛР-6, the extra task comes after
   the main part's checks and push, so it moved from §4.7 to §4.9: «Що
