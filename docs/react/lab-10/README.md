@@ -80,6 +80,13 @@ stays local until the last group's ЛР-8 class, as `feat/react-lab-8` did for
   §4.7 opens by telling students to skip to §4.8 in class; §3, §4.8's
   commit list, §5 and §7 say the §4.7 commit comes last, after class and
   before the report. The in-class estimate drops from 55 to 50 minutes.
+- **§4.7 shows a hybrid structure, as an example, not a task**
+  (2026-11-22, the instructor's request, modelled on a real project's tree):
+  a cinema site with route folders on top and type folders inside a route
+  only when it has the files, then `features/booking/` once two pages share
+  a part with its own state. It sits in §4.7 rather than §4.4, so it can't
+  answer §4.4's question about splitting a route folder during class. The
+  handout says «гібридна структура», not «суміш» (the instructor's wording).
 - **`check:deps` uses `--output-type err-long`,** so each violation prints
   its rule's Ukrainian comment under it, not only the rule's name.
 - **No `graph` script** (the plan's optional Mermaid graph). A collapse
