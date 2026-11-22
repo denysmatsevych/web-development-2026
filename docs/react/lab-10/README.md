@@ -70,8 +70,9 @@ stays local until the last group's ЛР-8 class, as `feat/react-lab-8` did for
   again (the instructor, third round): it is §4.8, right after the hybrid,
   then the checks (§4.9) and the +1 package (§4.10); it offers the hybrid
   as a fifth choice. Both `STRUCTURES.md` tables go into the report's
-  letter as tables, not as a link, and the letter's subject is «[React]
-  ЛР-10: Структура папок і файлів у React-застосунку». The
+  letter (a link to the file also counts), the letter's subject is
+  «[React] ЛР-10: Структура папок і файлів у React-застосунку», and steps
+  not finished in class are done at home, not as a missed class. The
   self-study section is gone (the instructor, second round), so Steiger
   and `check:fsd` left the starter; §4.6 still describes Steiger's rules
   as reading. The cart table has three rows (by type, hybrid, package).
