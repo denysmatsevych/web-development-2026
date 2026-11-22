@@ -107,8 +107,11 @@ group's ЛР-11 class.
   ЛР-10, unfinished challenges are done at home, and the in-class time
   estimate and the numbered references to §2's links are gone. §4.5's
   DevTools check names `orders` and `customers` instead of «стан нової
-  форми», which read as the order form's state.
-- **Length:** about 4,950 words by `wc -w` since 2026-11-22 (4,700
+  форми», which read as the order form's state. §4.3 opens with plain
+  definitions of a reducer and an action, shows the `useReducer` line that
+  gives `dispatch`, and the size handler before and after, instead of the
+  instructor's «too hard» `(стан, дія) => новий стан` paragraph.
+- **Length:** about 5,030 words by `wc -w` since 2026-11-22 (4,700
   before), between ЛР-7's and ЛР-10's.
 
 ## Verified on 2026-11-20
