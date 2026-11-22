@@ -65,8 +65,8 @@ stays local until the last group's ЛР-8 class, as `feat/react-lab-8` did for
   `shared-stays-shared` (`shared/` imports neither `app/` nor `routes/`),
   `features-are-independent` (inside `shared/features/`),
   `shared-code-below-features` (the rest of `shared/` doesn't import a
-  feature) and `app-on-top`. The seeded `BeanCard` coupling shows as one
-  `shared-code-below-features` error. «Вибір структури» is done in class
+  feature) and `app-on-top`. The seeded coupling still needs a code change
+  in §4.7 (see `solution/README.md`). «Вибір структури» is done in class
   again (the instructor, third round): it is §4.8, right after the hybrid,
   then the checks (§4.9) and the +1 package (§4.10); it offers the hybrid
   as a fifth choice. Both `STRUCTURES.md` tables go into the report's
@@ -257,11 +257,10 @@ In a scratch `react-labs` workspace with the same versions as below:
 - the starter with the new `.dependency-cruiser.cjs` passes `check:deps`
   and 12 of 12 tests;
 - the hybrid reference (`solution/stages/4.7-hybrid`), moved by a script
-  that rewrites relative imports the way the editor does: before the
-  `children` fix `check:deps` reports exactly one error,
-  `shared-code-below-features: src/shared/components/BeanCard.jsx →
-src/shared/features/cart/components/AddToCartButton.jsx`; after it, 12 of 12
-  tests, lint, Prettier, `check:deps` and the build pass, and
+  that rewrites relative imports the way the editor does: before the code
+  change `check:deps` reports the seeded coupling as `solution/README.md`
+  records it; after it, 12 of 12 tests, lint, Prettier, `check:deps` and
+  the build pass, and
   `git diff --cached --stat` shows the moves as renames
   (`src/{pages => routes/cart}/CartPage.jsx`);
 - each hybrid rule fires on a deliberate violation:
