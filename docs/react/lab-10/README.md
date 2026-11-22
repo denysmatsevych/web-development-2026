@@ -147,14 +147,16 @@ stays local until the last group's ЛР-8 class, as `feat/react-lab-8` did for
   default exports, and their importers switch to named imports by hand. Its
   example names (`UserCard`, `entities/user`) aren't from this app, so it
   doesn't place a file for the student.
-- **Each structure step has «Як діяти» and a folder check** (added on
-  2026-11-22 after students said the lab was unclear). §4.4–§4.6 list the
-  moves in order; «Рішення» became «Що вирішити», because it read as
-  "solution" and ЛР-7/8 never used it, and the §4 intro says the answers
-  aren't written down. §4.3, where nothing moves, dropped the labels for two
-  plain paragraphs (the instructor found them too templated). Each
-  «Перевірка» now names the folders `src/` may hold: without that line a
-  step has no done signal.
+- **The structure steps are plain prose with a numbered list of moves and
+  a done check** (2026-11-22, after students said the lab was unclear).
+  §4.3–§4.6 dropped the «Що має вийти» / «Що вже є» / «Рішення» /
+  «Перевірка» labels: the instructor found them too templated, and
+  «Рішення» read as "solution" (ЛР-7/8 never used it). Each of §4.4–§4.6
+  now says which folders `src/` holds afterwards and which rules
+  `check:deps` or Steiger checks, gives the moves in order, puts the
+  questions in a sentence (the §4 intro says the answers aren't written
+  down) and ends with «Крок завершено, коли…», naming the folders `src/` may
+  hold. Without that line a step has no done signal.
   With only the cart page and `CartLine` moved and every by-type folder
   still there, §4.4's tests, lint and `check:deps` pass, and Steiger says
   «No problems found!» for the 4.6 stage with a leftover `hooks/` and
