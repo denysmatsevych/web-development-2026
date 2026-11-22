@@ -133,10 +133,27 @@ stays local until the last group's ЛР-8 class, as `feat/react-lab-8` did for
   `index.js`, and importing their files by path isn't a sidestep; any other
   `shared/` segment (`routes/`, `config/`) needs an `index.js`
   (`fsd/public-api`). §4.6 doesn't spell this out: Steiger says it.
-- **§4.6 shows one re-export line**, since every slice's `index.js` needs
-  the syntax and the components are default exports. Its example names
-  (`UserCard`, `entities/user`) aren't from this app, so it doesn't place a
-  file for the student.
+- **§4.6 shows one re-export line and one import rewritten through it**,
+  since every slice's `index.js` needs the syntax, the components are
+  default exports, and their importers switch to named imports by hand. Its
+  example names (`UserCard`, `entities/user`) aren't from this app, so it
+  doesn't place a file for the student.
+- **Each structure step has «Як діяти» and a folder check** (added on
+  2026-11-22 after students said the lab was unclear). §4.4–§4.6 list the
+  moves in order; «Рішення» became «Що вирішити» (§4.3: «Що помітити»),
+  because it read as "solution" and ЛР-7/8 never used it, and the §4 intro
+  says the answers aren't written down. Each «Перевірка» now names the
+  folders `src/` may hold: without that line a step has no done signal.
+  With only the cart page and `CartLine` moved and every by-type folder
+  still there, §4.4's tests, lint and `check:deps` pass, and Steiger says
+  «No problems found!» for the 4.6 stage with a leftover `hooks/` and
+  `data/` beside the layers. §4.2 says how to find a file's importers
+  (**Find File References**; WebStorm **Find Usages**) and to place files
+  from the top down. §4.5 names one feature (`features/cart/`), says the
+  old `data/` and `hoc/` folders go, and points to ЛР-8 §4.3's `children`
+  for the seeded coupling. §4.6 says `app/routes/` becomes `pages/` and
+  that the `index.js` files and the imports through them are written by
+  hand, in that order, after Steiger's first run.
 
 ## Verified on 2026-11-17
 
@@ -190,7 +207,8 @@ Not verified:
   close all tabs, drag a file and a folder, and check a closed importer
   and the CSS import in `main.jsx` (only the TypeScript server was run, see
   above; the reference stages were moved by a script that rewrites relative
-  imports the same way); WebStorm's **Refactor → Move**;
+  imports the same way); WebStorm's **Refactor → Move**; §4.2's **Find File
+  References** on a file whose importers are all closed;
 - `npm install` with all of ЛР-1–6 present as well;
 - Vercel building `lab-10` with the `file:` package;
 - §4.10's aliases (the planning prototype showed the `jsconfig.json` trap,
