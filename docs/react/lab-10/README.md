@@ -156,7 +156,10 @@ stays local until the last group's ЛР-8 class, as `feat/react-lab-8` did for
   `check:deps` or Steiger checks, gives the moves in order, puts the
   questions in a sentence (the §4 intro says the answers aren't written
   down) and ends with «Крок завершено, коли…», naming the folders `src/` may
-  hold. Without that line a step has no done signal.
+  hold. Without that line a step has no done signal. §4.3 only states the
+  by-type principle (a file's folder says what it is, not which part of the
+  app it belongs to) and shows it on the cart's six files: the instructor
+  found «подумайте» prompts too abstract.
   With only the cart page and `CartLine` moved and every by-type folder
   still there, §4.4's tests, lint and `check:deps` pass, and Steiger says
   «No problems found!» for the 4.6 stage with a leftover `hooks/` and
