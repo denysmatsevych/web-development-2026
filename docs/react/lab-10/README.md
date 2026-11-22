@@ -258,7 +258,11 @@ src/features/cart/components/AddToCartButton.jsx`; after it, 12 of 12
   builds while `check:deps` reports `no-deep-imports-into-packages`;
 - the old FSD stage passes the new `check:deps`, Steiger and the tests, so
   §4.11's FSD move works with the starter's tools;
-- every code line in the handout is at most 75 characters.
+- every code line in the handout is at most 75 characters;
+- `lab-10.zip` (52 files), unpacked into a fresh folder, matches the
+  starter and passes 12 of 12 tests, lint, `format:check`, `check:deps`
+  and the build; a rebuild is byte-identical;
+- the site: `npm run check` and `npm run build` pass.
 
 Not verified on 2026-11-22: the PDF (not rebuilt until the instructor has
 reviewed the text), a timed dry run of the new in-class part, and the
