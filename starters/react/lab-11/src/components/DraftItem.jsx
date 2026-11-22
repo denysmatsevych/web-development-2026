@@ -11,8 +11,21 @@ export default function DraftItem({
   onSyrupToggle,
   onRemove,
 }) {
+  // «Видалити» прибирає напій разом із кнопкою, на якій фокус. Тому спершу
+  // фокус переходить на сусідній напій, а коли напій був один, — на першу
+  // кнопку «+ …» форми.
+  function handleRemove(e) {
+    const form = e.currentTarget.form
+    const all = [...form.querySelectorAll('.draft-item')]
+    const i = all.indexOf(e.currentTarget.closest('.draft-item'))
+    const next =
+      all[i + 1] ?? all[i - 1] ?? form.querySelector('.drink-buttons button')
+    next.focus()
+    onRemove()
+  }
+
   return (
-    <fieldset className="draft-item">
+    <fieldset className="draft-item" tabIndex={-1}>
       <legend>{item.drink}</legend>
       <p className="draft-price">{priceOf(item)} грн</p>
       <fieldset className="choice">
@@ -53,7 +66,7 @@ export default function DraftItem({
           </label>
         ))}
       </fieldset>
-      <button type="button" className="remove" onClick={onRemove}>
+      <button type="button" className="remove" onClick={handleRemove}>
         Видалити
       </button>
     </fieldset>
