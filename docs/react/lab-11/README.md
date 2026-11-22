@@ -85,8 +85,9 @@ group's ЛР-11 class.
   card, «Зберегти» to the panel's heading with the new name, «Видалити» to
   the next drink, «Надіслати бариста» to the name field. The given
   components do it with `flushSync`, and `OrderComposer` has one line for
-  it, which students keep when they rewrite the form in §4.3. No test checks
-  focus, so the tests and their counts didn't change.
+  it; §4.3's «Що має вийти» tells students to keep it when they rewrite
+  `handleSubmit`, since neither a test nor the lint would notice it gone.
+  No test checks focus, so the tests and their counts didn't change.
 - **`menu.js` also exports `defaultMilk(drink)` and `describeItem(item)`;**
   the cards and «Деталі» show a drink as «Лате L · вівсяне молоко · ваніль».
 - **§4.2 keeps only the rule that AI explains and doesn't write code,** as
@@ -117,9 +118,19 @@ group's ЛР-11 class.
   `<StrictMode>`'s double call and lists what makes a reducer pure, without
   saying which result React keeps (§6 asks it). Normalization «означає
   зберігати…», a full sentence. The report's item 4 asks to compare the two
-  reducers «коротко», with no sentence count.
-- **Length:** about 5,090 words by `wc -w` since 2026-11-22 (4,700
-  before), between ЛР-7's and ЛР-10's.
+  reducers «коротко», with no sentence count. In §6, the `useState` and
+  `useReducer` question asks when each fits and why, not for react.dev's
+  five points, and four questions ask to explain or compare: one action per
+  user action, why the event handler creates ids, what an unknown action
+  should do, and the bugs found in the given reducer.
+- **Review fixes on 2026-11-23.** §4.5's first step says what students see
+  before the code reads the new shape: a `TypeError` in the console and an
+  empty page, while the selectors read the old shape and then, once they
+  read the new one, on anything that changes the queue, until step 2 rewrites
+  the actions. §6's first question asks only for Kent C. Dodds's
+  rule, so it no longer repeats the react.dev comparison after it.
+- **Length:** about 5,200 words by `wc -w` since 2026-11-23 (4,700
+  before 2026-11-22), between ЛР-7's and ЛР-10's.
 
 ## Verified on 2026-11-20
 
@@ -194,7 +205,9 @@ workspace: React 19.3.1, Vite 8.3.8, `@vitejs/plugin-react` 6.3.0, ESLint
   so the page is wider than tall): it prints 13.6 cm wide instead of 7.8 cm,
   as wide as ЛР-8's and ЛР-10's; still 16 pages. After §4.3's definitions
   and §4.4's list the PDF has 17 pages; the last holds only the end of §7's
-  Immer table under its repeated header row.
+  Immer table under its repeated header row. Rebuilt on 2026-11-23 after
+  the review fixes: still 17 pages, and no word sits further right than
+  before.
 
 Not verified:
 
