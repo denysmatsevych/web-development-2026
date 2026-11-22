@@ -1,4 +1,4 @@
-// Правила гібридної структури (§4.7) і пакета (§4.9) для dependency-cruiser:
+// Правила гібридної структури (§4.7) і пакета (§4.10) для dependency-cruiser:
 // npm run check:deps. Правило перевіряє лише теки, які вже є: поки теки
 // routes/ немає, правило про маршрути нічого не знаходить. Тому перевірка
 // проходить і на стартовій структурі. Не змінюйте цей файл: це умова
@@ -65,7 +65,7 @@ module.exports = {
     {
       name: 'packages-are-independent',
       severity: 'error',
-      comment: 'Пакет не імпортує застосунок (§4.9).',
+      comment: 'Пакет не імпортує застосунок (§4.10).',
       from: { path: '^packages/' },
       to: { path: '^src/' },
     },
@@ -73,7 +73,7 @@ module.exports = {
       name: 'no-deep-imports-into-packages',
       severity: 'error',
       comment:
-        'Застосунок імпортує пакет лише за назвою (@coffee/cart), а не шляхом до файлу всередині пакета (§4.9).',
+        'Застосунок імпортує пакет лише за назвою (@coffee/cart), а не шляхом до файлу всередині пакета (§4.10).',
       from: { path: '^src/' },
       to: { path: '^packages/', pathNot: '^packages/[^/]+/index\\.js$' },
     },
