@@ -608,30 +608,47 @@ import { SeatMap } from '../../../features/book-seats/index.js'
 
 ```text
 src/
-├── app/                точка входу й маршрутизатор
-├── routes/             за маршрутами
+├── app/
+│   ├── App.jsx
+│   └── main.jsx
+├── routes/
 │   ├── about/
 │   │   └── AboutPage.jsx
 │   ├── contacts/
 │   │   ├── components/
+│   │   │   └── ContactForm.jsx
 │   │   └── ContactsPage.jsx
 │   ├── movie/
 │   │   ├── components/
+│   │   │   ├── CastList.jsx
+│   │   │   ├── ReviewList.jsx
+│   │   │   └── Trailer.jsx
 │   │   ├── hooks/
+│   │   │   └── useMovie.js
 │   │   ├── store/
+│   │   │   └── reviewsStore.js
 │   │   └── MoviePage.jsx
 │   └── schedule/
 │       ├── components/
+│       │   ├── DayPicker.jsx
+│       │   └── SessionList.jsx
 │       ├── hooks/
+│       │   └── useSessions.js
 │       └── SchedulePage.jsx
-└── shared/             спільне для кількох сторінок
-    ├── components/     кнопки, поля
-    ├── features/       за функціональністю
-    │   └── booking/    бронювання: у розкладі й на сторінці фільму
+└── shared/
+    ├── components/
+    │   ├── Button.jsx
+    │   └── TextField.jsx
+    ├── features/
+    │   └── booking/
     │       ├── components/
+    │       │   └── SeatMap.jsx
     │       ├── hooks/
+    │       │   └── useBooking.js
     │       └── store/
-    └── utils/          форматування дат
+    │           └── bookingStore.js
+    └── utils/
+        └── formatDate.js
 ```
 
 Сторінка лежить у корені теки свого маршруту, а решта файлів маршруту — у
@@ -694,7 +711,7 @@ src/
 Крок завершено, коли в `src/` лишилися тільки `app/`, `routes/` і
 `shared/`, у теках маршрутів поза підтеками лежать лише сторінки, а в
 `shared/` і його функціональностях усі файли лежать у підтеках за типом.
-Vitest показує 12 тестів з 12, а `npm run lint`, `npm run check:deps` і
+У `shared/features/cart/` лежать лише файли кошика з §4.2. Vitest показує 12 тестів з 12, а `npm run lint`, `npm run check:deps` і
 `npm run build` проходять без помилок. Заповніть рядок «Гібридна» в
 `STRUCTURES.md`, виконайте в корені `git add -A` і подивіться
 `git diff --cached --stat`: переміщення мають бути видні як
@@ -816,8 +833,8 @@ Node.js і Vite не дадуть імпортувати за назвою па�
 користувач) і `shared` (спільне в межах пакета). Ви спробуєте пакет на
 одній частині застосунку — кошику.
 
-Кошик переїжджає з `src/shared/features/cart/` у `lab-10/packages/cart/`
-настільки, наскільки дозволяє головне правило: пакет не імпортує
+Кошик переїжджає з `src/` у `lab-10/packages/cart/` настільки, наскільки
+дозволяє головне правило: пакет не імпортує
 застосунок. Ядро кошика (сховище, `useCart`, `CartLine`) імпортує лише
 React і переїжджає як є. Частини, яким потрібні `Button`, `withAnalytics`
 чи `Link` застосунку, або лишаються в `src/` і користуються пакетом, або
@@ -845,8 +862,8 @@ React і переїжджає як є. Частини, яким потрібні
    ```
 
 2. Перенесіть у пакет усе, що може переїхати за правилом вище, і розкладіть
-   за шарами зі статті: `data/` і `ui/`, а `state/` і `shared/` — якщо
-   знадобляться.
+   за шарами зі статті (`data/`, `state/`, `ui/`, `shared/`). Створюйте лише
+   ті шари, які знадобляться.
 3. Напишіть `packages/cart/index.js`: він експортує рівно те, чим
    користується застосунок.
 4. У `lab-10/package.json` у `dependencies` додайте
