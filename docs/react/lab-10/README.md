@@ -9,13 +9,14 @@
 
 `solution/` holds the instructor's material (gitignored): `stages/`, one
 folder per step that moves files, each a full copy of `src/`, `package.json`
-and `index.html` (and `packages/` for §4.9) as the reference left them
-(`4.7-hybrid` and `4.9-package` today; `4.4-routes`, `4.5-features`,
+and `index.html` (and `packages/` for the package, §4.10) as the reference
+left them (`4.7-hybrid` and `4.9-package` today, the latter named before
+the package became §4.10; `4.4-routes`, `4.5-features`,
 `4.6-fsd` and `4.7-package` are the steps before 2026-11-22);
 `shots.mjs`, which checks the starter and the last stage in headless Edge
 and takes the screenshot; and a `README.md` with the seeded coupling, the
 reference's measurements, the FSD/Makarevich comparison, the notes on
-§4.7's projects and the defence answers. The repository is public and the
+§4.8's projects and the defence answers. The repository is public and the
 defence asks for those, so they stay in `solution/`, not in this README or
 the plan. The plan the lab was built from is
 [folder-structure-and-fsd-plan.md](folder-structure-and-fsd-plan.md).
@@ -83,7 +84,8 @@ stays local until the last group's ЛР-8 class, as `feat/react-lab-8` did for
   який змінюється разом, має лежати разом»; the handout never makes
   bulletproof-react the subject of a sentence; the question on `index.js`
   in FSD versus feature folders is gone from §4.6 and §6, and so is §6's
-  question on why things that change together should live together. §4.9 is «кошик як локальний пакет»: packages are a
+  question on why things that change together should live together. The
+  package step, now §4.10, is «кошик як локальний пакет»: packages are a
   general practice (`react-labs` itself is npm workspaces), and Nadia
   Makarevich's article is cited for the layers inside a package, not as
   the author of the approach (the instructor, 2026-11-22). The bullets
@@ -172,8 +174,8 @@ stays local until the last group's ЛР-8 class, as `feat/react-lab-8` did for
   `components/Button.jsx` → `shared/ui/` updated 0 of 2 importers with
   nothing else open, and the folder `hooks/` → `shared/hooks/` 0 of 10;
   with `App.jsx` open, or with the `jsconfig.json`, all of them. Steiger
-  doesn't read `jsconfig.json`, so without `paths` it changes nothing there;
-  a student's §4.10 aliases would go into this file. The starter and the
+  doesn't read `jsconfig.json`, so without `paths` it changes nothing
+  there. The starter and the
   4.6 and 4.7 stages, re-run with it, pass every check, and Steiger still
   reports a forbidden import.
 - **One measurement, not two** (the instructor's decision after the
@@ -277,7 +279,8 @@ In a scratch `react-labs` workspace with the same versions as below:
   starter and passes 12 of 12 tests, lint, `format:check`, `check:deps`
   and the build; a rebuild is byte-identical;
 - the site: `npm run check` and `npm run build` pass;
-- the PDF, rebuilt after the instructor's review: 24 pages; nothing runs
+- the PDF, rebuilt after the PR review: 25 pages (24 before §4.7's tree
+  listed its files; the 42-line tree now starts a page); nothing runs
   past the right margin, every code line sits whole on one line, and each
   example tree stays on one page except the FSD tree (49 lines), whose last
   two lines move to the next page: a code block taller than a page has to
@@ -291,6 +294,14 @@ gives no in-class time estimate any more (the `duration` field keeps only
 the class and self-study hours, as ЛР-1 does), and students who already
 did the earlier version redo the lab with the new starter, so §4.8 no
 longer tells old-starter students to rename row 5.
+
+After the PR review on 2026-11-22: §4.7's cinema tree lists its files, as
+the trees in §4.3–§4.6 do, so the five can be compared file by file;
+§4.7's done check adds that `shared/features/cart/` holds only the cart's
+files from §4.2, so no other file can be parked in the cart feature to
+quiet a rule; §4.10's step 2 names the four layers without saying which
+are needed, since §4.10 asks whether the store belongs in `data` or
+`state`.
 
 ## Verified on 2026-11-17
 
@@ -348,9 +359,7 @@ Not verified:
   imports the same way); WebStorm's **Refactor → Move**; §4.2's **Find File
   References** on a file whose importers are all closed;
 - `npm install` with all of ЛР-1–6 present as well;
-- Vercel building `lab-10` with the `file:` package;
-- §4.10's aliases (the planning prototype showed the `jsconfig.json` trap,
-  not a working setup).
+- Vercel building `lab-10` with the `file:` package.
 
 ## Build
 
@@ -369,7 +378,8 @@ wrap in the PDF, and a URL wraps at its hyphen: with `<username>`, §5's
 
 To check the stages again: copy the starter into a `react-labs` workspace,
 replace `src/`, `package.json` and `index.html` with a stage's copies (and
-add `packages/` for §4.9, then `npm install` at the root), and run
-`npx vitest run`, `npm run lint`, `npm run format:check`,
-`npm run check:deps`, `npm run check:fsd` (FSD stage only) and
-`npm run build`.
+add `packages/` for the package stage, then `npm install` at the root),
+and run `npx vitest run`, `npm run lint`, `npm run format:check`,
+`npm run check:deps` and `npm run build`. The earlier version's stages
+need that version's starter, from `ede6739` (PR #77's merge), whose rules
+match them and which still has `check:fsd` for the FSD stage.
