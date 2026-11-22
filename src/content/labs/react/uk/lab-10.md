@@ -347,7 +347,7 @@ React називає першим: «Grouping by features or routes».
 [Project structure and organization](https://nextjs.org/docs/app/getting-started/project-structure),
 [File Structure](https://legacy.reactjs.org/docs/faq-structure.html).
 
-### 4.5. За функціональністю
+### 4.5. За функціональністю (by feature)
 
 У цій структурі код групують за функціональністю (feature). В одній теці
 лежить усе, що потрібно одній функції застосунку, хоч би на якій сторінці
