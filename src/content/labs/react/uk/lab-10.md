@@ -11,8 +11,8 @@ handout: /uk/react/labs/lab-10.pdf
 ---
 
 > **Примітка щодо актуальності.** Документ підготовлено станом на 22 листопада
-> 2026 року: React 19, Vite 8, Vitest 5, Feature-Sliced Design 2.1, Steiger
-> 0.10, dependency-cruiser 18. У разі відмінностей орієнтуйтеся на
+> 2026 року: React 19, Vite 8, Vitest 5, Feature-Sliced Design 2.1,
+> dependency-cruiser 18. У разі відмінностей орієнтуйтеся на
 > документацію за посиланнями в §2.
 
 ## 1. Мета роботи
@@ -24,7 +24,8 @@ handout: /uk/react/labs/lab-10.pdf
 
 **Очікуваний результат:** у теці `lab-10/` репозиторію `react-labs` — кавова
 крамниця з трьох сторінок у гібридній структурі: теки за маршрутами, у них
-теки за типом файлів, а кошик — окремою текою функціональності. Застосунок
+теки за типом файлів, а кошик — окремою текою функціональності в
+`shared/`. Застосунок
 один, копій немає: ви переносите його файли з тек за типом файлів у
 гібридну структуру, і обидві структури лишаються в історії окремими
 комітами. У `STRUCTURES.md` — у яких теках лежить кошик до й після
@@ -40,8 +41,13 @@ handout: /uk/react/labs/lab-10.pdf
 
 Теоретичної частини в цій роботі немає: замість неї в кроках §4.3–§4.6 ви
 читаєте статті й документацію за посиланнями нижче. Щоб устигнути на
-занятті, сторінки за посиланнями 1, 2 і 7 (Overview і Layers) прочитайте
-заздалегідь. Решту відкривайте, коли до них відсилає крок. Усі сторінки
+занятті, заздалегідь прочитайте
+[сторінку старої документації React](https://legacy.reactjs.org/docs/faq-structure.html),
+[статтю Robin Wieruch](https://www.robinwieruch.de/react-folder-structure/)
+і сторінки FSD
+[Overview](https://feature-sliced.design/docs/get-started/overview) і
+[Layers](https://feature-sliced.design/docs/reference/layers). Решту
+відкривайте, коли до них відсилає крок. Усі сторінки
 англійською: документація FSD українською не перекладена.
 
 1. React (стара документація): [File Structure](https://legacy.reactjs.org/docs/faq-structure.html) —
@@ -70,7 +76,7 @@ handout: /uk/react/labs/lab-10.pdf
    [Tutorial](https://feature-sliced.design/docs/get-started/tutorial) —
    шари, слайси, сегменти, правило імпортів і публічний API (§4.6).
 8. [Steiger](https://github.com/feature-sliced/steiger) — лінтер FSD. Кожне
-   його повідомлення має посилання на сторінку свого правила (§4.6, §4.11).
+   його повідомлення має посилання на сторінку свого правила (§4.6).
 9. Nadia Makarevich: [React project structure for scale: decomposition, layers and hierarchy](https://www.developerway.com/posts/react-project-structure) (2022) —
    застосунок із пакетів, шари всередині пакета й ієрархія компонентів
    (§4.9).
@@ -86,7 +92,7 @@ handout: /uk/react/labs/lab-10.pdf
     за бажанням: порада в одне речення.
 
 Основна література програми — книга Nadia Makarevich _Advanced React_ і її
-блог Developer Way (посилання 9).
+блог [Developer Way](https://www.developerway.com/).
 
 ## 3. Завдання лабораторної роботи
 
@@ -182,8 +188,7 @@ dependency-cruiser, а до й після переміщення ви запис
 
    Обидві команди проходять без помилок. `check:deps` запускає
    dependency-cruiser з правилами з `.dependency-cruiser.cjs`. Більшість
-   правил стосується тек, яких поки немає (`app/`, `routes/`, `features/`,
-   `shared/`), і почне працювати, щойно ці теки з'являться. Тому перевірки
+   правил стосується тек, яких поки немає (`app/`, `routes/`, `shared/`), і почне працювати, щойно ці теки з'являться. Тому перевірки
    проходять і тоді, коли файли перенесено лише частково. Що переміщення
    завершено, видно з того, які теки лишилися в `src/`: їх називає §4.7.
 
@@ -270,7 +275,8 @@ dependency-cruiser, а до й після переміщення ви запис
 `AppHeader` з лічильником. Запишіть у цю таблицю в `STRUCTURES.md`, у
 скількох теках вони лежать і які це теки. Тека — та, у якій файл лежить
 безпосередньо: `src/hooks/` і `src/components/` — дві теки, і
-`src/features/cart/hooks/` і `src/features/cart/components/` — теж дві.
+`src/shared/features/cart/hooks/` і
+`src/shared/features/cart/components/` — теж дві.
 
 Рядок іде в коміт структури: заповніть його, коли файли вже на своїх
 місцях, потім у корені репозиторію `git add -A` і коміт кроку.
@@ -287,9 +293,11 @@ dependency-cruiser, а до й після переміщення ви запис
 структуру в проєкті з понад тисячею файлів і пояснює, чому не переходить
 на теки за функціональністю.
 
-Прочитайте сторінку старої документації React (посилання 1), перші чотири
-кроки статті Robin Wieruch (посилання 2) і статтю Josh Comeau
-(посилання 3).
+Прочитайте
+[сторінку старої документації React](https://legacy.reactjs.org/docs/faq-structure.html),
+перші чотири кроки
+[статті Robin Wieruch](https://www.robinwieruch.de/react-folder-structure/)
+і [статтю Josh Comeau](https://www.joshwcomeau.com/react/file-structure/).
 
 Приклади в §4.3–§4.7 — той самий сайт кінотеатру, щоб структури було легко
 порівняти. На сайті чотири сторінки: «Про нас», «Контакти», сторінка фільму
@@ -340,22 +348,22 @@ src/
 заповнений рядок.
 
 **Коміт:** `docs: measure the by-type structure`.
-**Довідка:** [File Structure](https://legacy.reactjs.org/docs/faq-structure.html),
-[React Folder Structure](https://www.robinwieruch.de/react-folder-structure/),
-[Delightful React File/Directory Structure](https://www.joshwcomeau.com/react/file-structure/).
 
 ### 4.4. За маршрутами
 
-Код, який змінюється разом, має лежати разом. Kent C. Dodds називає це
-colocation і радить: «Place code as close to where it's relevant as
-possible». У застосунку з кількома сторінками найпростіше провести межу по
-маршрутах: усе, що потрібне лише одній сторінці, лежить у її теці. Так
-влаштовано теки маршрутів у Next.js, і саме цей підхід стара документація
-React називає першим: «Grouping by features or routes».
+Kent C. Dodds радить тримати код якомога ближче до місця, де ним
+користуються: «Place code as close to where it's relevant as possible».
+Цей принцип він називає colocation. У застосунку з кількома сторінками
+найпростіше файли погрупувати за маршрутами: усе, що потрібне лише одній
+сторінці, лежить у її теці. Так влаштовано теки маршрутів у Next.js, і
+саме цей підхід стара документація React називає першим: «Grouping by
+features or routes».
 
-Прочитайте статтю Kent C. Dodds (посилання 4), а на сторінці Next.js
-(посилання 5) — розділи про файли поруч із маршрутом (colocation),
-приватні теки, групи маршрутів і способи організувати проєкт.
+Прочитайте [статтю Kent C. Dodds](https://kentcdodds.com/blog/colocation),
+а на
+[сторінці Next.js про структуру проєкту](https://nextjs.org/docs/app/getting-started/project-structure)
+— розділи про файли поруч із маршрутом (colocation), приватні теки, групи
+маршрутів і способи організувати проєкт.
 
 Той самий сайт кінотеатру за маршрутами:
 
@@ -400,52 +408,69 @@ src/
 потроху.
 
 Перевірте себе на прикладі: куди в цій структурі піде `MovieRating.jsx` —
-рейтинг фільму, який показують і на сторінці фільму, і в розкладі? Те саме
-питання буде в §4.5 і §4.6, а на захисті запитають, куди й чому. Крок
+рейтинг фільму, який показують і на сторінці фільму, і в розкладі? Крок
 завершено, коли ви прочитали сторінки й можете відповісти на це питання.
-
-**Довідка:** [Colocation](https://kentcdodds.com/blog/colocation),
-[Project structure and organization](https://nextjs.org/docs/app/getting-started/project-structure),
-[File Structure](https://legacy.reactjs.org/docs/faq-structure.html).
 
 ### 4.5. За функціональністю (by feature)
 
-У цій структурі код групують за функціональністю (feature). В одній теці
-лежить усе, що потрібно одній функції застосунку, хоч би на якій сторінці
-вона з'являлася, а сторінки лише складають функціональності разом. Імпорти
-йдуть в одному напрямку: shared → features → app.
+У цій структурі файли групують за функціональністю (feature), тобто за
+тим, що вміє застосунок: бронювати місця, показувати відгуки, надсилати
+форму. Кожна функціональність має свою теку, і в ній лежать усі її файли:
+компоненти, хуки, сховище. Бронювання є і в розкладі, і на сторінці
+фільму, але всі його файли однаково лежать в одній теці. Сторінка в такій
+структурі сама майже нічого не робить: вона лише показує компоненти з
+кількох функціональностей. Імпорти йдуть в одному напрямку: від спільного
+коду до функціональностей і далі до застосунку (shared → features → app).
 
-Прочитайте сторінку Project Structure у bulletproof-react (посилання 6) і
-останній крок статті Robin Wieruch (посилання 2).
+Прочитайте [опис структури проєкту в репозиторії bulletproof-react](https://github.com/alan2207/bulletproof-react/blob/master/docs/project-structure.md)
+і останній крок [статті Robin Wieruch](https://www.robinwieruch.de/react-folder-structure/).
 
-Сайт кінотеатру за функціональністю, як у bulletproof-react. Праворуч від
-назви теки перелічено файли в ній:
+Нижче наведено приклад сайту кінотеатру, реалізованого за функціональним
+групуванням.
 
 ```text
 src/
 ├── app/
-│   ├── routes/         AboutPage.jsx, ContactsPage.jsx, MoviePage.jsx,
-│   │                   SchedulePage.jsx
+│   ├── routes/
+│   │   ├── AboutPage.jsx
+│   │   ├── ContactsPage.jsx
+│   │   ├── MoviePage.jsx
+│   │   └── SchedulePage.jsx
 │   ├── App.jsx
 │   └── main.jsx
-├── components/         Button.jsx, TextField.jsx
+├── components/
+│   ├── Button.jsx
+│   └── TextField.jsx
 ├── features/
 │   ├── booking/
-│   │   ├── components/ SeatMap.jsx
-│   │   ├── hooks/      useBooking.js
-│   │   └── stores/     bookingStore.js
+│   │   ├── components/
+│   │   │   └── SeatMap.jsx
+│   │   ├── hooks/
+│   │   │   └── useBooking.js
+│   │   └── stores/
+│   │       └── bookingStore.js
 │   ├── contacts/
-│   │   └── components/ ContactForm.jsx
+│   │   └── components/
+│   │       └── ContactForm.jsx
 │   ├── movies/
-│   │   ├── components/ CastList.jsx, Trailer.jsx
-│   │   └── hooks/      useMovie.js
+│   │   ├── components/
+│   │   │   ├── CastList.jsx
+│   │   │   └── Trailer.jsx
+│   │   └── hooks/
+│   │       └── useMovie.js
 │   ├── reviews/
-│   │   ├── components/ ReviewList.jsx
-│   │   └── stores/     reviewsStore.js
+│   │   ├── components/
+│   │   │   └── ReviewList.jsx
+│   │   └── stores/
+│   │       └── reviewsStore.js
 │   └── schedule/
-│       ├── components/ DayPicker.jsx, SessionList.jsx
-│       └── hooks/      useSessions.js
-└── utils/              formatDate.js
+│       ├── components/
+│       │   ├── DayPicker.jsx
+│       │   └── SessionList.jsx
+│       └── hooks/
+│           └── useSessions.js
+└── utils/
+    └── formatDate.js
 ```
 
 Сторінки лежать в `app/routes/` і лише складають функціональності:
@@ -454,17 +479,14 @@ src/
 `shared/`. Функціональність не імпортує іншу: якщо схемі місць потрібна
 назва фільму, її передає сторінка через props. Спільні теки
 (`components/`, `utils/`) не імпортують ні `features/`, ні `app/`.
-bulletproof-react радить також не робити `index.js`, які реекспортують
-вміст теки: імпорти вказують прямо на файли. Найважче в цій структурі —
+Файлів `index.js`, які реекспортують вміст теки, у цій структурі не
+роблять: імпорти вказують прямо на файли. Найважче в цій структурі —
 вирішити, що є однією функціональністю: наприклад, чи відгуки окремі від
 `movies/`.
 
 Перевірте себе: куди за функціональністю піде `MovieRating.jsx`, рейтинг
 фільму на сторінці фільму й у розкладі? Крок завершено, коли ви прочитали
 сторінки й можете відповісти на це питання.
-
-**Довідка:** [Project Structure](https://github.com/alan2207/bulletproof-react/blob/master/docs/project-structure.md),
-[React Folder Structure](https://www.robinwieruch.de/react-folder-structure/).
 
 ### 4.6. Feature-Sliced Design
 
@@ -476,42 +498,66 @@ Feature-Sliced Design (FSD) ділить код на три рівні. **Шар
 призначенням коду: `ui`, `model`, `api`, `lib`, `config`. Шари `app` і
 `shared` на слайси не діляться, у них одразу сегменти.
 
-Прочитайте сторінки Overview, Layers, Slices and segments і Public API
-(посилання 7). Tutorial — за бажанням: у ньому FSD крок за кроком
-застосовують до цілого застосунку.
+Прочитайте сторінки документації FSD
+[Overview](https://feature-sliced.design/docs/get-started/overview),
+[Layers](https://feature-sliced.design/docs/reference/layers),
+[Slices and segments](https://feature-sliced.design/docs/reference/slices-segments)
+і [Public API](https://feature-sliced.design/docs/reference/public-api).
+[Tutorial](https://feature-sliced.design/docs/get-started/tutorial) — за
+бажанням: у ньому FSD крок за кроком застосовують до цілого застосунку.
 
-Сайт кінотеатру за FSD. Шари — у порядку FSD, згори вниз:
+Сайт кінотеатру за FSD:
 
 ```text
 src/
-├── app/                main.jsx, App.jsx, маршрутизатор
+├── app/
+│   ├── App.jsx
+│   └── main.jsx
 ├── pages/
 │   ├── about/
-│   │   ├── ui/         AboutPage.jsx
+│   │   ├── ui/
+│   │   │   └── AboutPage.jsx
 │   │   └── index.js
 │   ├── contacts/
-│   │   ├── ui/         ContactForm.jsx, ContactsPage.jsx
+│   │   ├── ui/
+│   │   │   ├── ContactForm.jsx
+│   │   │   └── ContactsPage.jsx
 │   │   └── index.js
 │   ├── movie/
-│   │   ├── model/      reviewsStore.js, useMovie.js
-│   │   ├── ui/         CastList.jsx, MoviePage.jsx, ReviewList.jsx,
-│   │   │               Trailer.jsx
+│   │   ├── model/
+│   │   │   ├── reviewsStore.js
+│   │   │   └── useMovie.js
+│   │   ├── ui/
+│   │   │   ├── CastList.jsx
+│   │   │   ├── MoviePage.jsx
+│   │   │   ├── ReviewList.jsx
+│   │   │   └── Trailer.jsx
 │   │   └── index.js
 │   └── schedule/
-│       ├── ui/         DayPicker.jsx, SchedulePage.jsx, SessionList.jsx
+│       ├── ui/
+│       │   ├── DayPicker.jsx
+│       │   ├── SchedulePage.jsx
+│       │   └── SessionList.jsx
 │       └── index.js
 ├── features/
 │   └── book-seats/
-│       ├── model/      bookingStore.js, useBooking.js
-│       ├── ui/         SeatMap.jsx
+│       ├── model/
+│       │   ├── bookingStore.js
+│       │   └── useBooking.js
+│       ├── ui/
+│       │   └── SeatMap.jsx
 │       └── index.js
 ├── entities/
 │   └── session/
-│       ├── model/      useSessions.js
+│       ├── model/
+│       │   └── useSessions.js
 │       └── index.js
 └── shared/
-    ├── lib/            formatDate.js
-    └── ui/             Button.jsx, TextField.jsx
+    ├── lib/
+    │   └── formatDate.js
+    └── ui/
+        ├── Button.jsx
+        └── TextField.jsx
 ```
 
 Бронювання — дія користувача, тому це функціональність
@@ -535,29 +581,19 @@ export { useBooking } from './model/useBooking.js'
 import { SeatMap } from '../../../features/book-seats/index.js'
 ```
 
-Правила FSD перевіряє лінтер Steiger (посилання 8). Шар імпортує лише шари,
-нижчі за себе, а слайси одного шару не імпортують один одного
+Правила FSD перевіряє лінтер
+[Steiger](https://github.com/feature-sliced/steiger). Шар імпортує лише
+шари, нижчі за себе, а слайси одного шару не імпортують один одного
 (`fsd/forbidden-imports`). Інший слайс імпортують тільки через його
 `index.js` (`fsd/no-public-api-sidestep`). Слайс, яким користується лише
 одне місце, не має бути окремим слайсом (`fsd/insignificant-slice`).
 Сегменти називають за призначенням, а не за типом файлів, тож не
 `components/`, `hooks/` чи `utils/` (`fsd/segments-by-purpose`). Під
-кожним повідомленням Steiger є посилання на сторінку правила. У цій роботі
-Steiger знадобиться лише в самостійній роботі (§4.11).
-
-Зверніть увагу: bulletproof-react радить обходитися без `index.js`, а FSD
-вимагає його в кожному слайсі. Чому так, запитають на захисті.
+кожним повідомленням Steiger є посилання на сторінку правила.
 
 Перевірте себе: куди за FSD піде `MovieRating.jsx`, рейтинг фільму на
 сторінці фільму й у розкладі? Крок завершено, коли ви прочитали сторінки й
 можете відповісти на це питання.
-
-**Довідка:** [Overview](https://feature-sliced.design/docs/get-started/overview),
-[Layers](https://feature-sliced.design/docs/reference/layers),
-[Slices and segments](https://feature-sliced.design/docs/reference/slices-segments),
-[Public API](https://feature-sliced.design/docs/reference/public-api),
-[Tutorial](https://feature-sliced.design/docs/get-started/tutorial),
-[Steiger](https://github.com/feature-sliced/steiger).
 
 ### 4.7. Гібридна структура
 
@@ -567,17 +603,12 @@ Steiger знадобиться лише в самостійній роботі (
 сторінок. Таку структуру називають гібридною. Поширений варіант: зверху
 теки за маршрутами (§4.4), усередині маршруту — теки за типом файлів
 (§4.3), а частина, якою користуються кілька сторінок і яка має власний
-стан, — окремою текою за функціональністю (§4.5). Сайт кінотеатру в такій
-структурі:
+стан, — окремою текою функціональності (§4.5) всередині `shared/`. Сайт
+кінотеатру в такій структурі:
 
 ```text
 src/
 ├── app/                точка входу й маршрутизатор
-├── features/           за функціональністю
-│   └── booking/        бронювання: у розкладі й на сторінці фільму
-│       ├── components/
-│       ├── hooks/
-│       └── store/
 ├── routes/             за маршрутами
 │   ├── about/
 │   │   └── AboutPage.jsx
@@ -593,56 +624,63 @@ src/
 │       ├── components/
 │       ├── hooks/
 │       └── SchedulePage.jsx
-└── shared/             кнопки, поля, форматування дат
-    ├── components/
-    └── utils/
+└── shared/             спільне для кількох сторінок
+    ├── components/     кнопки, поля
+    ├── features/       за функціональністю
+    │   └── booking/    бронювання: у розкладі й на сторінці фільму
+    │       ├── components/
+    │       ├── hooks/
+    │       └── store/
+    └── utils/          форматування дат
 ```
 
 Сторінка лежить у корені теки свого маршруту, а решта файлів маршруту — у
 підтеках за типом файлів. Сторінці «Про нас», крім неї самої, нічого не
 потрібно, тому підтек в `about/` немає. Код, потрібний кільком сторінкам,
 іде в `shared/`, у таку саму підтеку за типом. Бронювання теж потрібне двом
-сторінкам, але воно має власний стан і власні компоненти, і в `shared/`
-воно розсипалося б між кнопками й полями. Тому для нього є
-`features/booking/`, як у §4.5. Так одна структура бере від трьох підходів
-те, що потрібно саме цьому сайту.
+сторінкам, але воно має власний стан і власні компоненти, і в
+`shared/components/` і `shared/hooks/` воно розсипалося б між кнопками й
+полями. Тому для нього є окрема тека `shared/features/booking/`, як у
+§4.5. Так одна структура бере від трьох підходів те, що потрібно саме
+цьому сайту.
 
 Перенесіть файли крамниці в таку саму структуру. Після цього кроку в
-`src/` лишаються чотири теки. В `app/` лежать `main.jsx`, `App.jsx`,
+`src/` лишаються три теки. В `app/` лежать `main.jsx`, `App.jsx`,
 `index.css` і те, чим користується лише `App`, без підтек. У `routes/` — по
 теці на маршрут, `catalog/`, `bean/` і `cart/`: у корені теки маршруту
 лежить сторінка, а код, потрібний лише їй, — у підтеках за типом файлів
-(`components/`, `hooks/`, `data/`, `utils/` тощо). У `features/cart/` —
-кошик: сховище, `useCart` і компоненти кошика, теж у підтеках за типом.
-Кошиком користуються три сторінки й шапка, і він має власний стан, як
-бронювання в кінотеатрі. Чи є в крамниці ще функціональності, вирішуєте
-ви. У `shared/` — код, яким користуються два маршрути, маршрут і `app/` або
-функціональність і ще хтось, у підтеках за типом. Створюйте лише ті
-підтеки, які потрібні.
+(`components/`, `hooks/`, `data/`, `utils/` тощо). У `shared/` — код, яким
+користуються два маршрути або маршрут і `app/`, у підтеках за типом.
+Кошик лежить там само, у `shared/features/cart/`: сховище, `useCart` і
+компоненти кошика, теж у підтеках за типом. Кошиком користуються три
+сторінки й шапка, і він має власний стан, як бронювання в кінотеатрі. Чи є
+в крамниці ще функціональності, вирішуєте ви. Створюйте лише ті підтеки,
+які потрібні.
 
 `npm run check:deps` стежить за п'ятьма правилами. Тека маршруту не
-імпортує теку іншого маршруту (`routes-are-independent`). Функціональність
-не імпортує іншу функціональність (`features-are-independent`) і не
-імпортує маршрутів (`features-below-routes`). `shared/` не імпортує ні
-`app/`, ні `routes/`, ні `features/` (`shared-stays-shared`). А `app/` не
-імпортує ніхто, крім самої `app/` (`app-on-top`). Назву порушеного правила
+імпортує теку іншого маршруту (`routes-are-independent`). `shared/` не
+імпортує ні `app/`, ні `routes/` (`shared-stays-shared`). Функціональність
+у `shared/features/` не імпортує іншу функціональність
+(`features-are-independent`), а решта `shared/` не імпортує
+функціональностей (`shared-code-below-features`). А `app/` не імпортує
+ніхто, крім самої `app/` (`app-on-top`). Назву порушеного правила
 `check:deps` пише в кожному повідомленні.
 
 Порядок дій такий:
 
 1. У `src/` створіть теки `app/`, `routes/catalog/`, `routes/bean/`,
-   `routes/cart/`, `features/cart/` і `shared/`.
+   `routes/cart/` і `shared/features/cart/`.
 2. Перетягніть в `app/` файли `main.jsx`, `App.jsx` і `index.css`. Оновіть
    шлях у `imports["#app"]` у `package.json` і в `<script>` в `index.html`
    (§4.2).
 3. Перетягніть кожну сторінку з `pages/` у теку її маршруту.
-4. Перенесіть у `features/cart/` сховище кошика, `useCart` і компоненти, що
-   належать кошику, кожен файл у підтеку за типом (`store/`, `hooks/`,
-   `components/`).
+4. Перенесіть у `shared/features/cart/` сховище кошика, `useCart` і
+   компоненти, що належать кошику, кожен файл у підтеку за типом
+   (`store/`, `hooks/`, `components/`).
 5. Для кожного файлу, що лишився в старих теках (`components/`, `hooks/`,
    `hoc/`, `store/`, `utils/`, `data/`), з'ясуйте, хто його імпортує
-   (§4.2), і перенесіть його в `app/`, у підтеку теки маршруту, у
-   функціональність чи в підтеку `shared/`.
+   (§4.2), і перенесіть його в `app/`, у підтеку теки маршруту, у підтеку
+   `shared/` чи у функціональність.
 6. Запустіть `npm run check:deps`. Якщо він повідомляє про порушення і
    жодне переміщення цього не виправляє, змініть код (§4.2): хай частини
    поєднує компонент, що стоїть вище. Згадайте ЛР-8 §4.3: компонент може
@@ -653,9 +691,9 @@ src/
 піде `CartLine`, яким користується лише сторінка кошика, і чи ♡ — окрема
 функціональність, чи спільний компонент.
 
-Крок завершено, коли в `src/` лишилися тільки `app/`, `features/`,
-`routes/` і `shared/`, у теках маршрутів поза підтеками лежать лише
-сторінки, а у функціональностях і `shared/` усі файли лежать у підтеках.
+Крок завершено, коли в `src/` лишилися тільки `app/`, `routes/` і
+`shared/`, у теках маршрутів поза підтеками лежать лише сторінки, а в
+`shared/` і його функціональностях усі файли лежать у підтеках за типом.
 Vitest показує 12 тестів з 12, а `npm run lint`, `npm run check:deps` і
 `npm run build` проходять без помилок. Заповніть рядок «Гібридна» в
 `STRUCTURES.md`, виконайте в корені `git add -A` і подивіться
@@ -723,12 +761,13 @@ Vitest показує 12 тестів з 12, а `npm run lint`, `npm run check:d
 пакета охороняє не лінтер, а сама платформа: поле `exports` у
 `package.json` визначає, які файли пакета можна імпортувати, а решту
 Node.js і Vite не дадуть імпортувати за назвою пакета. Як розкласти код
-усередині пакета, описує, наприклад, стаття Надії Макаревич (посилання 9):
+усередині пакета, описує, наприклад,
+[стаття Надії Макаревич](https://www.developerway.com/posts/react-project-structure):
 шари `data` (дані), `state` (стан, за потреби), `ui` (що бачить
 користувач) і `shared` (спільне в межах пакета). Ви спробуєте пакет на
 одній частині застосунку — кошику.
 
-Кошик переїжджає з `src/features/cart/` у `lab-10/packages/cart/`
+Кошик переїжджає з `src/shared/features/cart/` у `lab-10/packages/cart/`
 настільки, наскільки дозволяє головне правило: пакет не імпортує
 застосунок. Ядро кошика (сховище, `useCart`, `CartLine`) імпортує лише
 React і переїжджає як є. Частини, яким потрібні `Button`, `withAnalytics`
@@ -847,31 +886,6 @@ React і переїжджає як є. Частини, яким потрібні
 **Довідка:** [File Structure](https://legacy.reactjs.org/docs/faq-structure.html),
 [FSD: Is it right for me?](https://feature-sliced.design/docs/get-started/overview#is-it-right-for-me).
 
-### 4.11. Самостійна робота (не оцінюється): «Оптимізація структури модулів»
-
-Робіть її в окремій гілці (`git switch -c fsd`), щоб у `main` лишилася
-гібридна структура, яку оцінюють.
-
-1. **Feature-Sliced Design.** Перенесіть крамницю з гібридної структури у
-   FSD за §4.6: шари, слайси з `index.js` і сегменти. `npm run check:fsd`
-   запускає Steiger. Поки немає `index.js`, він повідомляє про кожен слайс
-   без публічного API (`fsd/public-api`) і про кожен імпорт в обхід нього
-   (`fsd/no-public-api-sidestep`). Готово, коли Steiger пише «No problems
-   found!», а тести, `npm run lint` і `npm run check:deps` проходять. Зайву
-   теку поруч із шарами Steiger не помічає: теки перевірте самі.
-2. **Псевдоніми імпортів.** Відносні шляхи на кшталт
-   `'../../../entities/…/index.js'` довгі й ламаються під час
-   переміщень. Замініть їх у структурі FSD на псевдоніми `@/…`, які
-   розуміють одночасно Vite, редактор і Steiger. Steiger не читає
-   `jsconfig.json`: з псевдонімами, описаними лише там, він не бачить
-   жодного імпорту й пише «No problems found!» навіть для забороненого.
-   Знайдіть, як це обійти, і доведіть, що Steiger знову ловить заборонений
-   імпорт (наприклад, сутності з функціональності).
-3. **За бажанням:** запишіть правила §4.7 для ESLint через
-   [`eslint-plugin-boundaries`](https://github.com/javierbrea/eslint-plugin-boundaries)
-   і порівняйте з `check:deps`: що зручніше, що кожен бачить і чого не
-   бачить.
-
 ## 5. Вимоги до звіту
 
 Звіт надсилають після заняття. Спершу виконайте §4.10 — вибір структури
@@ -949,7 +963,8 @@ _За функціональністю_
 - Чому функціональності не імпортують одна одну? Як тоді сторінка поєднує
   кілька функціональностей?
 - Що означає напрямок імпортів «shared → features → app»? Навіщо він?
-- Що таке barrel-файл? Чому bulletproof-react радить їх не робити?
+- Що таке barrel-файл? Чому в структурі за функціональністю радять
+  обходитися без них?
 - Куди за функціональністю піде `MovieRating.jsx` і чому?
 
 _Feature-Sliced Design_
@@ -959,8 +974,6 @@ _Feature-Sliced Design_
 - Чим сутність відрізняється від функціональності й віджета? Наведіть
   приклад із сайту кінотеатру.
 - Що таке публічний API слайсу? Що станеться, якщо його обійти?
-- Чому FSD вимагає `index.js`, а bulletproof-react радить обходитися без
-  них? Коли кращий кожен із підходів?
 - Чому сутність не може імпортувати функціональність? Що FSD пропонує, коли
   сутностям треба знати одна про одну (`@x`)?
 - Що означає правило `fsd/insignificant-slice`? Чому відгуки в прикладі
@@ -973,8 +986,9 @@ _Гібридна структура_
 
 - Які підходи поєднує гібридна структура з §4.7? Що в ній узято від
   кожного?
-- Чому кошик лежить у `features/cart/`, а не в `shared/`? Що мало б
-  статися, щоб і ♡ став окремою функціональністю?
+- Чому кошик лежить у `shared/features/cart/`, а не в `shared/components/`
+  і `shared/hooks/`? Що мало б статися, щоб і ♡ став окремою
+  функціональністю?
 - Коли в теці маршруту з'являються підтеки за типом файлів?
 - Що ви робили, коли `check:deps` повідомив про порушення, яке не
   виправляє жодне переміщення? Як ви змінили код?
@@ -1008,7 +1022,6 @@ _Інструменти_
 - Що перевіряє dependency-cruiser і чого він перевірити не може?
 - Що перевіряє Steiger? Чим його правила відрізняються від правил у
   `.dependency-cruiser.cjs`?
-- Чому псевдоніми імпортів можуть сховати порушення від лінтера?
 - Як тести в цій роботі імпортують застосунок і чому вони не ламаються від
   переміщень? Що таке `imports` у `package.json`?
 

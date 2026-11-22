@@ -20,9 +20,18 @@ module.exports = {
       severity: 'error',
       comment:
         'Тека маршруту не імпортує теку іншого маршруту. Те, що потрібно ' +
-        'двом маршрутам, переносьте в shared/ або features/ (§4.7).',
+        'двом маршрутам, переносьте в shared/ (§4.7).',
       from: { path: '^src/routes/([^/]+)/' },
       to: { path: '^src/routes/', pathNot: '^src/routes/$1/' },
+    },
+    {
+      name: 'shared-stays-shared',
+      severity: 'error',
+      comment:
+        'Спільний код не знає, хто ним користується: shared/ не імпортує ' +
+        'app/ і routes/ (§4.7).',
+      from: { path: '^src/shared/' },
+      to: { path: '^src/(app|routes)/' },
     },
     {
       name: 'features-are-independent',
@@ -30,26 +39,20 @@ module.exports = {
       comment:
         'Функціональність (feature) не імпортує іншу. Їх поєднує маршрут, ' +
         'що стоїть вище (§4.7).',
-      from: { path: '^src/features/([^/]+)/' },
-      to: { path: '^src/features/', pathNot: '^src/features/$1/' },
+      from: { path: '^src/shared/features/([^/]+)/' },
+      to: {
+        path: '^src/shared/features/',
+        pathNot: '^src/shared/features/$1/',
+      },
     },
     {
-      name: 'features-below-routes',
+      name: 'shared-code-below-features',
       severity: 'error',
       comment:
-        'Функціональність не знає, на яких сторінках її використовують: ' +
-        'маршрути імпортують features/, а не навпаки (§4.7).',
-      from: { path: '^src/features/' },
-      to: { path: '^src/routes/' },
-    },
-    {
-      name: 'shared-stays-shared',
-      severity: 'error',
-      comment:
-        'Спільний код не знає, хто ним користується: shared/ не імпортує ' +
-        'app/, routes/ і features/ (§4.7).',
-      from: { path: '^src/shared/' },
-      to: { path: '^src/(app|routes|features)/' },
+        'Кнопки, хуки й утиліти в shared/ не знають функціональностей: ' +
+        'shared/features/ імпортує решту shared/, а не навпаки (§4.7).',
+      from: { path: '^src/shared/', pathNot: '^src/shared/features/' },
+      to: { path: '^src/shared/features/' },
     },
     {
       name: 'app-on-top',

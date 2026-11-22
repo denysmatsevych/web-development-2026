@@ -1,18 +1,17 @@
 # Lab 10 — Folder structure and Feature-Sliced Design
 
-| Route                               | Source                                | What it is                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| ----------------------------------- | ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `/react/labs/lab-10/`               | `src/content/labs/react/uk/lab-10.md` | the handout: useful links instead of theory; §4.3–§4.6 four approaches read from articles and docs, each shown as a tree of the same cinema site (§4.3 by file type, which the starter uses, §4.4 by route, §4.5 feature folders after bulletproof-react, §4.6 Feature-Sliced Design); §4.7 the starter moved once into a hybrid structure; the folders that hold the cart counted before and after; the AI rule; §4.8 checks and Vercel; §4.9, +1 point: the cart as a local package; §4.10 a structure chosen for five projects (after class, with the report); §4.11 self-study; report, defence |
-| `/uk/react/labs/lab-10.pdf`         | built from the handout                | the downloadable handout                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| `/uk/react/starters/lab-10.zip`     | `starters/react/lab-10/`              | the starter, unpacked by students into `react-labs/lab-10/`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| `/uk/react/labs/lab-10/result.webp` | the reference solution                | the catalogue with «Кошик (3)» in the header, in the handout's §1; it shows no folder tree, since the tree is the answer                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| Route                               | Source                                | What it is                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| ----------------------------------- | ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/react/labs/lab-10/`               | `src/content/labs/react/uk/lab-10.md` | the handout: useful links instead of theory; §4.3–§4.6 four approaches read from articles and docs, each shown as a tree of the same cinema site (§4.3 by file type, which the starter uses, §4.4 by route, §4.5 feature folders after bulletproof-react, §4.6 Feature-Sliced Design); §4.7 the starter moved once into a hybrid structure; the folders that hold the cart counted before and after; the AI rule; §4.8 checks and Vercel; §4.9, +1 point: the cart as a local package; §4.10 a structure chosen for five projects (after class, with the report); report, defence |
+| `/uk/react/labs/lab-10.pdf`         | built from the handout                | the downloadable handout                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `/uk/react/starters/lab-10.zip`     | `starters/react/lab-10/`              | the starter, unpacked by students into `react-labs/lab-10/`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `/uk/react/labs/lab-10/result.webp` | the reference solution                | the catalogue with «Кошик (3)» in the header, in the handout's §1; it shows no folder tree, since the tree is the answer                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 
 `solution/` holds the instructor's material (gitignored): `stages/`, one
 folder per step that moves files, each a full copy of `src/`, `package.json`
 and `index.html` (and `packages/` for §4.9) as the reference left them
 (`4.7-hybrid` and `4.9-package` today; `4.4-routes`, `4.5-features`,
-`4.6-fsd` and `4.7-package` are the steps before 2026-11-22, and `4.6-fsd`
-doubles as a reference for §4.11's FSD move);
+`4.6-fsd` and `4.7-package` are the steps before 2026-11-22);
 `shots.mjs`, which checks the starter and the last stage in headless Edge
 and takes the screenshot; and a `README.md` with the seeded coupling, the
 reference's measurements, the FSD/Makarevich comparison, the notes on
@@ -56,18 +55,29 @@ stays local until the last group's ЛР-8 class, as `feat/react-lab-8` did for
   each asks where a new `MovieRating.jsx`, shown on two pages, would go: one
   question across three structures, answered at the defence, not written
   down. The cinema tree the instructor had added to the old §4.7 is the
-  new §4.7's example, with `features/booking/` and `shared/`'s type folders
-  drawn in, since the task now asks for a feature folder. The coffee shop
-  moves once: `app/` (flat), `routes/<route>/` (the page at the folder's
-  root, the rest in type folders), `features/cart/` and `shared/` (both in
-  type folders). `.dependency-cruiser.cjs` now holds only the hybrid's and
-  the package's rules, plus `features-below-routes`, which the old rules
-  didn't need. The seeded `BeanCard` coupling shows as one
-  `shared-stays-shared` error. «Вибір структури» moved from §4.7 to §4.10,
-  after the +1 task, and offers the hybrid as a fifth choice; the
-  self-study is §4.11 and starts with an FSD move, which is why Steiger and
-  `check:fsd` stay in the starter. The cart table has three rows (by type,
-  hybrid, package). §4.9 is «кошик як локальний пакет»: packages are a
+  new §4.7's example, with `shared/`'s type folders and
+  `shared/features/booking/` drawn in: features sit inside `shared/`, not
+  beside it (the instructor, second round). The coffee shop moves once:
+  `app/` (flat), `routes/<route>/` (the page at the folder's root, the rest
+  in type folders) and `shared/` (type folders, plus the cart in
+  `shared/features/cart/`). `.dependency-cruiser.cjs` now holds only the
+  hybrid's and the package's rules: `routes-are-independent`,
+  `shared-stays-shared` (`shared/` imports neither `app/` nor `routes/`),
+  `features-are-independent` (inside `shared/features/`),
+  `shared-code-below-features` (the rest of `shared/` doesn't import a
+  feature) and `app-on-top`. The seeded `BeanCard` coupling shows as one
+  `shared-code-below-features` error. «Вибір структури» moved from §4.7 to
+  §4.10, after the +1 task, and offers the hybrid as a fifth choice. The
+  self-study section is gone (the instructor, second round), so Steiger
+  and `check:fsd` left the starter; §4.6 still describes Steiger's rules
+  as reading. The cart table has three rows (by type, hybrid, package).
+  Also from the second round: every reference to a link is an inline link
+  (no «посилання N» outside §2's list), so the reading steps dropped their
+  «Довідка» lines, which repeated the same pages; all example trees list
+  files as tree entries; §4.4 opens with Dodds' advice rather than «код,
+  який змінюється разом, має лежати разом»; the handout never makes
+  bulletproof-react the subject of a sentence; the question on `index.js`
+  in FSD versus feature folders is gone from §4.6 and §6. §4.9 is «кошик як локальний пакет»: packages are a
   general practice (`react-labs` itself is npm workspaces), and Nadia
   Makarevich's article is cited for the layers inside a package, not as
   the author of the approach (the instructor, 2026-11-22). The bullets
@@ -243,21 +253,20 @@ In a scratch `react-labs` workspace with the same versions as below:
 - the hybrid reference (`solution/stages/4.7-hybrid`), moved by a script
   that rewrites relative imports the way the editor does: before the
   `children` fix `check:deps` reports exactly one error,
-  `shared-stays-shared: src/shared/components/BeanCard.jsx →
-src/features/cart/components/AddToCartButton.jsx`; after it, 12 of 12
+  `shared-code-below-features: src/shared/components/BeanCard.jsx →
+src/shared/features/cart/components/AddToCartButton.jsx`; after it, 12 of 12
   tests, lint, Prettier, `check:deps` and the build pass, and
   `git diff --cached --stat` shows the moves as renames
   (`src/{pages => routes/cart}/CartPage.jsx`);
 - each hybrid rule fires on a deliberate violation:
-  `routes-are-independent`, `features-are-independent`,
-  `features-below-routes`, `shared-stays-shared`, `app-on-top`;
+  `routes-are-independent`, `shared-stays-shared` (to `routes/` and to
+  `app/`), `features-are-independent`, `shared-code-below-features`,
+  `app-on-top`;
 - the package on the hybrid (`solution/stages/4.9-package`) passes every
   check with the root `package.json` unchanged; a deep import by name from
   `src/routes/cart/CartPage.jsx` fails `vite build` with the message §4.9
   quotes, and the relative path `../../../packages/cart/ui/CartLine.jsx`
   builds while `check:deps` reports `no-deep-imports-into-packages`;
-- the old FSD stage passes the new `check:deps`, Steiger and the tests, so
-  §4.11's FSD move works with the starter's tools;
 - every code line in the handout is at most 75 characters;
 - `lab-10.zip` (52 files), unpacked into a fresh folder, matches the
   starter and passes 12 of 12 tests, lint, `format:check`, `check:deps`
