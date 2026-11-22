@@ -43,7 +43,7 @@ stays local until the last group's ЛР-8 class, as `feat/react-lab-8` did for
 
 - **«Вибір структури для проєкту» (§4.7, formerly «Що обрати») is spelled out** (the instructor found the first
   version unclear, 2026-11-18): the section states its purpose, lists the
-  five structures and the projects itself, names what to look at in a
+  structures and the projects itself, names what to look at in a
   project (size, what pages share, people, lifetime, apps sharing code) and
   shows one worked row on a project outside the list plus one non-answer.
   «Чому» is one or two sentences: what matters in the project and why the
@@ -67,9 +67,7 @@ stays local until the last group's ЛР-8 class, as `feat/react-lab-8` did for
   pushed in class. The main part's history is six commits; the package adds
   a seventh. §7 has a
   table for each point, §5 asks whether §4.9 was done, and §6's questions
-  on building `@coffee/cart` are asked only of those who did it; the
-  questions on packages as a structure stay for everyone, since «Що
-  обрати» still offers packages and the article is read before §4.7. The
+  on building `@coffee/cart` are asked only of those who did it. The
   in-class part is about 50 minutes by the plan's estimates (below), about
   8 more for §4.9. `STRUCTURES.md` keeps the «Пакет» row and says it is for
   §4.9.
@@ -86,7 +84,15 @@ stays local until the last group's ЛР-8 class, as `feat/react-lab-8` did for
   only when it has the files, then `features/booking/` once two pages share
   a part with its own state. It sits in §4.7 rather than §4.4, so it can't
   answer §4.4's question about splitting a route folder during class. The
-  handout says «гібридна структура», not «суміш» (the instructor's wording).
+  handout says «гібридна структура», not «суміш» (the instructor's wording),
+  and gives the reason: parts of a project grow differently, and real
+  projects often combine structures.
+- **§4.7 offers four structures, not five** (the instructor's decision,
+  2026-11-22): packages after Nadia Makarevich are one author's article
+  and the +1 task, not a structure every student has worked with. §2's
+  link 9 now points to §4.9 only, §4.7's references drop the article, and
+  §6's «Пакети» questions, kept for everyone while packages were a choice,
+  are now asked only of those who did §4.9, with «Пакет `@coffee/cart`».
 - **`check:deps` uses `--output-type err-long`,** so each violation prints
   its rule's Ukrainian comment under it, not only the rule's name.
 - **No `graph` script** (the plan's optional Mermaid graph). A collapse
