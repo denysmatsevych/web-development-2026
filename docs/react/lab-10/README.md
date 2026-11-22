@@ -277,11 +277,17 @@ src/shared/features/cart/components/AddToCartButton.jsx`; after it, 12 of 12
 - `lab-10.zip` (52 files), unpacked into a fresh folder, matches the
   starter and passes 12 of 12 tests, lint, `format:check`, `check:deps`
   and the build; a rebuild is byte-identical;
-- the site: `npm run check` and `npm run build` pass.
+- the site: `npm run check` and `npm run build` pass;
+- the PDF, rebuilt after the instructor's review: 24 pages; nothing runs
+  past the right margin, every code line sits whole on one line, and each
+  example tree stays on one page except the FSD tree (49 lines), whose last
+  two lines move to the next page: a code block taller than a page has to
+  break.
 
-Not verified on 2026-11-22: the PDF (not rebuilt until the instructor has
-reviewed the text), a timed dry run of the new in-class part, and the
-browser checks (`shots.mjs`), since the app's pages didn't change.
+Not verified on 2026-11-22: a timed dry run of the new in-class part (the
+estimate stays at about 50 minutes, now with the structure choice in
+class), and the browser checks (`shots.mjs`), since the app's pages didn't
+change.
 
 ## Verified on 2026-11-17
 
