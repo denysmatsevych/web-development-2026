@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { flushSync } from 'react-dom'
 import { describeItem, priceOf } from '../data/menu.js'
 
 const statusTitle = {
@@ -27,13 +28,21 @@ export default function OrderDetails({ order, dispatch, onClose }) {
 
   const total = order.items.reduce((sum, item) => sum + priceOf(item), 0)
 
+  // «Закрити» прибирає панель разом із кнопкою, на якій був фокус. Тому
+  // flushSync одразу оновлює сторінку, а фокус повертається на картку цього
+  // замовлення на дошці.
+  function handleClose() {
+    flushSync(onClose)
+    document.querySelector(`[data-order-id="${order.id}"]`)?.focus()
+  }
+
   return (
     <section className="order-details" aria-label="Деталі замовлення">
       <div className="details-head">
         <h2 ref={headingRef} tabIndex={-1}>
           № {order.number} · {order.customer.name}
         </h2>
-        <button type="button" onClick={onClose}>
+        <button type="button" onClick={handleClose}>
           Закрити
         </button>
       </div>
@@ -50,19 +59,25 @@ export default function OrderDetails({ order, dispatch, onClose }) {
         key={`${order.id}:${order.customer.name}`}
         customer={order.customer}
         dispatch={dispatch}
+        onSaved={() => headingRef.current.focus()}
       />
     </section>
   )
 }
 
 // key вище створює форму наново, коли змінюється замовлення чи ім'я гостя:
-// поле знову починає з поточного імені.
-function RenameForm({ customer, dispatch }) {
+// поле знову починає з поточного імені. Разом із формою зникає й поле чи
+// кнопка, на яких був фокус, тому після збереження flushSync одразу оновлює
+// сторінку, а onSaved переводить фокус на заголовок панелі з новим ім'ям.
+function RenameForm({ customer, dispatch, onSaved }) {
   function handleSubmit(e) {
     e.preventDefault()
     const name = new FormData(e.currentTarget).get('name').trim()
     if (name === '') return
-    dispatch({ type: 'customer_renamed', customerId: customer.id, name })
+    flushSync(() =>
+      dispatch({ type: 'customer_renamed', customerId: customer.id, name }),
+    )
+    onSaved()
   }
 
   return (

@@ -1,9 +1,10 @@
-import { useId, useState } from 'react'
+import { useId, useRef, useState } from 'react'
 import { defaultMilk, drinks, priceOf } from '../data/menu.js'
 import DraftItem from './DraftItem.jsx'
 
 export default function OrderComposer({ onPlace }) {
   const titleId = useId()
+  const nameRef = useRef(null)
   const [customerName, setCustomerName] = useState('')
   const [items, setItems] = useState([])
   const [total, setTotal] = useState(0)
@@ -58,6 +59,9 @@ export default function OrderComposer({ onPlace }) {
     setCustomerName('')
     setItems([])
     setTotal(0)
+    // Порожня форма вимикає «Надіслати бариста», і кнопка втратила б фокус.
+    // Він переходить на ім'я гостя: можна приймати наступне замовлення.
+    nameRef.current.focus()
   }
 
   const canPlace = customerName.trim() !== '' && items.length > 0
@@ -72,6 +76,7 @@ export default function OrderComposer({ onPlace }) {
       <label className="field">
         Ім'я гостя
         <input
+          ref={nameRef}
           value={customerName}
           onChange={handleNameChange}
           autoComplete="off"
