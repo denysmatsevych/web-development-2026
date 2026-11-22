@@ -284,10 +284,14 @@ src/shared/features/cart/components/AddToCartButton.jsx`; after it, 12 of 12
   two lines move to the next page: a code block taller than a page has to
   break.
 
-Not verified on 2026-11-22: a timed dry run of the new in-class part (the
-estimate stays at about 50 minutes, now with the structure choice in
-class), and the browser checks (`shots.mjs`), since the app's pages didn't
-change.
+Not verified on 2026-11-22: a timed dry run of the new in-class part, and
+the browser checks (`shots.mjs`), since the app's pages didn't change.
+
+Two more decisions from the instructor's review on 2026-11-22: the handout
+gives no in-class time estimate any more (the `duration` field keeps only
+the class and self-study hours, as ЛР-1 does), and students who already
+did the earlier version redo the lab with the new starter, so §4.8 no
+longer tells old-starter students to rename row 5.
 
 ## Verified on 2026-11-17
 
