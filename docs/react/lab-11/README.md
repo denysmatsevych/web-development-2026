@@ -2,7 +2,7 @@
 
 | Route | Source | What it is |
 | --- | --- | --- |
-| `/react/labs/lab-11/` | `src/content/labs/react/uk/lab-11.md` | the handout: useful links instead of theory, four code challenges on a barista's order queue (§4.3 the order form moved to the student's own `draftReducer`, §4.4 a colleague's queue reducer made pure, §4.5 the queue's state normalized into `byId` and `ids`, §4.6 undo and redo through `withUndo`), the AI rule, checks and Vercel, +1 point for the form's reducer with Immer (§4.8); report, defence |
+| `/react/labs/lab-11/` | `src/content/labs/react/uk/lab-11.md` | the handout: useful links instead of theory, four code challenges on a barista's order queue (§4.3 the order form moved to the student's own `draftReducer`, §4.4 the given queue reducer made pure, §4.5 the queue's state normalized into `byId` and `ids`, §4.6 undo and redo through `withUndo`), the AI rule, checks and Vercel, +1 point for the form's reducer with Immer (§4.8); report, defence |
 | `/uk/react/labs/lab-11.pdf` | built from the handout | the downloadable handout |
 | `/uk/react/starters/lab-11.zip` | `starters/react/lab-11/` | the starter with stubs and the given tests, unpacked by students into `react-labs/lab-11/` |
 | `/uk/react/labs/lab-11/result.webp` | the reference solution | the page at 1280 px with a draft in the form, orders in all four columns and «Скасувати дію» enabled, in the handout's §1 |
@@ -36,7 +36,7 @@ group's ЛР-11 class.
 - **Code challenges with given tests,** as in ЛР-7, all in class, with an
   optional +1 task once the main part is pushed, as in ЛР-10 (the
   instructor's decisions 1–4, 2026-11-19).
-- **Two reducers.** Students write the form's; the queue's is a colleague's
+- **Two reducers.** Students write the form's; the queue's is given
   with seeded defects that show only under `<StrictMode>`, so §4.4 is a bug
   hunt that compares `npm run dev` with `npm run preview`.
 - **Every page test renders in `<StrictMode>`,** as `src/main.jsx` does
