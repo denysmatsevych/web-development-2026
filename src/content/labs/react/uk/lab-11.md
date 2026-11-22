@@ -431,8 +431,9 @@ them in sync. Reduce duplication when you can.» **Нормалізація** �
 - У браузері: «Ольга» з'являється на обох замовленнях; «Деталі» показують
   відмітку, зроблену на дошці; після «Скасувати замовлення» відкритого
   замовлення панель «Деталі» зникає.
-- **Components ⚛** → `App`: у хуку `Reducer` — стан нової форми, а в `State`
-  — id відкритого замовлення.
+- **Components ⚛** → `App`: у хуку `Reducer` — стан з `orders` і
+  `customers`, а в `State` — id замовлення, відкритого в «Деталях» (`null`,
+  коли нічого не відкрито).
 
 **Коміт:** `fix: normalize the queue state`.
 **Довідка:** [Avoid duplication in state](https://uk.react.dev/learn/choosing-the-state-structure#avoid-duplication-in-state),
