@@ -1,7 +1,8 @@
-// Правила структур §4.4–§4.6 і §4.9 для dependency-cruiser: npm run check:deps.
-// Правило перевіряє лише теки, які вже є: поки теки routes/ немає, правило
-// про маршрути нічого не знаходить. Тому один файл служить для всіх
-// структур. Не змінюйте цей файл: це умова задачі, як і tests/.
+// Правила гібридної структури (§4.7) і пакета (§4.10) для dependency-cruiser:
+// npm run check:deps. Правило перевіряє лише теки, які вже є: поки теки
+// routes/ немає, правило про маршрути нічого не знаходить. Тому перевірка
+// проходить і на стартовій структурі. Не змінюйте цей файл: це умова
+// задачі, як і tests/.
 
 /** @type {import('dependency-cruiser').IConfiguration} */
 module.exports = {
@@ -18,42 +19,53 @@ module.exports = {
       name: 'routes-are-independent',
       severity: 'error',
       comment:
-        'Тека маршруту чи сторінки не імпортує теку іншого маршруту чи сторінки. ' +
-        'Те, що потрібно двом, переносьте в спільну теку (§4.4–§4.6).',
-      from: { path: '^src/(routes|pages|app/routes)/([^/]+)/' },
-      to: { path: '^src/$1/[^/]+/', pathNot: '^src/$1/$2/' },
-    },
-    {
-      name: 'features-are-independent',
-      severity: 'error',
-      comment:
-        'Функціональність (feature) не імпортує іншу. Їх поєднує сторінка ' +
-        'або маршрут, що стоїть вище (§4.5, §4.6).',
-      from: { path: '^src/features/([^/]+)/' },
-      to: { path: '^src/features/', pathNot: '^src/features/$1/' },
+        'Тека маршруту не імпортує теку іншого маршруту. Те, що потрібно ' +
+        'двом маршрутам, переносьте в shared/ (§4.7).',
+      from: { path: '^src/routes/([^/]+)/' },
+      to: { path: '^src/routes/', pathNot: '^src/routes/$1/' },
     },
     {
       name: 'shared-stays-shared',
       severity: 'error',
       comment:
-        'Спільний код не знає, хто ним користується: shared/, components/, ' +
-        'hooks/, lib/, stores/ і utils/ не імпортують app/, routes/, pages/, ' +
-        'widgets/, features/ і entities/ (§4.4–§4.6).',
-      from: { path: '^src/(shared|components|hooks|lib|stores|utils)/' },
-      to: { path: '^src/(app|routes|pages|widgets|features|entities)/' },
+        'Спільний код не знає, хто ним користується: shared/ не імпортує ' +
+        'app/ і routes/ (§4.7).',
+      from: { path: '^src/shared/' },
+      to: { path: '^src/(app|routes)/' },
+    },
+    {
+      name: 'features-are-independent',
+      severity: 'error',
+      comment:
+        'Функціональність (feature) не імпортує іншу. Їх поєднує маршрут, ' +
+        'що стоїть вище (§4.7).',
+      from: { path: '^src/shared/features/([^/]+)/' },
+      to: {
+        path: '^src/shared/features/',
+        pathNot: '^src/shared/features/$1/',
+      },
+    },
+    {
+      name: 'shared-code-below-features',
+      severity: 'error',
+      comment:
+        'Кнопки, хуки й утиліти в shared/ не знають функціональностей: ' +
+        'shared/features/ імпортує решту shared/, а не навпаки (§4.7).',
+      from: { path: '^src/shared/', pathNot: '^src/shared/features/' },
+      to: { path: '^src/shared/features/' },
     },
     {
       name: 'app-on-top',
       severity: 'error',
       comment:
-        'app/ — верхній шар: він імпортує все інше, а його не імпортує ніхто (§4.4–§4.6).',
+        'app/ — верхній рівень: він імпортує все інше, а його не імпортує ніхто (§4.7).',
       from: { path: '^src/', pathNot: '^src/app/' },
       to: { path: '^src/app/' },
     },
     {
       name: 'packages-are-independent',
       severity: 'error',
-      comment: 'Пакет не імпортує застосунок (§4.9).',
+      comment: 'Пакет не імпортує застосунок (§4.10).',
       from: { path: '^packages/' },
       to: { path: '^src/' },
     },
@@ -61,7 +73,7 @@ module.exports = {
       name: 'no-deep-imports-into-packages',
       severity: 'error',
       comment:
-        'Застосунок імпортує пакет лише за назвою (@coffee/cart), а не шляхом до файлу всередині пакета (§4.9).',
+        'Застосунок імпортує пакет лише за назвою (@coffee/cart), а не шляхом до файлу всередині пакета (§4.10).',
       from: { path: '^src/' },
       to: { path: '^packages/', pathNot: '^packages/[^/]+/index\\.js$' },
     },
