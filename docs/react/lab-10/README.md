@@ -77,7 +77,8 @@ stays local until the last group's ЛР-8 class, as `feat/react-lab-8` did for
   files as tree entries; §4.4 opens with Dodds' advice rather than «код,
   який змінюється разом, має лежати разом»; the handout never makes
   bulletproof-react the subject of a sentence; the question on `index.js`
-  in FSD versus feature folders is gone from §4.6 and §6. §4.9 is «кошик як локальний пакет»: packages are a
+  in FSD versus feature folders is gone from §4.6 and §6, and so is §6's
+  question on why things that change together should live together. §4.9 is «кошик як локальний пакет»: packages are a
   general practice (`react-labs` itself is npm workspaces), and Nadia
   Makarevich's article is cited for the layers inside a package, not as
   the author of the approach (the instructor, 2026-11-22). The bullets
