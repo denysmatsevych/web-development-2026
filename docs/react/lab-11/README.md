@@ -86,7 +86,19 @@ group's ЛР-11 class.
   (decision 14): the instructor dropped it on 2026-11-20, so the handout ends
   with §4.8. §6's question about components that only pass `dispatch` on
   moved into «Структура стану».
-- **Length:** about 4,700 words by `wc -w`, between ЛР-7's and ЛР-10's.
+- **Clarity fixes on 2026-11-22,** the instructor's review after students
+  found ЛР-10 unclear. §4.5 has a three-step order: `createInitialState` and
+  the selectors first, because while the selectors read the old shape the
+  page renders nothing and every page test fails; then the actions; then
+  `App` keeps the opened order's id. The decisions in §4.5 and §4.6 are a
+  sentence, not a «Рішення» label. §4.4's experiment moved out of
+  «Перевірка», which students reach after the fix, to the text before it,
+  and its `git restore` path starts at the repository root, where git
+  commands run; «Перевірка» checks that `lab-11/tests/` is unchanged. As in
+  ЛР-10, unfinished challenges are done at home, and the in-class time
+  estimate and the numbered references to §2's links are gone.
+- **Length:** about 4,950 words by `wc -w` since 2026-11-22 (4,700
+  before), between ЛР-7's and ЛР-10's.
 
 ## Verified on 2026-11-20
 
@@ -111,6 +123,11 @@ workspace: React 19.3.1, Vite 8.3.8, `@vitejs/plugin-react` 6.3.0, ESLint
   or the lint, as recorded in `solution/README.md`;
 - §4.4's experiment: with `renderStrict` rendering without `<StrictMode>`,
   the board's three page tests pass on the starter;
+- §4.5's order of steps (2026-11-22, on the stages): with the `4.5` stage's
+  `createInitialState` and selectors but the `4.4` stage's actions, the
+  page renders all six cards; with the whole `4.5` queue reducer and the
+  `4.4` stage's `App`, `queueState` and the §4.3–§4.4 tests pass and the
+  three `OrderDetails` tests fail; with the `4.5` `App` they pass too;
 - in Edge headless (`solution/shots.mjs`): the starter on a Vite dev server
   and the same starter on `vite preview` differ as §4.4 describes, and the
   rename and «Деталі» problems §4.5 starts from show in both; the reference
@@ -138,7 +155,8 @@ workspace: React 19.3.1, Vite 8.3.8, `@vitejs/plugin-react` 6.3.0, ESLint
   page (§4.1's file list, §7's first table) repeat their header row. The
   screenshot is taller than wide, so the PDF's 3.8-inch height cap prints it
   about 7.8 cm wide (ЛР-8's and ЛР-10's, about 13 cm); it stays sharp when
-  zoomed.
+  zoomed. Rebuilt on 2026-11-22 after the clarity fixes: still 16 pages,
+  with no text past the right margin; the new §4.5 steps sit on page 9.
 
 Not verified:
 
