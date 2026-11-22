@@ -301,7 +301,14 @@ the trees in §4.3–§4.6 do, so the five can be compared file by file;
 files from §4.2, so no other file can be parked in the cart feature to
 quiet a rule; §4.10's step 2 names the four layers without saying which
 are needed, since §4.10 asks whether the store belongs in `data` or
-`state`.
+`state`. Two more calls by the instructor: §4.1 tells students who did the
+earlier version how to redo it (delete `lab-10/` in the editor, commit,
+then go on as with a new starter; §4.9's `git log` then lists three
+commits, and the existing Vercel project redeploys on push, so they skip
+the import), and §7's rule on `tests/` and `.dependency-cruiser.cjs`
+excepts that removal; §5 takes the `STRUCTURES.md` tables copied into the
+letter or as a link to the file, so §4.8 and `STRUCTURES.md` point to §5
+rather than saying "copy".
 
 ## Verified on 2026-11-17
 
