@@ -149,10 +149,12 @@ stays local until the last group's ЛР-8 class, as `feat/react-lab-8` did for
   doesn't place a file for the student.
 - **Each structure step has «Як діяти» and a folder check** (added on
   2026-11-22 after students said the lab was unclear). §4.4–§4.6 list the
-  moves in order; «Рішення» became «Що вирішити» (§4.3: «Що помітити»),
-  because it read as "solution" and ЛР-7/8 never used it, and the §4 intro
-  says the answers aren't written down. Each «Перевірка» now names the
-  folders `src/` may hold: without that line a step has no done signal.
+  moves in order; «Рішення» became «Що вирішити», because it read as
+  "solution" and ЛР-7/8 never used it, and the §4 intro says the answers
+  aren't written down. §4.3, where nothing moves, dropped the labels for two
+  plain paragraphs (the instructor found them too templated). Each
+  «Перевірка» now names the folders `src/` may hold: without that line a
+  step has no done signal.
   With only the cart page and `CartLine` moved and every by-type folder
   still there, §4.4's tests, lint and `check:deps` pass, and Steiger says
   «No problems found!» for the 4.6 stage with a leftover `hooks/` and
