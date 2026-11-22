@@ -390,7 +390,7 @@ ESLint тут не допоможе: правила `react-hooks` перевір
 кожному її замовленні, а `App` тримає ще одну копію — відкрите в «Деталях»
 замовлення. react.dev радить: «When the same data is duplicated between
 multiple state variables, or within nested objects, it is difficult to keep
-them in sync. Reduce duplication when you can.» **Нормалізація** —
+them in sync. Reduce duplication when you can.» **Нормалізація** означає
 зберігати кожен об'єкт один раз, у словнику за id, а там, де він потрібен,
 тримати лише його id.
 
