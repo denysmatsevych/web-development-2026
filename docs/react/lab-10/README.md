@@ -166,7 +166,11 @@ stays local until the last group's ЛР-8 class, as `feat/react-lab-8` did for
   old `data/` and `hoc/` folders go, and points to ЛР-8 §4.3's `children`
   for the seeded coupling. §4.6 says `app/routes/` becomes `pages/` and
   that the `index.js` files and the imports through them are written by
-  hand, in that order, after Steiger's first run.
+  hand, in that order, after Steiger's first run. §4.7 and §4.9 dropped the
+  same labels (also «Що вирішити», «З чого обирати», «Як пояснити вибір»):
+  §4.7 keeps its lists of structures and projects and the example table,
+  §4.9 keeps the `package.json` block inside a numbered list of moves, and
+  both end with a done check.
 
 ## Verified on 2026-11-17
 
