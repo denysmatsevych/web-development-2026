@@ -99,10 +99,10 @@ every test passes unchanged.
 
 Two measurements run through the lab, recorded in a `MEASUREMENTS.md` the
 starter provides: which props each component only passes on (on the starter,
-after §4.3, after §4.5), and which components render when a drink is ticked
-(after §4.4 and after §4.5, from React DevTools' Profiler). They make the
-lab's two claims visible: context removes props, and where the state sits
-decides what renders.
+after §4.3 and after §4.4), and which components render when a drink is
+ticked (after §4.4 and after §4.5, from React DevTools' Profiler). They make
+the lab's two claims visible: context removes props, and where the state
+sits decides what renders.
 
 ### The readings
 
@@ -162,6 +162,10 @@ syrup. While something is on the stop-list:
   unless that drink already has it, so it can still be unticked;
 - «Надіслати бариста» is disabled while the draft holds anything stopped, and
   the form says why: «У замовленні є позиції зі стоп-листа»;
+- a drink whose default milk is stopped can still be added: four of the six
+  drinks default to «звичайне», so with «звичайне» stopped, «+ Лате» adds a
+  latte with «звичайне» milk, the form shows its note, and «Надіслати
+  бариста» stays disabled until the milk is changed (see **Decisions**, 18);
 - a card in «Нові» or «Готуються» that holds anything stopped says «Є позиції
   зі стоп-листа», so the barista knows to talk to the guest. Cards in «Готові»
   and «Видані» don't: those drinks are made.
@@ -184,7 +188,7 @@ so §4.6 is about where the stop-list is kept and who reads it.
 | the queue's history (`past`, `present`, `future`) | `useReducer` in `App`; the queue, `dispatch` and the history flags passed as props | `useReducer` in `QueueProvider`; read through `useQueue` and `useQueueDispatch` |
 | the opened order's id | `useState` in `App` | the same: two components need it, one level down, so it stays a prop (react.dev's «Start by passing props») |
 | the form's draft | `useReducer` in `OrderComposer` | the same: one component reads it |
-| the stop-list | not there | `useState` in `StopListProvider`; read through `useStopList` |
+| the stop-list | not there | `useState` in `StopListProvider` in the reference (`useReducer` is the student's other choice); read through `useStopList` |
 
 That table is also a defence topic: why the opened order's id and the draft
 don't go into context.
@@ -218,8 +222,11 @@ the build.
 **Що має вийти.** `OrderColumn` takes `title`, `count` and `children`: it
 renders the column's heading with the count and puts its children into the
 list, or «Порожньо» when the count is 0. `OrderBoard` selects each column's
-orders and renders the cards into `OrderColumn` itself. `OrderColumn` no
-longer receives `dispatch` and `onOpen`. The page doesn't change.
+orders and renders the cards into `OrderColumn` itself. `OrderColumn` keeps
+the `<ul>`, and `OrderBoard` wraps each card in its `<li key>`, so the
+children are list items and `OrderColumn` needn't wrap them (that would need
+the `Children` API). `OrderColumn` no longer receives `dispatch` and
+`onOpen`. The page doesn't change.
 
 Before the code, students fill the first table in `MEASUREMENTS.md`,
 «Пропи, які компонент лише передає далі», for the starter: for each
@@ -274,14 +281,14 @@ The tests don't look at the contexts' values, only at the props, so any way
 of getting the queue to the cards passes, the +1's store included (see
 **Decisions**, 8). ЛР-11's page tests show that the buttons still work.
 
-**Перевірка.** The props table again: what is left after §4.4. And the second
-table in `MEASUREMENTS.md`, «Які компоненти рендеряться, коли бариста
-відмічає напій», recorded with React DevTools' Profiler (record, tick a drink
-on a card in «Готуються», stop). The handout explains how to read the
-Profiler's flame graph: React's 2018 post introducing the Profiler says
-«gray components did not render at all during this commit»; react.dev's
-DevTools page doesn't describe the panel, so the build checks that DevTools 8
-still draws it that way.
+**Перевірка.** The props table for the last time: what is left after §4.4.
+And the second table in `MEASUREMENTS.md`, «Які компоненти рендеряться,
+коли бариста відмічає напій», recorded with React DevTools' Profiler
+(record, tick a drink on a card in «Готуються», stop). The handout explains
+how to read the Profiler's flame graph: React's 2018 post introducing the
+Profiler says «gray components did not render at all during this commit»;
+react.dev's DevTools page doesn't describe the panel, so the build checks
+that DevTools 8 still draws it that way.
 
 ### §4.5. `QueueProvider` and the hooks `useQueue`, `useQueueDispatch`
 
@@ -295,7 +302,9 @@ check). `App` renders `<QueueProvider>` around the page and keeps only the
 opened order's id. `HistoryButtons` and `OrderComposer` get what they need
 from the hooks and receive no queue props; the form dispatches
 `order_placed` itself, so creating the order's ids moves from `App` into the
-form's submit handler.
+form's submit handler. The form then has two dispatch functions, its draft's
+and the queue's, and the handout suggests naming the queue's
+`queueDispatch`.
 
 `App` no longer has the queue, so it can't look up the opened order for
 «Деталі». How «Деталі» find their order is the student's choice; the handout
@@ -337,8 +346,8 @@ it is the only one that fails after §4.4 for a reason other than a stub
 (the probe counts the form's renders on a tick after §4.4 and after §4.5),
 and §6 asks why.
 
-**Перевірка.** The Profiler table again, and the props table for the last
-time: after §4.5 it should hold no queue props.
+**Перевірка.** The Profiler table again. The props table isn't filled again:
+§4.5 removes props, but §6 asks whether that changes the first table.
 
 ### §4.6. The stop-list in its own context
 
@@ -347,15 +356,21 @@ time: after §4.5 it should hold no queue props.
 student chooses `useState` or `useReducer`) and provides `StopListContext`
 with `{ stopped, toggle }`; `useStopList()` reads it and names
 `StopListProvider` when it is missing. `App` wraps the page in
-`StopListProvider`. The given `StopListPanel` (props `stopped`, `onToggle`)
-goes on the page; the form, the drink rows and the cards read the stop-list.
-Whether `DraftItem`, one level below the form, reads the hook or gets the
-stop-list as a prop is the student's choice, and the handout names it.
+`StopListProvider`. The given `StopListPanel` takes the stop-list as props
+(`stopped`, `onToggle`), and `App` can't read the hook to give them, since
+`App` renders the provider. So students write a container,
+`src/components/StopList.jsx`, that reads `useStopList()` and renders the
+panel with its props, ЛР-7's Container/Presentational (see **Decisions**,
+19); `App` puts `<StopList />` in the header. The form, the drink rows and
+the cards read the stop-list. Whether `DraftItem`, one level below the form,
+reads the hook or gets the stop-list as a prop is the student's choice, and
+the handout names it.
 
 **Що вже є.** `StopListContext` itself, created in `stopListContext.js` (see
 **Decisions**, 11); the stubs `useStopList` and `StopListProvider`; the given
 `StopListPanel` with its markup and styles; `stopListOptions` and
-`hasStopped` in `menu.js`.
+`hasStopped` in `menu.js`. No stub for the container: nothing imports it
+before §4.6.
 
 **Tests** (`tests/StopList.test.jsx`, 7, through `<App />` except the
 first):
@@ -374,7 +389,8 @@ The last test is the only one of the seven that tells a separate context
 from a stop-list kept in `QueueProvider`: that variant passes every
 behaviour check (checked with the probes; what it does is in
 `solution/README.md`). The one before it is meant to catch a stop-list put
-into the queue's reducer, a variant the build adds.
+into the queue's reducer, a variant the build adds. The send-button test
+includes a drink added with a stopped default milk (decision 18).
 
 ### §4.8. +1: the queue in Zustand behind the same hooks
 
@@ -473,22 +489,28 @@ The slot is 80 minutes.
 | --- | --- | --- |
 | Starter, `npm install`, `npm test`, first commit | §4.1 | 5 |
 | The AI rule, as in ЛР-11 | §4.2 | 1 |
-| The props table, `OrderColumn` with `children` | §4.3 | 10 |
-| Two contexts from `App`, the Profiler table | §4.4 | 12 |
-| `QueueProvider`, the hooks, both tables again | §4.5 | 16 |
-| The stop-list | §4.6 | 15 |
+| The props table, `OrderColumn` with `children` | §4.3 | 8 |
+| Two contexts from `App`, both tables | §4.4 | 10 |
+| `QueueProvider`, the hooks, the Profiler table again | §4.5 | 19 |
+| The stop-list, its container | §4.6 | 16 |
 | Checks, `git push`, the Vercel project | §4.7 | 5 |
 | **The lab** | | **64** |
 | +1: Zustand | §4.8 | 12 |
 
 These are estimates; the timed dry run decides. A proxy from the prototype,
 counting code lines written by hand (not blank, not comments, not
-re-indented): §4.3 about 15, §4.4 about 20, §4.5 about 70, §4.6 about 60,
-together about 165, against ЛР-11's 223, ЛР-7's 212 and ЛР-8's 132. At
-ЛР-7's pace (4.0 lines a minute) the challenges take about 41 minutes, at
-ЛР-8's (2.7) about 61, plus the tables. How long ЛР-11 took in class is the
-better guide, and the instructor knows it by the time the lab is built. If
-the lab takes longer than 65 minutes, the cuts, in order:
+re-indented): §4.3 about 15, §4.4 about 20, §4.5 about 70, §4.6 about 60
+(the `StopList` container's 6 included), together about 165, against
+ЛР-11's 223, ЛР-7's 212 and ЛР-8's 132. The rows give each challenge its
+lines at about 4.4 a minute, plus about 15 minutes for the tables and the
+test runs: 5 each in §4.3 and §4.4, where React DevTools' two panels are
+new, 3 in §4.5 and 2 in §4.6. That pace is faster than ЛР-7's (4.0 lines a
+minute) and ЛР-8's (2.7), as ЛР-11's estimate was. At ЛР-7's pace the
+challenges take about 56 minutes and the lab about 67, past the 65-minute
+line below; at ЛР-8's, about 76 and 87, past the 80-minute slot. How long
+ЛР-11 took in class is the better guide, and the instructor knows it by the
+time the lab is built. If the lab takes longer than 65 minutes, the cuts, in
+order:
 
 1. drop the milk and syrup rules from §4.6 (one test less): the form still
    disables stopped drinks and the send button;
@@ -523,7 +545,8 @@ starters/react/lab-12/
 │   │   ├── QueueProvider.jsx     stub (§4.5)
 │   │   ├── stopListContext.js    StopListContext given; useStopList stub (§4.6)
 │   │   └── StopListProvider.jsx  stub (§4.6)
-│   └── components/        ЛР-11's seven, plus StopListPanel (given, not on the page yet)
+│   └── components/        ЛР-11's seven, plus StopListPanel (given, not on the page yet);
+│                          StopList.jsx, its container, is written in §4.6
 └── tests/                 setup.js, page.jsx (renderStrict, finders, a provider wrapper),
                            App.test.jsx (ЛР-11's ten page tests) and the files named
                            under each challenge
@@ -643,13 +666,16 @@ readings, asking to explain or compare rather than to recall:
   finds its provider; `<Context value>` against `<Context.Provider>`; `use`
   against `useContext`; what happens to the components between the provider
   and a consumer.
-- **«Ред'юсер і контекст»:** why react.dev uses two contexts and Kent C. Dodds
-  one, and how Nadia Makarevich's split of state and API answers it; why `dispatch` can go into a context of its own; why the form creates
-  an order's ids since §4.5.
+- **«Ред'юсер і контекст»:** why react.dev puts `dispatch` into a context of
+  its own where Kent C. Dodds keeps one context, and how Nadia Makarevich's
+  split of state and API answers it; why the form creates an order's ids
+  since §4.5.
 - **«Провайдер і хуки»:** what `QueueProvider` owns and what `App` still
-  owns; why the hooks throw instead of returning the default; when a default
-  value is the better choice; why the provider and the hooks are in two
-  files here; why the provider's file has to import the contexts.
+  owns; whether §4.5's removed props change the first table, and why; why
+  the hooks throw instead of returning the default; when a default value is
+  the better choice; why the provider and the hooks are in two files here;
+  why the provider's file has to import the contexts; why `App` can't read
+  `useStopList`, and what the `StopList` container does instead.
 - **«Ре-рендери»:** when React renders a context's consumers again; the
   second table after §4.4 and after §4.5, and why it changed in a commit that
   didn't change the page; why `QueueProvider` creates a new value object on
@@ -680,7 +706,7 @@ The handout's §6 will be the full list; the answers go in
 | --- | --- |
 | Тести | у теці `lab-12` `npx vitest run` проходить: усі тести; файли в `tests/` не змінено в жодному коміті |
 | Якість | `npm run lint` без помилок і попереджень; `format:check` і `build` — без помилок |
-| Пропси | `OrderColumn` отримує картки через `children`; жоден компонент не отримує стан черги чи `dispatch` через пропси |
+| Пропси | `OrderColumn` отримує картки через `children`; жоден компонент не отримує через пропси `queue`, `dispatch`, `canUndo`, `canRedo`, `onUndo`, `onRedo` чи `onPlace` |
 | Провайдери | `QueueProvider` і `StopListProvider` у `src/model/`; хуки повідомляють, якщо провайдера немає |
 | Стоп-лист | правила з §4.6 на сторінці; зміни стоп-листа не потрапляють в історію |
 | Вимірювання | обидві таблиці в `MEASUREMENTS.md` заповнено |
@@ -777,8 +803,11 @@ was checked.
 - the full starter and the reference as one stage per challenge, each
   through the tests (with the expected failures), lint, Prettier and the
   build; the exact test counts for §1, §4.1, §5 and §7;
-- that each stub fails with a readable message, including the tests that
-  import `QueueContext` before §4.4 creates it;
+- that each stub fails with a readable message, and that no test imports
+  `QueueContext` or `QueueDispatchContext`: a test that set their value
+  directly would fail on §4.8's store (decision 8);
+- the stop-list rules on the reference, including «+ Лате» with «звичайне»
+  stopped (decision 18), and `StopList.jsx` linting clean;
 - **React DevTools 8**: the Components panel's props for the first table and
   the Profiler's flame graph for the second, on the stages, as ЛР-11 did
   through `react-devtools-inline`; whether «Record why each component
@@ -834,8 +863,8 @@ was checked.
     `.js` module and the provider alone in a `.jsx`, because of
     `react-refresh/only-export-components`.
 11. **`StopListContext` is given in the starter,** with `useStopList` and the
-    provider as stubs, so the tests can give an empty stop-list to isolated
-    renders from §4.4 on.
+    provider as stubs, so §4.5's tests can give an empty stop-list to the
+    components they render without `App`.
 12. **Two tests assert re-renders:** the form after a tick (§4.5) and the
     history buttons after a stop-list change (§4.6). Re-renders are otherwise
     measured in `MEASUREMENTS.md`, not tested.
@@ -850,3 +879,14 @@ was checked.
     (ЛР-15); an authentication context and routing (ЛР-13); Redux Toolkit
     and `use-context-selector` (Lecture 4's presentations); typing contexts
     (ЛР-19, П8.8); saving the stop-list.
+18. **A drink whose default milk is stopped can still be added.** It arrives
+    with that milk, the form shows its note, and «Надіслати бариста» stays
+    disabled until the milk is changed, so `draftReducer` stays ЛР-11's.
+    Disabling the drink's button instead would also block a latte with oat
+    milk, and adding the drink with the first milk not on the stop-list
+    would change ЛР-11's reducer.
+19. **The stop-list panel is given as a presentational component,** with
+    the stop-list as props, and students write the `StopList` container
+    that reads `useStopList`, ЛР-7's Container/Presentational. A panel that
+    read the hook itself would leave nothing to connect, and the question of
+    why `App` can't read the hook would never come up.
