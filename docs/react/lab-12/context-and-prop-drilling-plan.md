@@ -1,15 +1,16 @@
 # Plan: React ЛР-12 «Глобальний стан за допомогою Context API та вирішення проблеми Prop Drilling»
 
-Status: proposed on 2026-11-24, awaiting the instructor. ЛР-11's decision 2
-already settled the app: ЛР-12 continues ЛР-11's barista order queue and
-decides how its state is shared. Everything else under **Decisions** is
-proposed. A prototype of every challenge, two wrong variants and the +1 task
-was built and checked the same day (see **Verification**). It lives in the
-gitignored `solution/` folder next to this file, with the instructor's notes:
-the measurements per stage and the defence answers. The lab is not built
-yet. Once it is, what was built, what was verified and where the build
-differs from this plan go into this folder's `README.md`, and this file stays
-as the plan the lab was built from.
+Status: settled on 2026-11-24. ЛР-11's decision 2 had already settled the
+app: ЛР-12 continues ЛР-11's barista order queue and decides how its state
+is shared. After the plan's review and merge the same day, the instructor
+confirmed the proposed decisions 2–19 under **Decisions**. A prototype of
+every challenge, two wrong variants and the +1 task was built and checked
+the same day (see **Verification**). It lives in the gitignored `solution/`
+folder next to this file, with the instructor's notes: the measurements per
+stage and the defence answers. The lab is not built yet. Once it is, what
+was built, what was verified and where the build differs from this plan go
+into this folder's `README.md`, and this file stays as the plan the lab was
+built from.
 
 The challenge format, the test tooling and the AI rule come from ЛР-7, with
 the changes ЛР-11 made. Their plans,
@@ -834,7 +835,7 @@ was checked.
 1. **The app is ЛР-11's order queue** (ЛР-11's decision 2): the starter is
    ЛР-11's reference, with the queue's state and `dispatch` in `App`.
 
-**Proposed in this plan:**
+**Proposed in this plan and confirmed by the instructor on 2026-11-24:**
 
 2. **Format:** ЛР-11's code challenges with given Vitest tests, all in class,
    AI explains only, 1 point; plus one optional task for 1 more point,
