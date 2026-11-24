@@ -153,7 +153,16 @@ Prettier 3.9.10, Vitest 5.1.1, jsdom 31.0.1, `@testing-library/react`
   translated, as §2 says; the headings the challenges' Ukrainian link texts
   name are the pages' own;
 - no code line in the handout is over 75 characters, so the PDF won't wrap
-  one.
+  one;
+- `lab-12.zip` (37 files at the root, LF only, a rebuild is byte-identical)
+  unpacked into the scratch workspace's `lab-12/` passes `format:check`,
+  lint and `build` and 10 of 29 tests; its `package.json` has ЛР-11's
+  dependencies, so `npm install` in an existing `react-labs` adds no new
+  package; `npm install zustand -w lab-12` from the workspace root adds
+  `"zustand": "^5.1.0"` to `lab-12/package.json`, as the `4.8-zustand`
+  stage has;
+- the site: `npm run check` and `npm run build` pass; the labs index lists
+  ЛР-12, and the page links the zip and the image under the base path.
 
 Not verified:
 
