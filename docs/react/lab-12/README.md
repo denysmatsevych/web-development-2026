@@ -188,10 +188,10 @@ In a new scratch `react-labs` workspace with the starter's packages (Vite
   Abramov's `#solution-1-move-state-down`, and the Zustand pages
   Introduction, Updating state, `createStore`, `useStore`) return 200 and
   their anchors and headings exist;
-- `lab-12.zip`, rebuilt from the staged starter (39 files at the root, LF
-  only), unpacked into the workspace's `lab-12/` passes `format:check`, lint
-  and `build` and 10 of 29 tests. Rebuild it once the starter is committed,
-  so its entries carry the commit's dates.
+- `lab-12.zip`, rebuilt after the starter's commit (39 files at the root,
+  LF only, entries dated by that commit, a second rebuild byte-identical),
+  unpacked into the workspace's `lab-12/` passes `format:check`, lint and
+  `build` and 10 of 29 tests.
 
 Not verified: a timed dry run. The proxy, counting code lines added by hand
 in the stages (no blank or comment lines, nor lines the file already had):
