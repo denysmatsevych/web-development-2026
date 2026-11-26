@@ -3,12 +3,10 @@
 | Route | Source | What it is |
 | --- | --- | --- |
 | `/react/labs/lab-12/` | `src/content/labs/react/uk/lab-12.md` | the handout: useful links instead of theory, five code challenges on ЛР-11's order queue (§4.3 a board column that takes its cards as `children`, §4.4 the queue and `dispatch` in two contexts provided from `App`, §4.5 a `QueueProvider` with `useQueue` and `useQueueDispatch`, §4.6 the opened order's id moved down into a `QueuePanel`, so `App` holds no state, §4.7 a café stop-list in its own context), two data flow diagrams (the starter and the end state), two tables of renders from React DevTools' Profiler, the AI rule, checks and Vercel (§4.8), +2 points for the queue in a Zustand store, learned from Zustand's docs (§4.9); report, defence |
+| `/uk/react/labs/lab-12.pdf` | built from the handout | the downloadable handout |
 | `/uk/react/starters/lab-12.zip` | `starters/react/lab-12/` | the starter with stubs and the given tests, unpacked by students into `react-labs/lab-12/` |
 | `/uk/react/labs/lab-12/data-flow-start.webp`, `data-flow-end.webp` | `diagrams/*.mmd`, rendered by `diagrams/render.mjs` | the §4 intro's data flow diagrams |
 | `/uk/react/labs/lab-12/result.webp` | the reference solution | the page at 1280 px with «вівсяне» on the stop-list, № 44 and № 46 marked, and a draft in the form, in the handout's §1 |
-
-No PDF yet: the plan builds it after the instructor's review, and the
-handout's `handout:` field comes with it.
 
 `solution/` holds the instructor's material (gitignored): `stages/`, one
 folder per challenge in the handout's order (`4.3-children`, `4.4-context`,
@@ -152,6 +150,19 @@ check` and `npm run build` pass, and the page loads the new diagram under
 the base path. `lab-12.zip` was rebuilt after the test change was
 committed: 39 files, unpacked equal to the starter, the test's entry dated
 by its commit, a second rebuild byte-identical.
+
+## The PDF (2026-11-26)
+
+`lab-12.pdf`, built after the review fixes, has 23 pages. Under the
+3.8-inch height cap that keeps screenshots small, the end diagram printed
+7.4 cm wide with labels of about 3.6 pt, too small to read on paper. So
+`docs/web/build-handout.py` now prints an image whose alt text starts with
+«Діаграма» as wide as the text, up to a page tall; no other handout has such
+an image. Both diagrams print 16.6 cm wide with labels of about 8 pt, each
+on the page after the paragraph that introduces it, which leaves pages 4
+and 6 half empty. The §1 screenshot prints 11.5 cm wide. All 14 code lines
+sit whole on one line, no text runs past the right margin, and §7's first
+table, which crosses a page, repeats its header row.
 
 ## Where the build differs from the plan
 
@@ -321,12 +332,14 @@ Not verified:
 ```bash
 git add starters/react/lab-12                                # the script packs tracked files only
 python docs/web/build-pack.py starters/react/lab-12          # public/uk/react/starters/lab-12.zip
+python docs/web/build-handout.py lab-12 react                # public/uk/react/labs/lab-12.pdf, from PowerShell
 ```
 
 Rebuild the zip after the starter is committed: each entry is dated by the
 file's last commit, and a file with no commit yet keeps its modification
-time. Keep code lines in the handout within 75 characters, or they wrap in
-the PDF.
+time. Rebuild the PDF after every handout edit; the handout's `handout:`
+field points to it. Keep code lines in the handout within 75 characters,
+or they wrap in the PDF.
 
 To check the stages again: copy the starter into a `react-labs` workspace,
 copy each `solution/stages/*` over it in order, and run `npx vitest run`,
