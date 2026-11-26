@@ -1,0 +1,22 @@
+flowchart TD
+  App["<b>App</b><br/>стан черги: useReducer<br/>id відкритого замовлення:<br/>useState"]:::state
+  OrderComposer["<b>OrderComposer</b><br/>чернетка: useReducer"]:::state
+  DraftItem["DraftItem<br/>по одному на напій"]
+  HistoryButtons["HistoryButtons"]
+  OrderDetails["<b>OrderDetails</b><br/>лише передає далі:<br/>dispatch"]:::drill
+  RenameForm["RenameForm"]
+  OrderBoard["<b>OrderBoard</b><br/>лише передає далі:<br/>dispatch, onOpen"]:::drill
+  OrderColumn["<b>OrderColumn × 4</b><br/>лише передає далі:<br/>dispatch, onOpen"]:::drill
+  OrderCard["OrderCard × 6"]
+
+  App -->|onPlace| OrderComposer
+  OrderComposer -->|"item, onSizeChange, onMilkChange,<br/>onSyrupToggle, onRemove"| DraftItem
+  App -->|"canUndo, canRedo,<br/>onUndo, onRedo"| HistoryButtons
+  App -->|"order, dispatch,<br/>onClose"| OrderDetails
+  OrderDetails -->|"customer, dispatch,<br/>onSaved"| RenameForm
+  App -->|"queue, dispatch,<br/>onOpen"| OrderBoard
+  OrderBoard -->|"title, orders,<br/>dispatch, onOpen"| OrderColumn
+  OrderColumn -->|"order, dispatch, onOpen"| OrderCard
+
+  classDef state fill:#fdf0d5,stroke:#b07a2a,color:#2b211b
+  classDef drill fill:#fde2e1,stroke:#c0392b,color:#2b211b

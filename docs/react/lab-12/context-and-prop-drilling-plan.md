@@ -1,15 +1,24 @@
 # Plan: React ЛР-12 «Глобальний стан за допомогою Context API та вирішення проблеми Prop Drilling»
 
-Status: proposed on 2026-11-24, awaiting the instructor. ЛР-11's decision 2
-already settled the app: ЛР-12 continues ЛР-11's barista order queue and
-decides how its state is shared. Everything else under **Decisions** is
-proposed. A prototype of every challenge, two wrong variants and the +1 task
-was built and checked the same day (see **Verification**). It lives in the
-gitignored `solution/` folder next to this file, with the instructor's notes:
-the measurements per stage and the defence answers. The lab is not built
-yet. Once it is, what was built, what was verified and where the build
-differs from this plan go into this folder's `README.md`, and this file stays
-as the plan the lab was built from.
+Status: settled on 2026-11-24. ЛР-11's decision 2 had already settled the
+app: ЛР-12 continues ЛР-11's barista order queue and decides how its state
+is shared. After the plan's review and merge the same day, the instructor
+confirmed the proposed decisions 2–19 under **Decisions**. A prototype of
+every challenge, two wrong variants and the +1 task was built and checked
+the same day (see **Verification**). It lives in the gitignored `solution/`
+folder next to this file, with the instructor's notes: the measurements per
+stage and the defence answers. The lab was built from this plan on
+2026-11-24. What was built, what was verified and where the build differs
+from this plan are in this folder's `README.md`, and this file stays as the
+plan the lab was built from.
+
+**Changed on 2026-11-26, after the build** (decisions 20–24 under
+**Decisions**): a new §4.6 moves the opened order's id from `App` into a
+`QueuePanel`, so `App` ends with no state; the stop-list becomes §4.7
+without its milk and syrup rules, the checks §4.8 and Zustand §4.9, worth 2
+points; the props table gives way to two data flow diagrams. The sections
+below describe the lab before that change; [README.md](README.md) describes
+it as it is.
 
 The challenge format, the test tooling and the AI rule come from ЛР-7, with
 the changes ЛР-11 made. Their plans,
@@ -834,7 +843,7 @@ was checked.
 1. **The app is ЛР-11's order queue** (ЛР-11's decision 2): the starter is
    ЛР-11's reference, with the queue's state and `dispatch` in `App`.
 
-**Proposed in this plan:**
+**Proposed in this plan and confirmed by the instructor on 2026-11-24:**
 
 2. **Format:** ЛР-11's code challenges with given Vitest tests, all in class,
    AI explains only, 1 point; plus one optional task for 1 more point,
@@ -890,3 +899,37 @@ was checked.
     that reads `useStopList`, ЛР-7's Container/Presentational. A panel that
     read the hook itself would leave nothing to connect, and the question of
     why `App` can't read the hook would never come up.
+
+**Decided by the instructor on 2026-11-26, after the build:**
+
+20. **`App` keeps no state.** A state change in `App` renders every
+    component `App` renders, so the opened order's id moves into a
+    `QueuePanel` that renders the history buttons, «Деталі» and the board
+    (react.dev's closest common parent, Dan Abramov's «Move State Down»,
+    Kent C. Dodds's state colocation). It is a challenge of its own, §4.6,
+    with two tests and a second render table in `MEASUREMENTS.md`, what
+    renders on opening «Деталі». This replaces the second half of decision
+    6; decision 14 still holds, since the id goes into `useState`, not into
+    a context.
+21. **The stop-list loses its milk and syrup rules** (cut 1 under
+    **Timing**): the form disables a stopped drink's button, and a stopped
+    milk or syrup only shows the note and disables «Надіслати бариста».
+    `DraftItem` doesn't read the stop-list. Decision 18 still holds.
+22. **`useStopList` is given in the starter** (cut 2 under **Timing**),
+    written as `useQueue` is in §4.5.
+23. **The props table is replaced by two data flow diagrams** in the §4
+    intro: the starter's tree with the props on the arrows and the
+    components that only pass a prop on marked, and the end state with the
+    providers, `QueuePanel` and the components that read a context. A
+    diagram with the props on it is the table's answer, so the table goes;
+    §4.3 asks students to check the starter's diagram against React
+    DevTools instead. The site shows a Mermaid block as code, so the
+    diagrams are images rendered from Mermaid sources in
+    `docs/react/lab-12/diagrams/`. `MEASUREMENTS.md` keeps the two render
+    tables. This replaces decision 13's first table.
+24. **The Zustand task gives 2 points,** because students learn Zustand
+    from its docs on their own: the handout lists the pages in reading order,
+    the task may be finished at home by the defence, and the defence asks
+    about what the lab's code doesn't show (`create` against `createStore`,
+    `set`, the store's subscription). This replaces the 1 point of decisions
+    2 and 6.

@@ -23,9 +23,9 @@ both in the same sitting. The Web Development course has its own plan in
 ## How the site maps to the plan
 
 The course is registered under the slug `react` with `status: 'published'`
-(see `src/data/courses.ts`), so it is on the public site. As of 2026-11-20,
+(see `src/data/courses.ts`), so it is on the public site. As of 2026-11-26,
 the built parts are Лекція 0, an introductory deck that isn't in the
-programme, the individual assignment, ЛР 1–8, ЛР 10 and ЛР 11.
+programme, the individual assignment, ЛР 1–8 and ЛР 10–12.
 
 When a lab is built, add a row here, as the Web Development plan does, and put
 its instructor docs in `docs/react/lab-N/` (the README's **Docs** section has
@@ -60,7 +60,8 @@ rules are in [lab-7/custom-hooks-and-render-props-plan.md](lab-7/custom-hooks-an
 | ЛР 9 | not built | |
 | ЛР 10 | `/react/labs/lab-10` | folder structures and Feature-Sliced Design, all in class, on ЛР-8's page grown into a three-page coffee shop with a hash router: four approaches read from articles and docs (by file type, by route, by feature after bulletproof-react, FSD), each shown on the same cinema site, then a starter for `lab-10/` organised by file type moved once into a hybrid structure (route folders with type folders inside, the cart as a feature folder inside `shared/`), 12 given app-level Vitest tests through `#app`, dependency-cruiser checking the hybrid's rules, the folders that hold the cart counted before and after the move, a structure chosen for five projects, deploy to Vercel; +1 point in class for moving the cart into a local package (`@coffee/cart`); [lab-10/README.md](lab-10/README.md) |
 | ЛР 11 | `/react/labs/lab-11` | useReducer and complex state as four code challenges with given Vitest tests, all in class, on a new barista's order queue: a starter for `lab-11/` with an order form on several `useState`, a given queue reducer with seeded defects that show only in development and stubs, the form moved to the student's own `draftReducer` with the total derived during render, the queue reducer made pure under `<StrictMode>`, the queue's state normalized into `byId` and `ids` behind selectors, undo and redo through a `withUndo` higher-order reducer, deploy to Vercel; +1 point in class for the form's reducer written with Immer's `produce`; [lab-11/README.md](lab-11/README.md) |
-| ЛР 12–27 | not built | |
+| ЛР 12 | `/react/labs/lab-12` | Context API and prop drilling as five code challenges with given Vitest tests, all in class, on ЛР-11's order queue: a starter for `lab-12/` built on ЛР-11's reference solution, with the queue's state and `dispatch` in `App` passed down as props, ЛР-11's page tests, two data flow diagrams of the starter and the end state, a `MEASUREMENTS.md` for the components that render on a tick and on opening «Деталі» (React DevTools' Profiler), a board column that takes its cards as `children`, the queue and `dispatch` in two contexts provided from `App`, then a `QueueProvider` with `useQueue` and `useQueueDispatch` that name the provider when it is missing, the opened order's id moved down into a `QueuePanel` so `App` holds no state, a café stop-list in its own context and provider with a container for a given panel, deploy to Vercel; +2 points for the queue in a Zustand store per provider behind the same hooks, with Zustand learned from its docs; [lab-12/README.md](lab-12/README.md) |
+| ЛР 13–27 | not built | |
 
 Лекція 0 reads its topic slides from the **Теми презентацій** table below
 when the site is built. Keep that table's rows in their current shape: the
@@ -337,17 +338,20 @@ Rules stated under the table:
 - Every student defends at least 2 presentations; at most 4 count towards the
   total (20 points). Topics and order are agreed with the teacher.
 
-**Extra points in ЛР 4, ЛР 6, ЛР 10 and ЛР 11** (the teacher's decisions,
+**Extra points in ЛР 4, ЛР 6, ЛР 10, ЛР 11 and ЛР 12** (the teacher's decisions,
 not in the programme): in each, the main part gives the usual 1 point and the
 extra tasks more. ЛР 4's §4.7 gives 1 (2026-11-08); ЛР 6's §4.7, done in
 class, and §4.8, homework due by the defence, give 1 each (2026-11-12); ЛР
 10's §4.10, the cart as a local package, done in class once the main part is
 pushed, gives 1 (2026-11-18); ЛР 11's §4.8, the form's reducer with Immer,
-done in class the same way, gives 1 (2026-11-19). The programme counts 1
-point per lab, so with them Part 1 can give 9 points rather than 6, and Part
-2 two more than its labs. Extra points are a bonus above the 65 points for
-current work (settled 2026-11-08), so current work can reach 70; no other
-task gives way.
+done in class the same way, gives 1 (2026-11-19); ЛР 12's §4.9, the queue
+in a Zustand store, started in class once the main part is pushed and
+finished by the defence, gives 2, since students learn Zustand from its docs
+on their own (1 on 2026-11-24, 2 since 2026-11-26). The programme counts 1
+point per lab, so with them Part 1 can give 9 points rather than 6, and
+Part 2 four more than its labs. Extra points are a bonus above the 65 points
+for current work (settled 2026-11-08), so current work can reach 72; no
+other task gives way.
 
 **Students on an individual plan** take another route, agreed with the
 teacher and not in the programme's table: instead of the labs and module
@@ -389,9 +393,9 @@ lecture when the decks are written:
 - **Context (ЛР 8).** ЛР 8's compound `Tabs` share their state through
   `createContext` and `use`, before Lecture 4 (row 2.5) and ЛР 12 (row 2.8)
   cover Context API. ЛР 8 uses context only as the private channel between
-  `Tabs` and its parts; global state, prop drilling and the cost of
-  re-renders stay with Lecture 4 and ЛР 12. Lecture 3 should introduce
-  context together with compound components.
+  `Tabs` and its parts; ЛР 12 practises global state, prop drilling and the
+  cost of re-renders. Lecture 3 should introduce context together with
+  compound components.
 
 Presentation topics П4.2, П2.6 and П2.8 cover these, but a topic may go
 unpicked, so the lectures should still introduce them.
