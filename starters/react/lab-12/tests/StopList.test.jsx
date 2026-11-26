@@ -1,9 +1,8 @@
-import { renderHook, screen, within } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import App from '../src/App.jsx'
 import HistoryButtons from '../src/components/HistoryButtons.jsx'
-import { useStopList } from '../src/model/stopListContext.js'
 import { card, columnOf, composer, renderStrict } from './page.jsx'
 
 // Шпигун на модулі кнопок історії: кнопки працюють як завжди, а тест
@@ -25,12 +24,6 @@ async function toggleStop(user, name) {
   await user.click(within(stopList()).getByRole('checkbox', { name }))
 }
 
-describe('useStopList', () => {
-  it('useStopList поза StopListProvider кидає помилку, у якій названо StopListProvider', () => {
-    expect(() => renderHook(() => useStopList())).toThrow(/StopListProvider/)
-  })
-})
-
 describe('Стоп-лист у формі', () => {
   it('напій зі стоп-листа не можна додати до замовлення', async () => {
     const user = userEvent.setup()
@@ -43,37 +36,6 @@ describe('Стоп-лист у формі', () => {
 
     await toggleStop(user, 'Какао')
     expect(drinkButton('Какао')).toBeEnabled()
-  })
-
-  it('молоко й сироп зі стоп-листа не можна обрати для напою у формі', async () => {
-    const user = userEvent.setup()
-    renderStrict(<App />)
-    await user.click(drinkButton('Лате'))
-    const latte = within(composer()).getByRole('group', { name: 'Лате' })
-    await user.click(within(latte).getByRole('checkbox', { name: 'ваніль' }))
-
-    await toggleStop(user, 'вівсяне')
-    await toggleStop(user, 'карамель')
-    await toggleStop(user, 'ваніль')
-    expect(
-      within(latte).getByRole('option', { name: 'вівсяне' }),
-    ).toBeDisabled()
-    expect(
-      within(latte).getByRole('option', { name: 'звичайне' }),
-    ).toBeEnabled()
-    expect(
-      within(latte).getByRole('checkbox', { name: 'карамель' }),
-    ).toBeDisabled()
-    expect(
-      within(latte).getByRole('checkbox', { name: 'лісовий горіх' }),
-    ).toBeEnabled()
-
-    // Сироп зі стоп-листа, який у напою вже є, можна зняти.
-    const vanilla = within(latte).getByRole('checkbox', { name: 'ваніль' })
-    expect(vanilla).toBeEnabled()
-    await user.click(vanilla)
-    expect(vanilla).not.toBeChecked()
-    expect(vanilla).toBeDisabled()
   })
 
   it('«Надіслати бариста» вимкнена, поки в замовленні є позиція зі стоп-листа', async () => {

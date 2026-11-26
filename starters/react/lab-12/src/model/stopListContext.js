@@ -1,4 +1,4 @@
-import { createContext } from 'react'
+import { createContext, use } from 'react'
 
 /**
  * Стоп-лист — те, що в кав'ярні закінчилося. Значення контексту:
@@ -15,12 +15,15 @@ import { createContext } from 'react'
 export const StopListContext = createContext(null)
 
 /**
- * §4.6. { stopped, toggle } з найближчого StopListProvider. Якщо компонент
- * рендериться не всередині <StopListProvider>, кидає помилку, у тексті якої
- * названо StopListProvider.
- *
- * Поки що кидає помилку. Вимоги — у тестах tests/StopList.test.jsx.
+ * { stopped, toggle } з найближчого StopListProvider. Хук готовий: він
+ * написаний так само, як useQueue у §4.5. Якщо компонент рендериться не
+ * всередині <StopListProvider>, хук кидає помилку, у тексті якої названо
+ * StopListProvider.
  */
 export function useStopList() {
-  throw new Error('Not implemented: useStopList')
+  const value = use(StopListContext)
+  if (value === null) {
+    throw new Error('useStopList must be used within a StopListProvider')
+  }
+  return value
 }

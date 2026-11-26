@@ -1,6 +1,6 @@
 /* Стилі всієї сторінки. Тут уже є й стилі панелі «Стоп-лист» (.stop-list)
    і напису «Є позиції зі стоп-листа» (.stop-note), які з'являться на
-   сторінці в §4.6. */
+   сторінці в §4.7. */
 
 :root {
   font-family: Inter, system-ui, 'Segoe UI', Roboto, sans-serif;
@@ -251,12 +251,6 @@ input[type='radio'] {
   display: flex;
   gap: 6px;
   align-items: center;
-}
-
-/* Відмітка, яку не можна обрати: сироп зі стоп-листа */
-
-.choice label:has(input:disabled) {
-  color: #9a8b7f;
 }
 
 .draft-item .remove {

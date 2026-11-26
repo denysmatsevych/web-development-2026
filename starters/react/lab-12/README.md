@@ -7,11 +7,13 @@ https://denysmatsevych.github.io/web-development-2026/react/labs/lab-12/
 Сторінка працює так само, як наприкінці ЛР-11: форма «Нове замовлення»
 ліворуч, черга з чотирьох колонок праворуч, «Деталі замовлення», «Скасувати
 дію» й «Повторити дію». Стан черги зберігається в `App` і доходить до карток,
-«Деталей» і кнопок історії через пропси. У чотирьох code challenges ви
+«Деталей» і кнопок історії через пропси. У п'яти code challenges ви
 приберете зайві пропси: спершу композицією через `children`, потім
-контекстом, потім компонентом-провайдером із власними хуками. Останнім
-з'явиться «Стоп-лист» кав'ярні з окремим контекстом. Що має вийти,
-перевіряють готові тести в теці `tests/`.
+контекстом, потім компонентом-провайдером із власними хуками. Потім id
+замовлення, відкритого в «Деталях», перейде з `App` у компонент
+`QueuePanel`, і в `App` не залишиться стану. Останнім з'явиться «Стоп-лист»
+кав'ярні з окремим контекстом. Що має вийти, перевіряють готові тести в теці
+`tests/`.
 
 ## Що вже є
 
@@ -25,9 +27,11 @@ https://denysmatsevych.github.io/web-development-2026/react/labs/lab-12/
   `OrderDetails`, `HistoryButtons`. А також `StopListPanel` — панель
   «Стоп-лист», яка показує стоп-лист з пропсів; на сторінці її поки немає;
 - заготовки з описом API в коментарі: `src/model/queueContext.js`,
-  `QueueProvider.jsx`, `stopListContext.js` і `StopListProvider.jsx`. Поки
-  що вони кидають помилку `Not implemented`. `StopListContext` у
-  `stopListContext.js` уже створено;
+  `QueueProvider.jsx`, `StopListProvider.jsx` і
+  `src/components/QueuePanel.jsx`. Поки що вони кидають помилку
+  `Not implemented`;
+- `src/model/stopListContext.js` — готові `StopListContext` і хук
+  `useStopList`;
 - `src/data/menu.js` — меню з цінами, `priceOf`, `defaultMilk`,
   `describeItem`, а також `stopListOptions` (групи панелі «Стоп-лист») і
   `hasStopped(item, stopped)`; `src/data/orders.js` — `loadOrders()`: шість
