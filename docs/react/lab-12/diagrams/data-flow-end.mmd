@@ -4,28 +4,29 @@ flowchart TD
   QueueProvider["<b>QueueProvider</b><br/>стан черги: useReducer"]:::state
   StopList["<b>StopList</b><br/>useStopList()"]:::reader
   StopListPanel["StopListPanel"]
-  OrderComposer["<b>OrderComposer</b><br/>чернетка: useReducer<br/>useQueueDispatch()<br/>useStopList()"]:::reader
+  OrderComposer["<b>OrderComposer</b><br/>чернетка: useReducer<br/>useQueueDispatch()<br/>useStopList()"]:::stateReader
   QueuePanel["<b>QueuePanel</b><br/>id відкритого<br/>замовлення: useState"]:::state
   HistoryButtons["<b>HistoryButtons</b><br/>useQueue()<br/>useQueueDispatch()"]:::reader
-  OrderDetails["OrderDetails"]
+  OrderDetails["OrderDetails<br/>useQueue(), якщо<br/>отримує id"]
   RenameForm["<b>RenameForm</b><br/>useQueueDispatch()"]:::reader
   OrderBoard["<b>OrderBoard</b><br/>useQueue()"]:::reader
   OrderColumn["OrderColumn × 4"]
   OrderCard["<b>OrderCard × 6</b><br/>useQueueDispatch()<br/>useStopList()"]:::reader
 
-  App --> StopListProvider
-  StopListProvider --> QueueProvider
-  QueueProvider --> StopList
+  App -->|children| StopListProvider
+  StopListProvider -.-> QueueProvider
+  QueueProvider -.-> StopList
   StopList -->|"stopped, onToggle"| StopListPanel
-  QueueProvider --> OrderComposer
-  QueueProvider --> QueuePanel
+  QueueProvider -.-> OrderComposer
+  QueueProvider -.-> QueuePanel
   QueuePanel --> HistoryButtons
   QueuePanel -->|"onClose і замовлення<br/>або його id"| OrderDetails
   OrderDetails -->|"customer, onSaved"| RenameForm
   QueuePanel -->|onOpen| OrderBoard
   OrderBoard -->|"title, count,<br/>children"| OrderColumn
-  OrderColumn --> OrderCard
+  OrderColumn -.-> OrderCard
   OrderBoard -->|"order, onOpen"| OrderCard
 
   classDef state fill:#fdf0d5,stroke:#b07a2a,color:#2b211b
   classDef reader fill:#e3eefb,stroke:#2f6fb3,color:#2b211b
+  classDef stateReader fill:#fdf0d5,stroke:#2f6fb3,stroke-width:3px,color:#2b211b
