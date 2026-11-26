@@ -32,8 +32,9 @@ the parts it shares with ЛР-7 and ЛР-11 are in their plans and in
 
 `starters/react/lab-12/` is ЛР-11's reference solution: the form's
 `draftReducer`, the pure and normalized `queueReducer` and `withUndo` are
-the answers to ЛР-11's four challenges. So `feat/react-lab-12` stays local
-until the last group's ЛР-11 class, as `feat/react-lab-8` did for ЛР-7.
+the answers to ЛР-11's four challenges. So `feat/react-lab-12` stayed local
+until every group had done ЛР-11, as `feat/react-lab-8` did for ЛР-7, and
+was pushed on 2026-11-26.
 
 ## Why it looks like this
 
@@ -81,7 +82,8 @@ until the last group's ЛР-11 class, as `feat/react-lab-8` did for ЛР-7.
   it in `useState`, takes no props, and `App` calls no hook. Two tests in
   `tests/QueuePanel.test.jsx`: `QueuePanel` opens and closes «Деталі» inside
   `QueueProvider` without `App`, and opening and closing «Деталі» doesn't
-  render `App` again (a spy on `App`'s own module). The starter has a
+  render `App` or `QueueProvider` again (spies on their modules; the
+  `QueueProvider` spy since the review below). The starter has a
   `QueuePanel.jsx` stub that throws `Not implemented: QueuePanel`, so the
   test file loads from the start. The challenges after it move up: the
   stop-list is §4.7, the checks §4.8, Zustand §4.9.
@@ -116,6 +118,40 @@ until the last group's ЛР-11 class, as `feat/react-lab-8` did for ЛР-7.
   summary in plain sentences, and §2 without its opening paragraph on what
   to read before class and which pages are translated.
 - **Still 29 tests:** two added (§4.6), two dropped (§4.7).
+
+## Fixed after the PR #83 review (2026-11-26)
+
+- **§4.6's render test also spies on `QueueProvider`.** §4.6 promised that
+  opening «Деталі» renders neither `App` nor `QueueProvider`, but the test
+  checked only `App`: the id kept in `QueueProvider` and passed through a
+  context to `QueuePanel` passed 29 of 29. The new wrong variant
+  `4.6-id-in-provider` now fails that test and only that one. Still 29
+  tests.
+- **§4.5 says why the provider's `children` don't render again.** The §4
+  intro sent students to §4.5 for it, but §4.5 didn't say it; now it does,
+  with Dan Abramov's «Solution 2: Lift Content Up».
+- **The end diagram no longer says a provider renders the page.** A dotted
+  arrow leads to the elements a component gets ready-made through
+  `children` (the providers' contents, created by `App`, and the cards in a
+  column, created by `OrderBoard`); `App` passes `children` to
+  `StopListProvider`. `OrderComposer`, which keeps the draft and reads two
+  contexts, is yellow with a blue border, and `OrderDetails` notes that it
+  reads `useQueue()` when it gets an id. The §4 legend and the alt text say
+  so; the start diagram is unchanged.
+- **§4.9 imports `useShallow` from `zustand/react/shallow`,** the path the
+  Zustand guide it links uses; `zustand/shallow` works too in 5.1.0. The
+  Zustand stage uses the same path.
+
+Verified the same day, in a scratch `react-labs` workspace with the
+packages above: the stages pass 10, 13, 16, 22, 24 and 29 of 29 and the
+Zustand stage 29 of 29, with ESLint, Prettier and the build passing at each;
+every wrong variant fails at least one test of its own challenge
+(`solution/README.md`); `render.mjs` drew the end diagram at 879 × 1145 CSS
+px and the start diagram byte-identical to the published one; `npm run
+check` and `npm run build` pass, and the page loads the new diagram under
+the base path. `lab-12.zip` was rebuilt after the test change was
+committed: 39 files, unpacked equal to the starter, the test's entry dated
+by its commit, a second rebuild byte-identical.
 
 ## Where the build differs from the plan
 

@@ -7,8 +7,8 @@
 //
 // mermaid.min.js comes from the `mermaid` package (dist/mermaid.min.js),
 // installed anywhere outside the repository: the site doesn't depend on it.
-// Run it from PowerShell with the sandbox off, as solution/shots.mjs: Edge
-// doesn't start from Node inside the Bash tool's sandbox.
+// Node starts headless Edge; a shell that doesn't let Node start other
+// programs ends the script with «no DevTools line».
 
 import { spawn } from 'node:child_process'
 import { mkdtempSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'

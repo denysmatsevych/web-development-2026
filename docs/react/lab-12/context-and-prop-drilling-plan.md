@@ -7,17 +7,18 @@ confirmed the proposed decisions 2–19 under **Decisions**. A prototype of
 every challenge, two wrong variants and the +1 task was built and checked
 the same day (see **Verification**). It lives in the gitignored `solution/`
 folder next to this file, with the instructor's notes: the measurements per
-stage and the defence answers. The lab is not built yet. Once it is, what
-was built, what was verified and where the build differs from this plan go
-into this folder's `README.md`, and this file stays as the plan the lab was
-built from.
+stage and the defence answers. The lab was built from this plan on
+2026-11-24. What was built, what was verified and where the build differs
+from this plan are in this folder's `README.md`, and this file stays as the
+plan the lab was built from.
 
 **Changed on 2026-11-26, after the build** (decisions 20–24 under
 **Decisions**): a new §4.6 moves the opened order's id from `App` into a
 `QueuePanel`, so `App` ends with no state; the stop-list becomes §4.7
 without its milk and syrup rules, the checks §4.8 and Zustand §4.9, worth 2
-points; the props table gives way to two data flow diagrams. The sections below describe the lab before that change;
-[README.md](README.md) describes it as it is.
+points; the props table gives way to two data flow diagrams. The sections
+below describe the lab before that change; [README.md](README.md) describes
+it as it is.
 
 The challenge format, the test tooling and the AI rule come from ЛР-7, with
 the changes ЛР-11 made. Their plans,
@@ -906,9 +907,10 @@ was checked.
     `QueuePanel` that renders the history buttons, «Деталі» and the board
     (react.dev's closest common parent, Dan Abramov's «Move State Down»,
     Kent C. Dodds's state colocation). It is a challenge of its own, §4.6,
-    with two tests and a third Profiler table. This replaces the second half
-    of decision 6; decision 14 still holds, since the id goes into
-    `useState`, not into a context.
+    with two tests and a second render table in `MEASUREMENTS.md`, what
+    renders on opening «Деталі». This replaces the second half of decision
+    6; decision 14 still holds, since the id goes into `useState`, not into
+    a context.
 21. **The stop-list loses its milk and syrup rules** (cut 1 under
     **Timing**): the form disables a stopped drink's button, and a stopped
     milk or syrup only shows the note and disables «Надіслати бариста».

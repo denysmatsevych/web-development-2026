@@ -23,7 +23,7 @@ both in the same sitting. The Web Development course has its own plan in
 ## How the site maps to the plan
 
 The course is registered under the slug `react` with `status: 'published'`
-(see `src/data/courses.ts`), so it is on the public site. As of 2026-11-24,
+(see `src/data/courses.ts`), so it is on the public site. As of 2026-11-26,
 the built parts are Лекція 0, an introductory deck that isn't in the
 programme, the individual assignment, ЛР 1–8 and ЛР 10–12.
 
