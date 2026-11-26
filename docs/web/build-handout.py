@@ -17,6 +17,11 @@ The green deadline line comes from a blockquote that opens the lab's body:
 `> **Термін здачі:** 19.10.2026.` in Ukrainian, `> **Deadline:** 19.10.2026.`
 in English. Any other wording stays an ordinary blockquote.
 
+An image prints at most 3.8 inches tall, so a screenshot fits under a page's
+opening text. An image whose alt text starts with «Діаграма» (in English,
+"Diagram") is exempt: it prints as wide as the text, up to a page tall, so
+the labels in a tall diagram stay readable on paper.
+
 A centred title block opens the handout: the university and the department,
 a rule, the title, and the course from the lab's `discipline:` field. Every
 page's footer carries the short attribution and the page number.
@@ -58,6 +63,7 @@ WORDS = {
         "lab": "Лабораторна робота №{}.",
         "discipline": "з дисципліни {}",
         "deadline": "Термін здачі",
+        "diagram": "Діаграма",
         "footer": "НаУОА • ННІ ІТ та бізнесу • Кафедра ІТАД",
         "page": "Сторінка",
         "of": "з",
@@ -68,6 +74,7 @@ WORDS = {
         "lab": "Lab {}.",
         "discipline": "{}",
         "deadline": "Deadline",
+        "diagram": "Diagram",
         "footer": "NaUOA • Institute of IT & Business • Department of IT & Data Analytics",
         "page": "Page",
         "of": "of",
@@ -207,6 +214,8 @@ th {{ background: var(--code-bg); color: var(--head); }}
 /* Capped so a screenshot fits under a page's opening text instead of leaving a gap. */
 img {{ display: block; max-width: 100%; max-height: 3.8in; width: auto; height: auto;
       margin: 0.4em 0 0.9em; border: 1px solid var(--code-line); break-inside: avoid; }}
+/* A diagram's labels must stay readable, so it may fill the text width, up to a page tall. */
+img[alt^="{WORDS['diagram']}"] {{ max-height: 9.3in; }}
 """
 
 html = f"""<!doctype html>
