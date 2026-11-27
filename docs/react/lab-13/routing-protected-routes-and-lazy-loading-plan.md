@@ -24,6 +24,17 @@ rather than as a route tree. A fourth extra task, «Дивитися» і «Мі
 список», joins the three. The blog and the fourth task are not prototyped
 yet (see **Verification**).
 
+**Revised again on 2026-11-27, after the PR review,** with probes on the
+prototype. React Router marks a `NavLink` to `/` only at `/`, with or
+without `end`, so «Афіша» needs no `end`. The `end` decision moves to the
+account's menu in §4.5, where «Профіль» links to `/account`. §4.6 gets a
+seventh test, a signed-in user with a foreign `redirectTo`, because none of
+the other six caught a `guestOnly` without `safeRedirect`. The «Назад» test
+now checks the page «Назад» lands on. §4.7's first test checks that the
+routes reach the lazy pages, so it no longer passes on the starter.
+Decision 26 now says what the rename test protects. The reasons the
+defence asks for moved to `solution/README.md`.
+
 The challenge format, the test tooling and the AI rule come from ЛР-7, with
 the changes ЛР-11 and ЛР-12 made. Their plans,
 [../lab-7/custom-hooks-and-render-props-plan.md](../lab-7/custom-hooks-and-render-props-plan.md),
@@ -66,10 +77,10 @@ What earlier labs left for this one:
   route imports, so the folders from ЛР-10 and the code splitting in §4.7
   line up.
 - **ЛР-10's cart was an external store** read with `useSyncExternalStore`.
-  The fake session in this lab is one too, not a context: middleware runs
-  before React renders a route, outside the component tree, so it can't read
-  a context (decision 8). ЛР-12's decision 17 had named "an authentication
-  context" for ЛР-13; this plan replaces it, and the defence asks why.
+  The fake session in this lab is one too, not a context (decision 8).
+  ЛР-12's decision 17 had left "an authentication context" to ЛР-13; this
+  plan replaces it, and the defence asks why (the answer is in
+  `solution/README.md`).
 - **ЛР-5's form with `FormData`** is the given login form; ЛР-6's
   `useActionState` stays where it was, since React Router's `action` is out
   of scope (decision 21).
@@ -96,7 +107,8 @@ route tree gets there is the student's design (decision 27):
    the schedule and a 404 page, all under the site's header, whose links
    mark the current page for screen readers.
 2. **Nested routes** (§4.5): the account section with a heading and menu of
-   its own around its pages, and the booking page.
+   its own around its pages, the menu marking the current page, and the
+   booking page.
 3. **Protected routes** (§4.6): the account and booking only for a
    signed-in user, checked by middleware; a guest goes to «Вхід» and comes
    back where they were going, only to an address on this site; a signed-in
@@ -135,7 +147,7 @@ page is the English text.
 | React Router: [Routing (Data)](https://reactrouter.com/start/data/routing) | 8.5.3 | before class. `#nested-routes`, `#layout-routes`, `#index-routes` (§4.3–§4.5), `#dynamic-segments` (§4.3, §4.4), `#splats` (404) |
 | React Router: [Route Object](https://reactrouter.com/start/data/route-object) | 8.5.3 | `#middleware` (§4.3, §4.6: its `authMiddleware` throws `redirect("/login")`; §4.9.4: the `params` it gets), `#lazy` (§4.3, §4.7), `#handle` (§4.9.1) |
 | React Router: [Middleware](https://reactrouter.com/how-to/middleware) | 8.5.3 | `#quick-start-data-mode`, `#authentication` under «Common Patterns» (§4.3, §4.6); the order parent → child |
-| React Router: [`NavLink`](https://reactrouter.com/api/components/NavLink) | 8.5.3 | «Automatically applies `aria-current="page"` to the link when the link is active» (§4.3, §4.4); `end` (§4.4, which the blog doesn't need) |
+| React Router: [`NavLink`](https://reactrouter.com/api/components/NavLink) | 8.5.3 | «Automatically applies `aria-current="page"` to the link when the link is active» (§4.3, §4.4); `end` (§4.5, which the blog doesn't need), with its note that `<NavLink to="/">` «effectively ignores the `end` prop and only matches when you're at the root route» (§4.4) |
 | React Router: [`createMemoryRouter`](https://reactrouter.com/api/data-routers/createMemoryRouter) | 8.5.3 | how the tests render the app at any address (defence) |
 | React Router: [Upgrading from v7](https://reactrouter.com/upgrading/v7) and the [React Router v8](https://remix.run/blog/react-router-v8) post (Brooks Lybrand) | 2026-06-17 | the version note: «React Router v8 removes the `react-router-dom` re-export package»; imports come from `react-router` and `react-router/dom`; middleware is always on; Node 22.22+, React 19.2.7+ (§2 note, defence) |
 | React Router: [Routing (Declarative)](https://reactrouter.com/start/declarative/routing) | 8.5.3 | §4.3's declarative part: the same nesting with `<Routes>` and `<Route>` |
@@ -153,7 +165,8 @@ and `isRouteErrorResponse` API pages for §4.9.2–§4.9.4, and the
 `useLocation` page for §4.9.4, which the package's bundled docs have but
 the web check didn't cover; the data mode
 installation page for `RouterProvider` from `react-router/dom` (in the
-bundled docs).
+bundled docs); and the `NavLink` page's note on `<NavLink to="/">`, quoted
+from the package's `lib.d.ts`, from which the API pages are generated.
 
 Programme reading: Основна 3 is React Router's docs, above. The programme
 says v7; see **Decisions**, 3.
@@ -263,22 +276,25 @@ student sees the mechanism act before reading why:
 | --- | --- | --- |
 | Layout | one layout route with `<Outlet>` and an index route | the same, plus the account's layout inside the site's, with its own `<Outlet>` |
 | Address with a parameter | `posts/:postId`, `useParams`, a message for an unknown id | the same mechanism, twice (`movies/:movieId`, `booking/:sessionId`) |
-| `NavLink` | to `/about` and `/new` only | «Афіша» links to `/`, which needs `end`; the failing test and `NavLink`'s page lead there |
+| `NavLink` | to `/about` and `/new` only; neither address starts another page's | the account's menu: «Профіль» links to `/account`, and `/account/tickets` starts with it, so it needs `end`, while «Кабінет» in the header is marked on every account page; the failing test and `NavLink`'s page lead there |
 | 404 | a top-level splat, without the header | under the header |
 | Protection | middleware on one route; after sign-in always `/` | several pages behind the check; back to the requested page (`redirectTo`, «Назад» that skips «Вхід»); `guestOnly`; `safeRedirect`; «Вийти» |
 | Lazy loading | one public page; `HydrateFallback` | two protected pages, and what a guest's browser gets (the Network table) |
 | Declarative mode | the blog again, read and compared | — |
 
-§4.4 is the closest to the blog: routes, a layout and a parameter are the
-API the lab introduces, and there is little to decide in them beyond where
-the 404 page goes and `end`. The decisions sit in §4.5–§4.7, the
-measurements and §4.9.
+Much of the cinema's code is the blog's API applied to other pages, which
+is what the walkthrough is for (decision 23). §4.4 is the closest to the
+blog: the decision in it is where the 404 page goes. §4.5 adds a layout
+inside a layout and the menu's `end`, and §4.7 the blog's `lazy` on two
+protected pages. The decisions sit in §4.6, the measurements and §4.9;
+decision 26 lists them.
 
 **What the blog avoids on purpose:** a page that is both protected and
-lazy. What a guest's browser gets for such a page is the question of
-§4.7's second table (the answer is in `solution/README.md`), so the blog's
-lazy page is public and its protected page is eager, and no probe looks at
-a guest's downloads.
+lazy, a return address after sign-in, and a `NavLink` to an address that
+starts another page's. What a guest's browser gets for a protected lazy
+page is the question of §4.7's second table (the answer is in
+`solution/README.md`), so the blog's lazy page is public and its protected
+page is eager, and no probe looks at a guest's downloads.
 
 ### The declarative part (the end of §4.3)
 
@@ -336,14 +352,17 @@ instead of the prop it receives in the starter, and an unknown id shows
 «Фільм не знайдено». Every page, «Сторінку не знайдено» for an unknown
 address included, shows under the site's header. The header's links open
 pages without reloading the site and mark the current one with
-`aria-current="page"`; «Афіша» is marked only on «Афіша».
+`aria-current="page"`. «Афіша» needs nothing extra: React Router marks a
+`NavLink` to `/` only at `/`, and the handout quotes `NavLink`'s page on
+this (checked on the prototype: without `end`, «Афіша» isn't marked on
+`/schedule`, a film's page or `/account/tickets`).
 
 The routes are objects with `Component`, not JSX `element`s, so
 `routes.js` stays a plain `.js` module (see **ESLint in this lab**).
 
 **From §4.3:** the layout, the index route, the dynamic segment and
 `NavLink`. **Not in §4.3:** the 404 page under the header (the blog's is
-outside it) and `NavLink`'s `end` (the blog has no `NavLink` to `/`).
+outside it).
 
 **Що вже є.** `main.jsx` with `createBrowserRouter(routes)` and
 `<RouterProvider>` from `react-router/dom`, as in React Router's data mode
@@ -352,15 +371,14 @@ starter shows «Афіша» without a header; `RootLayout` with the header made
 of plain `<a href>` links and a comment where the page goes; every page;
 `NotFoundPage`.
 
-**Tests** (`tests/routes.test.jsx`, 6):
+**Tests** (`tests/routes.test.jsx`, 5):
 
 - головна сторінка показує афішу (passes on the starter);
 - сторінка фільму відкривається за адресою `/movies/:movieId`;
 - для невідомого фільму показує «Фільм не знайдено»;
 - невідома адреса показує «Сторінку не знайдено» під шапкою сайту;
 - посилання «Розклад» у шапці відкриває розклад і позначене
-  `aria-current="page"`;
-- «Афіша» не позначена як поточна на інших сторінках.
+  `aria-current="page"`, а «Афіша» — ні.
 
 A click on a plain `<a href>` does nothing in jsdom, so the link test also
 tells a `NavLink` from the starter's anchor. The handout says what a plain
@@ -370,26 +388,33 @@ anchor does in the browser: the whole page reloads.
 
 **Що має вийти.** «Кабінет» at `/account` shows the heading «Кабінет» and a
 menu («Профіль», «Мої квитки») around the account's pages: «Профіль» at
-`/account` and «Мої квитки» at `/account/tickets`, with the current one
-marked in the menu. Booking opens at `/booking/:sessionId`, and
+`/account` and «Мої квитки» at `/account/tickets`. The menu marks only the
+current page, while «Кабінет» in the site's header stays marked on every
+page of the account. Booking opens at `/booking/:sessionId`, and
 «Забронювати» leads to «Мої квитки» with the new ticket. The handout says in
 one sentence what a relative path is: a child route's path continues its
 parent's.
 
 **From §4.3:** a layout with `<Outlet>` and an index route. **Not in
-§4.3:** a layout inside another layout.
+§4.3:** a layout inside another layout, and `NavLink`'s `end`: the blog has
+no `NavLink` to an address that starts another page's.
 
-**Що вже є.** `AccountLayout` with the menu and a comment where the child
-goes; the pages; the given session, which the tests fill with a signed-in
-user, since nothing is protected yet.
+**Що вже є.** `AccountLayout` with the menu as `NavLink`s without `end` and
+a comment where the child goes; the pages; the given session, which the
+tests fill with a signed-in user, since nothing is protected yet.
 
-**Tests** (`tests/account.test.jsx`, 4, each with a signed-in user):
+**Tests** (`tests/account.test.jsx`, 5, each with a signed-in user):
 
 - `/account` показує «Кабінет» і «Профіль»;
-- `/account/tickets` показує квитки в макеті кабінету, а «Мої квитки»
-  позначені як поточна сторінка;
+- `/account/tickets` показує квитки в макеті кабінету;
+- на `/account/tickets` у меню кабінету позначені лише «Мої квитки», а
+  «Кабінет» у шапці позначений;
 - `/booking/:sessionId` показує бронювання цього сеансу;
 - «Забронювати» веде в «Мої квитки», і там є новий квиток.
+
+The third test fails without `end` on «Профіль» (checked on the prototype:
+a `NavLink` to `/account` without `end` is marked on `/account/tickets`),
+and it also fails if «Кабінет» in the header gets `end` too.
 
 **Перевірка.** In `npm run dev`, open `/account/tickets` and reload the
 page: Vite's dev server sends `index.html` for any address, so the page
@@ -401,9 +426,10 @@ opens. §4.8 shows that Vercel doesn't, until `vercel.json` says so.
 signed-in user. A guest who opens one lands on «Вхід», and the address
 keeps where they were going as `redirectTo`, with its path and query. After
 signing in they go there, but only to an address on this site
-(`safeRedirect`), and «Назад» doesn't bring back «Вхід». A signed-in user
-who opens «Вхід» goes to `redirectTo` or to the account. «Вийти» in the
-header signs out and goes to «Афіша».
+(`safeRedirect`), and «Назад» then leads to the page they were on before,
+not to «Вхід». A signed-in user who opens «Вхід» goes to `redirectTo`, again
+only on this site, or to the account. «Вийти» in the header signs out and
+goes to «Афіша».
 
 The checks are middleware, and their contract is given in the starter's
 `src/app/authMiddleware.js`:
@@ -431,8 +457,10 @@ check, the return to the requested page, `guestOnly`, `safeRedirect`,
 «Вийти».
 
 **Порядок дій:** `requireUser` on the routes it has to guard; then the
-login page's return; then `guestOnly`; then «Вийти». After each step one
-more test passes, and the handout ends the step with «Крок завершено,
+login page's return; then `guestOnly`; then «Вийти». Each step turns its
+own tests green: one after `requireUser`, three after the return (the
+return, «Назад», a foreign `redirectTo` at sign-in), two after `guestOnly`
+and one after «Вийти». The handout ends each step with «Крок завершено,
 коли…».
 
 **Що вже є.** The stubs `requireUser` and `guestOnly`, throwing
@@ -441,23 +469,28 @@ uses them; `LoginPage` with the form, the error message and a comment where
 the return goes; `safeRedirect` with its rule in a comment; «Вийти» that
 only calls `signOut()`.
 
-**Tests** (`tests/protected.test.jsx`, 6):
+**Tests** (`tests/protected.test.jsx`, 7):
 
 - гість, який відкриває `/account/tickets`, бачить «Вхід», а адреса
   зберігає `redirectTo=/account/tickets`;
 - гість після входу повертається на бронювання, з якого прийшов;
-- після входу кнопка «Назад» не повертає на «Вхід»;
+- після входу кнопка «Назад» веде на сторінку фільму, з якої гість
+  відкрив бронювання;
+- `redirectTo` з адресою іншого сайту після входу веде в кабінет;
 - користувач, який відкриває `/login`, потрапляє в кабінет;
-- «Вийти» на захищеній сторінці веде на афішу;
-- `redirectTo` з адресою іншого сайту після входу веде в кабінет.
+- користувач, який відкриває `/login` з `redirectTo` на інший сайт,
+  потрапляє в кабінет;
+- «Вийти» на захищеній сторінці веде на афішу.
 
-The "Назад" test starts on «Афіша», follows a link to a booking and goes
-back after signing in; if the return adds a history entry instead of
-replacing «Вхід», it lands on `/login`, which `guestOnly` sends to the
-account. Its exact history steps are checked at build time (see
-**Verification**). **Not tested:** which routes carry the middleware,
-whether the return uses `navigate` or a `redirect`, or where the middleware
-file's helpers go.
+The «Назад» test opens a film's page, follows its link to a booking, signs
+in and goes back. It checks the page «Назад» lands on, not only that «Вхід»
+isn't shown: once `guestOnly` is done, a return without `replace` doesn't
+show «Вхід» either (what it does instead was checked on the prototype and
+is in `solution/README.md`). The sixth test is there because none of the
+others catches a `guestOnly` without `safeRedirect` (see **Verification**).
+**Not
+tested:** which routes carry the middleware, whether the return uses
+`navigate` or a `redirect`, or where the middleware file's helpers go.
 
 ### §4.7. Lazy routes
 
@@ -489,15 +522,21 @@ tables.
 
 **Tests** (`tests/lazy.test.jsx`, 3):
 
-- код бронювання й квитків не завантажується разом із маршрутами;
+- маршрути ведуть на бронювання й квитки, але їхній код не
+  завантажується разом із маршрутами;
 - відкриття бронювання завантажує його код і показує сторінку;
 - лінива сторінка, відкрита за адресою, показується без попередження про
   `HydrateFallback`.
 
 The first two count module loads through a `vi.mock` factory on each
 page's module: after importing `routes` the count is 0, after opening the
-page 1. The third test passes from §4.5 on, since nothing is lazy yet; it
-keeps §4.7 without a `HydrateFallback` from passing.
+page 1. A count alone would pass on the starter, whose `routes.js` doesn't
+import these pages yet, so the first test also checks with `matchRoutes`
+that `/booking/s1` and `/account/tickets` each match a route of their own,
+not the 404's splat. It fails until §4.5 because the routes are missing,
+then until §4.7 because they are imported eagerly. The third test passes
+from §4.5 on, since nothing is lazy yet; it keeps §4.7 without a
+`HydrateFallback` from passing.
 
 ## Extra task (§4.9): one of four
 
@@ -527,10 +566,12 @@ in `<StrictMode>` (see `solution/README.md`).
 
 `/admin` (lazy, the given `AdminPage`) with `requireAdmin` middleware: a
 guest goes to «Вхід» with `redirectTo=/admin`; a signed-in user whose role
-isn't `admin` gets `throw data('Доступ заборонено', { status: 403 })`,
-which the route's `ErrorBoundary` shows as «Доступ заборонено» under the
-site's header, through `useRouteError()` and `isRouteErrorResponse()`. The
-header shows «Адміністрування» only to the administrator.
+isn't `admin` gets `throw data('Доступ заборонено', { status: 403 })`.
+Students write the route's `ErrorBoundary`: it reads the error with
+`useRouteError()` and `isRouteErrorResponse()` and shows the given
+`ErrorPage` (a heading from its `title` prop and a link to «Афіша») with
+«Доступ заборонено», under the site's header. The header shows
+«Адміністрування» only to the administrator.
 
 **Tests** (`tests/extra/admin.test.jsx`, 4): гість потрапляє на «Вхід» з
 `redirectTo=/admin`; глядач бачить «Доступ заборонено» під шапкою сайту;
@@ -562,7 +603,8 @@ lines, so each page brings a mechanism the main part doesn't have:
   user watches: a guest goes to «Вхід» first, whatever the film, and after
   signing in comes back to watching that film. For a film that isn't
   online, the address shows «Фільм недоступний онлайн» under the site's
-  header. The check is middleware that reads the film's id from its
+  header, through the route's `ErrorBoundary` and the given `ErrorPage`,
+  as in §4.9.2. The check is middleware that reads the film's id from its
   `params`. New against §4.6: a check that depends on a parameter of the
   address and ends in an error, not a redirect, on a page whose address
   continues a public page's.
@@ -578,10 +620,13 @@ lines, so each page brings a mechanism the main part doesn't have:
 **Що вже є.** `online` in `movies.js`; `watchlist.js` with `getList()`,
 `add()`, `remove()` and `useWatchlist()` through `useSyncExternalStore`;
 `WatchPage` in `routes/watch/` (the film's poster and a player
-placeholder); `WatchlistPage` in `routes/account/`; on `MoviePage`, the
+placeholder); `WatchlistPage` in `routes/account/`; `ErrorPage` in
+`shared/components/`; on `MoviePage`, inside a comment marked §4.9.4, the
 «Дивитися» link for online films and `WatchlistButton`, which adds and
 removes for a signed-in user and renders nothing for a guest, with a
-comment where the guest's link goes.
+comment where the guest's link goes. The task starts by uncommenting
+them, so a student who picks another task doesn't deploy a «Дивитися» link
+to the 404 page.
 
 **Tests** (`tests/extra/watch.test.jsx`, 6): гість, який відкриває
 перегляд фільму, потрапляє на «Вхід», а після входу — на перегляд цього
@@ -638,10 +683,8 @@ Checked with ЛР-12's config (`eslint-plugin-react-hooks` 7.1.1,
   middleware file is a plain module too.
 - The prototype's app code lints clean; the only report was a probe's use
   of `process` in a test helper, which the starter doesn't have.
-- To check at build time: a `.jsx` that exports `RootLayout` and a
-  `HydrateFallback` next to each other (two components pass the rule), each
-  extra task's reference, and `example/`, which `npm run lint` covers with
-  the same config.
+- To check at build time: each extra task's reference, and `example/`,
+  which `npm run lint` covers with the same config.
 
 ## Design principles
 
@@ -662,11 +705,12 @@ Checked with ЛР-12's config (`eslint-plugin-react-hooks` 7.1.1,
    tab, before and after.
 6. **No data loading.** Loaders and actions are left to Lecture 5's topics
    and ЛР-14, so the lab stays about routes.
-7. **An example shows a mechanism; the task asks for a combination.** The
-   blog shows each mechanism once and in its simplest form, and renaming
-   its code doesn't give the cinema's (decision 26). The same test applies
-   to the probes: none of them answers a measurement or a defence question
-   about the cinema.
+7. **An example shows a mechanism; the task asks for decisions.** The
+   blog shows each mechanism once and in its simplest form. Its code with
+   the cinema's names gives the API of §4.4, §4.5 and §4.7, which is what
+   the walkthrough is for, and none of the decisions listed in decision 26.
+   The same test applies to the probes: none of them answers a measurement
+   or a defence question about the cinema.
 
 ## Timing
 
@@ -678,8 +722,8 @@ The slot is 80 minutes.
 | The AI rule, as in ЛР-12 | §4.2 | 1 |
 | The blog: run it, read its code, the probes | §4.3 | 13 |
 | The blog in the declarative mode, the table | §4.3 | 5 |
-| Routes, the layout, `NavLink`, `useParams` | §4.4 | 10 |
-| The account's layout and children, booking | §4.5 | 7 |
+| Routes, the layout, `NavLink`, `useParams` | §4.4 | 9 |
+| The account's layout and children, `end`, booking | §4.5 | 8 |
 | Middleware, the login page's return, «Вийти» | §4.6 | 15 |
 | `lazy`, `HydrateFallback`, two builds, the Network table | §4.7 | 10 |
 | Checks, `vercel.json`, `git push`, the Vercel project | §4.8 | 6 |
@@ -693,7 +737,8 @@ The lines are fewer, but each is a new API, so the rows give §4.4 and §4.6
 more time than their lines would at ЛР-12's pace, and §4.7 adds two builds
 and three visits in the Network tab. The walkthrough adds about 18 minutes
 and should take a few off §4.4–§4.6, where the API is no longer new
-(14 → 10, 8 → 7, 16 → 15 against the first version of this plan). The lab
+(14 → 9, 8 → 8 with `end` moved there from §4.4, 16 → 15 against the
+first version of this plan). The lab
 still grows from 65 to about 72 of the 80 minutes, so few students will
 start §4.9 in class, which decision 30 allows for. How long ЛР-12 took in
 class is the better guide. If the lab takes longer than 72 minutes, the
@@ -701,7 +746,7 @@ cuts, in order:
 
 1. fill «Файли збірки» once, after §4.7, with the eager size given in the
    handout;
-2. give `guestOnly` in the starter (one test passes from the start);
+2. give `guestOnly` in the starter (two tests pass from the start);
 3. move §4.3's declarative part to the defence's reading, done at home;
 4. keep two of §4.3's four probes;
 5. make the Network table a defence question instead of a table.
@@ -719,7 +764,7 @@ starters/react/lab-13/
 ├── index.html             lang="uk", <title>ЛР-13. Кінотеатр</title>
 ├── package.json           "name": "lab-13"; react-router ^8.5.3, qrcode ^1.5.4;
 │                          "test": "vitest --project lab", "test:extra": "vitest --project extra",
-│                          "example": "vite example" (the blog, §4.3)
+│                          "example": "vite example --config vite.config.js" (the blog, §4.3)
 ├── README.md              the app, the two accounts, the blog, «Що вже є», the commands
 ├── MEASUREMENTS.md        two empty tables: «Файли збірки», «Які JS-файли завантажує браузер»
 ├── public/favicon.svg
@@ -734,22 +779,26 @@ starters/react/lab-13/
 │   │   ├── authMiddleware.js   stubs: requireUser, guestOnly (§4.6)
 │   │   └── index.css
 │   ├── routes/            movies/, movie/ (MoviePage takes movieId as a prop; the
-│   │                      «Дивитися» link and WatchlistButton for §4.9.4),
+│   │                      «Дивитися» link and WatchlistButton in a comment, §4.9.4),
 │   │                      schedule/, login/, booking/ (+ SeatMap), account/
 │   │                      (AccountLayout, ProfilePage, TicketsPage, WatchlistPage for
 │   │                      §4.9.4), admin/ (§4.9.2), watch/ (§4.9.4)
 │   └── shared/            auth/session.js, data/ (movies with `online`, sessions,
 │                          tickets, watchlist), utils/safeRedirect.js, components/
-│                          (NotFoundPage, HydrateFallback, ForbiddenPage for §4.9.2)
+│                          (NotFoundPage, HydrateFallback, ErrorPage for §4.9.2, §4.9.4)
 └── tests/                 setup.js, app.jsx (renderApp, signInAs, the route copy),
                            routes, account, protected, lazy; extra/focus, extra/admin,
                            extra/pending, extra/watch
 ```
 
 The blog runs with `npm run example` on its own Vite root, so `npm run
-dev`, `build` and the tests don't see it; whether Vite serves both roots
-at once on two ports, and how the blog shares `react-router` from the
-workspace, is checked at build time.
+dev`, `build` and the tests don't see it. Vite looks for its config in the
+root it is given, so without `--config` the blog would run without the
+lab's `vite.config.js` and its React plugin (checked in Vite 8.4: JSX still
+builds, but without Fast Refresh; with `--config`, the dev server serves
+`@react-refresh`). Whether Vite serves both roots at once
+on two ports, and how the blog shares `react-router` from the workspace, is
+checked at build time.
 
 The starter's tests: `npm test -- --run` passes one test («головна
 сторінка показує афішу») and fails the rest with readable messages. In the
@@ -763,8 +812,9 @@ be pushed as soon as it is ready (unlike ЛР-12's).
 ## Handout: `src/content/labs/react/uk/lab-13.md`
 
 About ЛР-12's length. The blog's code is printed in §4.3, part by part;
-the cinema's is not, and no example in the handout passes the rename test
-of decision 26. Frontmatter as in ЛР-12, with `number: 13`, the programme's title
+the cinema's is not, and no example in the handout gives one of the
+cinema's decisions listed in decision 26. Frontmatter as in ЛР-12, with
+`number: 13`, the programme's title
 and `duration: "2 академічні години (самостійна робота — 2 години)"`.
 `handout:` is added once the PDF is built after the instructor's review.
 Ukrainian only; English later. ЛР-12's revised style: definitions as full
@@ -888,7 +938,8 @@ readings, asking to explain or compare rather than to recall:
   against a child with a path; why the account's child paths are relative;
   `useParams` and where the param's name comes from; how the splat route
   works and why the unknown film shows its own message; `NavLink`'s
-  `aria-current` and `end`.
+  `aria-current`; why «Профіль» needs `end` while «Кабінет» and «Афіша»
+  don't.
 - **«Режими React Router»:** the three modes and what data mode adds;
   §4.3's table: when each mode checks the user, how it loads a page's code
   and what shows meanwhile; where each mode keeps a return address (the
@@ -901,15 +952,17 @@ readings, asking to explain or compare rather than to recall:
 - **«Захищені маршрути»:** what middleware is and in which order it runs;
   which routes your guard sits on, why there, and what would change if it
   sat on each protected route; why `redirectTo` is in the query and
-  not in `location.state`; why `replace` after sign-in; why `safeRedirect`,
-  and what an open redirect would let someone do; why the session is a
+  not in `location.state`; why `replace` after sign-in, and what «Назад»
+  does without it; why `safeRedirect` in both the login page and
+  `guestOnly`, and what an open redirect would let someone do; why the session is a
   store, not a context; why «Вийти» has to navigate; what a server would
   check that the browser can't.
 - **«Ліниве завантаження»:** what `lazy` changes in the build, from the
   first table; whether a guest's browser gets the protected pages' code,
   from the second table, and why that doesn't make the site less safe;
   `HydrateFallback` and when it shows; the route's `lazy` against
-  `React.lazy`; what ЛР-16 will measure that this lab didn't.
+  `React.lazy`, and what `React.lazy` can load lazily that a route's `lazy`
+  can't (react.dev's `lazy` page).
 - **«Тести»:** how a test opens the app at an address; why the helper copies
   the routes; how a test sees that a module wasn't loaded; why the extra
   tests are a separate Vitest project.
@@ -998,8 +1051,9 @@ revision and are not prototyped (see **To check during the build**).
 - **Middleware:** `requireUser` runs on the first load and on navigations,
   and its `redirect` carries `redirectTo`; the login page's return,
   `guestOnly` and «Вийти» behave as §4.6 says; a `//evil.example`
-  `redirectTo` ends in the account. Middleware runs only on navigations, so
-  a page stays after the session is cleared until the next one.
+  `redirectTo` ends in the account. What a protected page shows when the
+  session is cleared without a navigation was checked too (result in
+  `solution/README.md`).
 - **Lazy routes:** importing `routes` loads neither lazy page; opening one
   loads it once. What a guest's visit loads was measured for both forms of
   `lazy` (result in `solution/README.md`).
@@ -1010,8 +1064,8 @@ revision and are not prototyped (see **To check during the build**).
   prints «No `HydrateFallback` element provided to render during initial
   hydration»; with one on the root route, nothing.
 - **The build:** `vite build` emits a separate chunk per lazy page, and the
-  tickets page's chunk carries `qrcode`; the eager build has one chunk (sizes
-  in `solution/README.md`).
+  tickets page's chunk carries `qrcode` (both builds' files and sizes are in
+  `solution/README.md`).
 - **The declarative example** (`<Routes>`, `RequireAuth` with `<Navigate
   replace state>`, `React.lazy` with `<Suspense>`) works in v8 on the
   cinema's routes; the blog's version, without `state`, is checked at build
@@ -1035,30 +1089,56 @@ revision and are not prototyped (see **To check during the build**).
   2026-11-14 in its metadata; `uk.react.dev`'s `lazy` page is the English
   text.
 
+**Checked in the PR review (2026-11-27),** with temporary tests on the
+prototype:
+
+- **`NavLink` and `end`:** without `end`, a `NavLink` to `/` is marked only
+  at `/` (not on `/schedule`, a film's page or `/account/tickets`), as
+  React Router's `lib.d.ts` says and its code does; a `NavLink` to
+  `/account` without `end` is marked on `/account/tickets`.
+- **«Назад» after a return without `replace`:** where it lands, before and
+  after `guestOnly` (result in `solution/README.md`).
+- **A `guestOnly` without `safeRedirect`:** none of the first plan's six
+  §4.6 tests caught it, since the one that reaches `guestOnly` (a signed-in
+  user at `/login`) has no `redirectTo` and passes; a signed-in user at
+  `/login?redirectTo=//evil.example/x` leaves the site (jsdom: «Not
+  implemented: navigation to another Document»), hence the new test.
+- **§4.7's first test:** a count of module loads alone passes on the
+  starter, whose `routes.js` imports only `MoviesPage`, hence the route
+  match.
+- **`vite example`:** Vite reads its config from the root it is given;
+  with `--config vite.config.js` the blog builds and its dev server serves
+  `@react-refresh`.
+
 **To check during the build:**
 
 - the full starter and the reference as one stage per challenge and per
   extra task, each through the tests (with the expected failures), lint,
   Prettier and the build; the exact test counts for §1, §4.1, §5 and §7;
 - that each stub fails with a readable message, and that the starter's one
-  passing test is the only one;
-- the «Назад» test of §4.6: the history after a link, a redirect and a
-  `replace`, with and without `replace`;
+  passing test is the only one (§4.7's first test fails through its route
+  match);
+- the «Назад» test of §4.6 on the real pages: it passes with `replace` and
+  fails without it, both before and after `guestOnly`;
 - §4.9.3's held-back module through an async `vi.mock` factory (the probe
   held back a `lazy` function instead);
 - **the blog:** `npm run example` serves it on its own Vite root next to
   `npm run dev`; it lints clean with the lab's config; each probe behaves
   as §4.3 says; its declarative version runs in v8; and the rename test of
-  decision 26 holds: the blog's code with the cinema's names passes few
-  tests beyond §4.4's (which ones goes in `solution/README.md`);
+  decision 26: the blog's code with the cinema's names is expected to pass
+  §4.4's tests except the 404 under the header, §4.5's except the menu's
+  `end`, and §4.7's, and none of §4.6's that need the return, `guestOnly`
+  or «Вийти» (which ones it passes goes in `solution/README.md`);
 - **§4.9.4:** middleware reads `params.movieId`; a film that isn't online
   ends in the route's `ErrorBoundary` under the header; a guest's sign-in
   started from the film page's link returns there through `redirectTo`
   built with `useLocation()`; the six tests, and that the guest check comes
   before the online check;
 - the wrong variants as a set (an `<a href>` header, absolute child paths,
-  the guard as a component inside each page, no `safeRedirect`, no
-  `replace`, a `lazy` page still imported at the top of `routes.js`, no
+  «Профіль» without `end`, «Кабінет» with `end`, the guard as a component
+  inside each page, no `safeRedirect` in the login page, none in
+  `guestOnly`, no `replace`, a `lazy` page still imported at the top of
+  `routes.js`, no
   `HydrateFallback`, for §4.9.1 the StrictMode trap, and for §4.9.4 a guest
   link without `redirectTo`), each failing at least one test or the lint;
 - both tables on the reference: the build's files, and the Network tab in
@@ -1102,17 +1182,18 @@ revision and are not prototyped (see **To check during the build**).
 7. **Format:** ЛР-12's code challenges with given Vitest tests, all in
    class, AI explains only, 1 point.
 8. **The session is a module store** read with `useSyncExternalStore`, not
-   a context, because middleware runs outside React. This replaces ЛР-12's
-   decision 17 on "an authentication context".
+   a context. Why is a defence question, answered in `solution/README.md`.
+   This replaces ЛР-12's decision 17 on "an authentication context".
 9. **The guard is client middleware,** `requireUser`, with `guestOnly` for
    the login page. Which routes carry them is the student's design since
    decision 27; the reference's choice is in `solution/README.md`.
-10. **`redirectTo` in the query string,** not `location.state`: the
-    middleware sees only the request, and the query survives a reload.
-    The defence compares it with `location.state` in Robin Wieruch's
-    article; §4.3's declarative blog keeps no return address.
+10. **`redirectTo` in the query string,** not `location.state`. The
+    defence asks why and compares it with `location.state` in Robin
+    Wieruch's article (answer in `solution/README.md`); §4.3's declarative
+    blog keeps no return address.
 11. **`safeRedirect` is given,** with its rule; students use it in the
-    login page and in `guestOnly`, and a test catches a page that doesn't.
+    login page and in `guestOnly`, and a test catches each place that
+    doesn't (the fourth and the sixth of §4.6).
 12. **Two lazy pages, booking and tickets,** and the tickets page shows QR
     codes through `qrcode`, so the split shows in the build. `/admin` is
     lazy too, in §4.9.2.
@@ -1158,12 +1239,19 @@ revision and are not prototyped (see **To check during the build**).
 
 **Proposed in the revision, to confirm:**
 
-26. **The rename test.** The blog shows each mechanism once and in its
-    simplest form; the cinema needs them combined, and some the blog
-    doesn't show (the table under **The walkthrough**). If the blog's code
-    with the cinema's names gave the cinema's code, the walkthrough would
-    be the solution. The blog has no page that is both protected and lazy,
-    so no probe answers §4.7's Network table.
+26. **The rename test, applied to the decisions.** The blog shows each
+    mechanism once and in its simplest form, so its code with the cinema's
+    names does give API calls of §4.4, §4.5 and §4.7: a layout route, an
+    index route, a dynamic segment, a `NavLink`, a middleware that throws
+    `redirect`, `lazy` and `HydrateFallback`. That is the walkthrough's job
+    (decision 23). What it must not give are the cinema's decisions: where
+    the 404 page goes; which account link needs `end`; which routes carry
+    the guard; the return to the requested page, with `replace` and with
+    `safeRedirect` in both places; `guestOnly`; «Вийти»; and what a guest's
+    browser downloads for a protected lazy page. So the blog has no
+    `NavLink` to an address that starts another page's, no return address,
+    no page that is both protected and lazy, and no probe that answers
+    §4.7's Network table (the table under **The walkthrough**).
 27. **The cinema's challenges state requirements,** not the route tree:
     addresses, who sees what, what happens after sign-in. The tree is the
     student's design, the tests already check behaviour, and the reference's
