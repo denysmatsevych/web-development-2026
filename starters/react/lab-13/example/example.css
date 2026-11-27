@@ -1,0 +1,71 @@
+/* Стилі блогу з §4.3. */
+
+:root {
+  font-family: Georgia, 'Times New Roman', serif;
+  line-height: 1.6;
+  color: #22252b;
+  background: #fbfaf7;
+}
+
+body {
+  margin: 0;
+}
+
+#root {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+
+.blog-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 24px;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #22252b;
+}
+
+.blog-name {
+  color: inherit;
+  font-size: 1.375rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.blog-header nav {
+  display: flex;
+  gap: 16px;
+}
+
+a {
+  color: #1d4f91;
+}
+
+a[aria-current='page'] {
+  font-weight: 700;
+  text-decoration-thickness: 3px;
+}
+
+.new-post {
+  display: grid;
+  gap: 12px;
+  max-width: 480px;
+}
+
+.new-post label {
+  display: grid;
+  gap: 4px;
+}
+
+input,
+textarea,
+button {
+  font: inherit;
+}
+
+.loading {
+  color: #6b6f78;
+}

@@ -1,6 +1,8 @@
 # Plan: React ЛР-13 «Налаштування React-маршрутизації, захищених роутів та лінивого завантаження»
 
-Status: proposed on 2026-11-27. Four decisions were settled with the
+Status: built on 2026-11-27 (see [README.md](README.md) for what the
+build changed); the proposals below were built as written. Proposed on
+2026-11-27. Four decisions were settled with the
 instructor before the plan was written (see **Decisions**, 1–4): a new app,
 React Router's data mode with middleware for the protected routes and the
 declarative mode shown as an example, React Router 8 rather than the
