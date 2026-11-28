@@ -1,7 +1,7 @@
 import { Link } from 'react-router'
 
 // Сторінка помилки: заголовок з пропа title, пояснення й посилання на
-// «Афішу». Її показують NotFoundPage і сторінки помилок у §4.9.2, §4.9.4.
+// «Афішу». Її показує NotFoundPage.
 export default function ErrorPage({ title, children }) {
   return (
     <section className="error-page">

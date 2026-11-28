@@ -2,8 +2,8 @@
 
 | Route | Source | What it is |
 | --- | --- | --- |
-| `/react/labs/lab-13/` | `src/content/labs/react/uk/lab-13.md` | the handout: a walkthrough of React Router's data mode on a given blog (§4.3, with the same blog in the declarative mode and a comparison table), four code challenges on a cinema site with given pages (§4.4 routes and the shared layout, §4.5 the account's nested routes and booking, §4.6 middleware guards with `redirectTo` and `safeRedirect`, §4.7 lazy routes and `HydrateFallback`), two measurement tables, the AI rule, checks, `vercel.json` and Vercel (§4.8), +1 point for one of four extra tasks (§4.9); report, defence |
-| `/uk/react/starters/lab-13.zip` | `starters/react/lab-13/` | the starter: the cinema's pages, data and fake session, stubs, the blog in `example/`, the given tests in `tests/` and `tests/extra/`, unpacked by students into `react-labs/lab-13/` |
+| `/react/labs/lab-13/` | `src/content/labs/react/uk/lab-13.md` | the handout: a walkthrough of React Router's data mode on a given blog (§4.3, with the same blog in the declarative mode and a comparison table), four code challenges on a cinema site with given pages (§4.4 routes and the shared layout, §4.5 the account's nested routes and booking, §4.6 middleware guards with `redirectTo` and `safeRedirect`, §4.7 lazy routes and `HydrateFallback`), two measurement tables, the AI rule, checks, `vercel.json` and Vercel (§4.8); report, defence; no extra task since 2026-11-28 |
+| `/uk/react/starters/lab-13.zip` | `starters/react/lab-13/` | the starter: the cinema's pages, data and fake session, stubs, the blog in `example/`, the given tests in `tests/`, unpacked by students into `react-labs/lab-13/` |
 | `/uk/react/labs/lab-13/result.webp` | the reference solution | «Мої квитки» with two tickets at 1280 px, in the handout's §1 |
 
 No PDF yet: the instructor reviews the lab on localhost first (2026-11-27).
@@ -29,7 +29,12 @@ asks for. The plan the lab was built from is
   the root route, `end` on «Профіль», one pathless route with
   `requireUser`, `replace` after sign-in); the defence asks why
   (the instructor's choice: the lab was too hard to follow).
-- **§4.9 lists only requirements** for each of the four tasks.
+- **§4.9, the extra task, is removed** (the instructor's decision), with
+  its tests (`tests/extra/`), the `admin/` and `watch/` pages, the watchlist,
+  the admin account and the second Vitest project; `npm test` is plain
+  `vitest` again, and ЛР 13 gives no extra point, so current work can reach
+  72. Its reference stages stay in `solution/stages/4.9.*` for later. The
+  report no longer asks what the cinema needed beyond the blog.
 - **The router moved into `App.jsx`** in the cinema and the blog, so
   `main.jsx` only renders `<App />` into `#root`, as in the earlier labs;
   the blog's declarative version is `example/DeclarativeApp.jsx`.

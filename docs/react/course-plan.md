@@ -61,7 +61,7 @@ rules are in [lab-7/custom-hooks-and-render-props-plan.md](lab-7/custom-hooks-an
 | ЛР 10 | `/react/labs/lab-10` | folder structures and Feature-Sliced Design, all in class, on ЛР-8's page grown into a three-page coffee shop with a hash router: four approaches read from articles and docs (by file type, by route, by feature after bulletproof-react, FSD), each shown on the same cinema site, then a starter for `lab-10/` organised by file type moved once into a hybrid structure (route folders with type folders inside, the cart as a feature folder inside `shared/`), 12 given app-level Vitest tests through `#app`, dependency-cruiser checking the hybrid's rules, the folders that hold the cart counted before and after the move, a structure chosen for five projects, deploy to Vercel; +1 point in class for moving the cart into a local package (`@coffee/cart`); [lab-10/README.md](lab-10/README.md) |
 | ЛР 11 | `/react/labs/lab-11` | useReducer and complex state as four code challenges with given Vitest tests, all in class, on a new barista's order queue: a starter for `lab-11/` with an order form on several `useState`, a given queue reducer with seeded defects that show only in development and stubs, the form moved to the student's own `draftReducer` with the total derived during render, the queue reducer made pure under `<StrictMode>`, the queue's state normalized into `byId` and `ids` behind selectors, undo and redo through a `withUndo` higher-order reducer, deploy to Vercel; +1 point in class for the form's reducer written with Immer's `produce`; [lab-11/README.md](lab-11/README.md) |
 | ЛР 12 | `/react/labs/lab-12` | Context API and prop drilling as five code challenges with given Vitest tests, all in class, on ЛР-11's order queue: a starter for `lab-12/` built on ЛР-11's reference solution, with the queue's state and `dispatch` in `App` passed down as props, ЛР-11's page tests, two data flow diagrams of the starter and the end state, a `MEASUREMENTS.md` for the components that render on a tick and on opening «Деталі» (React DevTools' Profiler), a board column that takes its cards as `children`, the queue and `dispatch` in two contexts provided from `App`, then a `QueueProvider` with `useQueue` and `useQueueDispatch` that name the provider when it is missing, the opened order's id moved down into a `QueuePanel` so `App` holds no state, a café stop-list in its own context and provider with a container for a given panel, deploy to Vercel; +2 points for the queue in a Zustand store per provider behind the same hooks, with Zustand learned from its docs; [lab-12/README.md](lab-12/README.md) |
-| ЛР 13 | `/react/labs/lab-13` | React Router's data mode, protected routes and lazy loading as four code challenges with given Vitest tests, all in class, on a new cinema site with given pages: a walkthrough of each mechanism on a given blog in `example/`, read in both the data and the declarative mode, then the cinema's routes and shared layout with `NavLink` and a 404 under the header, the account's nested routes with `end`, middleware guards (`requireUser`, `guestOnly`) with a `redirectTo` checked by a given `safeRedirect`, lazy booking and tickets pages with `HydrateFallback`, a `MEASUREMENTS.md` of the build's files and of what a guest's browser downloads, `vercel.json` and deploy to Vercel; +1 point for one of four extra tasks (title and focus, an administrator's 403 page, a loading indicator, watching and a watchlist); [lab-13/README.md](lab-13/README.md) |
+| ЛР 13 | `/react/labs/lab-13` | React Router's data mode, protected routes and lazy loading as four code challenges with given Vitest tests, all in class, on a new cinema site with given pages: a walkthrough of each mechanism on a given blog in `example/`, read in both the data and the declarative mode, then the cinema's routes and shared layout with `NavLink` and a 404 under the header, the account's nested routes with `end`, middleware guards (`requireUser`, `guestOnly`) with a `redirectTo` checked by a given `safeRedirect`, lazy booking and tickets pages with `HydrateFallback`, a `MEASUREMENTS.md` of the build's files and of what a guest's browser downloads, `vercel.json` and deploy to Vercel; [lab-13/README.md](lab-13/README.md) |
 | ЛР 14–27 | not built | |
 
 Лекція 0 reads its topic slides from the **Теми презентацій** table below
@@ -339,7 +339,7 @@ Rules stated under the table:
 - Every student defends at least 2 presentations; at most 4 count towards the
   total (20 points). Topics and order are agreed with the teacher.
 
-**Extra points in ЛР 4, ЛР 6, ЛР 10, ЛР 11, ЛР 12 and ЛР 13** (the teacher's decisions,
+**Extra points in ЛР 4, ЛР 6, ЛР 10, ЛР 11 and ЛР 12** (the teacher's decisions,
 not in the programme): in each, the main part gives the usual 1 point and the
 extra tasks more. ЛР 4's §4.7 gives 1 (2026-11-08); ЛР 6's §4.7, done in
 class, and §4.8, homework due by the defence, give 1 each (2026-11-12); ЛР
@@ -348,12 +348,10 @@ pushed, gives 1 (2026-11-18); ЛР 11's §4.8, the form's reducer with Immer,
 done in class the same way, gives 1 (2026-11-19); ЛР 12's §4.9, the queue
 in a Zustand store, started in class once the main part is pushed and
 finished by the defence, gives 2, since students learn Zustand from its docs
-on their own (1 on 2026-11-24, 2 since 2026-11-26); ЛР 13's §4.9, one
-of four extra tasks, started in class once the main part is pushed and
-finished by the defence, gives 1 (2026-11-27). The programme counts 1
+on their own (1 on 2026-11-24, 2 since 2026-11-26). The programme counts 1
 point per lab, so with them Part 1 can give 9 points rather than 6, and
 Part 2 four more than its labs. Extra points are a bonus above the 65 points
-for current work (settled 2026-11-08), so current work can reach 73; no
+for current work (settled 2026-11-08), so current work can reach 72; no
 other task gives way.
 
 **Students on an individual plan** take another route, agreed with the

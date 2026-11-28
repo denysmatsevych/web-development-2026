@@ -1,6 +1,6 @@
 import { useUser } from '../../shared/auth/session.js'
 
-const roles = { viewer: 'глядач', admin: 'адміністратор' }
+const roles = { viewer: 'глядач' }
 
 export default function ProfilePage() {
   const user = useUser()

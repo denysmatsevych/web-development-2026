@@ -1,4 +1,4 @@
-/* Стилі всього сайту: шапка, сторінки, кабінет і сторінки §4.9. */
+/* Стилі всього сайту: шапка, сторінки й кабінет. */
 
 :root {
   font-family: Inter, system-ui, 'Segoe UI', Roboto, sans-serif;
@@ -130,10 +130,9 @@ ul {
   min-width: 0;
 }
 
-/* Індикатор завантаження сторінки (§4.7, §4.9.3) */
+/* Що видно, поки завантажується код сторінки (§4.6) */
 
-.page-loading,
-.pending {
+.page-loading {
   padding: 10px 16px;
   border-radius: 12px;
   background: #fff;
@@ -239,12 +238,6 @@ ul {
 
 .movie-info h2 {
   margin-top: 8px;
-}
-
-.movie-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
 }
 
 .session-list {
@@ -503,54 +496,6 @@ ul {
   flex: none;
   width: 112px;
   height: 112px;
-}
-
-.watchlist {
-  display: grid;
-  gap: 6px;
-}
-
-/* «Адміністрування» (§4.9.2) */
-
-.admin-table {
-  width: 100%;
-  border-collapse: collapse;
-  border-radius: 12px;
-  background: #fff;
-}
-
-.admin-table caption {
-  padding-bottom: 8px;
-  color: #5f5866;
-  text-align: left;
-}
-
-.admin-table th,
-.admin-table td {
-  padding: 8px 12px;
-  border-bottom: 1px solid #e4ddd4;
-  text-align: left;
-}
-
-/* «Дивитися» (§4.9.4) */
-
-.watch {
-  display: grid;
-  gap: 16px;
-}
-
-.player {
-  display: grid;
-  gap: 8px;
-  max-width: 720px;
-}
-
-.player .poster {
-  aspect-ratio: 16 / 9;
-}
-
-.player p {
-  color: #5f5866;
 }
 
 /* Сторінки помилок */

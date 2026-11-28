@@ -9,8 +9,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest --project lab",
-    "test:extra": "vitest --project extra",
+    "test": "vitest",
     "format": "prettier . --write",
     "format:check": "prettier . --check"
   },

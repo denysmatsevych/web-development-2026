@@ -12,17 +12,11 @@ challenges ви налаштуєте маршрути React Router між сто
 сторінки й ліниве завантаження коду. Що має вийти, перевіряють готові тести
 в теці `tests/`.
 
-## Облікові записи
+## Вхід
 
-Вхід несправжній, з двома обліковими записами й одним паролем `kino2026`:
-
-| Пошта                | Ім'я          | Роль                   |
-| -------------------- | ------------- | ---------------------- |
-| `glyadach@kino.test` | Глядач        | глядач                 |
-| `admin@kino.test`    | Адміністратор | адміністратор (§4.9.2) |
-
-Користувач, який увійшов, зберігається в `sessionStorage`, квитки й «Мій
-список» — у `localStorage` браузера.
+Вхід несправжній: обліковий запис `glyadach@kino.test` з паролем
+`kino2026`. Користувач, який увійшов, зберігається в `sessionStorage`,
+квитки — у `localStorage` браузера.
 
 ## Що вже є
 
@@ -35,18 +29,16 @@ challenges ви налаштуєте маршрути React Router між сто
 - `src/app/authMiddleware.js` — заготовки middleware `requireUser` і
   `guestOnly` з описом у коментарі (§4.6);
 - `src/routes/` — сторінки, по теці на маршрут: `movies/`, `movie/`,
-  `schedule/`, `login/`, `booking/`, `account/`, а також `admin/` і
-  `watch/` для додаткових завдань §4.9;
+  `schedule/`, `login/`, `booking/`, `account/`;
 - `src/shared/` — несправжній вхід (`auth/session.js`), фільми, сеанси,
-  квитки й «Мій список» (`data/`), `safeRedirect` (`utils/`) і спільні
+  квитки (`data/`), `safeRedirect` (`utils/`) і спільні
   компоненти (`components/`): «Сторінку не знайдено», сторінка помилки,
   `HydrateFallback`, обкладинка фільму;
 - `example/` — блог, на якому §4.3 показує маршрутизацію React Router;
   `DeclarativeApp.jsx` і `main-declarative.jsx` — той самий блог у
   декларативному режимі;
 - `MEASUREMENTS.md` — дві таблиці, які ви заповните в §4.7;
-- тести Vitest і React Testing Library в `tests/`: по файлу на challenge і
-  `tests/extra/` — тести додаткових завдань §4.9. `app.jsx` відкриває сайт
+- тести Vitest і React Testing Library в `tests/`: по файлу на challenge. `app.jsx` відкриває сайт
   за адресою в `<StrictMode>`, як `src/app/App.jsx`. Файли в `tests/` не
   змінюйте.
 
@@ -58,12 +50,10 @@ challenges ви налаштуєте маршрути React Router між сто
 - `npm run dev`: dev-сервер сайту на http://localhost:5173
 - `npm run example`: dev-сервер блогу з §4.3; якщо порт 5173 зайнято, Vite
   візьме наступний
-- `npm test`: тести основної частини в режимі спостереження, вони
+- `npm test`: тести в режимі спостереження, вони
   перезапускаються після кожного збереження файлу; `q` — вихід
 - `npm test -- tests/routes`: лише тести цього файлу
-- `npm test -- --run`: усі тести основної частини один раз
-- `npm run test:extra -- tests/extra/focus`: тести одного додаткового
-  завдання
+- `npm test -- --run`: усі тести один раз
 - `npm run lint`: ESLint
 - `npm run format:check`: перевірка форматування Prettier
 - `npm run build`: production-збірка в `dist/`

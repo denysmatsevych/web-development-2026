@@ -9,11 +9,6 @@ export const viewer = {
   name: 'Глядач',
   role: 'viewer',
 }
-export const admin = {
-  email: 'admin@kino.test',
-  name: 'Адміністратор',
-  role: 'admin',
-}
 
 // React Router записує в об'єкт `lazy` маршруту те, що вже завантажив, а
 // цей об'єкт спільний для всіх роутерів, створених з того самого масиву

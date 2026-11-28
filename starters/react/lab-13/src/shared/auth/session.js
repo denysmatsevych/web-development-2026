@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from 'react'
 
-// Несправжній вхід: два облікові записи з паролем kino2026 (README.md).
+// Несправжній вхід: один обліковий запис з паролем kino2026 (README.md).
 // Користувач, який увійшов, зберігається в sessionStorage, тож сесія
 // закінчується, коли закривають вкладку.
 //
@@ -14,12 +14,6 @@ const accounts = [
     password: 'kino2026',
     name: 'Глядач',
     role: 'viewer',
-  },
-  {
-    email: 'admin@kino.test',
-    password: 'kino2026',
-    name: 'Адміністратор',
-    role: 'admin',
   },
 ]
 const listeners = new Set()
