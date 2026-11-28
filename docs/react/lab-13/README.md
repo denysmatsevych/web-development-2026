@@ -5,8 +5,10 @@
 | `/react/labs/lab-13/` | `src/content/labs/react/uk/lab-13.md` | the handout: a walkthrough of React Router's data mode on a given blog (§4.3, with the same blog in the declarative mode and a comparison table), four tasks in numbered steps on a cinema site with given pages (§4.4 routes and the shared layout, §4.5 the account's nested routes and booking, §4.6 middleware guards with `redirectTo` and `safeRedirect`, §4.7 lazy routes), two measurement tables, the AI rule, checks, `vercel.json` and Vercel (§4.8); report, defence; no extra task since 2026-11-28 |
 | `/uk/react/starters/lab-13.zip` | `starters/react/lab-13/` | the starter: the cinema's pages, data and fake session, stubs, the blog in `example/`, the given tests in `tests/`, unpacked by students into `react-labs/lab-13/` |
 | `/uk/react/labs/lab-13/result.webp` | the reference solution | «Мої квитки» with two tickets at 1280 px, in the handout's §1 |
+| `/uk/react/labs/lab-13.pdf` | built from the handout | the downloadable handout, 19 pages |
 
-No PDF yet: the instructor reviews the lab on localhost first (2026-11-27).
+The PDF was built on 2026-11-28, after the instructor's review on localhost
+and the PR review's fixes.
 
 `solution/` holds the instructor's material (gitignored): `stages/`, one
 folder per task (`4.4-routes` … `4.7-lazy`), each holding only the files it
@@ -167,12 +169,13 @@ browser (it ran in tests only).
 ```bash
 git add starters/react/lab-13                                # the script packs tracked files only
 python docs/web/build-pack.py starters/react/lab-13          # public/uk/react/starters/lab-13.zip
+python docs/web/build-handout.py lab-13 react                # public/uk/react/labs/lab-13.pdf, from PowerShell
 ```
 
 Rebuild the zip after the starter is committed: each entry is dated by the
-file's last commit. The PDF (`python docs/web/build-handout.py lab-13
-react`) waits for the instructor's review; then add `handout:` to the
-frontmatter. Keep code lines in the handout within 75 characters.
+file's last commit. Rebuild the PDF after every handout edit; the
+handout's `handout:` field points to it. Keep code lines in the handout
+within 75 characters, or they wrap in the PDF.
 
 To check the stages again: copy the starter into a `react-labs` workspace,
 copy `solution/stages/4.4-routes` … `4.7-lazy` over it in order, and run
