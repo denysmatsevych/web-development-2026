@@ -11,7 +11,7 @@
 
 // Пропускає далі лише користувача, який увійшов. Гостя відправляє на
 // /login?redirectTo=…, де redirectTo — шлях і query адреси, яку він
-// відкривав, наприклад /booking/s2?from=schedule.
+// відкривав, наприклад /booking/s2?from=schedule&row=3.
 export function requireUser() {
   throw new Error('Not implemented: requireUser')
 }

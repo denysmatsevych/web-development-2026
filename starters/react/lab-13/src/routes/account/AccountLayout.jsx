@@ -4,7 +4,7 @@ import { NavLink } from 'react-router'
 export default function AccountLayout() {
   return (
     <div className="account">
-      <h1 tabIndex={-1}>Кабінет</h1>
+      <h1>Кабінет</h1>
       <nav aria-label="Меню кабінету">
         <ul className="account-nav">
           <li>

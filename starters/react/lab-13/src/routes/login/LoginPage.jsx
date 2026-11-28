@@ -22,7 +22,7 @@ export default function LoginPage() {
 
   return (
     <section className="login">
-      <h1 tabIndex={-1}>Вхід</h1>
+      <h1>Вхід</h1>
       <form className="login-form" onSubmit={handleSubmit}>
         <label>
           Пошта

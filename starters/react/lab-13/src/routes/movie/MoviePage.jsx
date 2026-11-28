@@ -15,7 +15,7 @@ export default function MoviePage({ movieId }) {
     <article className="movie">
       <Poster movie={movie} />
       <div className="movie-info">
-        <h1 tabIndex={-1}>{movie.title}</h1>
+        <h1>{movie.title}</h1>
         <p className="lead">
           {movie.year} · режисер {movie.director}
         </p>

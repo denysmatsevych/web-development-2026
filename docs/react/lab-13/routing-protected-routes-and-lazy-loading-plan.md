@@ -1,7 +1,9 @@
 # Plan: React ЛР-13 «Налаштування React-маршрутизації, захищених роутів та лінивого завантаження»
 
-Status: built on 2026-11-27 (see [README.md](README.md) for what the
-build changed); the proposals below were built as written. Proposed on
+Status: built on 2026-11-27 as proposed below, then changed on 2026-11-28:
+§4.4–§4.7 became numbered steps, the extra task (§4.9) was removed, and the
+PR review corrected §4.3's declarative part and §4.6's open-redirect
+explanation. [README.md](README.md) lists every change. Proposed on
 2026-11-27. Four decisions were settled with the
 instructor before the plan was written (see **Decisions**, 1–4): a new app,
 React Router's data mode with middleware for the protected routes and the

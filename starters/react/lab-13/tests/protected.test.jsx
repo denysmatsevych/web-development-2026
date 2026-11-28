@@ -26,16 +26,16 @@ test('гість, який відкриває /account/tickets, потрапля
 
 test('гість після входу повертається на бронювання, з якого прийшов, з тим самим query', async () => {
   const user = userEvent.setup()
-  const { router } = renderApp('/booking/s2?from=schedule')
+  const { router } = renderApp('/booking/s2?from=schedule&row=3')
   await screen.findByRole('heading', { level: 1, name: 'Вхід' })
-  expect(query(router, 'redirectTo')).toBe('/booking/s2?from=schedule')
+  expect(query(router, 'redirectTo')).toBe('/booking/s2?from=schedule&row=3')
   await signInWithForm(user)
 
   expect(
     await screen.findByRole('heading', { level: 1, name: 'Бронювання: Земля' }),
   ).toBeInTheDocument()
   expect(router.state.location.pathname).toBe('/booking/s2')
-  expect(router.state.location.search).toBe('?from=schedule')
+  expect(router.state.location.search).toBe('?from=schedule&row=3')
 })
 
 test('після входу кнопка «Назад» веде на сторінку фільму, з якої гість відкрив бронювання', async () => {

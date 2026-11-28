@@ -10,7 +10,7 @@ import {
 export default function SchedulePage() {
   return (
     <>
-      <h1 tabIndex={-1}>Розклад</h1>
+      <h1>Розклад</h1>
       {sessionsByDay().map(({ day, sessions }) => (
         <section key={day} className="schedule-day">
           <h2>{formatDay(day)}</h2>

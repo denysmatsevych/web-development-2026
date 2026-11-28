@@ -100,7 +100,7 @@ starters/           the source of each zip: <course>/<name>/ becomes public/uk/<
    ├─ lab-10/                   ЛР-8's reference solution grown into a three-page shop organised by file type, with app-level tests and structure rules, for ЛР-10 to move into a hybrid structure
    ├─ lab-11/                   a barista's order queue with a form on several useState, a given queue reducer with seeded defects, stubs and given Vitest tests, for ЛР-11's code challenges
    ├─ lab-12/                   ЛР-11's reference solution with the queue passed down as props, a stop-list panel, context and provider stubs and given Vitest tests, for ЛР-12's code challenges
-   └─ lab-13/                   a cinema site with given pages, middleware stubs, a routing walkthrough blog and given Vitest tests, for ЛР-13's code challenges
+   └─ lab-13/                   a cinema site with given pages, middleware stubs, a routing walkthrough blog and given Vitest tests, for ЛР-13's step-by-step tasks
 ```
 
 See `docs/agents/design-system.md` for which stylesheet owns what and how

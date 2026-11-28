@@ -34,12 +34,13 @@ function pageRoute(url) {
   return route && route.path !== '*' ? route : null
 }
 
-test('маршрути ведуть на бронювання й квитки, але їхній код не завантажується разом із маршрутами', () => {
-  expect(pageRoute('/booking/s1'), 'маршрут для /booking/s1').not.toBeNull()
-  expect(
-    pageRoute('/account/tickets'),
-    'маршрут для /account/tickets',
-  ).not.toBeNull()
+test('маршрути бронювання й квитків мають lazy, і код цих сторінок не завантажується разом із маршрутами', () => {
+  const booking = pageRoute('/booking/s1')
+  const tickets = pageRoute('/account/tickets')
+  expect(booking, 'маршрут для /booking/s1').not.toBeNull()
+  expect(tickets, 'маршрут для /account/tickets').not.toBeNull()
+  expect(booking.lazy, 'lazy маршруту /booking/s1').toBeDefined()
+  expect(tickets.lazy, 'lazy маршруту /account/tickets').toBeDefined()
   expect(loaded, 'завантажено модулів сторінок').toEqual({
     booking: 0,
     tickets: 0,

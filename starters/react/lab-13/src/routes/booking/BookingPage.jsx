@@ -33,7 +33,7 @@ export default function BookingPage({ sessionId }) {
 
   return (
     <section className="booking">
-      <h1 tabIndex={-1}>Бронювання: {movie.title}</h1>
+      <h1>Бронювання: {movie.title}</h1>
       <p className="lead">
         {formatDateTime(session.startsAt)} · {session.hall} · {session.price}{' '}
         грн за місце

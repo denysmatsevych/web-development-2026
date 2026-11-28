@@ -2,7 +2,7 @@ import '@testing-library/jest-dom/vitest'
 import { cleanup } from '@testing-library/react'
 import { afterEach, beforeEach, vi } from 'vitest'
 
-// Кожен тест починає як гість, без квитків і без «Мого списку».
+// Кожен тест починає як гість і без квитків.
 beforeEach(() => {
   sessionStorage.clear()
   localStorage.clear()

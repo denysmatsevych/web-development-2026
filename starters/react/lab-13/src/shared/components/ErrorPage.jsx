@@ -5,7 +5,7 @@ import { Link } from 'react-router'
 export default function ErrorPage({ title, children }) {
   return (
     <section className="error-page">
-      <h1 tabIndex={-1}>{title}</h1>
+      <h1>{title}</h1>
       {children && <p>{children}</p>}
       <p>
         <Link to="/">До афіші</Link>
