@@ -61,7 +61,8 @@ rules are in [lab-7/custom-hooks-and-render-props-plan.md](lab-7/custom-hooks-an
 | ЛР 10 | `/react/labs/lab-10` | folder structures and Feature-Sliced Design, all in class, on ЛР-8's page grown into a three-page coffee shop with a hash router: four approaches read from articles and docs (by file type, by route, by feature after bulletproof-react, FSD), each shown on the same cinema site, then a starter for `lab-10/` organised by file type moved once into a hybrid structure (route folders with type folders inside, the cart as a feature folder inside `shared/`), 12 given app-level Vitest tests through `#app`, dependency-cruiser checking the hybrid's rules, the folders that hold the cart counted before and after the move, a structure chosen for five projects, deploy to Vercel; +1 point in class for moving the cart into a local package (`@coffee/cart`); [lab-10/README.md](lab-10/README.md) |
 | ЛР 11 | `/react/labs/lab-11` | useReducer and complex state as four code challenges with given Vitest tests, all in class, on a new barista's order queue: a starter for `lab-11/` with an order form on several `useState`, a given queue reducer with seeded defects that show only in development and stubs, the form moved to the student's own `draftReducer` with the total derived during render, the queue reducer made pure under `<StrictMode>`, the queue's state normalized into `byId` and `ids` behind selectors, undo and redo through a `withUndo` higher-order reducer, deploy to Vercel; +1 point in class for the form's reducer written with Immer's `produce`; [lab-11/README.md](lab-11/README.md) |
 | ЛР 12 | `/react/labs/lab-12` | Context API and prop drilling as five code challenges with given Vitest tests, all in class, on ЛР-11's order queue: a starter for `lab-12/` built on ЛР-11's reference solution, with the queue's state and `dispatch` in `App` passed down as props, ЛР-11's page tests, two data flow diagrams of the starter and the end state, a `MEASUREMENTS.md` for the components that render on a tick and on opening «Деталі» (React DevTools' Profiler), a board column that takes its cards as `children`, the queue and `dispatch` in two contexts provided from `App`, then a `QueueProvider` with `useQueue` and `useQueueDispatch` that name the provider when it is missing, the opened order's id moved down into a `QueuePanel` so `App` holds no state, a café stop-list in its own context and provider with a container for a given panel, deploy to Vercel; +2 points for the queue in a Zustand store per provider behind the same hooks, with Zustand learned from its docs; [lab-12/README.md](lab-12/README.md) |
-| ЛР 13–27 | not built | |
+| ЛР 13 | `/react/labs/lab-13` | React Router's data mode, protected routes and lazy loading as four tasks in numbered steps with given Vitest tests, all in class, on a new cinema site with given pages: a walkthrough of each mechanism on a given blog in `example/`, read in both the data and the declarative mode, then the cinema's routes and shared layout with `NavLink` and a 404 under the header, the account's nested routes with `end`, middleware guards (`requireUser`, `guestOnly`) with `HydrateFallback` and a `redirectTo` checked by a given `safeRedirect`, lazy booking and tickets pages, a `MEASUREMENTS.md` of the build's files and of what a guest's browser downloads, `vercel.json` and deploy to Vercel; [lab-13/README.md](lab-13/README.md) |
+| ЛР 14–27 | not built | |
 
 Лекція 0 reads its topic slides from the **Теми презентацій** table below
 when the site is built. Keep that table's rows in their current shape: the
@@ -396,6 +397,11 @@ lecture when the decks are written:
   `Tabs` and its parts; ЛР 12 practises global state, prop drilling and the
   cost of re-renders. Lecture 3 should introduce context together with
   compound components.
+
+**React Router 8, not 7 (ЛР 13).** The programme names React Router v7
+(rows 3.1, 3.2, Lecture 5, Основна 3). ЛР 13 uses v8, current since
+2026-06-17: the data mode API is the same, `react-router-dom` is gone and
+its imports come from `react-router`. Lecture 5's deck should say so.
 
 Presentation topics П4.2, П2.6 and П2.8 cover these, but a topic may go
 unpicked, so the lectures should still introduce them.
