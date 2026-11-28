@@ -26,7 +26,8 @@ challenges ви налаштуєте маршрути React Router між сто
 
 ## Що вже є
 
-- `src/app/main.jsx` — роутер з маршрутів `src/app/routes.js` у
+- `src/app/main.jsx` — рендерить `<App />` в елемент `#root`;
+- `src/app/App.jsx` — роутер з маршрутів `src/app/routes.js` у
   `<RouterProvider>`;
 - `src/app/routes.js` — один маршрут: `/` → `MoviesPage`;
 - `src/app/RootLayout.jsx` — шапка сайту зі звичайними посиланнями `<a>`;
@@ -41,12 +42,12 @@ challenges ви налаштуєте маршрути React Router між сто
   компоненти (`components/`): «Сторінку не знайдено», сторінка помилки,
   `HydrateFallback`, обкладинка фільму;
 - `example/` — блог, на якому §4.3 показує маршрутизацію React Router;
-  `App.jsx` і `main-declarative.jsx` — той самий блог у декларативному
-  режимі;
+  `DeclarativeApp.jsx` і `main-declarative.jsx` — той самий блог у
+  декларативному режимі;
 - `MEASUREMENTS.md` — дві таблиці, які ви заповните в §4.7;
 - тести Vitest і React Testing Library в `tests/`: по файлу на challenge і
   `tests/extra/` — тести додаткових завдань §4.9. `app.jsx` відкриває сайт
-  за адресою в `<StrictMode>`, як `src/app/main.jsx`. Файли в `tests/` не
+  за адресою в `<StrictMode>`, як `src/app/App.jsx`. Файли в `tests/` не
   змінюйте.
 
 ## Команди

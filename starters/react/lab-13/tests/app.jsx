@@ -31,7 +31,7 @@ function copyRoutes(list) {
   }))
 }
 
-// Відкриває сайт за адресою url, як src/app/main.jsx, але з роутером у
+// Відкриває сайт за адресою url, як src/app/App.jsx, але з роутером у
 // пам'яті замість адресного рядка браузера. Повертає й роутер: у
 // router.state.location тест читає шлях і query, а router.navigate(-1) —
 // кнопка «Назад».

@@ -20,6 +20,27 @@ decision 26); `shots.mjs`, the headless Edge checks and the screenshot; the
 asks for. The plan the lab was built from is
 [routing-protected-routes-and-lazy-loading-plan.md](routing-protected-routes-and-lazy-loading-plan.md).
 
+## Changed on 2026-11-28 (the instructor's review on localhost)
+
+- **§4.4–§4.7 are numbered steps,** in words without code, each ending with
+  «Крок завершено, коли…» and the tests that pass by then; the challenge
+  template («Що має вийти», «Що вже є», «Код», «Перевірка») is gone. The
+  steps name the decisions the plan had left to students (the 404 inside
+  the root route, `end` on «Профіль», one pathless route with
+  `requireUser`, `replace` after sign-in); the defence asks why
+  (the instructor's choice: the lab was too hard to follow).
+- **§4.9 lists only requirements** for each of the four tasks.
+- **The router moved into `App.jsx`** in the cinema and the blog, so
+  `main.jsx` only renders `<App />` into `#root`, as in the earlier labs;
+  the blog's declarative version is `example/DeclarativeApp.jsx`.
+- **`/login` is added in §4.4** with the other public pages, so students can
+  sign in while doing §4.5.
+- **`HydrateFallback` moved from §4.7 to §4.6:** middleware also makes the
+  first render wait, and once the warning test collects warnings from the
+  start of its file, the §4.6 stage failed it without a fallback. Stages
+  still pass 1, 5, 11, 18 and 20 of 20. `solution/wrong-variants/` was
+  generated before these changes and wasn't rerun.
+
 ## Where the build differs from the plan
 
 - **The plan's proposals were built as written** (decisions 5–22 and
